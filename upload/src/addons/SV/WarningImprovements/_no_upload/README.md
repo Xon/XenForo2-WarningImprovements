@@ -2,6 +2,11 @@
 
 A Collection of improvements to XF2's warning system.
 
+- Warnings/Bans with time-based expiry are now be removed on the 1st visit after the expiry time, rather than needing to wait for the hourly cron task to run.
+- Sortable warnings with categories
+  - Drag & drop
+  - Permissions per category
+- Updated front-end using smart select menu, or radio boxes
 - User Criteria for warning points
 - Allow users to view their own warnings, and find which posts where warned. 
 - Sends an alert to a user when they receive a warning. (Defaults on, togglable)
