@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Admin\\Controller\\Warning",
+    "to_class": "SV\\WarningImprovements\\XF\\Admin\\Controller\\Warning",
+    "execute_order": 10,
+    "active": true
+}

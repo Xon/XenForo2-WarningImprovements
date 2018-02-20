@@ -1,0 +1,36 @@
+	<li><label>
+		<input type="checkbox" name="user_criteria[warning_points_l][rule]" value="warning_points_l" class="Disabler" id="ucrit_warning_points_l" {xen:checked $userCriteria.warning_points_l} />
+		{xen:phrase user_has_received_at_least_x_warnings_points}:</label>
+		<div class="criteriaQualifier" id="ucrit_warning_points_l_Disabler">
+			<xen:spinbox name="user_criteria[warning_points_l][data][points]" value="{$userCriteria.warning_points_l.points}" size="5" min="0" step="1" />
+			{xen:phrase days}: <xen:spinbox name="user_criteria[warning_points_l][data][days]" value="{$userCriteria.warning_points_l.days}" size="5" min="0" step="1" />
+			<br/><input type="checkbox" name="user_criteria[sv_warning_minimum][data][expired]" value="1" {xen:checked $userCriteria.sv_warning_minimum.expired} /> {xen:phrase sv_warning_include_expired}
+		</div>
+	</li>
+	<li><label>
+		<input type="checkbox" name="user_criteria[warning_points_m][rule]" value="warning_points_m" class="Disabler" id="ucrit_warning_points_m" {xen:checked $userCriteria.warning_points_m} />
+		{xen:phrase user_has_received_at_most_x_warnings_points}:</label>
+		<div class="criteriaQualifier" id="ucrit_warning_points_m_Disabler">
+			<xen:spinbox name="user_criteria[warning_points_m][data][points]" value="{$userCriteria.warning_points_m.points}" size="5" min="0" step="1" />
+			{xen:phrase days}: <xen:spinbox name="user_criteria[warning_points_m][data][days]" value="{$userCriteria.warning_points_m.days}" size="5" min="0" step="1" />
+			<br/><input type="checkbox" name="user_criteria[sv_warning_minimum][data][expired]" value="1" {xen:checked $userCriteria.sv_warning_minimum.expired} /> {xen:phrase sv_warning_include_expired}
+		</div>
+	</li>
+	<li><label>
+		<input type="checkbox" name="user_criteria[sv_warning_minimum][rule]" value="sv_warning_minimum" class="Disabler" id="ucrit_sv_warning_minimum" {xen:checked $userCriteria.sv_warning_minimum} />
+		{xen:phrase user_has_received_at_least_x_warnings_count}:</label>
+		<div class="criteriaQualifier" id="ucrit_sv_warning_minimum_Disabler">
+			<xen:spinbox name="user_criteria[sv_warning_minimum][data][count]" value="{$userCriteria.sv_warning_minimum.count}" size="5" min="0" step="1" />
+			{xen:phrase days}: <xen:spinbox name="user_criteria[sv_warning_minimum][data][days]" value="{$userCriteria.sv_warning_minimum.days}" size="5" min="0" step="1" />
+			<br/><input type="checkbox" name="user_criteria[sv_warning_minimum][data][expired]" value="1" {xen:checked $userCriteria.sv_warning_minimum.expired} /> {xen:phrase sv_warning_include_expired}
+		</div>
+	</li>
+	<li><label>
+		<input type="checkbox" name="user_criteria[sv_warning_maximum][rule]" value="sv_warning_maximum" class="Disabler" id="ucrit_sv_warning_maximum" {xen:checked $userCriteria.sv_warning_maximum} />
+		{xen:phrase user_has_received_at_most_x_warnings_count}:</label>
+		<div class="criteriaQualifier" id="ucrit_sv_warning_maximum_Disabler">
+			<xen:spinbox name="user_criteria[sv_warning_maximum][data][count]" value="{$userCriteria.sv_warning_maximum.count}" size="5" min="0" step="1" />
+			{xen:phrase days}: <xen:spinbox name="user_criteria[sv_warning_maximum][data][days]" value="{$userCriteria.sv_warning_maximum.days}" size="5" min="0" step="1" />
+			<br/><input type="checkbox" name="user_criteria[sv_warning_minimum][data][expired]" value="1" {xen:checked $userCriteria.sv_warning_minimum.expired} /> {xen:phrase sv_warning_include_expired}
+		</div>
+	</li>

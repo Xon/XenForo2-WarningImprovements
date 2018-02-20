@@ -1,0 +1,9 @@
+{
+    "template": "member_warn",
+    "description": "Display warning items by category with Chosen support",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#<dl class=\"ctrlUnit\">\\s*<dt>{xen:phrase warning_type}:</dt>.*?<dd>.*?\\s*</dd>\\s*</dl>#si",
+    "replace": "<xen:include template=\"sv_member_warn_chooser\" />"
+}

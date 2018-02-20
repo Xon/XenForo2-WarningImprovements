@@ -1,0 +1,9 @@
+{
+    "template": "member_warn",
+    "description": "Sending Alerts on recieving a warning.",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#(<dt>{xen:phrase member_notification}:</dt>.*?<dd>.*?)(</dd>)#s",
+    "replace": "$1$2\n<dt></dt>\n<dd><label><input type=\"checkbox\" name=\"send_warning_alert\" value=\"1\" {xen:checked \"{$xenOptions.sv_warningimprovements_alert_send_default}\"} /> {xen:phrase send_alert_on_warning}</label></dd>"
+}

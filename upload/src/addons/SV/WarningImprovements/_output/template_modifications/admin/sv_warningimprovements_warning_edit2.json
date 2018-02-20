@@ -1,0 +1,9 @@
+{
+    "template": "warning_edit",
+    "description": "Special case editing the Custom Warning - 2",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xen:if is=\"{$warning.warning_definition_id}\">\n\t<xen:navigation>",
+    "replace": "<xen:if is=\"{$warning.warning_definition_id} or {$warning.is_custom}\">\n\t<xen:navigation>"
+}

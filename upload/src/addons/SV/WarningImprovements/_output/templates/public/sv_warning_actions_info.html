@@ -1,0 +1,66 @@
+<xen:title>{xen:phrase sv_warning_action_for_x, 'name={$user.username}'}</xen:title>
+
+<xen:navigation>
+	<xen:breadcrumb href="{xen:link members, $user}">{$user.username}</xen:breadcrumb>
+</xen:navigation>
+
+<div class="xenForm formOverlay overlayScroll">
+	<dl class="ctrlUnit">
+		<dt>{xen:phrase sv_warning_action_type}:</dt>
+		<dd>{$warningAction.name}, <xen:datetime time="{$warningAction.create_date}" /></dd>
+	</dl>
+
+	<dl class="ctrlUnit">
+		<dt>{xen:phrase sv_warning_action_result}:</dt>
+		<dd>{$warningAction.result}</dd>
+	</dl>
+
+	<dl class="ctrlUnit">
+		<dt>{xen:phrase sv_warning_action_expiry}:</dt>
+		<dd><xen:if is="{$warningAction.expiry_date_rounded}"><xen:datetime time="{$warningAction.expiry_date_rounded}" /><xen:else />{xen:phrase n_a}</xen:if></dd>
+	</dl>
+
+	<xen:if is="{$canEditUserWarningActions}">
+		<ul class="tabs Tabs" data-panes="#WarningActionTabs_{$warningAction.warning_action_id} > form">
+			<li><a href="javascript:">{xen:phrase sv_update_warning_action}</a></li>
+		</ul>
+	</xen:if>
+
+	<div id="WarningActionTabs_{$warningAction.warning_action_id}">
+
+		<xen:if is="{$canEditUserWarningActions}">
+			<form action="{xen:link warning-actions/expire, $warningAction}" method="post">
+				<dl class="ctrlUnit">
+					<dt></dt>
+					<dd><ul>
+						<li><label><input type="radio" name="expire" value="now" checked="checked" /> {xen:phrase expire_now}</label></li>
+						<li><label><input type="radio" name="expire" value="future" id="ExpireWarningFuture_{$warningAction.warning_action_id}" class="Disabler" /> {xen:phrase expire_in_time}:</label>
+							<ul id="ExpireWarningFuture_{$warningAction.warning_action_id}_Disabler">
+								<li>
+									<input type="text" size="5" name="expiry_length" value="1" class="textCtrl autoSize" />
+									<select name="expiry_unit" class="textCtrl autoSize">
+										<option value="minutes">{xen:phrase sv_wa_minutes}</option>
+										<option value="hours">{xen:phrase hours}</option>
+										<option value="days" selected="selected">{xen:phrase days}</option>
+										<option value="weeks">{xen:phrase weeks}</option>
+										<option value="months">{xen:phrase months}</option>
+									</select>
+								</li>
+							</ul>
+						</li>
+					</ul></dd>
+				</dl>
+				<dl class="ctrlUnit submitUnit">
+					<dt></dt>
+					<dd>
+						<input type="submit" value="{xen:phrase sv_update_warning_action}" class="button primary" />
+					</dd>
+				</dl>
+
+				<input type="hidden" name="_xfConfirm" value="1" />
+				<input type="hidden" name="redirect" value="{$redirect}" />
+				<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+			</form>
+		</xen:if>
+	</div>
+</div>

@@ -1,0 +1,32 @@
+<xen:title>{xen:if '{$warningCategory.warning_category_id}', '{xen:phrase sv_edit_warning_category}: {$warningCategory.title}', '{xen:phrase sv_create_new_warning_category}'}</xen:title>
+
+<xen:if is="{$warningCategory.warning_category_id}">
+	<xen:navigation>
+		<xen:breadcrumb href="{xen:adminlink warnings}#_category-{$warningCategory.warning_category_id}">{$warningCategory.title}</xen:breadcrumb>
+	</xen:navigation>
+</xen:if>
+
+<xen:form class="AutoValidator"
+	action="{xen:adminlink 'warnings/category-save', '', 'warning_category_id={$warningCategory.warning_category_id}'}"
+	data-redirect="on">
+
+	<xen:textboxunit label="{xen:phrase title}:" name="title" value="{$warningCategory.title}" data-optinout="OptOut" data-livetitletemplate="{xen:if {$warningCategory.warning_category_id},
+		'{xen:phrase sv_edit_warning_category}: <em>%s</em>',
+		'{xen:phrase sv_create_new_warning_category}: <em>%s</em>'}" />
+
+	<xen:selectunit label="{xen:phrase sv_parent_category}:" name="parent_warning_category_id" value="{$warningCategory.parent_warning_category_id}">
+		<xen:option value="0" label="({xen:phrase none})" />
+		<xen:options source="$warningCategories" />
+	</xen:selectunit>
+
+	<xen:spinboxunit label="{xen:phrase display_order}:" name="display_order" value="{$warningCategory.display_order}" min="0" step="10" />
+
+	<xen:checkboxunit id="allowedUserGroups" label="{xen:phrase sv_allowed_user_groups}:" name="allowed_user_group_ids[]" listclass="checkboxColumns">
+		<xen:hint><br /><label><input type="checkbox" class="CheckAll" data-target="#allowedUserGroups" /> {xen:phrase select_all}</label></xen:hint>
+		<xen:options source="$userGroups" />
+	</xen:checkboxunit>
+
+	<xen:submitunit save="{xen:phrase sv_save_warning_category}">
+		<xen:if is="{$warningCategory.warning_category_id}"><a href="{xen:adminlink 'warnings/category-delete', '', 'warning_category_id={$warningCategory.warning_category_id}'}" class="button OverlayTrigger">{xen:phrase sv_delete_warning_category}...</a></xen:if>
+	</xen:submitunit>
+</xen:form>

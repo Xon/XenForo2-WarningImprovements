@@ -1,0 +1,9 @@
+{
+    "template": "member_view",
+    "description": "Warning Actions (header)",
+    "execution_order": 100,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xen:hook name=\"member_view_tabs_heading\"",
+    "replace": "<xen:if is=\"{$warningActionsCount}\"><li><a href=\"{$requestPaths.requestUri}#warningActions\">{xen:phrase sv_user_warning_actions, 'count={$warningActionsCount}'}</a></li></xen:if>\n$0"
+}

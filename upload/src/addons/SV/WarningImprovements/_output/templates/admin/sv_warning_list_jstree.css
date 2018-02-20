@@ -1,0 +1,21 @@
+.subHeading .warningItemTreeSearch
+{
+	float: right;
+	margin-top: -3px;
+	max-height: 22px;
+	overflow: hidden;
+}
+
+.subHeading .warningItemTreeSearch .textCtrl
+{
+	padding-top: 2px;
+	padding-bottom: 2px;
+	font-size: 11px;
+	height: 13px;
+	box-sizing: content-box;
+}
+
+.jstree-contextmenu
+{
+	z-index: 100;
+}

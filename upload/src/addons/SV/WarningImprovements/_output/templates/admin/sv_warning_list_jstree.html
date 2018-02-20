@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="styles/jstree/default/style.min.css" />
+<xen:require css="sv_warning_list_jstree.css" />
+
+<xen:if is="{$debugMode}">
+	<xen:require js="js/jsTree/jstree.js" />
+	<xen:require js="js/SV/WarningImprovements/full/warnings.js" />
+<xen:else />
+	<xen:require js="js/jsTree/jstree.min.js" />
+	<xen:require js="js/SV/WarningImprovements/warnings.js" />
+</xen:if>
+
+<div class="section">
+	<h2 class="subHeading">
+		{xen:phrase warnings}
+		<xen:if is="{$warnings}">
+			<div class="warningItemTreeSearch">
+				<input id="warningItemTreeSearch" type="search" name="filter" placeholder="{xen:phrase filter_items}" class="textCtrl">
+			</div>
+		</xen:if>
+	</h2>
+
+	<xen:if is="{$warnings}">
+		<div id="warningitems" class="WarningItemTree"
+			data-overlay="1"
+			data-searchinput="#warningItemTreeSearch"
+			data-loadurl="{xen:adminlink warnings/load-tree}"
+			data-syncurl="{xen:adminlink warnings/sync-tree}"
+			data-renameurl="{xen:adminlink warnings/rename-tree-item}"
+			data-categoryediturl="{xen:adminlink 'warnings/category-edit&warning_category_id={id}'}"
+			data-categorydeleteurl="{xen:adminlink 'warnings/category-delete&warning_category_id={id}'}"
+			data-warningediturl="{xen:adminlink 'warnings/{id}/edit'}"
+			data-warningdeleteurl="{xen:adminlink 'warnings/{id}/delete'}"
+			data-renametext="{xen:phrase sv_rename}"
+			data-edittext="{xen:phrase edit}"
+			data-deletetext="{xen:phrase delete}">
+		</div>
+	<xen:else />
+		<div class="noResults">{xen:phrase no_warnings_have_been_defined}</div>
+	</xen:if>
+</div>

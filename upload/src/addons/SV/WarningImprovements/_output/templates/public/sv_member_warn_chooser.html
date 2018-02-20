@@ -1,0 +1,75 @@
+<link rel="stylesheet" href="styles/chosen/chosen.min.css" />
+<xen:require css="sv_member_warn_chooser.css" />
+
+<xen:if is="{$debugMode}">
+	<xen:require js="js/chosen/chosen.jquery.js" />
+	<xen:require js="js/SV/WarningImprovements/full/warnings.js" />
+<xen:else />
+	<xen:require js="js/chosen/chosen.jquery.min.js" />
+	<xen:require js="js/SV/WarningImprovements/warnings.js" />
+</xen:if>
+
+<div id="warningViewSelect" class="JsOnly" style="display:none;">
+	<dl class="ctrlUnit">
+		<dt>{xen:phrase warning_type}:</dt>
+
+		<dd>
+			<select class="warningItems WarningSelector" name="warning_definition_id"
+				data-customwarningtitle="#customWarningTitle"
+				data-noresultstext="{xen:phrase sv_no_results_match}"
+				data-placeholdertext="{xen:phrase sv_choose_a_warning}">
+				<option></option>
+
+				<xen:foreach loop="$warningCategories" value="$warningCategory">
+					<optgroup class="warningCategory" label="{$warningCategory.title}">
+						<xen:foreach loop="$warningCategory.warnings" value="$warning">
+							<option class="warningDefinition FormFiller" value="{$warning.warning_definition_id}" {xen:if {$warning.sv_custom_title}, 'data-custom-title="1"', ''}>{$warning.title}</option>
+						</xen:foreach>
+					</optgroup>
+				</xen:foreach>
+			</select>
+
+			<input id="customWarningTitle" class="textCtrl" style="display:none" type="text" name="title" placeholder="{xen:phrase custom_warning}..." maxlength="255" />
+		</dd>
+	</dl>
+</div>
+
+<div id="warningViewRadio">
+	<xen:foreach loop="$rootWarningCategories" value="$rootWarningCategory">
+		<dl class="ctrlUnit">
+			<dt class="warningCategory">{$rootWarningCategory.title}:</dt>
+
+			<dd>
+				<ul class="warningItems">
+					<xen:foreach loop="$rootWarningCategory.children" value="$warningItem">
+						<xen:if is="{$warningItem.warning_category_id}">
+							<li class="warningCategory _depth{$warningItem.depth}">{$warningItem.title}</li>
+						<xen:else />
+							<xen:if is="{$warningItem.warning_definition_id} != 0">
+								<li class="warningDefinition _depth{$warningItem.depth}"><label><input type="radio" name="warning_definition_id" id="warning_{$warningItem.warning_definition_id}" class="FormFiller {xen:if '{$warningItem.sv_custom_title}', 'Disabler', ''}" value="{$warningItem.warning_definition_id}" {xen:if {$warning.sv_custom_title}, 'data-custom-title="1"', ''}/> {$warningItem.title}</label>
+								<xen:if is="{$warningItem.sv_custom_title}">
+									<ul id="warning_{$warningItem.warning_definition_id}_Disabler">
+										<li><input type="text" name="title" class="textCtrl" value="{$warningItem.title}" maxlength="255" /></li>
+									</ul>
+								</xen:if>
+								</li>
+							<xen:else />
+								<li class="warningDefinition _depth{$warningItem.depth}"><label><input type="radio" name="warning_definition_id" class="FormFiller Disabler" value="0" id="customWarning" checked="checked" /> {xen:phrase custom_warning}:</label>
+									<ul id="customWarning_Disabler">
+										<li><input type="text" name="title" class="textCtrl" placeholder="{xen:phrase custom_warning}..." maxlength="255" /></li>
+									</ul>
+								</li>
+							</xen:if>
+						</xen:if>
+					</xen:foreach>
+				</ul>
+			</dd>
+		</dl>
+	</xen:foreach>
+</div>
+
+<a id="warningViewToggle" class="WarningViewToggler JsOnly" href="#"
+	data-selectview="#warningViewSelect"
+	data-radioview="#warningViewRadio"
+	data-toggleselecttext="{xen:phrase sv_toggle_select_view}"
+	data-toggleradiotext="{xen:phrase sv_toggle_radio_view}"></a>

@@ -1,0 +1,9 @@
+{
+    "template": "warning_list",
+    "description": "Warning Escalating Defaults",
+    "execution_order": 4156,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#$#Usi",
+    "replace": "$0\n<xen:include template=\"sv_warningimprovements_escalating_defaults\" />"
+}

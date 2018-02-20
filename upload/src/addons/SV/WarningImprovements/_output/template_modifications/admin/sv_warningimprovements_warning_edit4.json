@@ -1,0 +1,9 @@
+{
+    "template": "warning_edit",
+    "description": "Special case editing the Custom Warning - 4",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#(<xen:textboxunit label=\"{xen:phrase title}:\".*?/>)#si",
+    "replace": "<xen:if is=\"{$warning.is_custom}\">\n<input name=\"title\" type=\"hidden\" value=\"{$masterTitle}\" />\n<input name=\"is_custom\" type=\"hidden\" value=\"1\" />\n<fieldset>\n<dl class=\"ctrlUnit\"><dt>{xen:phrase title}:</dt><dd><em>{$masterTitle}</em></dd></dl>\n</fieldset>\n<xen:else />\n$1\n<xen:checkboxunit label=\"\">\n\t<xen:option name=\"sv_custom_title\" selected=\"{$warning.sv_custom_title}\">{xen:phrase sv_custom_warning_title}</xen:option>\n</xen:checkboxunit>\n</xen:if>"
+}

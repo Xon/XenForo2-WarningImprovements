@@ -1,0 +1,9 @@
+{
+    "template": "warning_list",
+    "description": "Add \"Warning Defaults\" button",
+    "execution_order": 100,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#(<xen:topctrl>.*?)(</xen:topctrl>)#Usi",
+    "replace": "$1\n<a href=\"{xen:adminlink warnings/default/add}\" class=\"button\">+ {xen:phrase sv_create_new_warning_default}</a>\n$2"
+}

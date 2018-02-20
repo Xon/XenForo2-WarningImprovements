@@ -1,0 +1,92 @@
+{
+    "admin/sv_warning_action_edit.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "41433dff20e2f7a7abae2f864a5d9853"
+    },
+    "admin/sv_warning_action_list.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "080cfd69a1df4f87747430fc30580bcd"
+    },
+    "admin/sv_warning_category_delete.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "ab11f588b67514ba415f1fbbc19c32e1"
+    },
+    "admin/sv_warning_category_edit.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "f7eb26e272ace521d63887edeaf26432"
+    },
+    "admin/sv_warning_edit_inputs.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "595066caad6b0544541ef3a5db2c9026"
+    },
+    "admin/sv_warning_list_jstree.css": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "a1a5030702ffce2e9ccf01116fe0eb03"
+    },
+    "admin/sv_warning_list_jstree.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "4c3fed0e3dfe147f70b736f691785bbc"
+    },
+    "admin/sv_warningimprovements_criteria.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d101540bc28838f82ab0124e97767ef1"
+    },
+    "admin/sv_warningimprovements_escalating_defaults.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "0e4f0ef3c3392a07b5211f5d84533cc8"
+    },
+    "admin/sv_warningimprovements_warning_default_delete.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "fa8f85a46aec748e21af0187fc641661"
+    },
+    "admin/sv_warningimprovements_warning_default_edit.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "8c9e46037ea94c127fc813c593b6e171"
+    },
+    "public/alert_warning_alert_warning.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "115ac8057c95e190635f616863a5f546"
+    },
+    "public/sv_member_warn_chooser.css": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "43f6d5f13470bca0770ba446159ab45d"
+    },
+    "public/sv_member_warn_chooser.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "13e0e4cc7fdee8f24a294500b7971422"
+    },
+    "public/sv_member_warning_actions.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "56ad962c3a65241480c6555d07ea17a7"
+    },
+    "public/sv_warning_actions_info.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "69ab174c61995946e93d7e682b300ca2"
+    },
+    "public/sv_warning_improvement_js.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "2507e6a51336ec316bce102dcd9cf80e"
+    },
+    "public/sv_warningimprovements_member_view_warning_actions.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "248966bfe861bb65d5184b9c5d5cc987"
+    }
+}

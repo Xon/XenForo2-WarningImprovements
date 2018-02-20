@@ -1,0 +1,13 @@
+<xen:title>{xen:phrase sv_confirm_deletion_of_warning_default}</xen:title>
+
+<xen:require css="public:delete_confirmation.css" />
+
+<xen:form action="{xen:adminlink 'warnings/default/delete', $default}" class="deleteConfirmForm formOverlay">
+
+	<p>{xen:phrase please_confirm_that_you_want_to_delete_following_warning_action}:</p>
+	<strong><a href="{xen:adminlink 'warnings/default/edit', $default}">{xen:phrase points}: {$default.threshold_points}</a></strong>
+
+	<xen:submitunit save="{xen:phrase sv_delete_warning_default}" />
+	<input type="hidden" name="_xfConfirm" value="1" />
+
+</xen:form>

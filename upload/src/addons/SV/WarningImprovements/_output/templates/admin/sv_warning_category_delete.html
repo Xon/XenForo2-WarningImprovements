@@ -1,0 +1,18 @@
+<xen:title>{xen:phrase sv_confirm_deletion_of_warning_category}: {$warningCategory.title}</xen:title>
+<xen:h1>{xen:phrase sv_confirm_deletion_of_warning_category}</xen:h1>
+
+<xen:navigation>
+	<xen:breadcrumb href="{xen:adminlink 'warnings/category-edit', '', 'warning_category_id={$warningCategory.warning_category_id}'}">{$warningCategory.title}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:require css="public:delete_confirmation.css" />
+
+<xen:form action="{xen:adminlink 'warnings/category-delete', '', 'warning_category_id={$warningCategory.warning_category_id}'}" class="deleteConfirmForm">
+	<p>{xen:phrase sv_please_confirm_that_you_want_to_delete_following_warning_category}:</p>
+	<strong><a href="{xen:adminlink 'warnings/category-edit', '','warning_category_id={$warningCategory.warning_category_id}'}">{$warningCategory.title}</a></strong>
+	<p>{xen:phrase sv_confirm_delete_warning_category_footnote}</p>
+
+	<xen:submitunit save="{xen:phrase sv_delete_warning_category}" />
+
+	<input type="hidden" name="_xfConfirm" value="1" />
+</xen:form>

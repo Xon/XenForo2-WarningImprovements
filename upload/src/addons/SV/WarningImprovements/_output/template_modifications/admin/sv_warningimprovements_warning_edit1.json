@@ -1,0 +1,9 @@
+{
+    "template": "warning_edit",
+    "description": "Special case editing the Custom Warning - 1",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "{xen:adminlink warnings/save, $warning}",
+    "replace": "{xen:if '{$warning.is_custom}', '{xen:adminlink warnings/save}', '{xen:adminlink warnings/save, $warning}'}"
+}

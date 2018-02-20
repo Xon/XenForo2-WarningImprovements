@@ -1,0 +1,9 @@
+{
+    "template": "warning_edit",
+    "description": "Add category and display order inputs",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<fieldset>\n\t\t<xen:spinboxunit label=\"{xen:phrase warning_points}:\" name=\"points_default\" value=\"{$warning.points_default}\" min=\"0\" />",
+    "replace": "<xen:include template=\"sv_warning_edit_inputs\" />\n$0"
+}

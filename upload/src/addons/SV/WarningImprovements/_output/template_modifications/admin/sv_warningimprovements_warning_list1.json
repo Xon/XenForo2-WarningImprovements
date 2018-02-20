@@ -1,0 +1,9 @@
+{
+    "template": "warning_list",
+    "description": "Add \"Create Warning Category\" button",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<a href=\"{xen:adminlink warnings/add}\" class=\"button\">+ {xen:phrase create_new_warning}</a>",
+    "replace": "<a href=\"{xen:adminlink warnings/category-add}\" class=\"button\">+ {xen:phrase sv_create_new_warning_category}</a>\n$0"
+}
