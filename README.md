@@ -10,10 +10,9 @@ A Collection of improvements to XF2's warning system.
 - User Criteria for warning points
 - Allow users to view their own warnings, and find which posts where warned. 
 - Sends an alert to a user when they receive a warning. (Defaults on, togglable)
-- Allows the Custom Warning to be customized
+- Allows the Custom Warning Definition to be customized
 - Copy Warning title/text automatically to the public warning
 - Allow non-custom Warnings to have thier Titles edited, opt-in
-- Use XenForo's AJAX handling on errors instead of breaking the current form.
 - Optional "Continue" button on the warning dialog, instead of a "warn" button for the first few tabs.
 - Allow the default content action to be set
 - Control defaults for user notification
