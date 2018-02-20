@@ -1,0 +1,1 @@
+Forces an email to be send when a user receives a warning conversation. Sends email if the user is banned.

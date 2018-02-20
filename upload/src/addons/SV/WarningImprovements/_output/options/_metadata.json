@@ -1,0 +1,53 @@
+{
+    "sv_force_conversation_email_on_warning.json": {
+        "hash": "f8a3a88854c74578eecc84ab597a0cc0"
+    },
+    "sv_only_force_warning_email_on_banned.json": {
+        "hash": "73f42dc3f39a3acbba6a1d8dd60166f9"
+    },
+    "sv_post_warning_summary.json": {
+        "hash": "57a62b39c69093e07f9049f9558d3bc4"
+    },
+    "sv_respect_receive_admin_email_on_warning.json": {
+        "hash": "f68291d93f4f840fbe69d84772389af3"
+    },
+    "sv_show_discouraged_warning_actions.json": {
+        "hash": "f2ed66cdd2051cea18dd9ecf6cb69c0a"
+    },
+    "sv_view_own_warnings.json": {
+        "hash": "37df5a024284c4e0cd8602c45830e2cd"
+    },
+    "sv_warning_date_format.json": {
+        "hash": "7d4121045b5f0758a90e1f66636b6285"
+    },
+    "sv_warningimprovements_alert_send_default.json": {
+        "hash": "9a52663f6720a9c6c6403bfc21b55cba"
+    },
+    "sv_warningimprovements_continue_button.json": {
+        "hash": "91a1d2881f49699a1a5b2f942047af55"
+    },
+    "sv_warningimprovements_conversation_invite.json": {
+        "hash": "b983c4cde805ed09613c01ecdcfae257"
+    },
+    "sv_warningimprovements_conversation_locked.json": {
+        "hash": "5692765c8160b0db817e2d31097feeb5"
+    },
+    "sv_warningimprovements_conversation_send_default.json": {
+        "hash": "b4284a639c1c5f20a474b63d49d91b9f"
+    },
+    "sv_warningimprovements_copy_title.json": {
+        "hash": "7447ed5f33d39bbabe32524ed110922c"
+    },
+    "sv_warningimprovements_default_content_action.json": {
+        "hash": "da1a9983410d602247efd9a8c0924523"
+    },
+    "sv_warningimprovements_warning_user.json": {
+        "hash": "f74f8c30e7bf3a60f73c9385f45f42c4"
+    },
+    "sv_wi_require_warning_notes.json": {
+        "hash": "dbee4883e03ca3f45faf7c6fee3544ee"
+    },
+    "sv_wi_warning_note_chars.json": {
+        "hash": "445cf1bf948e8ccdd21cf587ca583675"
+    }
+}

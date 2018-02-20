@@ -1,0 +1,1 @@
+You have received a warning for <a {warning_attributes}>{warning_title}</a> for {points} points.

@@ -1,0 +1,1 @@
+@{username} received {warning_points} warning points and is above the {threshold} warning point threshold, with a total accumulated {points} active warning points. Triggering report: {report}

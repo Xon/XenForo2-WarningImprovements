@@ -1,0 +1,12 @@
+{
+    "edit_format": "radio",
+    "edit_format_params": "none={{ phrase('do_nothing')}}\ndelete_content={{ phrase('delete_the_content')}}\npublic_warning={{ phrase('post_public_warning')}}",
+    "data_type": "string",
+    "sub_options": [],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "public_warning",
+    "relations": {
+        "SV_WarningImprovements": 9150
+    }
+}

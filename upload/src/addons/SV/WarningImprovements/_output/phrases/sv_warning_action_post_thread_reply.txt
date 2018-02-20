@@ -1,0 +1,5 @@
+Post message to an existing thread when this warning action is triggered. Zero to disable.<br/>
+<br/>
+Edit the phases:<ul>
+<li>Warning_Thread_Message</li>
+</ul>

@@ -1,0 +1,8 @@
+Post message to a new thread in the given forum when this warning action is triggered. Zero to disable.<br/>
+<br/>
+New Thread trumps replying to a thread. Only the last warning action is applied when posting.<br/>
+<br/>
+Edit the phases:<ul>
+<li>Warning_Thread_Message</li>
+<li>Warning_Thread_Title</li>
+</ul>

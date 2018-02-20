@@ -1,0 +1,12 @@
+{
+    "edit_format": "username",
+    "edit_format_params": "",
+    "data_type": "integer",
+    "sub_options": [],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "",
+    "relations": {
+        "SV_WarningImprovements": 400
+    }
+}

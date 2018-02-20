@@ -1,0 +1,1 @@
+Only send warning emails when the user is in a banned state.

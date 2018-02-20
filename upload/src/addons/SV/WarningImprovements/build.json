@@ -1,0 +1,9 @@
+{
+    "additional_files": [
+        "js/sv/warningimprovements",
+        "js/sv/jsTree",
+    ],
+    "minify": [
+        "js/sv/warningimprovements/warnings.js"
+    ]
+}
