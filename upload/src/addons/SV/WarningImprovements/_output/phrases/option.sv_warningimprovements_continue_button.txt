@@ -1,1 +1,1 @@
-Add Continue Button on Warning
+Add continue button on warning

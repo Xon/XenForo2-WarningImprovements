@@ -1,1 +1,1 @@
-Copy Warning Title to Public Warning
+Copy warning title to public warning

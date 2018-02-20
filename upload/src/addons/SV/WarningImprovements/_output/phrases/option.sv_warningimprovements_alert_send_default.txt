@@ -1,1 +1,1 @@
-Send Warning Alert By Default
+Send warning alert by default

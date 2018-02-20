@@ -1,1 +1,1 @@
-Show Discouraged Warning Action
+Show discouraged warning action

@@ -1,1 +1,1 @@
-Allow Invite into Warning Conversations By Default
+Allow invite into warning conversations by default

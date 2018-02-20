@@ -1,1 +1,1 @@
-Send Warning Conversations By Default
+Send warning conversations by default
