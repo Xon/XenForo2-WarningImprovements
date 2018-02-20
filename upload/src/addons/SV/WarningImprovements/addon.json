@@ -1,7 +1,7 @@
 {
     "legacy_addon_id": "SV_WarningImprovements",
     "title": "Warning Improvements",
-    "description": "",
+    "description": "A (large) collection of improvements to XF's warning system.",
     "version_id": 2000000,
     "version_string": "2.0.0 Alpha",
     "dev": "Xon",
