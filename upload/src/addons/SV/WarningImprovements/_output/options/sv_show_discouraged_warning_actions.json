@@ -1,0 +1,12 @@
+{
+    "edit_format": "radio",
+    "edit_format_params": "0={{ phrase('sv_discouraged_display_all')}}\n1={{ phrase('sv_discouraged_display_moderators')}}\n2={{ phrase('sv_discouraged_display_administrators')}}\n3={{ phrase('sv_discouraged_display_none')}}",
+    "data_type": "unsigned_integer",
+    "sub_options": [],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "2",
+    "relations": {
+        "SV_WarningImprovements": 1000
+    }
+}

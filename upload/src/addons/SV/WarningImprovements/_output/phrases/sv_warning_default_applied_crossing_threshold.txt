@@ -1,0 +1,1 @@
+This warning default will only be applied when a user is issued a warning with their total warning points above this points threshold. 

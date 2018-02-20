@@ -1,0 +1,1 @@
+Makes the Notes field required when creating a warning

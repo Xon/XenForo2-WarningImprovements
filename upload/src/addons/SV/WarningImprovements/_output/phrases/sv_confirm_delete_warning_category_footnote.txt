@@ -1,0 +1,1 @@
+<strong>Any children of this category will also be deleted. This includes subcategories, warning definitions, and warning actions.</strong>

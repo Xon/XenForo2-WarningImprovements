@@ -1,0 +1,3 @@
+The minimum amount of characters required for warning notes. Setting this to 0 will disable.<br/>
+<br/>
+Requires "Require Notes for Warning" to be enabled

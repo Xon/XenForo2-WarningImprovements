@@ -1,0 +1,3 @@
+Please enter a note with at least {count} characters.
+<br />
+Note is under by {under} characters.

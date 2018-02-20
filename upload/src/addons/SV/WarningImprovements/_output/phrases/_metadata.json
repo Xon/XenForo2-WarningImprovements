@@ -1,0 +1,716 @@
+{
+    "WarningStaff.txt": {
+        "global_cache": false,
+        "version_id": 100,
+        "version_string": "1.0.0",
+        "hash": "2fb50f27296c34b13e7625254d93d202"
+    },
+    "Warning_Summary_Message.txt": {
+        "global_cache": false,
+        "version_id": 1020200,
+        "version_string": "1.2.2",
+        "hash": "86593835310e601b8882202f30fe3f5b"
+    },
+    "Warning_Thread_Message.txt": {
+        "global_cache": false,
+        "version_id": 1030006,
+        "version_string": "1.3.0 RC6",
+        "hash": "fe04c02c68cc9938d592e654fe619ff2"
+    },
+    "Warning_Thread_Title.txt": {
+        "global_cache": false,
+        "version_id": 1020204,
+        "version_string": "1.2.2 RC4",
+        "hash": "f49df452133ff3dab5e5abf1cdf2f34c"
+    },
+    "option.sv_force_conversation_email_on_warning.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "5f418e0678027371c699c8ce3fbc227d"
+    },
+    "option.sv_only_force_warning_email_on_banned.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "7f420498bb1e500fbde5b7a8fc54b407"
+    },
+    "option.sv_post_warning_summary.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "3ad26f9039a29c50b59fa39ba8aebc9b"
+    },
+    "option.sv_respect_receive_admin_email_on_warning.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "cb1433d07bc85d0f3f861b8483cd5db3"
+    },
+    "option.sv_show_discouraged_warning_actions.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "2f69a4d48aa6aac72746435f7e93040d"
+    },
+    "option.sv_view_own_warnings.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "a7732c3d4120018356236bbcd4f44b0c"
+    },
+    "option.sv_warning_date_format.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "dc0907dc43163a8c2a25ad5f60de3e34"
+    },
+    "option.sv_warningimprovements_alert_send_default.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "5f7633df059bce671f5f8c08f88959de"
+    },
+    "option.sv_warningimprovements_continue_button.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "410fdd82ba460cb1a4b428397e9e6827"
+    },
+    "option.sv_warningimprovements_conversation_invite.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "b6b3184f633153fd453c92cb3481f6bc"
+    },
+    "option.sv_warningimprovements_conversation_locked.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "1a8a975b1020b09a7bfd8718b1731184"
+    },
+    "option.sv_warningimprovements_conversation_send_default.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "54913545c47a350aec0349e02a80b55a"
+    },
+    "option.sv_warningimprovements_copy_title.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "8654f3f5feff339e99e9a8c9093b3bdd"
+    },
+    "option.sv_warningimprovements_default_content_action.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "df63992ddc9cd85b43ac9b696b013fe1"
+    },
+    "option.sv_warningimprovements_warning_user.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "b9ca87cb3edd5e3f8577b6d3c99de96e"
+    },
+    "option.sv_wi_require_warning_notes.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "03c052558feae592b72ae300fe1927c1"
+    },
+    "option.sv_wi_warning_note_chars.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "5118c977c5621c4172faec17073507e0"
+    },
+    "option_explain.sv_force_conversation_email_on_warning.txt": {
+        "global_cache": false,
+        "version_id": 101001,
+        "version_string": "1.1.1",
+        "hash": "ef5ceb337e0a7153027e4482879a7939"
+    },
+    "option_explain.sv_only_force_warning_email_on_banned.txt": {
+        "global_cache": false,
+        "version_id": 101001,
+        "version_string": "1.1.1",
+        "hash": "dabad72bd35317acec7b40a0bd3a4ee4"
+    },
+    "option_explain.sv_post_warning_summary.txt": {
+        "global_cache": false,
+        "version_id": 1020200,
+        "version_string": "1.2.2",
+        "hash": "08bbd02fb4c3ff967da94375d43d3d50"
+    },
+    "option_explain.sv_respect_receive_admin_email_on_warning.txt": {
+        "global_cache": false,
+        "version_id": 101001,
+        "version_string": "1.1.1",
+        "hash": "68d9434f7d46925ebbdc8d346d4464f6"
+    },
+    "option_explain.sv_show_discouraged_warning_actions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "c00c4e549d140ee02b992724ba244679"
+    },
+    "option_explain.sv_view_own_warnings.txt": {
+        "global_cache": false,
+        "version_id": 1020200,
+        "version_string": "1.2.2",
+        "hash": "5124eb98c3573b12c408cd002b13253e"
+    },
+    "option_explain.sv_warning_date_format.txt": {
+        "global_cache": false,
+        "version_id": 1020204,
+        "version_string": "1.2.2 RC4",
+        "hash": "f1b32708d2a413b3b5977e7493636b8e"
+    },
+    "option_explain.sv_warningimprovements_alert_send_default.txt": {
+        "global_cache": false,
+        "version_id": 1030100,
+        "version_string": "1.3.1",
+        "hash": "347845e51e69e9c77e426f1d70c2b672"
+    },
+    "option_explain.sv_warningimprovements_continue_button.txt": {
+        "global_cache": false,
+        "version_id": 2,
+        "version_string": "0.02",
+        "hash": "96295a09b4946ed433a7ff65dc557e0e"
+    },
+    "option_explain.sv_warningimprovements_conversation_invite.txt": {
+        "global_cache": false,
+        "version_id": 100010,
+        "version_string": "1.0.1",
+        "hash": "4643fe11b995de8768c43a14e7a057dd"
+    },
+    "option_explain.sv_warningimprovements_conversation_locked.txt": {
+        "global_cache": false,
+        "version_id": 2,
+        "version_string": "0.02",
+        "hash": "35342300cfa90b3f845ba9641a14bb99"
+    },
+    "option_explain.sv_warningimprovements_conversation_send_default.txt": {
+        "global_cache": false,
+        "version_id": 100010,
+        "version_string": "1.0.1",
+        "hash": "7242ceaba9f7ba099b3c6751492fa479"
+    },
+    "option_explain.sv_warningimprovements_copy_title.txt": {
+        "global_cache": false,
+        "version_id": 2,
+        "version_string": "0.02",
+        "hash": "f7640c5faa2d11d7eb56b8b252d9066a"
+    },
+    "option_explain.sv_warningimprovements_default_content_action.txt": {
+        "global_cache": false,
+        "version_id": 2,
+        "version_string": "0.02",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.sv_warningimprovements_warning_user.txt": {
+        "global_cache": false,
+        "version_id": 1030006,
+        "version_string": "1.3.0 RC6",
+        "hash": "ce8a008c2c797a81b849243abf7edd6c"
+    },
+    "option_explain.sv_wi_require_warning_notes.txt": {
+        "global_cache": false,
+        "version_id": 100040,
+        "version_string": "1.0.4",
+        "hash": "fdac5e43d850ce9196767923c0977443"
+    },
+    "option_explain.sv_wi_warning_note_chars.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "104e4d254b11c68c4268d322feca5ba4"
+    },
+    "option_group.SV_WarningImprovements.txt": {
+        "global_cache": false,
+        "version_id": 100000,
+        "version_string": "1.0.0",
+        "hash": "d8ba5808212439d2118cd30c73448fa9"
+    },
+    "option_group_description.SV_WarningImprovements.txt": {
+        "global_cache": false,
+        "version_id": 100000,
+        "version_string": "1.0.0",
+        "hash": "dc0dee42502960a7c314c9dce7376ebb"
+    },
+    "permission.general_sv_editWarningActions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "536023532015cd468910b8ada6990d6b"
+    },
+    "permission.general_sv_showAllWarningActions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "f64e01a33b34ea90b16cef2955e0d165"
+    },
+    "permission.general_sv_viewWarningActions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "39d4d2e369100cb5e30d67d4f253bf76"
+    },
+    "permission.general_viewWarning_issuer.txt": {
+        "global_cache": false,
+        "version_id": 100,
+        "version_string": "1.0.0",
+        "hash": "713d06dc22610b4554ed9adb95061462"
+    },
+    "permission_general_sv_editWarningActions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "536023532015cd468910b8ada6990d6b"
+    },
+    "permission_general_sv_showAllWarningActions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "f64e01a33b34ea90b16cef2955e0d165"
+    },
+    "permission_general_sv_viewWarningActions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "39d4d2e369100cb5e30d67d4f253bf76"
+    },
+    "permission_general_viewWarning_issuer.txt": {
+        "global_cache": false,
+        "version_id": 100,
+        "version_string": "1.0.0",
+        "hash": "713d06dc22610b4554ed9adb95061462"
+    },
+    "send_alert_on_warning.txt": {
+        "global_cache": false,
+        "version_id": 100000,
+        "version_string": "1.0.0",
+        "hash": "ae4a95cc07457b883255e4389346e7c9"
+    },
+    "sv_allowed_user_groups.txt": {
+        "global_cache": false,
+        "version_id": 1040100,
+        "version_string": "1.4.1",
+        "hash": "6ea2c3986d3e9ec41060c14c28eff79c"
+    },
+    "sv_choose_a_warning.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "332cb46624e9dea6bd05e2f4e5819ef2"
+    },
+    "sv_confirm_delete_warning_category_footnote.txt": {
+        "global_cache": false,
+        "version_id": 1050004,
+        "version_string": "1.5.0 RC 4",
+        "hash": "7ab181a041a6743ea7f4080059ed3267"
+    },
+    "sv_confirm_deletion_of_warning_category.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "8c0ec40594405c9f470e72b8a5c1ecff"
+    },
+    "sv_confirm_deletion_of_warning_default.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "5c67d086057ac0ee4bb616847c469742"
+    },
+    "sv_content_already_warned.txt": {
+        "global_cache": false,
+        "version_id": 1070100,
+        "version_string": "1.7.1",
+        "hash": "78632a78453f9db6cf0ba0d5f82c6009"
+    },
+    "sv_create_new_warning_category.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "56ad8cc8189c99cbc5b6c47f20445484"
+    },
+    "sv_create_new_warning_default.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "dfd6d7473498b83040dc3b9a810067be"
+    },
+    "sv_custom_warning_title.txt": {
+        "global_cache": false,
+        "version_id": 1070000,
+        "version_string": "1.7.0",
+        "hash": "07a6ab0e1a9de0fe3138a8a6730ebaba"
+    },
+    "sv_delete_warning_category.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "b54e09e04078dd46d83c6297662c7697"
+    },
+    "sv_delete_warning_default.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "422b53656b849685f0fc07fc9de730be"
+    },
+    "sv_discouraged_display_administrators.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "c1ec1d62eafad32ca16fe4df49b9ca2f"
+    },
+    "sv_discouraged_display_all.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "286c057439cfcdd9ce4ad41350a22751"
+    },
+    "sv_discouraged_display_moderators.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "8ad9b15af882e04437b1e5aad297703c"
+    },
+    "sv_discouraged_display_none.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "6e7b34fa59e1bd229b207892956dc41c"
+    },
+    "sv_edit_warning_category.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "ddbdf48135785f8e300a0ec0686c3cbe"
+    },
+    "sv_edit_warning_default.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "3b27a12fdf1197140b0bc7eae4a7c46d"
+    },
+    "sv_global_warning_actions.txt": {
+        "global_cache": false,
+        "version_id": 1050001,
+        "version_string": "1.5.0 Alpha 1",
+        "hash": "8dd6957429cc308390d787c78afd43fb"
+    },
+    "sv_increase_default_expiry_by_x.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "581f047e6bc853f5a78f4f8dfd495e2b"
+    },
+    "sv_issued_warning.txt": {
+        "global_cache": false,
+        "version_id": 1070100,
+        "version_string": "1.7.1",
+        "hash": "053ad6626c02433df7a86029071ec499"
+    },
+    "sv_no_permission_to_give_warning.txt": {
+        "global_cache": false,
+        "version_id": 1040100,
+        "version_string": "1.4.1",
+        "hash": "08d3331b5538c3699c2c1e8ccd4cd4fc"
+    },
+    "sv_no_permission_to_give_warnings.txt": {
+        "global_cache": false,
+        "version_id": 1040500,
+        "version_string": "1.4.5",
+        "hash": "e870d5785e135c31b1862bdc9a2cfb0d"
+    },
+    "sv_no_results_match.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "a52a61f818c989c53d490b122ed90b19"
+    },
+    "sv_parent_category.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "4e98e60e38a29ab7bd94ea815c4f2ef2"
+    },
+    "sv_please_confirm_that_you_want_to_delete_following_warning_category.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "f5b40d9e3803b2824c5ee1ce46349a5a"
+    },
+    "sv_please_enter_note_with_at_least_x_characters.txt": {
+        "global_cache": false,
+        "version_id": 1060200,
+        "version_string": "1.6.2",
+        "hash": "fd75d86189c8d6d2f2c3b83615137ce2"
+    },
+    "sv_please_enter_valid_parent_warning_category_id.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "4e29d0acba7c0705d093b014c0c33dce"
+    },
+    "sv_please_enter_valid_warning_category_id.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "bf1e20978e60c0c657e378d81dfb860e"
+    },
+    "sv_rename.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "904a8304056d77e4547744781b7ceb50"
+    },
+    "sv_requested_warning_action_not_found.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "de16a7dfeddbde474c05569f8e637fc5"
+    },
+    "sv_requested_warning_category_not_found.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "bf89a2cd26c0e18535bc5a9683f388ac"
+    },
+    "sv_requested_warning_default_not_found.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "fdc0d7234fa0bdbbefcb82e943a7b38f"
+    },
+    "sv_save_warning_category.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "678c908d6bfce09043c2b2276d5384d7"
+    },
+    "sv_save_warning_default.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "3ecc3a21108572a780f5d7c8880c1f53"
+    },
+    "sv_this_user_has_no_warning_actions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "042ed48c93ef357bf3ac4af08209ec9a"
+    },
+    "sv_toggle_radio_view.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "0caa436d7c463a58dcdf859c385ac656"
+    },
+    "sv_toggle_select_view.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "ea57afe01968c99bd9b2c0312d75fb35"
+    },
+    "sv_update_warning_action.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "20acf97917a0c35dd1cb3efad8ae923d"
+    },
+    "sv_user_warning_actions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "50fd5471b0feae7dcdec7f2b2c3ba63a"
+    },
+    "sv_wa_minutes.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "f670ea66cfb0e90bd6090472ad692694"
+    },
+    "sv_warning_action_added_to_user_groups.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "99465494b392a831925dec0708612ee5"
+    },
+    "sv_warning_action_expiry.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "c51028fab616d29a0d8b4c282c0a9122"
+    },
+    "sv_warning_action_for_x.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "85126226f8050435d24a2fb6351af518"
+    },
+    "sv_warning_action_post_as_user.txt": {
+        "global_cache": false,
+        "version_id": 1060200,
+        "version_string": "1.6.2",
+        "hash": "0c0b9b66536357203426c4fc3553150d"
+    },
+    "sv_warning_action_post_new_thread.txt": {
+        "global_cache": false,
+        "version_id": 1050007,
+        "version_string": "1.5.0 RC 7",
+        "hash": "716be6f5bf322ba5b950cf3830a55b03"
+    },
+    "sv_warning_action_post_thread_reply.txt": {
+        "global_cache": false,
+        "version_id": 1050007,
+        "version_string": "1.5.0 RC 7",
+        "hash": "18ca8df5bc12f2f90f3b0b74080b87a3"
+    },
+    "sv_warning_action_result.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "8eea62084ca7e541d918e823422bd82e"
+    },
+    "sv_warning_action_type.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "b9553718475c1957d8c0270035f28878"
+    },
+    "sv_warning_actions.txt": {
+        "global_cache": false,
+        "version_id": 101000,
+        "version_string": "1.1.0",
+        "hash": "42d24f2414e01a9bf033bc66f8465a53"
+    },
+    "sv_warning_categories.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "372af0c0e426534d71730242ca4e8953"
+    },
+    "sv_warning_category.txt": {
+        "global_cache": false,
+        "version_id": 1040000,
+        "version_string": "1.4.0",
+        "hash": "39cec988254604293cba4348322f07cb"
+    },
+    "sv_warning_category_1_title.txt": {
+        "global_cache": false,
+        "version_id": 1050000,
+        "version_string": "1.5.0",
+        "hash": "0eaadb4fcb48a0a0ed7bc9868be9fbaa"
+    },
+    "sv_warning_default_applied_crossing_threshold.txt": {
+        "global_cache": false,
+        "version_id": 1060200,
+        "version_string": "1.6.2",
+        "hash": "2b987f0fbe65390e677ee132fdb4fa4a"
+    },
+    "sv_warning_default_is_active.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "e4411398537249e5360d11a70b01ecbf"
+    },
+    "sv_warning_expiry_extension.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "e22d82fa6f7f6f2b64d4176c567a23c7"
+    },
+    "sv_warning_expiry_extension_explain.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "b4e7a4027bca44f71c03474c54e3a0af"
+    },
+    "sv_warning_include_expired.txt": {
+        "global_cache": false,
+        "version_id": 1051000,
+        "version_string": "1.5.10",
+        "hash": "c6949835be643ce66180a433f5487a02"
+    },
+    "sv_warning_node_id.txt": {
+        "global_cache": false,
+        "version_id": 1030007,
+        "version_string": "1.3.0 RC7",
+        "hash": "c9846903f9fb3cd171727fb9dbe372b1"
+    },
+    "sv_warning_post_as_user_id.txt": {
+        "global_cache": false,
+        "version_id": 1020200,
+        "version_string": "1.2.2",
+        "hash": "046b6acc15575449ee506c756455d52a"
+    },
+    "sv_warning_thread_id.txt": {
+        "global_cache": false,
+        "version_id": 1030007,
+        "version_string": "1.3.0 RC7",
+        "hash": "91c09c5a51647bad49a3f2e48681a668"
+    },
+    "sv_x_weeks.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "2fb1194dd58df38c994806135bed00c6"
+    },
+    "svwi_the_user_x_could_not_be_found.txt": {
+        "global_cache": false,
+        "version_id": 1030200,
+        "version_string": "1.3.2",
+        "hash": "7e249292fc85e9fa0d5c6cadbceb11d6"
+    },
+    "user_has_received_at_least_x_warnings_points.txt": {
+        "global_cache": false,
+        "version_id": 3,
+        "version_string": "0.0.3",
+        "hash": "49ffd911d634cc4c0496a8257d495ea0"
+    },
+    "user_has_received_at_most_x_warnings_count.txt": {
+        "global_cache": false,
+        "version_id": 1051000,
+        "version_string": "1.5.10",
+        "hash": "93c2776efcfe3d0e1ebf348648467dd7"
+    },
+    "user_has_received_at_most_x_warnings_points.txt": {
+        "global_cache": false,
+        "version_id": 3,
+        "version_string": "0.0.3",
+        "hash": "629c9ca74c98eb29a7c44a196825cf9b"
+    },
+    "warning_alert_text.txt": {
+        "global_cache": false,
+        "version_id": 100000,
+        "version_string": "1.0.0",
+        "hash": "14253ef1275365c6fcc4d6526be5dfce"
+    },
+    "warning_alert_text_anonymize.txt": {
+        "global_cache": false,
+        "version_id": 100000,
+        "version_string": "1.0.0",
+        "hash": "04c5468819652c59a644ffd36456f862"
+    },
+    "warning_definition_0_title.txt": {
+        "global_cache": false,
+        "version_id": 101011,
+        "version_string": "1.1.1s",
+        "hash": "f546798c3268ca0d4844de65ffbfab8d"
+    },
+    "warning_escalating_defaults.txt": {
+        "global_cache": false,
+        "version_id": 102001,
+        "version_string": "1.2.0",
+        "hash": "d42bb4f91139da74698914d1b73241b3"
+    },
+    "warning_title.0.txt": {
+        "global_cache": false,
+        "version_id": 101011,
+        "version_string": "1.1.1s",
+        "hash": "f546798c3268ca0d4844de65ffbfab8d"
+    }
+}

@@ -1,0 +1,1 @@
+Limits who can see that warning actions with discouragment exist.

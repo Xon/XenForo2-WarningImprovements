@@ -1,0 +1,6 @@
+{
+    "permission_type": "flag",
+    "interface_group_id": "generalModeratorPermissions",
+    "display_order": 250,
+    "depend_permission_id": ""
+}
