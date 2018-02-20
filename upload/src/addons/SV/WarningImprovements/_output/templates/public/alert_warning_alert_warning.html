@@ -1,15 +1,15 @@
 
-<xen:if is="{$user.user_id}">
+<xf:if is="{$user.user_id}">
 {xen:phrase warning_alert_text,
 'name={xen:helper username, $user, 'subject'}',
 'warning_attributes=href="{xen:link warnings, $content}" class="PopupItemLink"',
 'points={$content.points}',
 'warning_title={$content.title}'
 }
-<xen:else/>
+<xf:else/>
 {xen:phrase warning_alert_text_anonymize,
 'warning_attributes=href="{xen:link warnings, $content}" class="PopupItemLink"',
 'points={$content.points}',
 'warning_title={$content.title}'
 }
-</xen:if>
+</xf:if>

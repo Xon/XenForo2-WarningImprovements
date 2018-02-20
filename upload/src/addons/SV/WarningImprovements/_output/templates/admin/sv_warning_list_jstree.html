@@ -1,40 +1,40 @@
 <link rel="stylesheet" href="styles/jstree/default/style.min.css" />
-<xen:require css="sv_warning_list_jstree.css" />
+<xf:css src="sv_warning_list_jstree.css" />
 
-<xen:if is="{$debugMode}">
-	<xen:require js="js/jsTree/jstree.js" />
-	<xen:require js="js/SV/WarningImprovements/full/warnings.js" />
-<xen:else />
-	<xen:require js="js/jsTree/jstree.min.js" />
-	<xen:require js="js/SV/WarningImprovements/warnings.js" />
-</xen:if>
+<xf:if is="{$debugMode}">
+	<xf:js addon="SV/WarningImprovements" src="js/jsTree/jstree.js" />
+	<xf:js addon="SV/WarningImprovements" src="js/SV/WarningImprovements/full/warnings.js" />
+<xf:else />
+	<xf:js addon="SV/WarningImprovements" src="js/jsTree/jstree.min.js" />
+	<xf:js addon="SV/WarningImprovements" src="js/SV/WarningImprovements/warnings.js" />
+</xf:if>
 
 <div class="section">
 	<h2 class="subHeading">
-		{xen:phrase warnings}
-		<xen:if is="{$warnings}">
+		{{ phrase('warnings') }}
+		<xf:if is="{$warnings}">
 			<div class="warningItemTreeSearch">
-				<input id="warningItemTreeSearch" type="search" name="filter" placeholder="{xen:phrase filter_items}" class="textCtrl">
+				<input id="warningItemTreeSearch" type="search" name="filter" placeholder="{{ phrase('filter_items') }}" class="textCtrl">
 			</div>
-		</xen:if>
+		</xf:if>
 	</h2>
 
-	<xen:if is="{$warnings}">
+	<xf:if is="{$warnings}">
 		<div id="warningitems" class="WarningItemTree"
 			data-overlay="1"
 			data-searchinput="#warningItemTreeSearch"
-			data-loadurl="{xen:adminlink warnings/load-tree}"
-			data-syncurl="{xen:adminlink warnings/sync-tree}"
-			data-renameurl="{xen:adminlink warnings/rename-tree-item}"
-			data-categoryediturl="{xen:adminlink 'warnings/category-edit&warning_category_id={id}'}"
-			data-categorydeleteurl="{xen:adminlink 'warnings/category-delete&warning_category_id={id}'}"
-			data-warningediturl="{xen:adminlink 'warnings/{id}/edit'}"
-			data-warningdeleteurl="{xen:adminlink 'warnings/{id}/delete'}"
-			data-renametext="{xen:phrase sv_rename}"
-			data-edittext="{xen:phrase edit}"
-			data-deletetext="{xen:phrase delete}">
+			data-loadurl="{{ link('warnings/load-tree') }}"
+			data-syncurl="{{ link('warnings/sync-tree') }}"
+			data-renameurl="{{ link('warnings/rename-tree-item') }}"
+			data-categoryediturl="{{ link('warnings/category-edit&warning_category_id={id') }}'}"
+			data-categorydeleteurl="{{ link('warnings/category-delete&warning_category_id={id') }}'}"
+			data-warningediturl="{{ link('warnings/{id') }}/edit'}"
+			data-warningdeleteurl="{{ link('warnings/{id') }}/delete'}"
+			data-renametext="{{ phrase('sv_rename') }}"
+			data-edittext="{{ phrase('edit') }}"
+			data-deletetext="{{ phrase('delete') }}">
 		</div>
-	<xen:else />
-		<div class="noResults">{xen:phrase no_warnings_have_been_defined}</div>
-	</xen:if>
+	<xf:else />
+		<div class="noResults">{{ phrase('no_warnings_have_been_defined') }}</div>
+	</xf:if>
 </div>

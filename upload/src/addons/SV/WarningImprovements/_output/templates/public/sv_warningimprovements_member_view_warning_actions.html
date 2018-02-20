@@ -1,6 +1,6 @@
-<xen:if is="{$warningActionsCount}">
+<xf:if is="{$warningActionsCount}">
 	<li id="warningActions" class="profileContent" data-loadUrl="{xen:link members/warning-actions, $user}">
-		{xen:phrase loading}...
-		<noscript><a href="{xen:link members/warning-actions, $user}">{xen:phrase view}</a></noscript>
+		{{ phrase('loading') }}...
+		<noscript><a href="{xen:link members/warning-actions, $user}">{{ phrase('view') }}</a></noscript>
 	</li>
-</xen:if>
+</xf:if>

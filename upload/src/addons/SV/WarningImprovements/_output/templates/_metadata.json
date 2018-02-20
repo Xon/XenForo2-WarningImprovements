@@ -1,28 +1,28 @@
 {
     "admin/sv_warning_action_edit.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "41433dff20e2f7a7abae2f864a5d9853"
+        "version_string": "2.0.0 Alpha",
+        "hash": "fba344c93678fab62ecaa26570f139ae"
     },
     "admin/sv_warning_action_list.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "080cfd69a1df4f87747430fc30580bcd"
+        "version_string": "2.0.0 Alpha",
+        "hash": "ae8327037dc1b1cfe81a4dbb9932c6ad"
     },
     "admin/sv_warning_category_delete.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "ab11f588b67514ba415f1fbbc19c32e1"
+        "version_string": "2.0.0 Alpha",
+        "hash": "8dbfaacee44d08dd0fd371b3294947a0"
     },
     "admin/sv_warning_category_edit.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "f7eb26e272ace521d63887edeaf26432"
+        "version_string": "2.0.0 Alpha",
+        "hash": "2a2727eae55bff9c6685165d255483e6"
     },
     "admin/sv_warning_edit_inputs.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "595066caad6b0544541ef3a5db2c9026"
+        "version_string": "2.0.0 Alpha",
+        "hash": "c6b5ed319ffa60c95fe11a798fc18b52"
     },
     "admin/sv_warning_list_jstree.css": {
         "version_id": 2000000,
@@ -31,33 +31,33 @@
     },
     "admin/sv_warning_list_jstree.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "4c3fed0e3dfe147f70b736f691785bbc"
+        "version_string": "2.0.0 Alpha",
+        "hash": "fcb9c4dd3e3a23cc246915ef0780c003"
     },
     "admin/sv_warningimprovements_criteria.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "d101540bc28838f82ab0124e97767ef1"
+        "version_string": "2.0.0 Alpha",
+        "hash": "bfcb88f5219ed2205d38f5bd2583f51a"
     },
     "admin/sv_warningimprovements_escalating_defaults.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "0e4f0ef3c3392a07b5211f5d84533cc8"
+        "version_string": "2.0.0 Alpha",
+        "hash": "5f8b5176c2fad5e9bcf3479a7f67f35b"
     },
     "admin/sv_warningimprovements_warning_default_delete.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "fa8f85a46aec748e21af0187fc641661"
+        "version_string": "2.0.0 Alpha",
+        "hash": "0419956a9302e92bfc2cb4ed8d57407a"
     },
     "admin/sv_warningimprovements_warning_default_edit.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "8c9e46037ea94c127fc813c593b6e171"
+        "version_string": "2.0.0 Alpha",
+        "hash": "7af4a7900631d08e17a07e70c630d752"
     },
     "public/alert_warning_alert_warning.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "115ac8057c95e190635f616863a5f546"
+        "version_string": "2.0.0 Alpha",
+        "hash": "2b3034992bdd353de2e793f40b4a3b04"
     },
     "public/sv_member_warn_chooser.css": {
         "version_id": 2000000,
@@ -66,27 +66,27 @@
     },
     "public/sv_member_warn_chooser.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "13e0e4cc7fdee8f24a294500b7971422"
+        "version_string": "2.0.0 Alpha",
+        "hash": "a133cfc6a13df87171bccd72059bdce7"
     },
     "public/sv_member_warning_actions.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "56ad962c3a65241480c6555d07ea17a7"
+        "version_string": "2.0.0 Alpha",
+        "hash": "67ec6e7415390c4e425f88b1a2283ea6"
     },
     "public/sv_warning_actions_info.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "69ab174c61995946e93d7e682b300ca2"
+        "version_string": "2.0.0 Alpha",
+        "hash": "46b831a5f3f17d01c161bea6df5f7f65"
     },
     "public/sv_warning_improvement_js.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "2507e6a51336ec316bce102dcd9cf80e"
+        "version_string": "2.0.0 Alpha",
+        "hash": "8f5bc925e2dfd93437664ac236541180"
     },
     "public/sv_warningimprovements_member_view_warning_actions.html": {
         "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "248966bfe861bb65d5184b9c5d5cc987"
+        "version_string": "2.0.0 Alpha",
+        "hash": "9b9121e7ae13d9d73410acd53e8aa595"
     }
 }

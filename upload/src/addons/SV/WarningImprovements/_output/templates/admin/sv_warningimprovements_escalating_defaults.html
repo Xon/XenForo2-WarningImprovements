@@ -1,33 +1,33 @@
-<xen:if is="{$warningEscalatingDefaults}">
-	<xen:form action="{xen:adminlink warnings}" class="section">
+<xf:if is="{$warningEscalatingDefaults}">
+	<xen:form action="{{ link('warnings') }}" class="section">
 		<h2 class="subHeading">
-			{xen:phrase warning_escalating_defaults}
+			{{ phrase('warning_escalating_defaults') }}
 		</h2>
 
 		<ol class="FilterList Scrollable">
-			<xen:foreach loop="$warningEscalatingDefaults" value="$warningDefault">
-				<xen:set var="$expiry_extension_phrase">{xen:phrase x_days, 'days={$warningDefault.expiry_extension}'}</xen:set>
-				<xen:if is="{$warningDefault.expiry_type} == 'weeks'">
-					<xen:set var="$expiry_extension_phrase">{xen:phrase sv_x_weeks, 'weeks={$warningDefault.expiry_extension}'}</xen:set>
-				</xen:if>
-				<xen:if is="{$warningDefault.expiry_type} == 'months'">
-					<xen:set var="$expiry_extension_phrase">{xen:phrase x_months, 'months={$warningDefault.expiry_extension}'}</xen:set>
-				</xen:if>
-				<xen:if is="{$warningDefault.expiry_type} == 'years'">
-					<xen:set var="$expiry_extension_phrase">{xen:phrase sv_x_years, 'years={$warningDefault.expiry_extension}'}</xen:set>
-				</xen:if>
+			<xf:foreach loop="$warningEscalatingDefaults" value="$warningDefault">
+				<xen:set var="$expiry_extension_phrase">{{ phrase('x_days', {'days':'{$warningDefault.expiry_extension}'}) }}</xen:set>
+				<xf:if is="{$warningDefault.expiry_type} == 'weeks'">
+					<xen:set var="$expiry_extension_phrase">{{ phrase('sv_x_weeks', {'weeks':'{$warningDefault.expiry_extension}'}) }}</xen:set>
+				</xf:if>
+				<xf:if is="{$warningDefault.expiry_type} == 'months'">
+					<xen:set var="$expiry_extension_phrase">{{ phrase('x_months', {'months':'{$warningDefault.expiry_extension}'}) }}</xen:set>
+				</xf:if>
+				<xf:if is="{$warningDefault.expiry_type} == 'years'">
+					<xen:set var="$expiry_extension_phrase">{{ phrase('sv_x_years', {'years':'{$warningDefault.expiry_extension}'}) }}</xen:set>
+				</xf:if>
 				<xen:listitem
 					id="warning_default-{$warningDefault.warning_default_id}"
-				    label="{xen:phrase points}: {$warningDefault.threshold_points}"
+				    label="{{ phrase('points') }}: {$warningDefault.threshold_points}"
 					href="{xen:adminlink warnings/default/edit, $warningDefault}"
 					delete="{xen:adminlink warnings/default/delete, $warningDefault}"
 				>
 					<xen:snippet>
-						{xen:phrase sv_increase_default_expiry_by_x, 'length={$expiry_extension_phrase}'}
-						{xen:if "{$warningDefault.active}", ", {xen:phrase sv_warning_default_is_active}" }
+						{{ phrase('sv_increase_default_expiry_by_x', {'length':'{$expiry_extension_phrase}'}) }}
+						{xen:if "{$warningDefault.active}", ", {{ phrase('sv_warning_default_is_active') }}" }
 					</xen:snippet>
 				</xen:listitem>
-			</xen:foreach>
+			</xf:foreach>
 		</ol>
 	</xen:form>
-</xen:if>
+</xf:if>

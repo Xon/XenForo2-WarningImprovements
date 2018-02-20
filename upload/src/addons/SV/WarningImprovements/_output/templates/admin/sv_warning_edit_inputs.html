@@ -1,7 +1,7 @@
 <fieldset>
-	<xen:selectunit label="{xen:phrase sv_warning_category}:" name="sv_warning_category_id" value="{$warning.sv_warning_category_id}">
+	<xen:selectunit label="{{ phrase('sv_warning_category') }}:" name="sv_warning_category_id" value="{$warning.sv_warning_category_id}">
 		<xen:options source="$warningCategories" />
 	</xen:selectunit>
 
-	<xen:spinboxunit label="{xen:phrase display_order}:" name="sv_display_order" value="{$warning.sv_display_order}" min="0" step="10" />
+	<xen:spinboxunit label="{{ phrase('display_order') }}:" name="sv_display_order" value="{$warning.sv_display_order}" min="0" step="10" />
 </fieldset>

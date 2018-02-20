@@ -1,11 +1,11 @@
 <script>
 !function($, window, document, _undefined)
 {
-	<xen:if is="{$xenOptions.sv_warningimprovements_continue_button}">
+	<xf:if is="{$xf.options.sv_warningimprovements_continue_button}">
 	$warningForm = $(".warningHeader").closest('form');
 	$warningSubmitButton = $warningForm.find('dl.submitUnit input[type=submit]').first();
 	$dl = $warningSubmitButton.parent();
-	$dl.append('<input type="button" class="continue button" value="{xen:phrase continue}"/>');
+	$dl.append('<input type="button" class="continue button" value="{{ phrase('continue') }}"/>');
 	$warningContinueButton = $dl.find('.continue');
 	$warningSubmitButton.hide();
 
@@ -26,10 +26,10 @@
 			$next.find('a').click().focus();
 		}
 	});
-	</xen:if>
+	</xf:if>
 	XenForo.WarningDefaultActionFormFillerControl = function($input)
 	{
-		if ($input.val() == '{$xenOptions.sv_warningimprovements_default_content_action}') {
+		if ($input.val() == '{$xf.options.sv_warningimprovements_default_content_action}') {
 			$input.prop("checked", true);
 			var Disabler = $input.data('XenForo.Disabler');
 			if (Disabler && typeof Disabler == 'object')
@@ -39,7 +39,7 @@
 		}
 	}
 	XenForo.register('input[name=content_action]', 'XenForo.WarningDefaultActionFormFillerControl');
-	<xen:if is='{$xenOptions.sv_warningimprovements_copy_title}'>
+	<xf:if is="{$xf.options.sv_warningimprovements_copy_title}">
 	XenForo.CustomWarningTitle = function($control)
 	{
 		$control.change(function (e){
@@ -75,7 +75,7 @@
 		});
 	}
 	XenForo.register('select.warningItems', 'XenForo.WarningDefSelectOption');
-	</xen:if>
+	</xf:if>
 }
 (jQuery, this, document);
 </script>

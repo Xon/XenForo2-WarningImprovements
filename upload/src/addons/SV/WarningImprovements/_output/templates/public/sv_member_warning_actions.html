@@ -1,27 +1,27 @@
-<xen:title>{xen:phrase warnings}: {$user.username}</xen:title>
-<xen:h1>{xen:phrase warnings}</xen:h1>
+<xf:title>{{ phrase('warnings') }}: {$user.username}</xf:title>
+<xen:h1>{{ phrase('warnings') }}</xen:h1>
 
-<xen:navigation>
-	<xen:breadcrumb href="{xen:link full:members, $user}">{$user.username}</xen:breadcrumb>
-</xen:navigation>
 
-<xen:require css="member_view.css" />
+	<xf:breadcrumb href="{xen:link full:members, $user}">{$user.username}</xf:breadcrumb>
+
+
+<xf:css src="member_view.css" />
 
 <div class="warningActionList">
 <table class="dataTable" style="table-layout: fixed">
 <tr class="dataRow">
-	<th class="warningActionType" width="20%">{xen:phrase sv_warning_action_type}</th>
-	<th class="warningActionResult">{xen:phrase sv_warning_action_result}</th>
-	<th class="warningActionExpiry">{xen:phrase sv_warning_action_expiry}</th>
+	<th class="warningActionType" width="20%">{{ phrase('sv_warning_action_type') }}</th>
+	<th class="warningActionResult">{{ phrase('sv_warning_action_result') }}</th>
+	<th class="warningActionExpiry">{{ phrase('sv_warning_action_expiry') }}</th>
 	<th class="warningActionView">&nbsp;</th>
 </tr>
-<xen:foreach loop="$warningActions" value="$warningAction">
+<xf:foreach loop="$warningActions" value="$warningAction">
 	<tr class="dataRow {xen:if $warning.is_expired, muted}">
 		<td class="warningActionType">{$warningAction.name}</td>
 		<td class="warningActionResult">{$warningAction.result}</td>
-		<td class="warningActionExpiry"><xen:if is="{$warningAction.expiry_date_rounded}"><xen:datetime time="{$warningAction.expiry_date_rounded}" /><xen:else />{xen:phrase n_a}</xen:if></td>
-		<td class="warningActionView dataOptions"><a href="{xen:link warning-actions, $warningAction}" class="OverlayTrigger secondaryContent">{xen:phrase view}</a></td>
+		<td class="warningActionExpiry"><xf:if is="{$warningAction.expiry_date_rounded}">{{ date_time("{$warningAction.expiry_date_rounded}") }}<xf:else />{{ phrase('n_a') }}</xf:if></td>
+		<td class="warningActionView dataOptions"><a href="{xen:link warning-actions, $warningAction}" class="OverlayTrigger secondaryContent">{{ phrase('view') }}</a></td>
 	</tr>
-</xen:foreach>
+</xf:foreach>
 </table>
 </div>
