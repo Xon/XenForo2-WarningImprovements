@@ -1,40 +1,36 @@
 <link rel="stylesheet" href="styles/jstree/default/style.min.css" />
 <xf:css src="sv_warning_list_jstree.css" />
 
-<xf:if is="{$debugMode}">
-	<xf:js addon="SV/WarningImprovements" src="js/jsTree/jstree.js" />
-	<xf:js addon="SV/WarningImprovements" src="js/SV/WarningImprovements/full/warnings.js" />
-<xf:else />
-	<xf:js addon="SV/WarningImprovements" src="js/jsTree/jstree.min.js" />
-	<xf:js addon="SV/WarningImprovements" src="js/SV/WarningImprovements/warnings.js" />
-</xf:if>
+<xf:js addon="SV/WarningImprovements" src="js/jstree/jstree.js" min="1" />
+<xf:js addon="SV/WarningImprovements" src="js/sv/warningimprovements/warnings.js" min="1" />
 
-<div class="section">
-	<h2 class="subHeading">
-		{{ phrase('warnings') }}
-		<xf:if is="{$warnings}">
-			<div class="warningItemTreeSearch">
-				<input id="warningItemTreeSearch" type="search" name="filter" placeholder="{{ phrase('filter_items') }}" class="textCtrl">
-			</div>
-		</xf:if>
-	</h2>
-
-	<xf:if is="{$warnings}">
-		<div id="warningitems" class="WarningItemTree"
-			data-overlay="1"
-			data-searchinput="#warningItemTreeSearch"
-			data-loadurl="{{ link('warnings/load-tree') }}"
-			data-syncurl="{{ link('warnings/sync-tree') }}"
-			data-renameurl="{{ link('warnings/rename-tree-item') }}"
-			data-categoryediturl="{{ link('warnings/category-edit&warning_category_id={id') }}'}"
-			data-categorydeleteurl="{{ link('warnings/category-delete&warning_category_id={id') }}'}"
-			data-warningediturl="{{ link('warnings/{id') }}/edit'}"
-			data-warningdeleteurl="{{ link('warnings/{id') }}/delete'}"
-			data-renametext="{{ phrase('sv_rename') }}"
-			data-edittext="{{ phrase('edit') }}"
-			data-deletetext="{{ phrase('delete') }}">
+<xf:if is="$warnings is not empty">
+	<div class="block">
+		<div class="block-outer">
+			<xf:macro template="filter_macros" name="quick_filter" arg-key="warnings" arg-class="block-outer-opposite" />
 		</div>
-	<xf:else />
-		<div class="noResults">{{ phrase('no_warnings_have_been_defined') }}</div>
-	</xf:if>
-</div>
+		<div class="block-container">
+			<div class="block-body">
+				<div id="warningitems" class="WarningItemTree"
+					 data-overlay="1"
+					 data-searchinput="#warningItemTreeSearch"
+					 data-loadurl="{{ link('warnings/load-tree') }}"
+					 data-syncurl="{{ link('warnings/sync-tree') }}"
+					 data-renameurl="{{ link('warnings/rename-tree-item') }}"
+					 data-categoryediturl="{{ link('warnings/category-edit&warning_category_id={id') }}'}"
+					 data-categorydeleteurl="{{ link('warnings/category-delete&warning_category_id={id') }}'}"
+					 data-warningediturl="{{ link('warnings/{id') }}/edit'}"
+					 data-warningdeleteurl="{{ link('warnings/{id') }}/delete'}"
+					 data-renametext="{{ phrase('sv_rename') }}"
+					 data-edittext="{{ phrase('edit') }}"
+					 data-deletetext="{{ phrase('delete') }}">
+				</div>
+			</div>
+			<div class="block-footer">
+				<span class="block-footer-counter">{{ display_totals($warnings) }}</span>
+			</div>
+		</div>
+	</div>
+<xf:else />
+	<div class="blockMessage">{{ phrase('no_warnings_have_been_defined') }}</div>
+</xf:if>

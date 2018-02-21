@@ -1,5 +1,6 @@
 Post message to an existing thread when this warning action is triggered. Zero to disable.<br/>
 <br/>
-Edit the phases:<ul>
-<li>Warning_Thread_Message</li>
+Edit the phases:
+<ul class="inputChoices">
+<li><strong>Warning_Thread_Message</strong></li>
 </ul>

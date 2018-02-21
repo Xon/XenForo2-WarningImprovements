@@ -1,16 +1,20 @@
-<fieldset>
-	<xen:selectunit label="{{ phrase('sv_warning_category') }}:" name="sv_warning_category_id" value="{$action.sv_warning_category_id}">
-		<xen:option value="0" label="({{ phrase('none') }})" />
-		<xen:options source="$warningCategories" />
-	</xen:selectunit>
-</fieldset>
+<hr class="formRowSep" /><xf:comment>Required to give seperator similar to XF1</xf:comment>
 
-<fieldset>
-	<xen:selectunit label="{{ phrase('sv_warning_node_id') }}:" name="sv_post_node_id" value="{$action.sv_post_node_id}">
-		<xen:options source="$nodeList" />
-		<xen:explain>{{ phrase('sv_warning_action_post_new_thread') }}</xen:explain>
-	</xen:selectunit>
+<xf:selectrow name="sv_warning_category_id" value="{$action.sv_warning_category_id}}" label="{{ phrase('sv_warning_category') }}">
+	<xf:option value="0">{{ phrase('(none)') }}</xf:option>
 
-	<xen:spinboxunit label="{{ phrase('sv_warning_thread_id') }}:" explain="{{ phrase('sv_warning_action_post_thread_reply') }}" name="sv_post_thread_id" value="{$action.sv_post_thread_id}" />
-	<xen:spinboxunit label="{{ phrase('sv_warning_post_as_user_id') }}:" explain="{{ phrase('sv_warning_action_post_as_user') }}" name="sv_post_as_user_id" value="{$action.sv_post_as_user_id}" />
-</fieldset>
+	<xf:option source="$warningCategories" />
+</xf:selectrow>
+
+<hr class="formRowSep" /><xf:comment>Required to give seperator similar to XF1</xf:comment>
+
+<xf:selectrow name="sv_post_node_id" value="{$action.sv_post_node_id}}" label="{{ phrase('sv_warning_node_id') }}" explain="{{ phrase('sv_warning_action_post_new_thread') }}">
+	<xf:option value="0">{{ phrase('(none)') }}</xf:option>
+
+	<xf:foreach loop="$nodeTree.getFlattened(0)" value="$treeEntry">
+		<xf:option value="{$treeEntry.record.node_id}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
+	</xf:foreach>
+</xf:selectrow>
+
+<xf:numberboxrow name="sv_post_thread_id" value="{$action.sv_post_thread_id}" label="{{ phrase('sv_warning_thread_id') }}:" explain="{{ phrase('sv_warning_action_post_thread_reply') }}" />
+<xf:numberboxrow name="sv_post_as_user_id" value="{$action.sv_post_as_user_id}" label="{{ phrase('sv_warning_post_as_user_id') }}:" explain="{{ phrase('sv_warning_action_post_as_user') }}" />
