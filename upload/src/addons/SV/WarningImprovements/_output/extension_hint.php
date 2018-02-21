@@ -25,11 +25,6 @@ namespace SV\WarningImprovements\XF\Entity
 	class XFCP_WarningDefinition extends \XF\Entity\WarningDefinition {}
 }
 
-namespace SV\WarningImprovements\XF\Public\View\Member
-{
-	class XFCP_WarnFill extends \XF\Public\View\Member\WarnFill {}
-}
-
 namespace SV\WarningImprovements\XF\Pub\Controller
 {
 	class XFCP_Member extends \XF\Pub\Controller\Member {}

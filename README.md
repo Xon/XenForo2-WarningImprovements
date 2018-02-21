@@ -48,4 +48,3 @@ New moderator permissions for viewing warning actions.
 - View Warning Actions
 - Edit Warning Actions
 - Don't Summarize Warning Actions
-

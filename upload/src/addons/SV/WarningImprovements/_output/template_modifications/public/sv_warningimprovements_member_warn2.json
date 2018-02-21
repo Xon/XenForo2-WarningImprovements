@@ -4,6 +4,6 @@
     "execution_order": 10,
     "enabled": true,
     "action": "str_replace",
-    "find": "<input type=\"checkbox\" name=\"open_invite\" value=\"1\"",
-    "replace": "$0 {xen:if '{$xenOptions.sv_warningimprovements_conversation_invite}', 'checked=\"checked\"'}"
+    "find": "<xf:option name=\"open_invite\" value=\"1\"",
+    "replace": "$0 checked=\"{{ $xf.options.sv_warningimprovements_conversation_invite ? true : false  }}\""
 }

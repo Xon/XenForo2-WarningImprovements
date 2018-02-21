@@ -4,6 +4,6 @@
     "execution_order": 100,
     "enabled": true,
     "action": "str_replace",
-    "find": "<xen:hook name=\"member_view_tabs_heading\"",
-    "replace": "<xen:if is=\"{$warningActionsCount}\"><li><a href=\"{$requestPaths.requestUri}#warningActions\">{xen:phrase sv_user_warning_actions, 'count={$warningActionsCount}'}</a></li></xen:if>\n$0"
+    "find": "<!--[XF:tabs:end]-->",
+    "replace": "<xf:if is=\"{$warningActionsCount}\">\n\t\t\t\t\t<a href=\"{{ link('members/warnings-actions', $user) }}\"\n\t\t\t\t\t\tclass=\"tabs-tab\"\n\t\t\t\t\t\tid=\"warningsActions\"\n\t\t\t\t\t\trole=\"tab\">{{ phrase('sv_user_warning_actions', {'count': {$warningActionsCount}}) }}</a>\n\t\t\t\t</xf:if>\n\t\t\t\t$0"
 }
