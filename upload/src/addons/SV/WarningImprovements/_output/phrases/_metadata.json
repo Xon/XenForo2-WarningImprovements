@@ -515,6 +515,12 @@
         "version_string": "1.4.0",
         "hash": "ea57afe01968c99bd9b2c0312d75fb35"
     },
+    "sv_total_warning_actions.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "e2551eaaf749dcf69a516df2ac4a2785"
+    },
     "sv_update_warning_action.txt": {
         "global_cache": false,
         "version_id": 101000,
