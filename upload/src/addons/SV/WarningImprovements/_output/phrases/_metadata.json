@@ -685,15 +685,15 @@
     },
     "warning_alert_text.txt": {
         "global_cache": false,
-        "version_id": 100000,
-        "version_string": "1.0.0",
-        "hash": "14253ef1275365c6fcc4d6526be5dfce"
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "0cb8b1994190f08edd6ce56e99a628d8"
     },
     "warning_alert_text_anonymize.txt": {
         "global_cache": false,
-        "version_id": 100000,
-        "version_string": "1.0.0",
-        "hash": "04c5468819652c59a644ffd36456f862"
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "60c05951bb11dbcc095875adc90d375d"
     },
     "warning_definition_0_title.txt": {
         "global_cache": false,
