@@ -4,6 +4,6 @@
     "execution_order": 10,
     "enabled": true,
     "action": "str_replace",
-    "find": "<xen:title>{xen:if $warning.warning_definition_id",
-    "replace": "<xen:title>{xen:if '{$warning.warning_definition_id} or {$warning.is_custom}'"
+    "find": "<xf:if is=\"$warning.isInsert()\">\n\t<xf:title>{{ phrase('add_warning') }}</xf:title>\n<xf:else />\n\t<xf:title>{{ phrase('edit_warning:') }} {$warning.title}</xf:title>\n</xf:if>",
+    "replace": "<xf:if is=\"$warning.warning_definition_id || $warning.is_custom\">\n\t<xf:title>{{ phrase('edit_warning:') }} {$warning.title}</xf:title>\n<xf:else />\n\t<xf:title>{{ phrase('add_warning') }}</xf:title>\n</xf:if>"
 }
