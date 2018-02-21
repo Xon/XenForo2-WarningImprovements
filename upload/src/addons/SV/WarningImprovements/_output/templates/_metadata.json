@@ -62,27 +62,27 @@
     "public/alert_warning_alert_warning.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "2b3034992bdd353de2e793f40b4a3b04"
-    },
-    "public/sv_member_warn_chooser.css": {
-        "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "43f6d5f13470bca0770ba446159ab45d"
+        "hash": "be890a6a52c9f5e39c270406d6a61b21"
     },
     "public/sv_member_warn_chooser.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "a133cfc6a13df87171bccd72059bdce7"
+        "hash": "8973c2054361f03bbebe7aac54af7067"
+    },
+    "public/sv_member_warn_chooser.less": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "4c64b9b3a86e8ed843e4d53350e418d8"
     },
     "public/sv_member_warning_actions.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "67ec6e7415390c4e425f88b1a2283ea6"
+        "hash": "f80393771f7685ffef6dd89fb24e9d60"
     },
     "public/sv_warning_actions_info.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "46b831a5f3f17d01c161bea6df5f7f65"
+        "hash": "497bfe52f50ce382d19331f4571bef14"
     },
     "public/sv_warning_improvement_js.html": {
         "version_id": 2000000,
@@ -92,6 +92,6 @@
     "public/sv_warningimprovements_member_view_warning_actions.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "9b9121e7ae13d9d73410acd53e8aa595"
+        "hash": "1a80e767c3282ce1227b5cfd28e91421"
     }
 }

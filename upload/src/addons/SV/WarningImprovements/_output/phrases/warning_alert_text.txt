@@ -1,1 +1,1 @@
-{name} issued you a warning for <a {warning_attributes}>{warning_title}</a> for {points} points.
+{username} issued you a warning for <a {warningLinkAttributes}>{warning_title}</a> for {points} points.

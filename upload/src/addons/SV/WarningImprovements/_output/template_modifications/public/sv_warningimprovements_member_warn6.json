@@ -1,9 +1,0 @@
-{
-    "template": "member_warn",
-    "description": "Add AutoValidator & redirect on-submit support",
-    "execution_order": 6,
-    "enabled": true,
-    "action": "preg_replace",
-    "find": "#(<form.*?members/warn.*?class=\"xenForm[^\"]*)(\")#si",
-    "replace": "$1 AutoValidator\" data-redirect=\"true\""
-}
