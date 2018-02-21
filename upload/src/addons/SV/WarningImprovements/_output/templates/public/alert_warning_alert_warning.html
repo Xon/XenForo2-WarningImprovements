@@ -1,15 +1,16 @@
-
 <xf:if is="{$user.user_id}">
-{xen:phrase warning_alert_text,
-'name={xen:helper username, $user, 'subject'}',
-'warning_attributes=href="{xen:link warnings, $content}" class="PopupItemLink"',
-'points={$content.points}',
-'warning_title={$content.title}'
-}
+	{{ phrase('alert_profile_post_insert', {
+			'username': username_link($user, false, {'defaultname': $alert.username}),
+			'warningLinkAttributes': 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"',
+			'points': {$content.points},
+			'warning_title': {$content.title}
+		})
+	}}
 <xf:else/>
-{xen:phrase warning_alert_text_anonymize,
-'warning_attributes=href="{xen:link warnings, $content}" class="PopupItemLink"',
-'points={$content.points}',
-'warning_title={$content.title}'
-}
+	{{ phrase('warning_alert_text_anonymize', {
+			'warningLinkAttributes': 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"',
+			'points': {$content.points},
+			'warning_title': {$content.title}
+		})
+	}}
 </xf:if>

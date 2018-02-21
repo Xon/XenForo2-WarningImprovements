@@ -4,6 +4,6 @@
     "execution_order": 10,
     "enabled": true,
     "action": "preg_replace",
-    "find": "#<dl class=\"ctrlUnit\">\\s*<dt>{xen:phrase warning_type}:</dt>.*?<dd>.*?\\s*</dd>\\s*</dl>#si",
-    "replace": "<xen:include template=\"sv_member_warn_chooser\" />"
+    "find": "#<xf:radiorow name=\"warning_definition_id\" value=\"0\"\\s*label=\"{{ phrase\\('warning_type'\\) }}\">.*<\\/xf:option>\\s*<\\/xf:radiorow>#si",
+    "replace": "<xf:include template=\"sv_member_warn_chooser\" />"
 }

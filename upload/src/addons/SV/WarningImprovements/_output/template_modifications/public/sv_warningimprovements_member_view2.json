@@ -3,7 +3,7 @@
     "description": "Warning Actions (body)",
     "execution_order": 100,
     "enabled": true,
-    "action": "preg_replace",
-    "find": "#(\\s*)(<xen:hook name=\"member_view_tabs_content\")#Us",
-    "replace": "$1<xen:include template=\"sv_warningimprovements_member_view_warning_actions\" />\n$1$2"
+    "action": "str_replace",
+    "find": "<!--[XF:tab_panes:end]-->",
+    "replace": "<xf:include template=\"sv_warningimprovements_member_view_warning_actions\" />\n\t$0"
 }
