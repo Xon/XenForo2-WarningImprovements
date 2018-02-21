@@ -2,13 +2,14 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
-use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
- * Extends \XF\Entity\ConversationMesssage
+ * Extends \XF\Entity\UserOption
+ *
+ * @property int sv_pending_warning_expiry
  */
-class ConversationMesssage extends XFCP_ConversationMesssage
+class UserOption extends XFCP_UserOption
 {
     /**
      * @param Structure $structure
@@ -17,7 +18,9 @@ class ConversationMesssage extends XFCP_ConversationMesssage
     public static function getStructure(Structure $structure)
     {
         $structure = parent::getStructure($structure);
-    
+
+        $structure->columns['sv_pending_warning_expiry'] = ['type' => self::UINT, 'default' => 0];
+
         return $structure;
     }
 }

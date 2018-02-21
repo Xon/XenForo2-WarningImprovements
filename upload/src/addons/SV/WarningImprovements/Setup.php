@@ -166,10 +166,6 @@ class Setup extends AbstractSetup
             $table->addColumn('sv_custom_title', 'tinyint', 1)->setDefault(0);
         };
 
-        $tables['xf_warning_definition'] = function (Alter $table) {
-            $table->addColumn('sv_warning_category_id', 'int')->setDefault(0);
-        };
-
         $tables['xf_warning_action'] = function (Alter $table) {
             $table->addColumn('sv_warning_category_id', 'int')->setDefault(0);
             $table->addColumn('sv_post_node_id', 'int')->setDefault(0);
