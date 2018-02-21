@@ -3,7 +3,7 @@
     "description": "Add \"Warning Defaults\" button",
     "execution_order": 100,
     "enabled": true,
-    "action": "preg_replace",
-    "find": "#(<xen:topctrl>.*?)(</xen:topctrl>)#Usi",
-    "replace": "$1\n<a href=\"{xen:adminlink warnings/default/add}\" class=\"button\">+ {xen:phrase sv_create_new_warning_default}</a>\n$2"
+    "action": "str_replace",
+    "find": "</xf:pageaction>",
+    "replace": "\t<xf:button href=\"{{ link('warnings/default/add') }}\" icon=\"add\">{{ phrase('sv_create_new_warning_default') }}</xf:button>\n$0"
 }
