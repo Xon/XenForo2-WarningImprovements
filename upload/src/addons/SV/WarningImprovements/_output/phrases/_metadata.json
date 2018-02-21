@@ -443,6 +443,12 @@
         "version_string": "1.4.0",
         "hash": "f5b40d9e3803b2824c5ee1ce46349a5a"
     },
+    "sv_please_enter_note_for_warning.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "f9b0d16443cdf7713ac8815a64d05523"
+    },
     "sv_please_enter_note_with_at_least_x_characters.txt": {
         "global_cache": false,
         "version_id": 1060200,
