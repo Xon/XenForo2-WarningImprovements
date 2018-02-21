@@ -1,8 +1,6 @@
 <xf:title>{{ phrase('sv_warning_action_for_x', {'name':'{$user.username}'}) }}</xf:title>
 
-
-	<xf:breadcrumb href="{xen:link members, $user}">{$user.username}</xf:breadcrumb>
-
+<xf:breadcrumb href="{{ link('members', $user) }}">{$user.username}</xf:breadcrumb>
 
 <div class="xenForm formOverlay overlayScroll">
 	<dl class="ctrlUnit">

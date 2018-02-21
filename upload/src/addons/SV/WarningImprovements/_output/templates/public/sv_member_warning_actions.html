@@ -1,9 +1,7 @@
 <xf:title>{{ phrase('warnings') }}: {$user.username}</xf:title>
 <xen:h1>{{ phrase('warnings') }}</xen:h1>
 
-
-	<xf:breadcrumb href="{xen:link full:members, $user}">{$user.username}</xf:breadcrumb>
-
+<xf:breadcrumb href="{{ link('members', $user) }}">{$user.username}</xf:breadcrumb>
 
 <xf:css src="member_view.css" />
 
