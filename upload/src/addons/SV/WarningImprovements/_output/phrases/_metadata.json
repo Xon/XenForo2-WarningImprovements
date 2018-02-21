@@ -571,15 +571,15 @@
     },
     "sv_warning_action_post_new_thread.txt": {
         "global_cache": false,
-        "version_id": 1050007,
-        "version_string": "1.5.0 RC 7",
-        "hash": "716be6f5bf322ba5b950cf3830a55b03"
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "e0b45bfc98ff5f0130ee603e29142aba"
     },
     "sv_warning_action_post_thread_reply.txt": {
         "global_cache": false,
-        "version_id": 1050007,
-        "version_string": "1.5.0 RC 7",
-        "hash": "18ca8df5bc12f2f90f3b0b74080b87a3"
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "f5dbe492b2d231cbd5da102e3d5493f1"
     },
     "sv_warning_action_result.txt": {
         "global_cache": false,
