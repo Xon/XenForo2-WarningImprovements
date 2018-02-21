@@ -4,6 +4,6 @@
     "execution_order": 10,
     "enabled": true,
     "action": "str_replace",
-    "find": "<input type=\"checkbox\" name=\"conversation_locked\" value=\"1\"",
-    "replace": "$0 {xen:if '{$xenOptions.sv_warningimprovements_conversation_locked}', 'checked=\"checked\"'}"
+    "find": "<xf:option name=\"conversation_locked\" value=\"1\"",
+    "replace": "$0 checked=\"{{ $xf.options.sv_warningimprovements_conversation_locked ? true : false  }}\""
 }
