@@ -1,13 +1,8 @@
 <link rel="stylesheet" href="styles/jstree/default/style.min.css" />
 <xf:css src="sv_warning_list_jstree.css" />
 
-<xf:if is="{$debugMode}">
-	<xf:js addon="SV/WarningImprovements" src="js/jsTree/jstree.js" />
-	<xf:js addon="SV/WarningImprovements" src="js/SV/WarningImprovements/full/warnings.js" />
-<xf:else />
-	<xf:js addon="SV/WarningImprovements" src="js/jsTree/jstree.min.js" />
-	<xf:js addon="SV/WarningImprovements" src="js/SV/WarningImprovements/warnings.js" />
-</xf:if>
+<xf:js addon="SV/WarningImprovements" src="js/jstree/jstree.js" min="1" />
+<xf:js addon="SV/WarningImprovements" src="js/sv/warningimprovements/warnings.js" min="1" />
 
 <div class="section">
 	<h2 class="subHeading">
