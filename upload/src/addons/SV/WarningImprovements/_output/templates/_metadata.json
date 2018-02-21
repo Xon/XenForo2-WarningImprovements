@@ -1,4 +1,9 @@
 {
+    "admin/option_list_option_textbox_autocomplete.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "44cca79e8de758cd5568f7cafd248b17"
+    },
     "admin/sv_warning_action_edit.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
@@ -37,7 +42,7 @@
     "admin/sv_warningimprovements_criteria.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "bfcb88f5219ed2205d38f5bd2583f51a"
+        "hash": "79c13940ae4f7c0b116f30b586f5739e"
     },
     "admin/sv_warningimprovements_escalating_defaults.html": {
         "version_id": 2000000,

@@ -1,9 +1,9 @@
 {
-    "template": "helper_criteria_user",
-    "description": "",
+    "template": "helper_criteria",
+    "description": "Add the warning related user criteria.",
     "execution_order": 10,
     "enabled": true,
-    "action": "preg_replace",
-    "find": "#(<xen:hook name=\"user_criteria_content\">.*?)(\\s*)(</xen:hook>)#si",
-    "replace": "$1$2<xen:include template=\"sv_warningimprovements_criteria\"/>$2$3"
+    "action": "str_replace",
+    "find": "<!--[XF:user:after_content]-->",
+    "replace": "$0\n<xf:include template=\"sv_warningimprovements_criteria\" />"
 }
