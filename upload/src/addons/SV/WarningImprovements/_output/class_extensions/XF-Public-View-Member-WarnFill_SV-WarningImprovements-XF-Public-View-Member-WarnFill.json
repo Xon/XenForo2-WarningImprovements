@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Public\\View\\Member\\WarnFill",
+    "to_class": "SV\\WarningImprovements\\XF\\Public\\View\\Member\\WarnFill",
+    "execute_order": 10,
+    "active": true
+}
