@@ -1,13 +1,8 @@
 <link rel="stylesheet" href="styles/chosen/chosen.min.css" />
 <xf:css src="sv_member_warn_chooser.css" />
 
-<xf:if is="{$debugMode}">
-	<xf:js addon="SV/WarningImprovements" src="js/chosen/chosen.jquery.js" />
-	<xf:js addon="SV/WarningImprovements" src="js/SV/WarningImprovements/full/warnings.js" />
-<xf:else />
-	<xf:js addon="SV/WarningImprovements" src="js/chosen/chosen.jquery.min.js" />
-	<xf:js addon="SV/WarningImprovements" src="js/SV/WarningImprovements/warnings.js" />
-</xf:if>
+<xf:js addon="SV/WarningImprovements" src="js/chosen/chosen.jquery.js" min="1" /><xf:comment>missing?</xf:comment>
+<xf:js addon="SV/WarningImprovements" src="js/sv/warningimprovements/warnings.js" min="1" />
 
 <div id="warningViewSelect" class="JsOnly" style="display:none;">
 	<dl class="ctrlUnit">
