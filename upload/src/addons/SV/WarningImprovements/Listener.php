@@ -8,11 +8,13 @@ class Listener
 	{
 		switch ($rule)
 		{
-			case 'xfmg_media_count':
-				if (isset($user->xfmg_media_count) && $user->xfmg_media_count >= $data['media_items'])
-				{
-					$returnValue = true;
-				}
+			case 'warning_points_l': // received at least x points
+				break;
+			case 'warning_points_m': // received at most x points
+				break;
+			case 'sv_warning_minimum': // received at least x warnings
+				break;
+			case 'sv_warning_maximum': // received at most x warnings
 				break;
 		}
 	}

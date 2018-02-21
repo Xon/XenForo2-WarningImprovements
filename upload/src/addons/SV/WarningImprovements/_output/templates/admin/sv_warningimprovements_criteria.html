@@ -40,7 +40,7 @@
 	</xf:option>
 
 	<xf:option name="user_criteria[sv_warning_minimum][rule]" value="sv_warning_minimum" selected="{$criteria.sv_warning_minimum}"
-		label="{{ phrase('user_has_received_at_most_x_warnings_points:') }}">
+		label="{{ phrase('user_has_received_at_least_x_warnings_count:') }}">
 		<xf:dependent>
 			<div class="inputGroup">
 				<xf:numberbox name="user_criteria[sv_warning_minimum][data][points]" value="{$criteria.sv_warning_minimum.points}" size="5" min="0" step="1" />
@@ -60,7 +60,7 @@
 	</xf:option>
 
 	<xf:option name="user_criteria[sv_warning_maximum][rule]" value="sv_warning_maximum" selected="{$criteria.sv_warning_maximum}"
-		label="{{ phrase('user_has_received_at_most_x_warnings_points:') }}">
+		label="{{ phrase('user_has_received_at_most_x_warnings_count:') }}">
 		<xf:dependent>
 			<div class="inputGroup">
 				<xf:numberbox name="user_criteria[sv_warning_maximum][data][points]" value="{$criteria.sv_warning_maximum.points}" size="5" min="0" step="1" />
