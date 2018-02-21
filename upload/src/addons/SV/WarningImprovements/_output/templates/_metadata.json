@@ -59,15 +59,15 @@
         "version_string": "2.0.0 Alpha",
         "hash": "be890a6a52c9f5e39c270406d6a61b21"
     },
-    "public/sv_member_warn_chooser.css": {
-        "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "43f6d5f13470bca0770ba446159ab45d"
-    },
     "public/sv_member_warn_chooser.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "3ffea377aad0d1e87a5d3fd79b560fc0"
+        "hash": "8973c2054361f03bbebe7aac54af7067"
+    },
+    "public/sv_member_warn_chooser.less": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "4c64b9b3a86e8ed843e4d53350e418d8"
     },
     "public/sv_member_warning_actions.html": {
         "version_id": 2000000,
