@@ -13,6 +13,7 @@ class Warning extends XFCP_Warning
     protected function _postDelete()
     {
         parent::_postDelete();
+
         /** @var \XF\Repository\UserAlert $alertRepo */
         $alertRepo = $this->repository('XF:UserAlert');
         $alertRepo->fastDeleteAlertsForContent('warning', $this->warning_id);
