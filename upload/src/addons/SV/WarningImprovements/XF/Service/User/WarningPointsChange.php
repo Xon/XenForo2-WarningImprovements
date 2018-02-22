@@ -2,8 +2,6 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
-
-
 /**
  * Extends \XF\Service\User\WarningPointsChange
  */

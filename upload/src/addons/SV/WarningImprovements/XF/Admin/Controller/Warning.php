@@ -1,6 +1,7 @@
 <?php
 
 namespace SV\WarningImprovements\XF\Admin\Controller;
+
 use XF\Mvc\ParameterBag;
 
 /**

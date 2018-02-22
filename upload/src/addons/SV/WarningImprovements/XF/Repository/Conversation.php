@@ -2,8 +2,6 @@
 
 namespace SV\WarningImprovements\XF\Repository;
 
-
-
 /**
  * Extends \XF\Repository\Conversation
  */
