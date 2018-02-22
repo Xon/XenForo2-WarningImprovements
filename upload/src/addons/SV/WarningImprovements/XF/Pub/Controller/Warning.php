@@ -2,6 +2,8 @@
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
+use XF\Mvc\ParameterBag;
+
 /**
  * Extends \XF\Pub\Controller\Warning
  */
