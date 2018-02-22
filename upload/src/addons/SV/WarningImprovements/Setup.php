@@ -102,6 +102,47 @@ class Setup extends AbstractSetup
         $this->installStep4();
     }
 
+    public function upgrade2000000Step3()
+    {
+        $map = [
+            'sv_warning_category_*_title' => 'sv_warning_category_title.*'
+        ];
+
+        $db = $this->db();
+
+        foreach ($map AS $from => $to)
+        {
+            $mySqlRegex = '^' . str_replace('*', '[a-zA-Z0-9_]+', $from) . '$';
+            $phpRegex = '/^' . str_replace('*', '([a-zA-Z0-9_]+)', $from) . '$/';
+            $replace = str_replace('*', '$1', $to);
+
+            $results = $db->fetchPairs("
+				SELECT phrase_id, title
+				FROM xf_phrase
+				WHERE title RLIKE ?
+					AND addon_id = ''
+			", $mySqlRegex);
+
+            if ($results)
+            {
+                /** @var \XF\Entity\Phrase[] $phrases */
+                $phrases = \XF::em()->findByIds('XF:Phrase', array_keys($results));
+                foreach ($results AS $phraseId => $oldTitle)
+                {
+                    if (isset($phrases[$phraseId]))
+                    {
+                        $newTitle = preg_replace($phpRegex, $replace, $oldTitle);
+
+                        $phrase = $phrases[$phraseId];
+                        $phrase->title = $newTitle;
+                        $phrase->global_cache = false;
+                        $phrase->save(false);
+                    }
+                }
+            }
+        }
+    }
+
     public function uninstallStep1()
     {
         $sm = $this->schemaManager();
