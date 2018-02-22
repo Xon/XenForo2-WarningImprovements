@@ -13,8 +13,8 @@ use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
- *
- * @property int warning_default_id
+ * COLUMNS
+ * @property int|null warning_default_id
  * @property int threshold_points
  * @property string expiry_type
  * @property int expiry_extension

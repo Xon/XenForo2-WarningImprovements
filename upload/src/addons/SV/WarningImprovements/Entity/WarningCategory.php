@@ -14,16 +14,16 @@ use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
+ * COLUMNS
+ * @property int|null warning_category_id
+ * @property int|null parent_warning_category_id
+ * @property int display_order
+ * @property array allowed_user_group_ids
  *
- * @property int warning_category_id
- * @property int threshold_points
- * @property string expiry_type
- * @property int expiry_extension
- * @property bool active
- *
- * @property WarningCategory Parent
- * @property WarningCategory[] ChildCategories
- * @property WarningDefinition[] WarningDefinitions
+ * RELATIONS
+ * @property \SV\WarningImprovements\Entity\WarningDefault Parent
+ * @property \SV\WarningImprovements\Entity\WarningDefault[] ChildCategories
+ * @property \XF\Entity\WarningDefinition[] WarningDefinitions
  */
 class WarningCategory extends Entity
 {
