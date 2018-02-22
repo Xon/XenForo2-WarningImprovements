@@ -76,7 +76,7 @@ class Warning extends XFCP_Warning
      */
     public function updatePendingExpiryFor(UserEntity $user = null, $checkBannedStatus)
     {
-        if (!$user)
+        if (!$user || !$user->Option)
         {
             return null;
         }
@@ -86,7 +86,7 @@ class Warning extends XFCP_Warning
 
         $effectiveNextExpiry = $this->getEffectiveNextExpiry($user->user_id, $checkBannedStatus);
 
-        $user->fastUpdate('sv_pending_warning_expiry', $effectiveNextExpiry);
+        $user->Option->fastUpdate('sv_pending_warning_expiry', $effectiveNextExpiry);
 
         $db->commit();
 

@@ -22,7 +22,7 @@ class Listener
         }
     }
 
-    public static function visitor_setup(User &$visitor)
+    public static function visitorsetup(User &$visitor)
     {
         $userId = $visitor->user_id;
         if (empty($userId))
@@ -33,15 +33,16 @@ class Listener
         /** @var \SV\WarningImprovements\XF\Entity\UserOption $option */
         $option = $visitor->Option;
 
-        if (isset($option->sv_pending_warning_expiry) &&
-            $option->sv_pending_warning_expiry <= \XF::$time
+        if ($option->offsetExists('sv_pending_warning_expiry') &&
+            ($sv_pending_warning_expiry = $option->sv_pending_warning_expiry) &&
+            $sv_pending_warning_expiry <= \XF::$time
         )
         {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningModel */
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = \XF::repository('XF:Warning');
             if (is_callable([$warningRepo, 'processExpiredWarningsForUser']))
             {
-                $warningModel->processExpiredWarningsForUser($visitor, $visitor->is_banned);
+                $warningRepo->processExpiredWarningsForUser($visitor, $visitor->is_banned);
             }
         }
     }

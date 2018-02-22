@@ -1,0 +1,9 @@
+{
+    "event_id": "visitor_setup",
+    "execute_order": 10,
+    "callback_class": "SV\\WarningImprovements\\Listener",
+    "callback_method": "visitorsetup",
+    "active": true,
+    "hint": "",
+    "description": "Expire warning on visit if they are known to be pending"
+}
