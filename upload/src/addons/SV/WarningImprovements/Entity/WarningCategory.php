@@ -112,8 +112,8 @@ class WarningCategory extends Entity
      */
     public static function getStructure(Structure $structure)
     {
-        $structure->table = 'xf_sv_warning_default';
-        $structure->shortName = 'SV\WarningImprovements:WarningDefault';
+        $structure->table = 'xf_sv_warning_category';
+        $structure->shortName = 'SV\WarningImprovements:WarningCategory';
         $structure->primaryKey = 'warning_category_id';
         $structure->columns = [
             'warning_category_id'        => ['type' => self::UINT, 'autoIncrement' => true, 'nullable' => true],
