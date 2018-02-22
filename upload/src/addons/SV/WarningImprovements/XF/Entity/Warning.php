@@ -10,6 +10,12 @@ use XF\Mvc\Entity\Structure;
  */
 class Warning extends XFCP_Warning
 {
+    public function canViewIssuer()
+    {
+        $visitor = \XF::visitor();
+        return $visitor->hasPermission('general', 'viewWarning_issuer');
+    }
+
     protected function _postDelete()
     {
         parent::_postDelete();

@@ -133,7 +133,9 @@ class Warning extends XFCP_Warning
 
         /** @var \XF\Service\User\TempChange $changeService */
         $changeService = $this->app()->service('XF:User\TempChange');
+
         $expired = $expired || $changes->count() > 0;
+
         /** @var \XF\Entity\UserChangeTemp $change */
         foreach ($changes AS $change)
         {
