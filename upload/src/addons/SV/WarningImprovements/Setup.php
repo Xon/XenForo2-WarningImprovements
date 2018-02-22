@@ -48,7 +48,7 @@ class Setup extends AbstractSetup
     {
         $db = $this->db();
 
-        $defaultRegisteredGroupId = 2;
+        $defaultRegisteredGroupId = \XF\Entity\User::GROUP_REG;
 
         // create default warning category, do not use the data writer as that requires the rest of the add-on to be setup
         $db->query("INSERT IGNORE INTO xf_sv_warning_category (warning_category_id, parent_warning_category_id, display_order, allowed_user_group_ids)

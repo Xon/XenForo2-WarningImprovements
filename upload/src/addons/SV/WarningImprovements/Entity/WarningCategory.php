@@ -46,7 +46,7 @@ class WarningCategory extends Entity
             'parent_warning_category_id' => ['type' => self::UINT, 'nullable' => true],
             'display_order'              => ['type' => self::UINT, 'default' => 0],
             'allowed_user_group_ids'     => [
-                'type' => self::LIST_COMMA, 'default' => [2],
+                'type' => self::LIST_COMMA, 'default' => [\XF\Entity\User::GROUP_REG],
                 'list' => ['type' => 'posint', 'unique' => true, 'sort' => SORT_NUMERIC]
             ],
 
