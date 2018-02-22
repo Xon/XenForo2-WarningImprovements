@@ -2,8 +2,6 @@
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
-
-
 /**
  * Extends \XF\Pub\Controller\Member
  */
