@@ -125,7 +125,7 @@ class Setup extends AbstractSetup
             {
                 $table->checkExists(true);
             }
-            $table->addColumn('warning_default_id', 'int');
+            $table->addColumn('warning_default_id', 'int')->autoIncrement();
             $table->addColumn('threshold_points', 'smallint')->setDefault(0);
             $table->addColumn('expiry_type', 'enum')->values(['never', 'days', 'weeks', 'months', 'years'])->setDefault('never');
             $table->addColumn('expiry_extension', 'smallint')->setDefault(0);
@@ -139,7 +139,7 @@ class Setup extends AbstractSetup
             {
                 $table->checkExists(true);
             }
-            $table->addColumn('warning_category_id', 'int');
+            $table->addColumn('warning_category_id', 'int')->autoIncrement();
             $table->addColumn('parent_warning_category_id', 'int')->nullable(true)->setDefault(null);
             $table->addColumn('display_order', 'int')->setDefault(0);
             $table->addColumn('allowed_user_group_ids', 'varbinary', 255)->setDefault('2');
