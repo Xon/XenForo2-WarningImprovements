@@ -108,8 +108,6 @@ class Warning extends XFCP_Warning
             return false;
         }
 
-        $db = $this->db();
-
         $warnings = $this->finder('XF:Warning')
                          ->where('expiry_date', '<=', \XF::$time)
                          ->where('expiry_date', '>', 0)
@@ -117,6 +115,7 @@ class Warning extends XFCP_Warning
                          ->where('user_id', $userId)
                          ->fetch();
         $expired = $warnings->count() > 0;
+
         /** @var \XF\Entity\Warning $warning */
         foreach ($warnings AS $warning)
         {
@@ -149,6 +148,7 @@ class Warning extends XFCP_Warning
                          ->where('user_id', $userId)
                          ->fetch();
             $expired = $expired || $bans->count() > 0;
+
             /** @var \XF\Entity\UserBan $userBan */
             foreach ($bans AS $userBan)
             {
