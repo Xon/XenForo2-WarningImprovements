@@ -25,6 +25,7 @@ use XF\Mvc\Entity\Structure;
  * @property \SV\WarningImprovements\Entity\WarningDefault Parent
  * @property \SV\WarningImprovements\Entity\WarningDefault[] ChildCategories
  * @property \XF\Entity\WarningDefinition[] WarningDefinitions
+ * @property \XF\Entity\WarningAction[] WarningActions
  */
 class WarningCategory extends Entity
 {
@@ -104,6 +105,28 @@ class WarningCategory extends Entity
                 }
             }
         }
+
+        foreach ($this->ChildCategories AS $childCategory)
+        {
+            $childCategory->delete();
+        }
+
+        foreach ($this->WarningDefinitions AS $warningDefinition)
+        {
+            if ($warningDefinition->warning_definition_id !== 0)
+            {
+                $warningDefinition->delete();
+            }
+            else
+            {
+                // something needs to happen here....
+            }
+        }
+
+        foreach ($this->WarningActions AS $warningAction)
+        {
+            $warningAction->delete();
+        }
     }
 
     /**
@@ -153,6 +176,12 @@ class WarningCategory extends Entity
                 'conditions' => [['sv_warning_category_id', '=', '$warning_category_id']],
                 'primary' => true
             ],
+            'WarningActions' => [
+                'entity' => 'XF:WarningAction',
+                'type' => self::TO_MANY,
+                'conditions' => [['sv_warning_category_id', '=', '$warning_category_id']],
+                'primary' => true
+            ]
         ];
 
         return $structure;
