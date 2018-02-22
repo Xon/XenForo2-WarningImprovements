@@ -113,13 +113,20 @@ class WarningCategory extends Entity
 
         foreach ($this->WarningDefinitions AS $warningDefinition)
         {
+            /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
             if ($warningDefinition->warning_definition_id !== 0)
             {
                 $warningDefinition->delete();
             }
             else
             {
-                // something needs to happen here....
+                /** @var \SV\WarningImprovements\Entity\WarningCategory $firstWarningCategory */
+                $firstWarningCategory = $this->finder('SV\WarningImprovements:WarningCategory')
+                    ->order(['parent_warning_category_id', 'display_order'])
+                    ->fetch()
+                    ->first();
+                $warningDefinition->sv_warning_category_id = $firstWarningCategory->warning_category_id;
+                $warningDefinition->save();
             }
         }
 
