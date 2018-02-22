@@ -6,15 +6,19 @@ use SV\WarningImprovements\Entity\WarningCategory;
 use XF\Mvc\Entity\Structure;
 
 /**
- * Extends \XF\Entity\WarningDefinition
- *
+ * COLUMNS
  * @property int sv_warning_category_id
- * @property WarningCategory Category
+ * @property int sv_display_order
+ * @property bool sv_custom_title
+ *
+ * RELATIONS
+ * @property \SV\WarningImprovements\Entity\WarningCategory Category
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {
     /**
      * @param Structure $structure
+     *
      * @return Structure
      */
     public static function getStructure(Structure $structure)
@@ -22,6 +26,8 @@ class WarningDefinition extends XFCP_WarningDefinition
         $structure = parent::getStructure($structure);
 
         $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'default' => 0];
+        $structure->columns['sv_display_order'] = ['type' => self::UINT];
+        $structure->columns['sv_custom_title'] = ['type' => self::BOOL, 'default' => false];
 
         $structure->relations['Category'] = [
             'entity' => 'SV\WarningImprovements:WarningDefault',
