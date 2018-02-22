@@ -29,9 +29,29 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningCategory extends Entity
 {
-    public function verifyParentWarningCategoryId()
+    public function verifyParentWarningCategoryId($parentWarningCategoryId)
     {
-        throw new \LogicException('not implemented');
+        if ($parentWarningCategoryId === 0)
+        {
+            return true;
+        }
+
+        /** @var \SV\WarningImprovements\Finder\WarningCategory $finder */
+        $finder = $this->finder('SV\WarningImprovements:WarningCategory');
+        $categoriesInWarningCategories = $finder->inParentWarningCategory($this)->fetch();
+
+        if ($this->isInsert() || empty($categoriesInWarningCategories))
+        {
+            /** @var \SV\WarningImprovements\Entity\WarningCategory $parentWarningCategory */
+            $parentWarningCategory = $this->_em->findOne('SV\WarningImprovements:WarningCategory', $parentWarningCategoryId);
+            if ($parentWarningCategory && $parentWarningCategory->parent_warning_category_id === 0)
+            {
+                return true;
+            }
+        }
+
+        $this->error('sv_please_enter_valid_warning_category_id', 'parent_warning_category_id');
+        return false;
     }
 
     /**
