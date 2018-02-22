@@ -1,0 +1,9 @@
+{
+    "template": "warning_info",
+    "description": "Hide actual warned by user if the visitor has no permission to view it",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:username user=\"{$warning.WarnedBy}\" />",
+    "replace": "<xf:if is=\"$warning.canViewIssuer()\">\n\t<xf:username user=\"{$warning.WarnedBy}\" />\n<xf:else />\n\t{{ phrase('WarningStaff') }}\n</xf:if>"
+}
