@@ -14,13 +14,16 @@ class Warning extends XFCP_Warning
     {
         $response = parent::actionIndex($params);
 
-        if ($warnings = $response->getParam('warnings'))
+        if ($response instanceof \XF\Mvc\Reply\View)
         {
-            $categoryRepo = $this->getCategoryRepo();
-            $categories = $categoryRepo->findCategoryList()->fetch();
-            $categoryTree = $categoryRepo->createCategoryTree($categories);
+            if ($warnings = $response->getParam('warnings'))
+            {
+                $categoryRepo = $this->getCategoryRepo();
+                $categories = $categoryRepo->findCategoryList()->fetch();
+                $categoryTree = $categoryRepo->createCategoryTree($categories);
 
-            $response->setParam('categoryTree', $categoryTree);
+                $response->setParam('categoryTree', $categoryTree);
+            }
         }
 
         return $response;
