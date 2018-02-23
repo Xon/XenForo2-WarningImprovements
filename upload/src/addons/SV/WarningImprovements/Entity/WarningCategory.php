@@ -76,6 +76,16 @@ class WarningCategory extends AbstractCategoryTree
         return $phrase;
     }
 
+    public function warningActionAdded(\XF\Entity\WarningAction $warningAction)
+    {
+        $this->warning_count++;
+    }
+
+    public function warningActionRemoved(\XF\Entity\WarningAction $warningAction)
+    {
+        $this->warning_count--;
+    }
+
     protected function _postSave()
     {
         if ($this->isUpdate())
