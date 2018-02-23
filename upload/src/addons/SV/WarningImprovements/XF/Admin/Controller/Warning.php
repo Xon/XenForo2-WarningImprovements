@@ -100,15 +100,29 @@ class Warning extends XFCP_Warning
         }
 
         $this->defaultSaveProcess($defaultAction)->run();
-
+        
         return $this->redirect(
             $this->buildLink('warnings') . $this->buildLinkHash('warning_default-' . $defaultAction->getEntityId())
         );
     }
 
-    public function actionDefaultDelete()
+    public function actionDefaultDelete(ParameterBag $params)
     {
+        $defaultAction = $this->assertDefaultExists($params->warning_default_id);
 
+        if ($this->isPost())
+        {
+            $defaultAction->delete();
+
+            return $this->redirect($this->buildLink('warnings'));
+        }
+        else
+        {
+            $viewParams = [
+                'defaultAction' => $defaultAction
+            ];
+            return $this->view('XF:Warning\DefaultDelete', 'sv_warningimprovements_warning_default_delete', $viewParams);
+        }
     }
 
     public function categoryAddEdit()
