@@ -23,7 +23,7 @@ class Setup extends AbstractSetup
         {
             $sm->createTable($tableName, $callback);
         }
-        
+
         foreach ($this->getAlterTables() as $tableName => $callback)
         {
             $sm->alterTable($tableName, $callback);
@@ -143,11 +143,6 @@ class Setup extends AbstractSetup
         }
     }
 
-    public function upgrade2000000Step4()
-    {
-
-    }
-
     public function uninstallStep1()
     {
         $sm = $this->schemaManager();
@@ -201,7 +196,7 @@ class Setup extends AbstractSetup
             }
 
             $table->addColumn('warning_category_id', 'int')->autoIncrement();
-            $table->addColumn('parent_category_id', 'int')->nullable(true)->setDefault(0);
+            $table->addColumn('parent_category_id', 'int')->nullable(true)->setDefault(null);
             $table->addColumn('display_order', 'int')->setDefault(0);
             $table->addColumn('lft', 'int')->setDefault(0);
             $table->addColumn('rgt', 'int')->setDefault(0);
@@ -243,6 +238,13 @@ class Setup extends AbstractSetup
             $table->addColumn('sv_post_node_id', 'int')->setDefault(0);
             $table->addColumn('sv_post_thread_id', 'int')->setDefault(0);
             $table->addColumn('sv_post_as_user_id', 'int')->setDefault(0);
+        };
+
+        $tables['xf_sv_warning_category'] = function (Alter $table)
+        {
+            $table->renameColumn('parent_warning_category_id', 'parent_category_id')
+                  ->nullable(true)
+                  ->setDefault(null);
         };
 
         return $tables;
