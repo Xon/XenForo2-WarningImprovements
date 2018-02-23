@@ -293,6 +293,12 @@
         "version_string": "1.0.0",
         "hash": "ae4a95cc07457b883255e4389346e7c9"
     },
+    "sv_add_warning_default.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "4f6930671e16e6a004de63b1fa9e28a4"
+    },
     "sv_allowed_user_groups.txt": {
         "global_cache": false,
         "version_id": 1040100,
