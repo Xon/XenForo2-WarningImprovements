@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\XF\Admin\Controller;
 
+use XF\Mvc\FormAction;
 use XF\Mvc\ParameterBag;
 
 /**
@@ -100,7 +101,7 @@ class Warning extends XFCP_Warning
         }
 
         $this->defaultSaveProcess($defaultAction)->run();
-        
+
         return $this->redirect(
             $this->buildLink('warnings') . $this->buildLinkHash('warning_default-' . $defaultAction->getEntityId())
         );
@@ -125,29 +126,123 @@ class Warning extends XFCP_Warning
         }
     }
 
-    public function categoryAddEdit()
+    public function categoryAddEdit(\SV\WarningImprovements\Entity\WarningCategory $category)
     {
-
+        $viewParams = [
+            'category' => $category,
+            'categories' => $this->getCategoryRepo()->getWarningCategoryRoots(),
+            'userGroups' => $this->repository('XF:UserGroup')->getUserGroupTitlePairs()
+        ];
+        return $this->view('XF:Warning\Category\Edit', 'sv_warning_category_edit', $viewParams);
     }
 
     public function actionCategoryAdd()
     {
-
+        /** @var \SV\WarningImprovements\Entity\WarningCategory $category */
+        $category = $this->em()->create('SV\WarningImprovements:WarningCategory');
+        return $this->categoryAddEdit($category);
     }
 
-    public function actionCategoryEdit()
+    public function actionCategoryEdit(ParameterBag $params)
     {
-
+        $category = $this->assertCategoryExists($params->warning_category_id);
+        return $this->categoryAddEdit($category);
     }
 
-    public function actionCategorySave()
+    protected function categorySaveProcess(\SV\WarningImprovements\Entity\WarningCategory $category)
     {
+        $form = $this->formAction();
 
+        $input = $this->filter([
+            'warning_category_id' => 'str',
+            'parent_warning_category_id' => 'uint',
+            'display_order' => 'uint',
+            'allowed_user_group_ids' => 'array-uint'
+        ]);
+
+        $form->basicEntitySave($category, $input);
+
+        $phraseInput = $this->filter([
+            'title' => 'str'
+        ]);
+        $form->validate(function(FormAction $form) use ($phraseInput)
+        {
+            if ($phraseInput['title'] === '')
+            {
+                $form->logError(\Xf::phrase('please_enter_valid_title'), 'title');
+            }
+        });
+        $form->apply(function() use ($phraseInput, $category)
+        {
+            foreach ($phraseInput AS $type => $text)
+            {
+                $masterPhrase = $category->getMasterPhrase($type);
+                $masterPhrase->phrase_text = $text;
+                $masterPhrase->save();
+            }
+        });
+
+        return $form;
     }
 
-    public function actionCategoryDelete()
+    public function actionCategorySave(ParameterBag $params)
     {
+        $this->assertPostOnly();
 
+        if ($params->warning_category_id)
+        {
+            $category = $this->assertDefaultExists($params->warning_category_id);
+        }
+        else
+        {
+            /** @var \SV\WarningImprovements\Entity\WarningCategory $category */
+            $category = $this->em()->create('SV\WarningImprovements:WarningCategory');
+        }
+
+        $this->categorySaveProcess($category)->run();
+
+        return $this->redirect(
+            $this->buildLink('warnings') . $this->buildLinkHash('warning_default-' . $category->getEntityId())
+        );
+    }
+
+    public function actionCategoryDelete(ParameterBag $params)
+    {
+        $category = $this->assertDefaultExists($params->warning_category_id);
+
+        if ($this->isPost())
+        {
+            $category->delete();
+
+            return $this->redirect($this->buildLink('warnings'));
+        }
+        else
+        {
+            $viewParams = [
+                'category' => $category
+            ];
+            return $this->view('XF:Warning\DefaultDelete', 'sv_warningimprovements_warning_default_delete', $viewParams);
+        }
+    }
+
+    /**
+     * @return \SV\WarningImprovements\Repository\WarningCategory
+     */
+    protected function getCategoryRepo()
+    {
+        return $this->repository('SV\WarningImprovements:WarningCategory');
+    }
+
+    /**
+     * @param $id
+     * @param null $with
+     * @param null $phraseKey
+     *
+     * @return \SV\WarningImprovements\Entity\WarningCategory
+     */
+    protected function assertCategoryExists($id, $with = null, $phraseKey = null)
+    {
+        return $this->assertRecordExists('SV\WarningImprovements:WarningCategory', $id, $with, $phraseKey);
     }
 
     /**
