@@ -96,7 +96,7 @@ class Warning extends XFCP_Warning
         else
         {
             /** @var \SV\WarningImprovements\Entity\WarningDefault $defaultAction */
-            $defaultAction = $this->em()->create('XF:WarningDefinition');
+            $defaultAction = $this->em()->create('SV\WarningImprovements:WarningDefault');
         }
 
         $this->defaultSaveProcess($defaultAction)->run();
