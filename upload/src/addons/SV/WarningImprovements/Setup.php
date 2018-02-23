@@ -62,7 +62,7 @@ class Setup extends AbstractSetup
         // set all warning definitions to be in default warning category, note; the phrase is defined in the XML
         $db->query('UPDATE xf_warning_definition
             SET sv_warning_category_id = 1
-            WHERE sv_warning_category_id = 0 OR sv_warning_category_id is null OR
+            WHERE sv_warning_category_id is null OR
                   NOT exists (SELECT *
                               FROM xf_sv_warning_category
                               WHERE xf_warning_definition.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
@@ -71,8 +71,6 @@ class Setup extends AbstractSetup
 
     public function upgrade2000000Step1()
     {
-        $db = $this->db();
-
         $this->installStep1();
 
         $sm = $this->schemaManager();
@@ -86,6 +84,11 @@ class Setup extends AbstractSetup
         {
             $sm->alterTable($tableName, $callback);
         }
+    }
+
+    public function upgrade2000000Step2()
+    {
+        $db = $this->db();
 
         $db->query('
             UPDATE xf_sv_warning_category
@@ -93,15 +96,43 @@ class Setup extends AbstractSetup
             WHERE parent_category_id = 0'
         );
 
-        $this->installStep4();
+        $db->query('
+            UPDATE xf_warning_definition
+            SET sv_warning_category_id = NULL
+            WHERE sv_warning_category_id = 0'
+        );
+
+        $db->query('
+            UPDATE xf_warning_action
+            SET sv_warning_category_id = NULL
+            WHERE sv_warning_category_id = 0'
+        );
+
+        $db->query('
+            UPDATE xf_warning_action
+            SET sv_post_node_id = NULL
+            WHERE sv_post_node_id = 0'
+        );
+
+        $db->query('
+            UPDATE xf_warning_action
+            SET sv_post_thread_id = NULL
+            WHERE sv_post_thread_id = 0'
+        );
+
+        $db->query('
+            UPDATE xf_warning_action
+            SET sv_post_as_user_id = NULL
+            WHERE sv_post_as_user_id = 0'
+        );
     }
 
-    public function upgrade2000000Step2()
+    public function upgrade2000000Step3()
     {
         $this->installStep4();
     }
 
-    public function upgrade2000000Step3()
+    public function upgrade2000000Step4()
     {
         $map = [
             'sv_warning_category_*_title' => 'sv_warning_category_title.*'
