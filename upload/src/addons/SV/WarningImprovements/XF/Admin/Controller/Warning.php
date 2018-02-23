@@ -266,7 +266,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return \SV\WarningImprovements\Repository\WarningCategory
+     * @return \SV\WarningImprovements\Repository\WarningCategory|\XF\Mvc\Entity\Repository
      */
     protected function getCategoryRepo()
     {
@@ -277,8 +277,7 @@ class Warning extends XFCP_Warning
      * @param $id
      * @param null $with
      * @param null $phraseKey
-     *
-     * @return \SV\WarningImprovements\Entity\WarningCategory
+     * @return \SV\WarningImprovements\Entity\WarningCategory|\XF\Mvc\Entity\Entity
      */
     protected function assertCategoryExists($id, $with = null, $phraseKey = null)
     {
@@ -289,8 +288,7 @@ class Warning extends XFCP_Warning
      * @param $id
      * @param null $with
      * @param null $phraseKey
-     *
-     * @return \SV\WarningImprovements\Entity\WarningDefault
+     * @return \SV\WarningImprovements\Entity\WarningDefault|\XF\Mvc\Entity\Entity
      */
     protected function assertDefaultExists($id, $with = null, $phraseKey = null)
     {
