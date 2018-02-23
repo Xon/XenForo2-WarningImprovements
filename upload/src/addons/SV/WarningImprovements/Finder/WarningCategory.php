@@ -17,6 +17,7 @@ class WarningCategory extends Finder
     public function rootOnly()
     {
         $this->where('parent_category_id', '=', 0);
+        $this->where('parent_category_id', '!=', null);
 
         return $this;
     }

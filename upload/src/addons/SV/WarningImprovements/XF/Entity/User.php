@@ -10,40 +10,40 @@ use XF\Mvc\Entity\Structure;
  */
 class User extends XFCP_User
 {
-    public function canViewWarningActions(&$error = null, User $asUser = null)
+    public function canViewWarningActions(&$error = null)
     {
-        $asUser = $asUser ?: \XF::visitor();
+        $visitor = \XF::visitor();
 
-        if (!$asUser->user_id)
+        if (!$visitor->user_id)
         {
             return false;
         }
 
-        if ($asUser->user_id == $this->user_id)
+        if ($visitor->user_id == $this->user_id)
         {
             return \XF::options()->sv_view_own_warnings;
         }
 
-        return $asUser->hasPermission('general', 'sv_viewWarningActions');
+        return $visitor->hasPermission('general', 'sv_viewWarningActions');
     }
 
-    public function canViewNonSummaryWarningActions(&$error = null, User $asUser = null)
+    public function canViewNonSummaryWarningActions(&$error = null)
     {
-        $asUser = $asUser ?: \XF::visitor();
+        $visitor = \XF::visitor();
 
-        if (!$asUser->user_id)
+        if (!$visitor->user_id)
         {
             return false;
         }
 
-        return $asUser->hasPermission('general', 'sv_showAllWarningActions');
+        return $visitor->hasPermission('general', 'sv_showAllWarningActions');
     }
 
-    public function canViewDiscouragedWarningActions(&$error = null, User $asUser = null)
+    public function canViewDiscouragedWarningActions(&$error = null)
     {
-        $asUser = $asUser ?: \XF::visitor();
+        $visitor = \XF::visitor();
 
-        if (!$asUser->user_id)
+        if (!$visitor->user_id)
         {
             return false;
         }
@@ -53,11 +53,11 @@ class User extends XFCP_User
         switch ($showDiscouragedWarningActions)
         {
             case 0: // Admin/Mod/User
-                return $asUser->is_admin || $asUser->is_moderator || ($this->user_id == $asUser->user_id);
+                return $visitor->is_admin || $visitor->is_moderator || ($this->user_id == $visitor->user_id);
             case 1: // Admin/Mod
-                return $asUser->is_admin || $asUser->is_moderator;
+                return $visitor->is_admin || $visitor->is_moderator;
             case 2: // Admin
-                return $asUser->is_admin;
+                return $visitor->is_admin;
             case 3:
             default: // None
                 return false;
