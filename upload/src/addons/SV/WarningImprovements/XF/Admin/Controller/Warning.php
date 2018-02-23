@@ -14,6 +14,22 @@ class Warning extends XFCP_Warning
     {
         $response = parent::actionIndex($params);
 
+        if ($warnings = $response->getParam('warnings'))
+        {
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = $this->getWarningRepo();
+            $escaltingDefaults = $warningRepo->getWarningDefaultExtentions();
+
+            /** @var \SV\WarningImprovements\Finder\WarningCategory $warningCategoryFinder */
+            $warningCategoryFinder = $this->finder('SV\WarningImprovements:WarningCategory');
+            $warningCategories = $warningCategoryFinder->fetch();
+
+            $response->setParams([
+                'escalatingDefaults' => $escaltingDefaults,
+                'warningCategories' => $warningCategories
+            ]);
+        }
+
         return $response;
     }
 
@@ -56,6 +72,15 @@ class Warning extends XFCP_Warning
     public function _actionAddEdit(\XF\Entity\WarningAction $action)
     {
         $response = parent::_actionAddEdit($action);
+
+        if ($response instanceof \XF\Mvc\Reply\View)
+        {
+            /** @var \XF\Repository\Node $nodeRepo */
+            $nodeRepo = $this->app()->repository('XF:Node');
+            $nodes = $nodeRepo->getFullNodeList()->filterViewable();
+            
+            $response->setParam('nodeTree', $nodeRepo->createNodeTree($nodes));
+        }
 
         return $response;
     }

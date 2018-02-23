@@ -9,6 +9,15 @@ use \XF\Entity\User as UserEntity;
  */
 class Warning extends XFCP_Warning
 {
+    public function getWarningDefaultExtentions()
+    {
+        return $this->db()->fetchAllKeyed("
+            SELECT *
+            FROM xf_sv_warning_default
+            ORDER BY threshold_points
+        ", 'warning_default_id');
+    }
+
     /**
      * @param $userId
      * @param $checkBannedStatus

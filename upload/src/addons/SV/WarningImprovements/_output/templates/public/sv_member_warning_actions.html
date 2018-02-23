@@ -28,7 +28,7 @@
 		</div>
 		<div class="block-footer">
 			<ul class="listInline listInline--bullet">
-				<li>{{ phrase('sv_total_warning_actions:') }} {{ $user.WarningActionsCount }}</li>
+				<li>{{ phrase('sv_total_warning_actions:') }} {{ count($user.WarningActions)|number }}</li>
 			</ul>
 		</div>
 	</div>

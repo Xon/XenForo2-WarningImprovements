@@ -7,7 +7,7 @@
     "admin/sv_warning_action_edit.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "b76e81793a6be5d3cc5df7745a2d79c1"
+        "hash": "29c5eadb3b15985476c5d1ebc5ec62a0"
     },
     "admin/sv_warning_action_list.html": {
         "version_id": 2000000,
@@ -77,7 +77,7 @@
     "public/sv_member_warning_actions.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "54117c73c4fcecd5bef39cf2a4e4cf8f"
+        "hash": "66d3823ce7dc9dc191ae9ea5d3c71ec8"
     },
     "public/sv_warning_actions_info.html": {
         "version_id": 2000000,
