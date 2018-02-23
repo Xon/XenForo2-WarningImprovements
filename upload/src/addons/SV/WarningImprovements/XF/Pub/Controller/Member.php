@@ -9,9 +9,20 @@ use XF\Mvc\ParameterBag;
  */
 class Member extends XFCP_Member
 {
-    public function actionWarningActions()
+    public function actionWarningActions(ParameterBag $params)
     {
+        /** @var \SV\WarningImprovements\XF\Entity\User $user */
+        $user = $this->assertViewableUser($params->user_id);
 
+        if (!$user->canViewWarningActions())
+        {
+            throw $this->exception($this->noPermission());
+        }
+
+        $viewParams = [
+            'user' => $user
+        ];
+        return $this->view('XF:Member\WarningActions', 'sv_member_warning_actions', $viewParams);
     }
 
     public function actionWarn(ParameterBag $params)

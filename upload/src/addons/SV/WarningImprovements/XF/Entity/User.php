@@ -64,9 +64,28 @@ class User extends XFCP_User
         }
     }
 
+    public function getWarningActions()
+    {
+        /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
+        $userChangeTempRepo = $this->repository('XF:UserChangeTemp');
+
+        return $userChangeTempRepo->getWarningActions(
+            $this,
+            $this->canViewNonSummaryWarningActions(),
+            $this->canViewDiscouragedWarningActions()
+        );
+    }
+
     public function getWarningActionsCount()
     {
-        return 0; // need to work on
+        /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
+        $userChangeTempRepo = $this->repository('XF:UserChangeTemp');
+
+        return $userChangeTempRepo->countWarningActions(
+            $this,
+            $this->canViewNonSummaryWarningActions(),
+            $this->canViewDiscouragedWarningActions()
+        );
     }
 
     /**
@@ -77,6 +96,7 @@ class User extends XFCP_User
     {
         $structure = parent::getStructure($structure);
 
+        $structure->getters['warning_actions'] = true;
         $structure->getters['warning_actions_count'] = true;
     
         return $structure;

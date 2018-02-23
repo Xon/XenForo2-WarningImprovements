@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Finder\\UserChangeTemp",
+    "to_class": "SV\\WarningImprovements\\XF\\Finder\\UserChangeTemp",
+    "execute_order": 10,
+    "active": true
+}
