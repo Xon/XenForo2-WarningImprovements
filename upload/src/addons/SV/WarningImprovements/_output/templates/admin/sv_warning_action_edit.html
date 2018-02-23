@@ -2,15 +2,12 @@
 
 <xf:selectrow name="sv_warning_category_id" value="{$action.sv_warning_category_id}}" label="{{ phrase('sv_warning_category') }}">
 	<xf:option value="0">{{ phrase('(none)') }}</xf:option>
-
 	<xf:option source="$warningCategories" />
 </xf:selectrow>
 
 <hr class="formRowSep" /><xf:comment>Required to give seperator similar to XF1</xf:comment>
 
-<xf:selectrow name="sv_post_node_id" value="{$action.sv_post_node_id}" class="js-nodeList"
-			  label="{{ phrase('sv_warning_node_id') }}"
-			  explain="{{ phrase('sv_warning_action_post_new_thread') }}">
+<xf:selectrow name="sv_post_node_id" value="{$action.sv_post_node_id}" class="js-nodeList" label="{{ phrase('sv_warning_node_id') }}" explain="{{ phrase('sv_warning_action_post_new_thread') }}">
 	<xf:option value="0">{{ phrase('(none)') }}</xf:option>
 
 	<xf:foreach loop="$nodeTree.getFlattened(0)" value="$treeEntry">
