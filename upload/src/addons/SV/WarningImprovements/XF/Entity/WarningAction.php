@@ -24,10 +24,10 @@ class WarningAction extends XFCP_WarningAction
     {
         $structure = parent::getStructure($structure);
 
-        $structure->columns['sv_post_node_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
-        $structure->columns['sv_post_thread_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
-        $structure->columns['sv_post_as_user_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
-        $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
+        $structure->columns['sv_post_node_id'] = ['type' => self::UINT, 'default' => 0];
+        $structure->columns['sv_post_thread_id'] = ['type' => self::UINT, 'default' => 0];
+        $structure->columns['sv_post_as_user_id'] = ['type' => self::UINT, 'default' => 0];
+        $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'default' => 0];
 
         $structure->relations['Category'] = [
             'entity' => 'SV\WarningImprovements:WarningDefault',

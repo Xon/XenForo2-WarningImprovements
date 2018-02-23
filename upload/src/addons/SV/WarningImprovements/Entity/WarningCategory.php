@@ -26,10 +26,11 @@ use XF\Mvc\Entity\Structure;
  *
  * GETTERS
  * @property \XF\Phrase title
+ * @property mixed titleRaw
  *
  * RELATIONS
  * @property \XF\Entity\Phrase MasterTitle
- * @property \SV\WarningImprovements\Entity\WarningDefault Parent
+ * @property \SV\WarningImprovements\Entity\WarningCategory Parent
  * @property \SV\WarningImprovements\Entity\WarningCategory[] ChildCategories
  * @property \XF\Entity\WarningDefinition[] WarningDefinitions
  * @property \XF\Entity\WarningAction[] WarningActions
@@ -43,6 +44,11 @@ class WarningCategory extends AbstractCategoryTree
     public function getTitle()
     {
         return \XF::phrase($this->getPhraseName('title'));
+    }
+
+    public function getTitleRaw()
+    {
+        return $this->getTitle()->render();
     }
 
     public function getPhraseName($type)
@@ -86,7 +92,6 @@ class WarningCategory extends AbstractCategoryTree
                         if ($maserPhrase)
                         {
                             $type = substr(strtolower($name), 6); // strip Master
-
                             $maserPhrase->title = $this->getPhraseName($type);
                             $maserPhrase->save();
                         }
@@ -142,7 +147,8 @@ class WarningCategory extends AbstractCategoryTree
             ]
         ];
         $structure->getters = [
-            'title' => true
+            'title' => true,
+            'titleRaw' => true // onii-chan breadcrumb needs raw KappaPride
         ];
         $structure->relations = [
             'MasterTitle' => [
@@ -154,7 +160,7 @@ class WarningCategory extends AbstractCategoryTree
                 ]
             ],
             'Parent' => [
-                'entity' => 'SV\WarningImprovements:WarningDefault',
+                'entity' => 'SV\WarningImprovements:WarningCategory',
                 'type' => self::TO_ONE,
                 'conditions' => [['warning_category_id', '=', '$parent_category_id']],
                 'primary' => true
@@ -183,6 +189,8 @@ class WarningCategory extends AbstractCategoryTree
         ];
 
         static::addCategoryTreeStructureElements($structure);
+
+        $structure->behaviors['XF:TreeStructured']['titleField'] = 'titleRaw';
 
         return $structure;
     }

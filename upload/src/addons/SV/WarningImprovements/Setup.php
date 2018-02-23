@@ -273,8 +273,8 @@ class Setup extends AbstractSetup
         $tables['xf_sv_warning_category'] = function (Alter $table)
         {
             $table->renameColumn('parent_warning_category_id', 'parent_category_id')
-                  ->nullable(true)
-                  ->setDefault(null);
+                ->nullable(true)
+                ->setDefault(null);
         };
 
         return $tables;
