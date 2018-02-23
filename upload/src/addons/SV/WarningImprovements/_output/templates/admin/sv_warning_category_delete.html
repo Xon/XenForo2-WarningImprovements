@@ -1,18 +1,13 @@
-<xf:title>{{ phrase('sv_confirm_deletion_of_warning_category') }}: {$warningCategory.title}</xf:title>
-<xen:h1>{{ phrase('sv_confirm_deletion_of_warning_category') }}</xen:h1>
+<xf:title>{{ phrase('confirm_action') }}</xf:title>
 
-
-	<xf:breadcrumb href="{xen:adminlink 'warnings/category-edit', '', 'warning_category_id={$warningCategory.warning_category_id}'}">{$warningCategory.title}</xf:breadcrumb>
-
-
-<xf:css src="public:delete_confirmation.css" />
-
-<xen:form action="{xen:adminlink 'warnings/category-delete', '', 'warning_category_id={$warningCategory.warning_category_id}'}" class="deleteConfirmForm">
-	<p>{{ phrase('sv_please_confirm_that_you_want_to_delete_following_warning_category') }}:</p>
-	<strong><a href="{xen:adminlink 'warnings/category-edit', '','warning_category_id={$warningCategory.warning_category_id}'}">{$warningCategory.title}</a></strong>
-	<p>{{ phrase('sv_confirm_delete_warning_category_footnote') }}</p>
-
-	<xen:submitunit save="{{ phrase('sv_delete_warning_category') }}" />
-
-	<input type="hidden" name="_xfConfirm" value="1" />
-</xen:form>
+<xf:form action="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}" ajax="true" class="block">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:inforow rowtype="confirm">
+				{{ phrase('please_confirm_that_you_want_to_delete_following:') }}
+				<strong><a href="{{ link('warnings/category-edit', null, { 'warning_category_id': $category.warning_category_id }) }}">{$category.title}</a></strong>
+			</xf:inforow>
+		</div>
+		<xf:submitrow rowtype="simple" icon="delete" />
+	</div>
+</xf:form>

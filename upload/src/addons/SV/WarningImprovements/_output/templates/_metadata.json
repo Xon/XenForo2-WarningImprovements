@@ -17,12 +17,12 @@
     "admin/sv_warning_category_delete.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "8dbfaacee44d08dd0fd371b3294947a0"
+        "hash": "86eb3c78cef391e351c1fba5f43d7372"
     },
     "admin/sv_warning_category_edit.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "2a2727eae55bff9c6685165d255483e6"
+        "hash": "cb8f9644ee76cc8d20cbb3726aa34f0c"
     },
     "admin/sv_warning_edit_inputs.html": {
         "version_id": 2000000,
@@ -37,7 +37,7 @@
     "admin/sv_warning_list_jstree.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "f3e60b9fad19158b32203c89f6ac986b"
+        "hash": "e407ddc8582f731b9ff02c5a0c90dd98"
     },
     "admin/sv_warningimprovements_criteria.html": {
         "version_id": 2000000,

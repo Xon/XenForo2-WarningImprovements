@@ -16,18 +16,11 @@ class Warning extends XFCP_Warning
 
         if ($warnings = $response->getParam('warnings'))
         {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = $this->getWarningRepo();
-            $escaltingDefaults = $warningRepo->getWarningDefaultExtentions();
+            $categoryRepo = $this->getCategoryRepo();
+            $categories = $categoryRepo->findCategoryList()->fetch();
+            $categoryTree = $categoryRepo->createCategoryTree($categories);
 
-            /** @var \SV\WarningImprovements\Finder\WarningCategory $warningCategoryFinder */
-            $warningCategoryFinder = $this->finder('SV\WarningImprovements:WarningCategory');
-            $warningCategories = $warningCategoryFinder->fetch();
-
-            $response->setParams([
-                'escalatingDefaults' => $escaltingDefaults,
-                'warningCategories' => $warningCategories
-            ]);
+            $response->setParam('categoryTree', $categoryTree);
         }
 
         return $response;
@@ -78,7 +71,7 @@ class Warning extends XFCP_Warning
             /** @var \XF\Repository\Node $nodeRepo */
             $nodeRepo = $this->app()->repository('XF:Node');
             $nodes = $nodeRepo->getFullNodeList()->filterViewable();
-            
+
             $response->setParam('nodeTree', $nodeRepo->createNodeTree($nodes));
         }
 
@@ -165,9 +158,13 @@ class Warning extends XFCP_Warning
 
     public function warningCategoryAddEdit(\SV\WarningImprovements\Entity\WarningCategory $warningCategory)
     {
+        $categoryRepo = $this->getCategoryRepo();
+        $categoryTree = $categoryRepo->createCategoryTree();
+
         $viewParams = [
             'category' => $warningCategory,
-            'categories' => $this->getCategoryRepo()->getWarningCategoryRoots(),
+            'categoryTree' => $categoryTree,
+
             'userGroups' => $this->repository('XF:UserGroup')->getUserGroupTitlePairs()
         ];
         return $this->view('XF:Warning\Category\Edit', 'sv_warning_category_edit', $viewParams);
@@ -183,7 +180,7 @@ class Warning extends XFCP_Warning
 
     public function actionCategoryEdit(ParameterBag $params)
     {
-        $warningCategory = $this->assertCategoryExists($params->warning_category_id);
+        $warningCategory = $this->assertCategoryExists($this->filter('warning_category_id', 'uint'));
 
         return $this->warningCategoryAddEdit($warningCategory);
     }
@@ -193,8 +190,7 @@ class Warning extends XFCP_Warning
         $form = $this->formAction();
 
         $input = $this->filter([
-            'warning_category_id' => 'str',
-            'parent_warning_category_id' => 'uint',
+            'parent_category_id' => 'uint',
             'display_order' => 'uint',
             'allowed_user_group_ids' => 'array-uint'
         ]);
@@ -228,9 +224,11 @@ class Warning extends XFCP_Warning
     {
         $this->assertPostOnly();
 
-        if ($params->warning_category_id)
+        $warningCategoryId = $this->filter('warning_category_id', 'uint');
+
+        if ($warningCategoryId)
         {
-            $warningCategory = $this->assertDefaultExists($params->warning_category_id);
+            $warningCategory = $this->assertCategoryExists($warningCategoryId);
         }
         else
         {
@@ -247,7 +245,7 @@ class Warning extends XFCP_Warning
 
     public function actionCategoryDelete(ParameterBag $params)
     {
-        $warningCategory = $this->assertDefaultExists($params->warning_category_id);
+        $warningCategory = $this->assertCategoryExists($this->filter('warning_category_id', 'uint'));
 
         if ($this->isPost())
         {
@@ -260,7 +258,7 @@ class Warning extends XFCP_Warning
             $viewParams = [
                 'category' => $warningCategory
             ];
-            return $this->view('XF:Warning\DefaultDelete', 'sv_warningimprovements_warning_default_delete', $viewParams);
+            return $this->view('XF:Warning\CategoryDelete', 'sv_warning_category_delete', $viewParams);
         }
     }
 

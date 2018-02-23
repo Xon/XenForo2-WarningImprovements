@@ -1,32 +1,39 @@
-<xf:title>{xen:if '{$warningCategory.warning_category_id}', '{{ phrase('sv_edit_warning_category') }}: {$warningCategory.title}', '{{ phrase('sv_create_new_warning_category') }}'}</xf:title>
-
-<xf:if is="{$warningCategory.warning_category_id}">
-	
-		<xf:breadcrumb href="{{ link('warnings') }}#_category-{$warningCategory.warning_category_id}">{$warningCategory.title}</xf:breadcrumb>
-	
+<xf:if is="$category.isInsert()">
+	<xf:title>{{ phrase('add_category') }}</xf:title>
+<xf:else />
+	<xf:title>{{ phrase('edit_category:') }} {$category.title}</xf:title>
 </xf:if>
 
-<xen:form class="AutoValidator"
-	action="{xen:adminlink 'warnings/category-save', '', 'warning_category_id={$warningCategory.warning_category_id}'}"
-	data-redirect="on">
+<xf:pageaction if="$category.warning_category_id">
+	<xf:button href="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}"
+		icon="delete"
+		data-xf-click="overlay" />
+</xf:pageaction>
 
-	<xen:textboxunit label="{{ phrase('title') }}:" name="title" value="{$warningCategory.title}" data-optinout="OptOut" data-livetitletemplate="{xen:if {$warningCategory.warning_category_id},
-		'{{ phrase('sv_edit_warning_category') }}: <em>%s</em>',
-		'{{ phrase('sv_create_new_warning_category') }}: <em>%s</em>'}" />
+<xf:form action="{{ link('warnings/category-save', null, { 'warning_category_id': $category.warning_category_id }) }}" ajax="true" class="block">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:textboxrow name="title" value="{{ $category.warning_category_id ? $category.MasterTitle.phrase_text : '' }}" label="{{ phrase('title') }}" />
 
-	<xen:selectunit label="{{ phrase('sv_parent_category') }}:" name="parent_warning_category_id" value="{$warningCategory.parent_warning_category_id}">
-		<xen:option value="0" label="({{ phrase('none') }})" />
-		<xen:options source="$warningCategories" />
-	</xen:selectunit>
+			<xf:selectrow name="parent_category_id" value="{$category.parent_category_id}"
+				label="{{ phrase('parent_category') }}">
 
-	<xen:spinboxunit label="{{ phrase('display_order') }}:" name="display_order" value="{$warningCategory.display_order}" min="0" step="10" />
+				<xf:option value="0">{{ phrase('(none)') }}</xf:option>
+				<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
+					<xf:if is="$treeEntry.record.warning_category_id === $category.warning_category_id">
+						<xf:option value="{$treeEntry.record.warning_category_id}" disabled="true">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
+					<xf:else />
+						<xf:option value="{$treeEntry.record.warning_category_id}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
+					</xf:if>
+				</xf:foreach>
+			</xf:selectrow>
 
-	<xen:checkboxunit id="allowedUserGroups" label="{{ phrase('sv_allowed_user_groups') }}:" name="allowed_user_group_ids[]" listclass="checkboxColumns">
-		<xen:hint><br /><label><input type="checkbox" class="CheckAll" data-target="#allowedUserGroups" /> {{ phrase('select_all') }}</label></xen:hint>
-		<xen:options source="$userGroups" />
-	</xen:checkboxunit>
-
-	<xen:submitunit save="{{ phrase('sv_save_warning_category') }}">
-		<xf:if is="{$warningCategory.warning_category_id}"><a href="{xen:adminlink 'warnings/category-delete', '', 'warning_category_id={$warningCategory.warning_category_id}'}" class="button OverlayTrigger">{{ phrase('sv_delete_warning_category') }}...</a></xf:if>
-	</xen:submitunit>
-</xen:form>
+			<xf:macro template="display_order_macros" name="row" arg-value="{$category.display_order}" />
+			
+			<xf:checkboxrow name="allowed_user_group_ids" value="{$category.allowed_user_group_ids}" listclass="listColumns" label="{{ phrase('sv_allowed_user_groups') }}">
+				<xf:options source="$userGroups" />
+			</xf:checkboxrow>
+		</div>
+		<xf:submitrow sticky="true" icon="save" />
+	</div>
+</xf:form>

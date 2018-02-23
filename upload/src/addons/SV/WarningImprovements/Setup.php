@@ -51,7 +51,7 @@ class Setup extends AbstractSetup
         $defaultRegisteredGroupId = \XF\Entity\User::GROUP_REG;
 
         // create default warning category, do not use the data writer as that requires the rest of the add-on to be setup
-        $db->query("INSERT IGNORE INTO xf_sv_warning_category (warning_category_id, parent_warning_category_id, display_order, allowed_user_group_ids)
+        $db->query("INSERT IGNORE INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
                 VALUES (1, 0, 0, {$defaultRegisteredGroupId})
             ");
     }
@@ -90,8 +90,8 @@ class Setup extends AbstractSetup
 
         $db->query('
             UPDATE xf_sv_warning_category
-            SET parent_warning_category_id = NULL
-            WHERE parent_warning_category_id = 0'
+            SET parent_category_id = NULL
+            WHERE parent_category_id = 0'
         );
 
         $this->installStep4();
@@ -143,6 +143,11 @@ class Setup extends AbstractSetup
         }
     }
 
+    public function upgrade2000000Step4()
+    {
+
+    }
+
     public function uninstallStep1()
     {
         $sm = $this->schemaManager();
@@ -183,6 +188,7 @@ class Setup extends AbstractSetup
             $table->addColumn('expiry_type', 'enum')->values(['never', 'days', 'weeks', 'months', 'years'])->setDefault('never');
             $table->addColumn('expiry_extension', 'smallint')->setDefault(0);
             $table->addColumn('active', 'tinyint', 3)->setDefault(1);
+
             $table->addPrimaryKey('warning_default_id');
         };
 
@@ -195,10 +201,18 @@ class Setup extends AbstractSetup
             }
 
             $table->addColumn('warning_category_id', 'int')->autoIncrement();
-            $table->addColumn('parent_warning_category_id', 'int')->nullable(true)->setDefault(null);
+            $table->addColumn('parent_category_id', 'int')->nullable(true)->setDefault(0);
             $table->addColumn('display_order', 'int')->setDefault(0);
+            $table->addColumn('lft', 'int')->setDefault(0);
+            $table->addColumn('rgt', 'int')->setDefault(0);
+            $table->addColumn('depth', 'smallint', 5)->setDefault(0);
+            $table->addColumn('breadcrumb_data', 'blob');
+            $table->addColumn('warning_count', 'int')->setDefault(0);
             $table->addColumn('allowed_user_group_ids', 'varbinary', 255)->setDefault('2');
+
             $table->addPrimaryKey('warning_category_id');
+            $table->addKey(['parent_category_id', 'lft']);
+            $table->addKey(['lft', 'rgt']);
         };
 
         return $tables;

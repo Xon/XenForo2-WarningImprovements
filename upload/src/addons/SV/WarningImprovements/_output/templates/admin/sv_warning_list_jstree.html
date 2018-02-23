@@ -1,33 +1,40 @@
 <link rel="stylesheet" href="styles/jstree/default/style.min.css" />
 <xf:css src="sv_warning_list_jstree.css" />
 
-<xf:js addon="SV/WarningImprovements" src="js/jstree/jstree.js" min="1" />
-<xf:js addon="SV/WarningImprovements" src="js/sv/warningimprovements/warnings.js" min="1" />
+<xf:js addon="SV/WarningImprovements" src="sv/jstree/jstree.js" min="1" />
+<xf:js addon="SV/WarningImprovements" src="sv/warningimprovements/warnings.js" min="1" />
 
 <xf:if is="$warnings is not empty">
 	<div class="block">
 		<div class="block-outer">
-			<xf:macro template="filter_macros" name="quick_filter" arg-key="warnings" arg-class="block-outer-opposite" />
+			<xf:macro template="filter_macros" name="quick_filter" arg-key="{$filterKey}" arg-class="block-outer-opposite" />
 		</div>
 		<div class="block-container">
 			<div class="block-body">
-				<div id="warningitems" class="WarningItemTree"
-					 data-overlay="1"
-					 data-search-input=".input.js-filterInput"
-					 data-load-url="{{ link('warnings/load-tree') }}"
-					 data-sync-url="{{ link('warnings/sync-item') }}"
-					 data-rename-url="{{ link('warnings/rename-tree-item') }}"
-					 data-category-edit-url="{{ link('warnings/category-edit&warning_category_id={id}') }}"
-					 data-category-delete-url="{{ link('warnings/category-delete&warning_category_id={id}') }}"
-					 data-warning-edit-url="{{ link('warnings/{id}/edit') }}"
-					 data-warning-delete-url="{{ link('warnings/{id}/delete') }}"
-					 data-rename-text="{{ phrase('sv_rename') }}"
-					 data-edit-text="{{ phrase('edit') }}"
-					 data-delete-text="{{ phrase('delete') }}">
-				</div>
-			</div>
-			<div class="block-footer">
-				<span class="block-footer-counter">{{ display_totals($warnings) }}</span>
+				<xf:datalist>
+					<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
+						<xf:set var="$category" value="{$treeEntry.record}" />
+						<xf:datarow>
+							<xf:cell class="dataList-cell--link dataList-cell--main" hash="{$category.warning_category_id}">
+								<a href="{{ link('warnings/category-edit', null, { 'warning_category_id': $category.warning_category_id }) }}">
+									<div class="u-depth{$treeEntry.depth}">
+										<div class="dataList-mainRow">{$category.title}</div>
+									</div>
+								</a>
+							</xf:cell>
+							<xf:popup class="dataList-cell--action u-hideMedium" label="{{ phrase('add...') }}">
+								<div class="menu" data-menu="menu" aria-hidden="true">
+									<div class="menu-content">
+										<h3 class="menu-header">{{ phrase('add...') }}</h3>
+										<a href="{{ link('warnings/category-add', null, { 'parent_category_id': $category.parent_category_id }) }}" class="menu-linkRow">{{ phrase('sibling') }}</a>
+										<a href="{{ link('warnings/category-add', null, { 'parent_category_id': $category.warning_category_id}) }}" class="menu-linkRow">{{ phrase('child') }}</a>
+									</div>
+								</div>
+							</xf:popup>
+							<xf:delete href="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}" />
+						</xf:datarow>
+					</xf:foreach>
+				</xf:datalist>
 			</div>
 		</div>
 	</div>
