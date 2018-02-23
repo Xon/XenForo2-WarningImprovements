@@ -13,17 +13,17 @@
 			<div class="block-body">
 				<div id="warningitems" class="WarningItemTree"
 					 data-overlay="1"
-					 data-searchinput="#warningItemTreeSearch"
-					 data-loadurl="{{ link('warnings/load-tree') }}"
-					 data-syncurl="{{ link('warnings/sync-tree') }}"
-					 data-renameurl="{{ link('warnings/rename-tree-item') }}"
-					 data-categoryediturl="{{ link('warnings/category-edit&warning_category_id={id') }}'}"
-					 data-categorydeleteurl="{{ link('warnings/category-delete&warning_category_id={id') }}'}"
-					 data-warningediturl="{{ link('warnings/{id') }}/edit'}"
-					 data-warningdeleteurl="{{ link('warnings/{id') }}/delete'}"
-					 data-renametext="{{ phrase('sv_rename') }}"
-					 data-edittext="{{ phrase('edit') }}"
-					 data-deletetext="{{ phrase('delete') }}">
+					 data-search-input=".input.js-filterInput"
+					 data-load-url="{{ link('warnings/load-tree') }}"
+					 data-sync-url="{{ link('warnings/sync-item') }}"
+					 data-rename-url="{{ link('warnings/rename-tree-item') }}"
+					 data-category-edit-url="{{ link('warnings/category-edit&warning_category_id={id}') }}"
+					 data-category-delete-url="{{ link('warnings/category-delete&warning_category_id={id}') }}"
+					 data-warning-edit-url="{{ link('warnings/{id}/edit') }}"
+					 data-warning-delete-url="{{ link('warnings/{id}/delete') }}"
+					 data-rename-text="{{ phrase('sv_rename') }}"
+					 data-edit-text="{{ phrase('edit') }}"
+					 data-delete-text="{{ phrase('delete') }}">
 				</div>
 			</div>
 			<div class="block-footer">
