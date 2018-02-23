@@ -8,6 +8,7 @@ use XF\AddOn\StepRunnerUninstallTrait;
 use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\Db\Schema\Alter;
 use XF\Db\Schema\Create;
+use XF\Entity\User;
 
 class Setup extends AbstractSetup
 {
@@ -48,12 +49,10 @@ class Setup extends AbstractSetup
     {
         $db = $this->db();
 
-        $defaultRegisteredGroupId = \XF\Entity\User::GROUP_REG;
-
         // create default warning category, do not use the data writer as that requires the rest of the add-on to be setup
         $db->query("INSERT IGNORE INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
-                VALUES (1, 0, 0, {$defaultRegisteredGroupId})
-            ");
+                VALUES (1, null, 0, ?)
+            ", [User::GROUP_REG]);
     }
 
     public function installStep4()
@@ -63,7 +62,7 @@ class Setup extends AbstractSetup
         // set all warning definitions to be in default warning category, note; the phrase is defined in the XML
         $db->query('UPDATE xf_warning_definition
             SET sv_warning_category_id = 1
-            WHERE sv_warning_category_id = 0 OR
+            WHERE sv_warning_category_id = 0 OR sv_warning_category_id is null OR
                   NOT exists (SELECT *
                               FROM xf_sv_warning_category
                               WHERE xf_warning_definition.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
@@ -203,7 +202,7 @@ class Setup extends AbstractSetup
             $table->addColumn('depth', 'smallint', 5)->setDefault(0);
             $table->addColumn('breadcrumb_data', 'blob');
             $table->addColumn('warning_count', 'int')->setDefault(0);
-            $table->addColumn('allowed_user_group_ids', 'varbinary', 255)->setDefault('2');
+            $table->addColumn('allowed_user_group_ids', 'varbinary', 255)->setDefault(strval(User::GROUP_REG));
 
             $table->addPrimaryKey('warning_category_id');
             $table->addKey(['parent_category_id', 'lft']);
@@ -227,17 +226,17 @@ class Setup extends AbstractSetup
 
         $tables['xf_warning_definition'] = function (Alter $table)
         {
-            $table->addColumn('sv_warning_category_id', 'int')->setDefault(0);
+            $table->addColumn('sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
             $table->addColumn('sv_display_order', 'int')->setDefault(0);
             $table->addColumn('sv_custom_title', 'tinyint', 1)->setDefault(0);
         };
 
         $tables['xf_warning_action'] = function (Alter $table)
         {
-            $table->addColumn('sv_warning_category_id', 'int')->setDefault(0);
-            $table->addColumn('sv_post_node_id', 'int')->setDefault(0);
-            $table->addColumn('sv_post_thread_id', 'int')->setDefault(0);
-            $table->addColumn('sv_post_as_user_id', 'int')->setDefault(0);
+            $table->addColumn('sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
+            $table->addColumn('sv_post_node_id', 'int')->nullable(true)->setDefault(null);
+            $table->addColumn('sv_post_thread_id', 'int')->nullable(true)->setDefault(null);
+            $table->addColumn('sv_post_as_user_id', 'int')->nullable(true)->setDefault(null);
         };
 
         $tables['xf_sv_warning_category'] = function (Alter $table)

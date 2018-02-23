@@ -25,7 +25,7 @@ class WarningDefinition extends XFCP_WarningDefinition
     {
         $structure = parent::getStructure($structure);
 
-        $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'default' => 0];
+        $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
         $structure->columns['sv_display_order'] = ['type' => self::UINT];
         $structure->columns['sv_custom_title'] = ['type' => self::BOOL, 'default' => false];
 
