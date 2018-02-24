@@ -92,9 +92,21 @@ class Warning extends XFCP_Warning
 
             foreach ($warnings as $categoryId => $warning)
             {
-                $sortTree = $sorter->buildSortTree($this->filter('category-' . $categoryId, 'json-array'));
+                if ($categoryId === 10)
+                {
+                    $sortTree = $sorter->buildSortTree($this->filter('category-' . $categoryId, 'json-array'));
+                    $sortedTreeData = $sortTree->getAllData();
+                    $lastOrder = 0;
 
-                $sorter->sortTree($sortTree, $sortTree->getAllData(), 'parent_category_id');
+                    foreach ($sortedTreeData as $warningId => $data)
+                    {
+                        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entry */
+                        $entry = $this->em()->findOne('XF:WarningDefinition', ['warning_definition_id', '=', $warningId]);
+                        $entry->sv_warning_category_id = $data['parent_id'];
+                        $entry->sv_display_order = $lastOrder + 5;
+                        $entry->saveIfChanged();
+                    }
+                }
             }
 
             return $this->redirect($this->buildLink('warnings'));
