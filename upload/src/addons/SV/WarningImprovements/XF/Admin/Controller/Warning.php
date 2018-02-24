@@ -20,6 +20,7 @@ class Warning extends XFCP_Warning
             $categories = $categoryRepo->findCategoryList()->fetch();
             $categoryTree = $categoryRepo->createCategoryTree($categories);
 
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = $this->getWarningRepo();
             $warnings = $warningRepo->findWarningDefinitionsForList()
                 ->order('sv_display_order', 'asc')
@@ -38,11 +39,17 @@ class Warning extends XFCP_Warning
                 unset($actions['']);
             }
 
+            $escalatingDefaults = $this->finder('SV\WarningImprovements:WarningDefault')->fetch();
+
             $response->setParams([
                 'categoryTree' => $categoryTree,
+
                 'warnings' => $warnings,
+
                 'actions' => $actions,
-                'globalActions' => $globalActions
+                'globalActions' => $globalActions,
+
+                'escalatingDefaults' => $escalatingDefaults
             ]);
         }
 

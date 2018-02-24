@@ -72,7 +72,7 @@
     "admin/sv_warningimprovements_escalating_defaults.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "5f8b5176c2fad5e9bcf3479a7f67f35b"
+        "hash": "afdeb3062e360ac71820ebc4c1ab94c7"
     },
     "admin/sv_warningimprovements_warning_default_delete.html": {
         "version_id": 2000000,

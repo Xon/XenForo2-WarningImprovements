@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "preg_replace",
     "find": "#$#Usi",
-    "replace": "$0\n<xen:include template=\"sv_warningimprovements_escalating_defaults\" />"
+    "replace": "$0\n<xf:include template=\"sv_warningimprovements_escalating_defaults\" />"
 }
