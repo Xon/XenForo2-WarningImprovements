@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:form action=\"{{ link('warnings/save', $warning) }}\" ajax=\"true\" class=\"block\">",
-    "replace": "<xf:if is=\"$warning.is_custom\">\n\t<xf:set var=\"$formActionUrl\">{{ link('warnings/save') }}</xf:set>\n<xf:else />\n\t<xf:set var=\"$formActionUrl\">{{ link('warnings/save', $warning) }}</xf:set>\n</xf:if>\n<xf:form action=\"{$formActionUrl}\" ajax=\"true\" class=\"block\">"
+    "replace": "<xf:if is=\"$warning.is_custom\">\n\t<xf:set var=\"$formActionUrl\">{{ link('warnings/save') }}</xf:set>\n<xf:else />\n\t<xf:set var=\"$formActionUrl\">{{ link('warnings/save', $warning) }}</xf:set>\n</xf:if>\n\n<xf:form action=\"{$formActionUrl}\" ajax=\"true\" class=\"block\">"
 }

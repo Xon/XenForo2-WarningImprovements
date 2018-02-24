@@ -29,21 +29,6 @@ class Warning extends XFCP_Warning
         return $response;
     }
 
-    public function actionLoadTree()
-    {
-
-    }
-
-    public function actionSyncTree()
-    {
-
-    }
-
-    public function actionRenameTreeItem()
-    {
-
-    }
-
     public function actionEdit(ParameterBag $params)
     {
         $response = parent::actionEdit($params);

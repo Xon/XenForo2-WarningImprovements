@@ -16,6 +16,11 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {
+    public function getIsCustom()
+    {
+        return ($this->warning_definition_id === 0);
+    }
+
     /**
      * @param Structure $structure
      *
@@ -28,6 +33,8 @@ class WarningDefinition extends XFCP_WarningDefinition
         $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
         $structure->columns['sv_display_order'] = ['type' => self::UINT];
         $structure->columns['sv_custom_title'] = ['type' => self::BOOL, 'default' => false];
+
+        $structure->getters['is_custom'] = true;
 
         $structure->relations['Category'] = [
             'entity' => 'SV\WarningImprovements:WarningDefault',
