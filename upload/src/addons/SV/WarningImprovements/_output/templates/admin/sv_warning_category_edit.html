@@ -14,17 +14,13 @@
 	<div class="block-container">
 		<div class="block-body">
 			<xf:textboxrow name="title" value="{{ $category.warning_category_id ? $category.MasterTitle.phrase_text : '' }}" label="{{ phrase('title') }}" />
-
+			
 			<xf:selectrow name="parent_category_id" value="{$category.parent_category_id}"
 				label="{{ phrase('parent_category') }}">
 
 				<xf:option value="0">{{ phrase('(none)') }}</xf:option>
 				<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
-					<xf:if is="$treeEntry.record.warning_category_id === $category.warning_category_id">
-						<xf:option value="{$treeEntry.record.warning_category_id}" disabled="true">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
-					<xf:else />
-						<xf:option value="{$treeEntry.record.warning_category_id}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
-					</xf:if>
+					<xf:option value="{$treeEntry.record.warning_category_id}" disabled="{{ $treeEntry.record.warning_category_id == $category.warning_category_id }}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
 				</xf:foreach>
 			</xf:selectrow>
 

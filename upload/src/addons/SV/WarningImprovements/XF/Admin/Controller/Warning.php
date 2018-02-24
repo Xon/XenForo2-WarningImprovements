@@ -33,13 +33,6 @@ class Warning extends XFCP_Warning
         return $response;
     }
 
-    public function actionEdit(ParameterBag $params)
-    {
-        $response = parent::actionEdit($params);
-
-        return $response;
-    }
-
     public function warningAddEdit(\XF\Entity\WarningDefinition $warning)
     {
         $response = parent::warningAddEdit($warning);
@@ -153,20 +146,39 @@ class Warning extends XFCP_Warning
     // underscore prefix to not be confused with actual controller actions
     protected function _actionSaveProcess(\XF\Entity\WarningAction $action)
     {
-        $inputFieldNames = ['sv_warning_category_id', 'sv_post_node_id'];
-        \SV\WarningImprovements\Listener::$warningActionData = [];
-        foreach ($inputFieldNames as $inputFieldName)
+        $inputFieldNames = [
+            'sv_warning_category_id' => 'uint',
+            'sv_post_node_id' => 'uint'
+        ];
+
+        $warningActionData = [];
+        foreach ($inputFieldNames AS $inputFieldName => $inputFieldFilterName)
         {
-            \SV\WarningImprovements\Listener::$warningActionData[$inputFieldName] = $this->filter($inputFieldName, 'uint');
+            $warningActionData[$inputFieldName] = $this->filter($inputFieldName, $inputFieldFilterName);
+            if ($inputFieldFilterName == 'uint' && empty($warningActionData[$inputFieldName]))
+            {
+                $warningActionData[$inputFieldName] = null;
+            }
         }
+
+        \SV\WarningImprovements\Listener::$warningActionData = $warningActionData;
 
         return parent::_actionSaveProcess($action);
     }
 
     public function defaultActionAddEdit(\SV\WarningImprovements\Entity\WarningDefault $defaultAction)
     {
+        /** @var \XF\Repository\Node $nodeRepo */
+        $nodeRepo = $this->app()->repository('XF:Node');
+        $nodes = $nodeRepo->getFullNodeList()->filterViewable();
+
+        $categoryRepo = $this->getCategoryRepo();
+        $categoryTree = $categoryRepo->createCategoryTree();
+
         $viewParams = [
-            'actionAction' => $defaultAction
+            'actionAction' => $defaultAction,
+            'nodeTree' => $nodeRepo->createNodeTree($nodes),
+            'categoryTree' => $categoryTree
         ];
         return $this->view('XF:Warning\Action\Edit', 'warning_action_edit', $viewParams);
     }
@@ -259,6 +271,11 @@ class Warning extends XFCP_Warning
     {
         /** @var \SV\WarningImprovements\Entity\WarningCategory $warningCategory */
         $warningCategory = $this->em()->create('SV\WarningImprovements:WarningCategory');
+
+        if ($parentCategoryId = $this->filter('parent_category_id', 'uint'))
+        {
+            $warningCategory->parent_category_id = $parentCategoryId;
+        }
 
         return $this->warningCategoryAddEdit($warningCategory);
     }

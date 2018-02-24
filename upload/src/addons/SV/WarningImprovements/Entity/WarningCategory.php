@@ -17,7 +17,7 @@ use XF\Mvc\Entity\Structure;
  * @property int|null warning_category_id
  * @property int warning_count
  * @property array allowed_user_group_ids
- * @property int parent_category_id
+ * @property int|null parent_category_id
  * @property int display_order
  * @property int lft
  * @property int rgt
@@ -199,6 +199,8 @@ class WarningCategory extends AbstractCategoryTree
         ];
 
         static::addCategoryTreeStructureElements($structure);
+
+        $structure->columns['parent_category_id']['nullable'] = true;
 
         $structure->behaviors['XF:TreeStructured']['titleField'] = 'titleRaw';
 
