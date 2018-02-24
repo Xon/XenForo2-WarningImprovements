@@ -23,37 +23,28 @@
 </div>
 
 <div id="warningViewRadio">
-	<xf:foreach loop="$rootWarningCategories" value="$rootWarningCategory">
-		<dl class="ctrlUnit">
-			<dt class="warningCategory">{$rootWarningCategory.title}:</dt>
+	<xf:formrow label="{{ phrase('warning_type') }}">
+		<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
+			<xf:set var="$category" value="{$treeEntry.record}" />
+			<div class="u-depth{$treeEntry.depth}">
+				<div class="dataList-mainRow">{$category.title}</div>
+			</div>
 
-			<dd>
-				<ul class="warningItems">
-					<xf:foreach loop="$rootWarningCategory.children" value="$warningItem">
-						<xf:if is="{$warningItem.warning_category_id}">
-							<li class="warningCategory _depth{$warningItem.depth}">{$warningItem.title}</li>
-						<xf:else />
-							<xf:if is="{$warningItem.warning_definition_id} != 0">
-								<li class="warningDefinition _depth{$warningItem.depth}"><label><input type="radio" name="warning_definition_id" id="warning_{$warningItem.warning_definition_id}" class="FormFiller {xen:if '{$warningItem.sv_custom_title}', 'Disabler', ''}" value="{$warningItem.warning_definition_id}" {xen:if {$warning.sv_custom_title}, 'data-custom-title="1"', ''}/> {$warningItem.title}</label>
-								<xf:if is="{$warningItem.sv_custom_title}">
-									<ul id="warning_{$warningItem.warning_definition_id}_Disabler">
-										<li><input type="text" name="title" class="textCtrl" value="{$warningItem.title}" maxlength="255" /></li>
-									</ul>
+			<xf:if is="{$warnings.{$category.warning_category_id}} is not empty">
+				<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
+					<xf:radio name="warning_definition_id" value="0">
+						<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}">
+							<xf:dependent>
+								<xf:if is="{$warningDefinition.sv_custom_title}">
+									<xf:textbox name="custom_titlez" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" />
 								</xf:if>
-								</li>
-							<xf:else />
-								<li class="warningDefinition _depth{$warningItem.depth}"><label><input type="radio" name="warning_definition_id" class="FormFiller Disabler" value="0" id="customWarning" checked="checked" /> {{ phrase('custom_warning') }}:</label>
-									<ul id="customWarning_Disabler">
-										<li><input type="text" name="title" class="textCtrl" placeholder="{{ phrase('custom_warning') }}..." maxlength="255" /></li>
-									</ul>
-								</li>
-							</xf:if>
-						</xf:if>
-					</xf:foreach>
-				</ul>
-			</dd>
-		</dl>
-	</xf:foreach>
+							</xf:dependent>
+						</xf:option>
+					</xf:radio>
+				</xf:foreach>
+			</xf:if>
+		</xf:foreach>
+	</xf:formrow>
 </div>
 
 <a id="warningViewToggle" class="WarningViewToggler JsOnly" href="#"

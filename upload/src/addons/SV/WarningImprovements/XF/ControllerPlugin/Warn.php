@@ -2,11 +2,38 @@
 
 namespace SV\WarningImprovements\XF\ControllerPlugin;
 
+use XF\Mvc\Entity\Entity;
+
 /**
  * Extends \XF\ControllerPlugin\Warn
  */
 class Warn extends XFCP_Warn
 {
+    public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
+    {
+        $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
+
+        if ($response instanceof \XF\Mvc\Reply\View)
+        {
+            $categoryRepo = $this->getWarningCategoryRepo();
+            $categoryTree = $categoryRepo->createCategoryTree();
+
+            /** @var \XF\Repository\Warning $warningRepo */
+            $warningRepo = $this->repository('XF:Warning');
+            $warnings = $warningRepo->findWarningDefinitionsForList()
+                ->order('sv_display_order', 'asc')
+                ->fetch()
+                ->groupBy('sv_warning_category_id');
+
+            $response->setParams([
+                'warnings' => $warnings,
+                'categoryTree' => $categoryTree
+            ]);
+        }
+
+        return $response;
+    }
+
 	protected function setupWarnService(\XF\Warning\AbstractHandler $warningHandler, \XF\Entity\User $user, $contentType, \XF\Mvc\Entity\Entity $content, array $input)
 	{
 		$options = $this->app->options();
@@ -20,4 +47,12 @@ class Warn extends XFCP_Warn
 		
 		return parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
 	}
+
+    /**
+     * @return \SV\WarningImprovements\Repository\WarningCategory
+     */
+    protected function getWarningCategoryRepo()
+    {
+        return $this->repository('SV\WarningImprovements:WarningCategory');
+    }
 }
