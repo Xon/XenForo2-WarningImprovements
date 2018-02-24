@@ -261,21 +261,20 @@ class Warning extends XFCP_Warning
 
     public function actionCategoryDelete(ParameterBag $params)
     {
-        $warningCategory = $this->assertCategoryExists($this->filter('warning_category_id', 'uint'));
+        return $this->getCategoryTreePlugin()->actionDelete($params);
+    }
 
-        if ($this->isPost())
-        {
-            $warningCategory->delete();
+    public function actionCategorySort()
+    {
+        return $this->getCategoryTreePlugin()->actionSort();
+    }
 
-            return $this->redirect($this->buildLink('warnings'));
-        }
-        else
-        {
-            $viewParams = [
-                'category' => $warningCategory
-            ];
-            return $this->view('XF:Warning\CategoryDelete', 'sv_warning_category_delete', $viewParams);
-        }
+    /**
+     * @return \SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree
+     */
+    protected function getCategoryTreePlugin()
+    {
+        return $this->plugin('SV\WarningImprovements\XF:WarningCategoryTree');
     }
 
     /**

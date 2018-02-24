@@ -1,13 +1,5 @@
 <xf:title>{{ phrase('confirm_action') }}</xf:title>
 
-<xf:form action="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}" ajax="true" class="block">
-	<div class="block-container">
-		<div class="block-body">
-			<xf:inforow rowtype="confirm">
-				{{ phrase('please_confirm_that_you_want_to_delete_following:') }}
-				<strong><a href="{{ link('warnings/category-edit', null, { 'warning_category_id': $category.warning_category_id }) }}">{$category.title}</a></strong>
-			</xf:inforow>
-		</div>
-		<xf:submitrow rowtype="simple" icon="delete" />
-	</div>
-</xf:form>
+<xf:macro template="category_tree_macros" name="category_delete_form"
+	arg-linkPrefix="warnings/category"
+	arg-category="{$category}" />
