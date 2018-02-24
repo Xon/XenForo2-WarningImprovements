@@ -1,9 +1,9 @@
 {
     "template": "warning_list",
-    "description": "Display warning items in jsTree instance",
+    "description": "Display warning items with category they belong in",
     "execution_order": 10,
     "enabled": true,
     "action": "preg_replace",
     "find": "#<div class=\"block\">.*?<\\/div>\\s*<xf:if is=\"\\$actions is not empty\">#si",
-    "replace": "<xf:include template=\"sv_warning_list_jstree\" />\n<xf:if is=\"$actions is not empty\">"
+    "replace": "<xf:include template=\"sv_warning_list\" />\n<xf:if is=\"$actions is not empty\">"
 }
