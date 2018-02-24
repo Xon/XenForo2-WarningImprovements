@@ -16,14 +16,17 @@ class Warning extends XFCP_Warning
 
         if ($response instanceof \XF\Mvc\Reply\View)
         {
-            if ($warnings = $response->getParam('warnings'))
-            {
-                $categoryRepo = $this->getCategoryRepo();
-                $categories = $categoryRepo->findCategoryList()->fetch();
-                $categoryTree = $categoryRepo->createCategoryTree($categories);
+            $categoryRepo = $this->getCategoryRepo();
+            $categories = $categoryRepo->findCategoryList()->fetch();
+            $categoryTree = $categoryRepo->createCategoryTree($categories);
 
-                $response->setParam('categoryTree', $categoryTree);
-            }
+            $response->setParam('categoryTree', $categoryTree);
+
+            $warningRepo = $this->getWarningRepo();
+            $warnings = $warningRepo->findWarningDefinitionsForList()
+                ->order('sv_display_order')
+                ->fetch();
+            $response->setParam('warnings', $warnings);
         }
 
         return $response;
@@ -81,7 +84,7 @@ class Warning extends XFCP_Warning
 
         $warningRepo = $this->getWarningRepo();
         $warnings = $warningRepo->findWarningDefinitionsForList()
-            ->order('warning_definition_id')
+            ->order('sv_display_order')
             ->fetch()
             ->groupBy('sv_warning_category_id');
 
@@ -100,10 +103,11 @@ class Warning extends XFCP_Warning
 
                     foreach ($sortedTreeData as $warningId => $data)
                     {
+                        $lastOrder += 5;
                         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entry */
                         $entry = $this->em()->findOne('XF:WarningDefinition', ['warning_definition_id', '=', $warningId]);
                         $entry->sv_warning_category_id = $data['parent_id'];
-                        $entry->sv_display_order = $lastOrder + 5;
+                        $entry->sv_display_order = $lastOrder;
                         $entry->saveIfChanged();
                     }
                 }
