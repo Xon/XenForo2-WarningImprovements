@@ -1,0 +1,107 @@
+<xf:macro name="action_list" arg-globalActions="!" arg-actions="!" arg-categoryTree="!">
+	<xf:if is="$actions is not empty">
+		<div class="block">
+			<div class="block-outer">
+				<xf:macro template="filter_macros" name="quick_filter" arg-key="warning-category" arg-class="block-outer-opposite" />
+			</div>
+			<div class="block-container">
+				<div class="block-body">
+					<xf:datalist>
+						<xf:if is="$globalActions">
+							<xf:datarow>
+								<xf:cell class="dataList-cell--link dataList-cell--main" hash="{$category.warning_category_id}">
+									<a>
+										<div class="u-depth0">
+											<div class="dataList-mainRow">{{ phrase('sv_global_warning_actions') }}</div>
+										</div>
+									</a>
+								</xf:cell>
+								<xf:cell>&nbsp;</xf:cell>
+							</xf:datarow>
+							
+							<xf:foreach loop="$globalActions" value="$action">
+								<xf:datarow>
+									<xf:cell href="{{ link('warnings/actions/edit', $action) }}" class="u-depth0">
+										<div class="dataList-mainRow">
+											<spam class="u-depth1">{{ phrase('points:') }} {$action.points}</spam>
+											<div class="dataList-hint" dir="auto">
+												<ul class="listInline listInline--bullet listInline--selfInline">
+													<xf:if is="$action.action == 'ban'">
+														<li>{{ phrase('ban') }}</li>
+														<xf:elseif is="$action.action == 'discourage'" />
+														<li>{{ phrase('discourage') }}</li>
+														<xf:elseif is="$action.action == 'groups'" />
+														<li>{{ phrase('add_to_selected_groups') }}</li>
+														<xf:else />
+														<li>{{ phrase('unknown_action') }}</li>
+													</xf:if>
+
+													<xf:if is="$action.action_length_type == 'permanent'">
+														<li>{{ phrase('permanent') }}</li>
+														<xf:elseif is="$action.action_length_type == 'points'" />
+														<li>{{ phrase('while_at_or_above_points_threshold') }}</li>
+														<xf:else />
+														<li>{{ phrase('temporary') }}</li>
+													</xf:if>
+												</ul>
+											</div>
+										</div>
+									</xf:cell>
+									<xf:delete href="{{ link('warnings/actions/delete', $action) }}" />
+								</xf:datarow>
+							</xf:foreach>
+						</xf:if>
+						<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
+							<xf:set var="$category" value="{$treeEntry.record}" />
+							<xf:datarow>
+								<xf:cell class="dataList-cell--link dataList-cell--main" hash="{$category.warning_category_id}">
+									<a href="{{ link('warnings/category-edit', null, { 'warning_category_id': $category.warning_category_id }) }}">
+										<div class="u-depth{$treeEntry.depth}">
+											<div class="dataList-mainRow">{$category.title}</div>
+										</div>
+									</a>
+								</xf:cell>
+								<xf:delete href="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}" />
+							</xf:datarow>
+							<xf:if is="{$actions.{$category.warning_category_id}} is not empty">
+								<xf:foreach loop="{$actions.{$category.warning_category_id}}" value="$action">
+									<xf:datarow>
+										<xf:cell href="{{ link('warnings/actions/edit', $action) }}">
+											<div class="dataList-mainRow">
+												<spam class="u-depth{{ $treeEntry.depth + 1 }}">{{ phrase('points:') }} {$action.points}</spam>
+												<div class="dataList-hint" dir="auto">
+													<ul class="listInline listInline--bullet listInline--selfInline">
+														<xf:if is="$action.action == 'ban'">
+															<li>{{ phrase('ban') }}</li>
+														<xf:elseif is="$action.action == 'discourage'" />
+															<li>{{ phrase('discourage') }}</li>
+														<xf:elseif is="$action.action == 'groups'" />
+															<li>{{ phrase('add_to_selected_groups') }}</li>
+														<xf:else />
+															<li>{{ phrase('unknown_action') }}</li>
+														</xf:if>
+
+														<xf:if is="$action.action_length_type == 'permanent'">
+															<li>{{ phrase('permanent') }}</li>
+														<xf:elseif is="$action.action_length_type == 'points'" />
+															<li>{{ phrase('while_at_or_above_points_threshold') }}</li>
+														<xf:else />
+															<li>{{ phrase('temporary') }}</li>
+														</xf:if>
+													</ul>
+												</div>
+											</div>
+										</xf:cell>
+										<xf:delete href="{{ link('warnings/actions/delete', $action) }}" />
+									</xf:datarow>
+								</xf:foreach>
+							</xf:if>
+						</xf:foreach>
+					</xf:datalist>
+				</div>
+			</div>
+		</div>
+	<xf:else />
+		<div class="blockMessage">{{ phrase('no_warnings_have_been_defined') }}</div>
+	</xf:if>
+</xf:macro>

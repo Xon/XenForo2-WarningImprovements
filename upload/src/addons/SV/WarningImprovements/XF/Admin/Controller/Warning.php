@@ -20,14 +20,30 @@ class Warning extends XFCP_Warning
             $categories = $categoryRepo->findCategoryList()->fetch();
             $categoryTree = $categoryRepo->createCategoryTree($categories);
 
-            $response->setParam('categoryTree', $categoryTree);
-
             $warningRepo = $this->getWarningRepo();
             $warnings = $warningRepo->findWarningDefinitionsForList()
                 ->order('sv_display_order', 'asc')
                 ->fetch()
                 ->groupBy('sv_warning_category_id');
-            $response->setParam('warnings', $warnings);
+
+            $actions = $warningRepo->findWarningActionsForList()
+                ->fetch()
+                ->groupBy('sv_warning_category_id');
+
+            $globalActions = [];
+
+            if (!empty($actions['']))
+            {
+                $globalActions = $actions[''];
+                unset($actions['']);
+            }
+
+            $response->setParams([
+                'categoryTree' => $categoryTree,
+                'warnings' => $warnings,
+                'actions' => $actions,
+                'globalActions' => $globalActions
+            ]);
         }
 
         return $response;
@@ -176,11 +192,11 @@ class Warning extends XFCP_Warning
         $categoryTree = $categoryRepo->createCategoryTree();
 
         $viewParams = [
-            'actionAction' => $defaultAction,
+            'default' => $defaultAction,
             'nodeTree' => $nodeRepo->createNodeTree($nodes),
             'categoryTree' => $categoryTree
         ];
-        return $this->view('XF:Warning\Action\Edit', 'warning_action_edit', $viewParams);
+        return $this->view('SV\WarningImprovements\XF:Warning\Action\DefaultEdit', 'sv_warningimprovements_warning_default_edit', $viewParams);
     }
 
     public function actionDefaultEdit(ParameterBag $params)

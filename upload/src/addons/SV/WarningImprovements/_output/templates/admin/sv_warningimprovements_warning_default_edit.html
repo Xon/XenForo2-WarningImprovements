@@ -1,26 +1,35 @@
-<xf:title>{xen:if $default.warning_default_id, '{{ phrase('sv_edit_warning_default') }}', '{{ phrase('sv_create_new_warning_default') }}'}</xf:title>
+<xf:if is="$default.isInsert()">
+	<xf:title>{{ phrase('sv_create_new_warning_default') }}</xf:title>
+<xf:else />
+	<xf:title>{{ phrase('sv_edit_warning_default:') }} {{ phrase('points_threshold') }} {$default.points}</xf:title>
+</xf:if>
 
-<xen:form action="{xen:adminlink warnings/default/save, $default}" class="AutoValidator" data-redirect="yes">
-	<xen:spinboxunit label="{{ phrase('points_threshold') }}:" explain="{{ phrase('sv_warning_default_applied_crossing_threshold') }}" name="threshold_points" value="{$default.threshold_points}" min="0" />
+<xf:pageaction if="$default.isUpdate()">
+	<xf:button href="{{ link('warnings/actions/delete', $default) }}" icon="delete" overlay="true" />
+</xf:pageaction>
 
-	<xen:spinboxunit label="{{ phrase('sv_warning_expiry_extension') }}:" explain="{{ phrase('sv_warning_expiry_extension_explain') }}" name="expiry_extension" value="{xen:if $default.expiry_extension, $default.expiry_extension, 1}" min="0" >
-		<xen:select name="expiry_type" value="{xen:if $default.expiry_type, $default.expiry_type, 'months'}"
-		inputclass="autoSize">
-			<xen:option value="days">{{ phrase('days') }}</xen:option>
-			<xen:option value="weeks">{{ phrase('weeks') }}</xen:option>
-			<xen:option value="months">{{ phrase('months') }}</xen:option>
-			<xen:option value="years">{{ phrase('years') }}</xen:option>
-		</xen:select>
-	</xen:spinboxunit>
+<xf:form action="{{ link('warnings/default/save', $default) }}" ajax="true" class="block">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:numberboxrow name="threshold_points" value="{$default.threshold_points}" min="1" label="{{ phrase('points_threshold') }}" explain="{{ phrase('sv_warning_default_applied_crossing_threshold') }}" />
 
-	<xen:checkboxunit label="" listclass="checkboxColumns">
-		<xen:option name="active" value="1" selected="{$default.active}">{{ phrase('sv_warning_default_is_active') }}</xen:option>
-	</xen:checkboxunit>
-
-	<xen:submitunit save="{{ phrase('sv_save_warning_default') }}">
-		<xf:if is="{$default.warning_default_id}">
-			<input type="button" value="{{ phrase('sv_delete_warning_default') }}..." accesskey="d" class="button OverlayTrigger"
-				data-href="{xen:adminlink warnings/default/delete, $default}" />
-		</xf:if>
-	</xen:submitunit>
-</xen:form>
+			<xf:formrow label="{{ phrase('sv_warning_expiry_extension') }}" explain="{{ phrase('sv_warning_expiry_extension_explain') }}">
+				<div class="inputGroup">
+					<xf:numberbox name="expiry_extension" value="{{ $default.expiry_extension }}" min="0" />
+					<span class="inputGroup-splitter"></span>
+					<xf:select name="expiry_type" value="{{ $default.expiry_type }}" class="input--inline">
+						<xf:option value="days">{{ phrase('days') }}</xf:option>
+						<xf:option value="weeks">{{ phrase('weeks') }}</xf:option>
+						<xf:option value="months">{{ phrase('months') }}</xf:option>
+						<xf:option value="years">{{ phrase('years') }}</xf:option>
+					</xf:select>
+				</div>
+			</xf:formrow>
+			
+			<xf:checkboxrow>
+				<xf:option name="active" value="1" selected="{$default.active}">{{ phrase('sv_warning_default_is_active') }}</xf:option>
+			</xf:checkboxrow>
+		</div>
+		<xf:submitrow sticky="true" icon="save" />
+	</div>
+</xf:form>

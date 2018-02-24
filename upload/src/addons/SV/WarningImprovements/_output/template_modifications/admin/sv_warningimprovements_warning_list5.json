@@ -4,6 +4,6 @@
     "execution_order": 10,
     "enabled": true,
     "action": "preg_replace",
-    "find": "#<xen:if is=\"{\\$warningActions}\">[\\S\\s]+</xen:if>#",
-    "replace": "<xen:include template=\"sv_warning_action_list\" />"
+    "find": "#<xf:if is=\"\\$actions is not empty\">.*<!--.*-->.*<\\/div>.*<\\/div>.*<\\/xf:if>#siU",
+    "replace": "<xf:include template=\"sv_warning_action_list\" />"
 }
