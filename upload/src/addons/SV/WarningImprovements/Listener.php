@@ -46,4 +46,16 @@ class Listener
             }
         }
     }
+
+    public static $warningDefinitionCategoryId = '';
+
+    public static function entityPreSave_XFWarningDefinition(\XF\Mvc\Entity\Entity $entity)
+    {
+        if (!is_string(self::$warningDefinitionCategoryId))
+        {
+            /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entity */
+            $entity->sv_warning_category_id = self::$warningDefinitionCategoryId;
+            self::$warningDefinitionCategoryId = '';
+        }
+    }
 }

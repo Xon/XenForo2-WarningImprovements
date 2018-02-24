@@ -40,14 +40,37 @@ class Warning extends XFCP_Warning
     {
         $response = parent::warningAddEdit($warning);
 
+        if ($response instanceof \XF\Mvc\Reply\View)
+        {
+            $categoryRepo = $this->getCategoryRepo();
+            $categoryTree = $categoryRepo->createCategoryTree();
+            $response->setParam('categoryTree', $categoryTree);
+        }
+
         return $response;
+    }
+
+    protected function warningSaveProcess(\XF\Entity\WarningDefinition $warning)
+    {
+        $categoryId = $this->filter('sv_warning_category_id', 'uint');
+        \SV\WarningImprovements\Listener::$warningDefinitionCategoryId = $categoryId ?: null;
+        return parent::warningSaveProcess($warning);
     }
 
     public function actionSave(ParameterBag $params)
     {
-        $response = parent::actionSave($params);
+        $this->assertPostOnly();
 
-        return $response;
+        if ($this->isCustomWarning($params->warning_definition_id))
+        {
+            $customWarningDefinition = $this->getCustomWarningDefinition();
+
+            $this->warningSaveProcess($customWarningDefinition)->run();
+
+            return $this->redirect($this->buildLink('warnings'));
+        }
+
+        return parent::actionSave($params);
     }
 
     public function _actionAddEdit(\XF\Entity\WarningAction $action)
@@ -256,7 +279,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return \SV\WarningImprovements\Repository\WarningCategory|\XF\Mvc\Entity\Repository
+     * @return \SV\WarningImprovements\Repository\WarningCategory
      */
     protected function getCategoryRepo()
     {
@@ -267,21 +290,67 @@ class Warning extends XFCP_Warning
      * @param $id
      * @param null $with
      * @param null $phraseKey
-     * @return \SV\WarningImprovements\Entity\WarningCategory|\XF\Mvc\Entity\Entity
+     *
+     * @return \SV\WarningImprovements\Entity\WarningCategory
+     *
+     * @throws \XF\Mvc\Reply\Exception
      */
     protected function assertCategoryExists($id, $with = null, $phraseKey = null)
     {
         return $this->assertRecordExists('SV\WarningImprovements:WarningCategory', $id, $with, $phraseKey);
     }
 
+
     /**
      * @param $id
      * @param null $with
      * @param null $phraseKey
-     * @return \SV\WarningImprovements\Entity\WarningDefault|\XF\Mvc\Entity\Entity
+     *
+     * @return \SV\WarningImprovements\Entity\WarningDefault
+     *
+     * @throws \XF\Mvc\Reply\Exception
      */
     protected function assertDefaultExists($id, $with = null, $phraseKey = null)
     {
         return $this->assertRecordExists('SV\WarningImprovements:WarningDefault', $id, $with, $phraseKey);
+    }
+
+    /**
+     * @param string $id
+     * @param null $with
+     * @param null $phraseKey
+     *
+     * @return \SV\WarningImprovements\XF\Entity\WarningDefinition
+     *
+     * @throws \XF\Mvc\Reply\Exception
+     */
+    protected function assertWarningDefinitionExists($id, $with = null, $phraseKey = null)
+    {
+        if ($this->isCustomWarning($id) && in_array(\XF::app()->router()->routeToController($this->request()->getRoutePath())->getAction(), ['edit', 'save']))
+        {
+            return $this->getCustomWarningDefinition();
+        }
+        else
+        {
+            return $this->assertRecordExists('XF:WarningDefinition', $id, $with, $phraseKey);
+        }
+    }
+
+    /**
+     * @return \SV\WarningImprovements\XF\Entity\WarningDefinition
+     */
+    private function getCustomWarningDefinition()
+    {
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = $this->getWarningRepo();
+        return $warningRepo->getCustomWarning();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isCustomWarning($warningDefinitionId)
+    {
+        return ($warningDefinitionId == 0);
     }
 }

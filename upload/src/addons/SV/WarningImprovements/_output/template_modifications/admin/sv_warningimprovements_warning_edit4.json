@@ -3,7 +3,7 @@
     "description": "Special case editing the Custom Warning - 4",
     "execution_order": 10,
     "enabled": true,
-    "action": "preg_replace",
-    "find": "#(<xen:textboxunit label=\"{xen:phrase title}:\".*?/>)#si",
-    "replace": "<xen:if is=\"{$warning.is_custom}\">\n<input name=\"title\" type=\"hidden\" value=\"{$masterTitle}\" />\n<input name=\"is_custom\" type=\"hidden\" value=\"1\" />\n<fieldset>\n<dl class=\"ctrlUnit\"><dt>{xen:phrase title}:</dt><dd><em>{$masterTitle}</em></dd></dl>\n</fieldset>\n<xen:else />\n$1\n<xen:checkboxunit label=\"\">\n\t<xen:option name=\"sv_custom_title\" selected=\"{$warning.sv_custom_title}\">{xen:phrase sv_custom_warning_title}</xen:option>\n</xen:checkboxunit>\n</xen:if>"
+    "action": "str_replace",
+    "find": "<xf:textboxrow name=\"title\" value=\"{$warning.MasterTitle.phrase_text}\" maxlength=\"{{ max_length($warning, 'title') }}\"\n\t\t\t\tlabel=\"{{ phrase('title') }}\" />",
+    "replace": "<xf:if is=\"$warning.is_custom\">\n\t<xf:formrow label=\"{{ phrase('title') }}\">\n\t\t<xf:hiddenval name=\"title\">{$warning.MasterTitle.phrase_text}</xf:hiddenval>\n\t\t<xf:hiddenval name=\"is_custom\">1</xf:hiddenval>\n\t\t{$warning.MasterTitle.phrase_text}\n\t</xf:formrow>\n<xf:else />\n\t$0\n\t<xf:checkboxrow>\n\t\t<xf:option name=\"sv_custom_title\" selected=\"$warning.sv_custom_title\">{{ phrase('sv_custom_warning_title') }}</xf:option>\n\t</xf:checkboxrow>\n</xf:if>"
 }

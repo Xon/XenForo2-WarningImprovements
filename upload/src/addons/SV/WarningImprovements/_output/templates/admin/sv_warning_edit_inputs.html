@@ -1,6 +1,8 @@
 <xf:selectrow name="sv_warning_category_id" value="{$warning.sv_warning_category_id}" label="{{ phrase('sv_warning_category:') }}">
-	<xf:option>&nbsp;</xf:option>
-	<xf:option src="$warningCategories" />
+	<xf:option value="0">{{ phrase('(none)') }}</xf:option>
+	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
+		<xf:option value="{$treeEntry.record.warning_category_id}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
+	</xf:foreach>
 </xf:selectrow>
 
 <xf:numberboxrow name="sv_display_order" value="{$warning.sv_display_order}" min="0" step="10" label="{{ phrase('display_order:') }}" />

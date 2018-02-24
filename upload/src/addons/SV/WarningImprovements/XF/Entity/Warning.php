@@ -45,8 +45,6 @@ class Warning extends XFCP_Warning
             }
         }
 
-        $structure->options['isCustom'] = false;
-
         return $structure;
     }
 

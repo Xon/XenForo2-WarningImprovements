@@ -9,6 +9,16 @@ use \XF\Entity\User as UserEntity;
  */
 class Warning extends XFCP_Warning
 {
+    public function getCustomWarning()
+    {
+        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
+        $warningDefinition = $this->finder('XF:WarningDefinition')
+            ->where('warning_definition_id', '=', 0)
+            ->fetchOne();
+
+        return $warningDefinition;
+    }
+
     public function getWarningDefaultExtentions()
     {
         return $this->db()->fetchAllKeyed("
