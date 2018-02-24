@@ -158,8 +158,7 @@ class WarningCategory extends AbstractCategoryTree
         ];
         $structure->getters = [
             'title' => true,
-            'titleRaw' => true, // onii-chan breadcrumb needs raw KappaPride
-            'warnings_simple' => true
+            'titleRaw' => true // onii-chan breadcrumb needs raw KappaPride
         ];
         $structure->relations = [
             'MasterTitle' => [
