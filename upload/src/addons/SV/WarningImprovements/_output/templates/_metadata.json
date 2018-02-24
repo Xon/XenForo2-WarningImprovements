@@ -49,15 +49,10 @@
         "version_string": "2.0.0 Alpha",
         "hash": "5b1f3fbf25d3ae7ccea9969dd6a2b7b7"
     },
-    "admin/sv_warning_list_jstree.css": {
-        "version_id": 2000000,
-        "version_string": "2.0.0",
-        "hash": "a1a5030702ffce2e9ccf01116fe0eb03"
-    },
     "admin/sv_warning_list_jstree.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "b1969025c526188bfa661e489898fc0f"
+        "hash": "cffc7d92fc882d14b20d0608d863a803"
     },
     "admin/sv_warning_sort.html": {
         "version_id": 2000000,
