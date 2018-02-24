@@ -647,6 +647,12 @@
         "version_string": "1.2.0",
         "hash": "b4e7a4027bca44f71c03474c54e3a0af"
     },
+    "sv_warning_improvements_enable_disable_this_warning_default.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "1f949d8ed39d5faee36355f217224cb5"
+    },
     "sv_warning_improvements_sort_categories.txt": {
         "global_cache": false,
         "version_id": 2000000,

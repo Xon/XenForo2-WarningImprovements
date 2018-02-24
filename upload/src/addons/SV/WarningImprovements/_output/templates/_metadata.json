@@ -72,7 +72,7 @@
     "admin/sv_warningimprovements_escalating_defaults.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "afdeb3062e360ac71820ebc4c1ab94c7"
+        "hash": "5c83bf2e413d8a618ec98e0f4a372a50"
     },
     "admin/sv_warningimprovements_warning_default_delete.html": {
         "version_id": 2000000,
@@ -82,7 +82,7 @@
     "admin/sv_warningimprovements_warning_default_edit.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "46a227b216734ee7773a2e5eb17887da"
+        "hash": "e4645051a0d3abf09aa2568ef8916690"
     },
     "public/alert_warning_alert_warning.html": {
         "version_id": 2000000,

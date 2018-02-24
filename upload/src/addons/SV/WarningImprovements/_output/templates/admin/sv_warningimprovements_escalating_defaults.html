@@ -17,13 +17,13 @@
 						</xf:if>
 						
 						<xf:datarow>
-							<xf:main href="{{ link('warnings/default/edit', $escalatingDefault) }}">
+							<xf:main href="{{ link('warnings/default/edit', null, { 'warning_default_id': $escalatingDefault.warning_default_id }) }}">
 								<xf:label>{{ phrase('sv_increase_default_expiry_by_x', {'length': $expiry_extension_phrase}) }}</xf:label>
 							</xf:main>
 							<xf:toggle name="active[{$escalatingDefault.warning_default_id}]" selected="$escalatingDefault.active"
 									   class="dataList-cell--separated" submit="true"
-									   tooltip="{{ phrase('enable_disable_x', {'title': $escalatingDefault.MasterTitle.phrase_text}) }}" />
-							<xf:delete href="{{ link('warnings/default/delete', $escalatingDefault) }}" />
+									   tooltip="{{ phrase('sv_warning_improvements_enable_disable_this_warning_default') }}" />
+							<xf:delete href="{{ link('warnings/default/delete', null, { 'warning_default_id': $escalatingDefault.warning_default_id }) }}" />
 						</xf:datarow>
 					</xf:foreach>
 				</xf:datalist>

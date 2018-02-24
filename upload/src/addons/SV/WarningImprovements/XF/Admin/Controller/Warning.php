@@ -208,7 +208,7 @@ class Warning extends XFCP_Warning
 
     public function actionDefaultEdit(ParameterBag $params)
     {
-        $defaultAction = $this->assertDefaultExists($params->warning_default_id);
+        $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
         return $this->defaultActionAddEdit($defaultAction);
     }
@@ -240,9 +240,9 @@ class Warning extends XFCP_Warning
     {
         $this->assertPostOnly();
 
-        if ($params->warning_default_id)
+        if ($warningDefaultId = $this->filter('warning_default_id', 'uint'))
         {
-            $defaultAction = $this->assertDefaultExists($params->warning_default_id);
+            $defaultAction = $this->assertDefaultExists($warningDefaultId);
         }
         else
         {
@@ -259,7 +259,7 @@ class Warning extends XFCP_Warning
 
     public function actionDefaultDelete(ParameterBag $params)
     {
-        $defaultAction = $this->assertDefaultExists($params->warning_default_id);
+        $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
         if ($this->isPost())
         {
