@@ -17,7 +17,7 @@
     "admin/sv_warning_category_delete.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "42b7718bb7a96e8044752faa8744db05"
+        "hash": "cb4f0d8ce2223947e7dcaedb1b4e8143"
     },
     "admin/sv_warning_category_edit.html": {
         "version_id": 2000000,
@@ -32,7 +32,7 @@
     "admin/sv_warning_improvements_category_tree_macros.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+        "hash": "408e7710380b212615f3a4085090287e"
     },
     "admin/sv_warning_list_jstree.css": {
         "version_id": 2000000,
@@ -42,7 +42,7 @@
     "admin/sv_warning_list_jstree.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "4cd20afdc2fd0b0c437c8a43557a64e6"
+        "hash": "b1969025c526188bfa661e489898fc0f"
     },
     "admin/sv_warningimprovements_criteria.html": {
         "version_id": 2000000,

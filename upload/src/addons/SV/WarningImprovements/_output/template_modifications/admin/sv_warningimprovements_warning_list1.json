@@ -1,9 +1,9 @@
 {
     "template": "warning_list",
-    "description": "Add \"Add category\" button",
+    "description": "Add \"Add category\" and \"Sort\" button",
     "execution_order": 10,
     "enabled": true,
     "action": "str_replace",
     "find": "</xf:pageaction>",
-    "replace": "\t<xf:button href=\"{{ link('warnings/category-add') }}\" icon=\"add\">{{ phrase('add_category') }}</xf:button>\n$0"
+    "replace": "\t<xf:button href=\"{{ link('warnings/category-add') }}\" icon=\"add\">{{ phrase('add_category') }}</xf:button>\n\t<xf:button href=\"{{ link('warnings/category-sort') }}\" icon=\"sort\" overlay=\"true\" />\n$0"
 }

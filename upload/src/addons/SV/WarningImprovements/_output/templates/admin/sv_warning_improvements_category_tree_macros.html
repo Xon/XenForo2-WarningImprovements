@@ -1,0 +1,124 @@
+<xf:macro name="category_list" arg-warnings="!" arg-categoryTree="!">
+	<xf:if is="$warnings is not empty">
+		<div class="block">
+			<div class="block-outer">
+				<xf:macro template="filter_macros" name="quick_filter" arg-key="warning-category" arg-class="block-outer-opposite" />
+			</div>
+			<div class="block-container">
+				<div class="block-body">
+					<xf:datalist>
+						<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
+							<xf:set var="$category" value="{$treeEntry.record}" />
+							<xf:datarow>
+								<xf:cell class="dataList-cell--link dataList-cell--main" hash="{$category.warning_category_id}">
+									<a href="{{ link('warnings/category-edit', null, { 'warning_category_id': $category.warning_category_id }) }}">
+										<div class="u-depth{$treeEntry.depth}">
+											<div class="dataList-mainRow">{$category.title}</div>
+										</div>
+									</a>
+								</xf:cell>
+								<xf:popup class="dataList-cell--action u-hideMedium" label="{{ phrase('add...') }}">
+									<div class="menu" data-menu="menu" aria-hidden="true">
+										<div class="menu-content">
+											<h3 class="menu-header">{{ phrase('add...') }}</h3>
+											<a href="{{ link('warnings/category-add', null, { 'parent_category_id': $category.parent_category_id }) }}" class="menu-linkRow">{{ phrase('sibling') }}</a>
+											<a href="{{ link('warnings/category-add', null, { 'parent_category_id': $category.warning_category_id}) }}" class="menu-linkRow">{{ phrase('child') }}</a>
+										</div>
+									</div>
+								</xf:popup>
+								<xf:delete href="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}" />
+							</xf:datarow>
+							<xf:foreach loop="$category.WarningDefinitions" value="$warningDefinition">
+								<xf:datarow>
+									<xf:cell class="dataList-cell--link dataList-cell--main" hash="warning_definition{$warningDefinition.warning_definition_id}">
+										<a href="{{ link('warnings/edit', $warningDefinition) }}">
+											<div class="u-depth{{ $treeEntry.depth + 1 }}">
+												<div class="dataList-mainRow">{$warningDefinition.title}</div>
+											</div>
+										</a>
+									</xf:cell>
+									<xf:cell>&nbsp;</xf:cell>
+									<xf:delete href="{{ link('warnings/delete', $warningDefinition) }}" />
+								</xf:datarow>
+							</xf:foreach>
+						</xf:foreach>
+					</xf:datalist>
+				</div>
+			</div>
+		</div>
+	<xf:else />
+		<div class="blockMessage">{{ phrase('no_warnings_have_been_defined') }}</div>
+	</xf:if>
+</xf:macro>
+
+<xf:macro name="sortable_form" arg-categoryTree="!">
+	<xf:macro template="public:nestable_macros" name="setup" />
+
+	<xf:form action="{{ link('warnings/category-sort') }}" class="block" ajax="true">
+		<div class="block-container">
+			<div class="block-body">
+				<div class="nestable-container" data-xf-init="nestable">
+					<xf:macro name="sortable_list" arg-children="{$categoryTree}" />
+					<xf:hiddenval name="categories" value="" />
+				</div>
+			</div>
+			<xf:submitrow icon="save" rowtype="simple" />
+		</div>
+	</xf:form>
+</xf:macro>
+
+<xf:macro name="sortable_list" arg-children="!">
+	<ol class="nestable-list">
+		<xf:foreach loop="$children" key="$id" value="$child">
+			<xf:macro name="sortable_list_entry" arg-child="{$child}" arg-children="{$child.children}" />
+		</xf:foreach>
+	</ol>
+</xf:macro>
+
+<xf:macro name="sortable_list_entry" arg-child="!" arg-children="!">
+	<li class="nestable-item" data-id="{$child.id}">
+		<div class="nestable-handle" aria-label="{{ phrase('drag_handle') }}"><i class="fa fa-bars" aria-hidden="true"></i></div>
+		<div class="nestable-content">{$child.record.title}</div>
+		<xf:if is="$child.children is not empty">
+			<xf:macro name="sortable_list" arg-children="{$child.children}" />
+		</xf:if>
+	</li>
+</xf:macro>
+
+<xf:macro name="parent_category_select_row"
+	arg-category="!"
+	arg-categoryTree="!">
+
+	<xf:selectrow name="parent_category_id" value="{$category.parent_category_id}"
+		label="{{ phrase('parent_category') }}">
+
+		<xf:option value="0">{{ phrase('(none)') }}</xf:option>
+		<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
+			<xf:option value="{$treeEntry.record.warning_category_id}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
+		</xf:foreach>
+	</xf:selectrow>
+</xf:macro>
+
+<xf:macro name="category_delete_form" arg-category="!">
+	<xf:form action="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}" class="block" ajax="true">
+
+		<div class="block-container">
+			<div class="block-body">
+				<xf:inforow rowtype="confirm">
+					{{ phrase('please_confirm_that_you_want_to_delete_following:') }}
+					<strong><a href="{{ link('warnings/category-edit', null, { 'warning_category_id': $category.warning_category_id }) }}">{$category.title}</a></strong>
+				</xf:inforow>
+
+				<xf:if is="$category.hasChildren()">
+					<xf:radiorow name="child_nodes_action">
+						<xf:option value="move" selected="true">{{ phrase('move_this_categorys_children_to_its_parent') }}</xf:option>
+						<xf:option value="delete">{{ phrase('delete_this_categorys_children') }} </xf:option>
+					</xf:radiorow>
+				</xf:if>
+			</div>
+			<xf:submitrow rowtype="{{ !$category.hasChildren() ? 'simple' : '' }}" icon="delete" />
+		</div>
+		<xf:redirect />
+
+	</xf:form>
+</xf:macro>
