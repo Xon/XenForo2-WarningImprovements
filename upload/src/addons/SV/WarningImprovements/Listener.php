@@ -58,4 +58,7 @@ class Listener
             self::$warningDefinitionCategoryId = '';
         }
     }
+
+    public static $customWarningPhrase_version_id = 101011;
+    public static $customWarningPhrase_version_string = '1.1.1s';
 }
