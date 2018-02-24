@@ -24,6 +24,11 @@
         "version_string": "2.0.0 Alpha",
         "hash": "cb8f9644ee76cc8d20cbb3726aa34f0c"
     },
+    "admin/sv_warning_category_sort.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "6dcc22045807c8746cb39e9527fb88e8"
+    },
     "admin/sv_warning_edit_inputs.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
