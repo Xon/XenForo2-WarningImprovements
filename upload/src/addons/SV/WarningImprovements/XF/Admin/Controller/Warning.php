@@ -24,8 +24,9 @@ class Warning extends XFCP_Warning
 
             $warningRepo = $this->getWarningRepo();
             $warnings = $warningRepo->findWarningDefinitionsForList()
-                ->order('sv_display_order')
-                ->fetch();
+                ->order('sv_display_order', 'asc')
+                ->fetch()
+                ->groupBy('sv_warning_category_id');
             $response->setParam('warnings', $warnings);
         }
 
@@ -95,21 +96,18 @@ class Warning extends XFCP_Warning
 
             foreach ($warnings as $categoryId => $warning)
             {
-                if ($categoryId === 10)
-                {
-                    $sortTree = $sorter->buildSortTree($this->filter('category-' . $categoryId, 'json-array'));
-                    $sortedTreeData = $sortTree->getAllData();
-                    $lastOrder = 0;
+                $sortTree = $sorter->buildSortTree($this->filter('category-' . $categoryId, 'json-array'));
+                $sortedTreeData = $sortTree->getAllData();
+                $lastOrder = 0;
 
-                    foreach ($sortedTreeData as $warningId => $data)
-                    {
-                        $lastOrder += 5;
-                        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entry */
-                        $entry = $this->em()->findOne('XF:WarningDefinition', ['warning_definition_id', '=', $warningId]);
-                        $entry->sv_warning_category_id = $data['parent_id'];
-                        $entry->sv_display_order = $lastOrder;
-                        $entry->saveIfChanged();
-                    }
+                foreach ($sortedTreeData as $warningId => $data)
+                {
+                    $lastOrder += 5;
+                    /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entry */
+                    $entry = $this->em()->findOne('XF:WarningDefinition', ['warning_definition_id', '=', $warningId]);
+                    $entry->sv_warning_category_id = $data['parent_id'];
+                    $entry->sv_display_order = $lastOrder;
+                    $entry->saveIfChanged();
                 }
             }
 
