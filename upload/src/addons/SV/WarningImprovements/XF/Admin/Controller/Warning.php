@@ -79,22 +79,31 @@ class Warning extends XFCP_Warning
         $categories = $categoryRepo->findCategoryList()->fetch();
         $categoryTree = $categoryRepo->createCategoryTree($categories);
 
+        $warningRepo = $this->getWarningRepo();
+        $warnings = $warningRepo->findWarningDefinitionsForList()
+            ->order('warning_definition_id')
+            ->fetch()
+            ->groupBy('sv_warning_category_id');
+
         if ($this->isPost())
         {
             /** @var \XF\ControllerPlugin\Sort $sorter */
             $sorter = $this->plugin('XF:Sort');
-            $sortTree = $sorter->buildSortTree($this->filter('categories', 'json-array'));
-            $sorter->sortTree($sortTree, $categoryTree->getAllData(), 'parent_category_id');
+
+            foreach ($warnings as $categoryId => $warning)
+            {
+                $sortTree = $sorter->buildSortTree($this->filter('category-' . $categoryId, 'json-array'));
+
+                $sorter->sortTree($sortTree, $sortTree->getAllData(), 'parent_category_id');
+            }
 
             return $this->redirect($this->buildLink('warnings'));
         }
         else
         {
-            $warningRepo = $this->getWarningRepo();
-
             $viewParams = [
                 'categoryTree' => $categoryTree,
-                'warnings' => $warningRepo->findWarningDefinitionsForList()->fetch()->groupBy('sv_warning_category_id'),
+                'warnings' => $warnings,
             ];
 
             return $this->view(

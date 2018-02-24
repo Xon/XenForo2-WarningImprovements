@@ -3,11 +3,10 @@
 	
 	<xf:macro template="public:nestable_macros" name="setup" />
 
-	<xf:form action="{{ link('warnings/category-sort') }}" class="block" ajax="true">
+	<xf:form action="{{ link('warnings/sort') }}" class="block" ajax="true">
 		<div class="block-container">
 			<div class="block-body">
 				<xf:macro name="sortable_list" arg-children="{$categoryTree}" arg-warnings="{$warnings}" />
-				<xf:hiddenval name="categories" value="" />
 			</div>
 			<xf:submitrow icon="save" rowtype="simple" />
 		</div>
@@ -25,7 +24,7 @@
 </xf:macro>
 
 <xf:macro name="sortable_warning_list" arg-warnings="!" arg-category="!">
-	<div class="nestable-container" data-xf-init="nestable" data-value-target="#js-warning-{$category.warning_category_id}-Data">
+	<div class="nestable-container" data-xf-init="nestable" data-parent-id="{$category.warning_category_id}" data-value-target="#js-category-{$category.warning_category_id}-Data">
 		<ol class="nestable-list">
 			<xf:foreach loop="$warnings" value="$warning">
 				<li class="nestable-item" data-id="{$warning.warning_definition_id}">
@@ -33,8 +32,8 @@
 					<div class="nestable-content">{$warning.MasterTitle.phrase_text}</div>
 				</li>
 			</xf:foreach>
-			<xf:hiddenval name="navigation" value="" id="js-warning-{$category.warning_category_id}-Data" />
 		</ol>
+		<xf:hiddenval name="category-{$category.warning_category_id}" value="" id="js-category-{$category.warning_category_id}-Data" />
 	</div>
 </xf:macro>
 
