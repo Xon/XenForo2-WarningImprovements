@@ -1,0 +1,48 @@
+<xf:macro name="sortable_form" arg-categoryTree="!" arg-warnings="!">
+	<xf:css src="sv_warning_improvements_nestable.less" />
+	
+	<xf:macro template="public:nestable_macros" name="setup" />
+
+	<xf:form action="{{ link('warnings/category-sort') }}" class="block" ajax="true">
+		<div class="block-container">
+			<div class="block-body">
+				<xf:macro name="sortable_list" arg-children="{$categoryTree}" arg-warnings="{$warnings}" />
+				<xf:hiddenval name="categories" value="" />
+			</div>
+			<xf:submitrow icon="save" rowtype="simple" />
+		</div>
+	</xf:form>
+</xf:macro>
+
+<xf:macro name="sortable_list" arg-children="!" arg-warnings="{{ null }}">
+	<div class="category-container">
+		<ol class="category-list">
+			<xf:foreach loop="$children" key="$id" value="$child">
+				<xf:macro name="sortable_list_entry" arg-child="{$child}" arg-children="{$child.children}" arg-warnings="{$warnings}" />
+			</xf:foreach>
+		</ol>
+	</div>
+</xf:macro>
+
+<xf:macro name="sortable_warning_list" arg-warnings="{{ null }}">
+	<ol class="nestable-list">
+		<xf:foreach loop="$warnings" value="$warning">
+			<li class="nestable-item" data-id="{$warning.warning_definition_id}">
+				<div class="nestable-handle" aria-label="{{ phrase('drag_handle') }}"><i class="fa fa-bars" aria-hidden="true"></i></div>
+				<div class="nestable-content">{$warning.MasterTitle.phrase_text}</div>
+			</li>
+		</xf:foreach>
+	</ol>
+</xf:macro>
+
+<xf:macro name="sortable_list_entry" arg-child="!" arg-children="!" arg-warnings="!">
+	<li class="category-item" data-id="{$child.id}">
+		<div class="category-content block-minorHeader">{$child.record.title}</div>
+		<xf:if is="{$warnings.{$child.id}} is not empty">
+			<xf:macro name="sortable_warning_list" arg-warnings="{$warnings.{$child.id}}" />
+		</xf:if>
+		<xf:if is="$child.children is not empty">
+			<xf:macro name="sortable_list" arg-children="{$child.children}" arg-warnings="{$warnings}" />
+		</xf:if>
+	</li>
+</xf:macro>

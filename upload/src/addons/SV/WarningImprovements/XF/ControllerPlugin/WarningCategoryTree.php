@@ -7,7 +7,7 @@ use XF\Mvc\ParameterBag;
 
 class WarningCategoryTree extends AbstractCategoryTree
 {
-    protected $viewFormatter = 'SV\WarningImprovements:WarningCategory\%s';
+    protected $viewFormatter = 'SV\WarningImprovements\XF:WarningCategory\%s';
     protected $templateFormatter = 'sv_warning_category_%s';
     protected $routePrefix = 'warnings';
     protected $entityIdentifier = 'SV\WarningImprovements:WarningCategory';

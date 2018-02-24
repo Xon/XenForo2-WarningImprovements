@@ -647,6 +647,18 @@
         "version_string": "1.2.0",
         "hash": "b4e7a4027bca44f71c03474c54e3a0af"
     },
+    "sv_warning_improvements_sort_categories.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "1d8e065217f7e1f7ed6d28562e5a81ad"
+    },
+    "sv_warning_improvements_sort_warning_definitions.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "ec61116f6371466a8d1ee040f256ddae"
+    },
     "sv_warning_include_expired.txt": {
         "global_cache": false,
         "version_id": 1051000,

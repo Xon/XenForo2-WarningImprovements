@@ -73,6 +73,38 @@ class Warning extends XFCP_Warning
         return parent::actionSave($params);
     }
 
+    public function actionSort()
+    {
+        $categoryRepo = $this->getCategoryRepo();
+        $categories = $categoryRepo->findCategoryList()->fetch();
+        $categoryTree = $categoryRepo->createCategoryTree($categories);
+
+        if ($this->isPost())
+        {
+            /** @var \XF\ControllerPlugin\Sort $sorter */
+            $sorter = $this->plugin('XF:Sort');
+            $sortTree = $sorter->buildSortTree($this->filter('categories', 'json-array'));
+            $sorter->sortTree($sortTree, $categoryTree->getAllData(), 'parent_category_id');
+
+            return $this->redirect($this->buildLink('warnings'));
+        }
+        else
+        {
+            $warningRepo = $this->getWarningRepo();
+
+            $viewParams = [
+                'categoryTree' => $categoryTree,
+                'warnings' => $warningRepo->findWarningDefinitionsForList()->fetch()->groupBy('sv_warning_category_id'),
+            ];
+
+            return $this->view(
+                'SV\WarningImprovements\XF:WarningCategory\Sort',
+                'sv_warning_sort',
+                $viewParams
+            );
+        }
+    }
+
     public function _actionAddEdit(\XF\Entity\WarningAction $action)
     {
         $response = parent::_actionAddEdit($action);
@@ -275,6 +307,14 @@ class Warning extends XFCP_Warning
     protected function getCategoryTreePlugin()
     {
         return $this->plugin('SV\WarningImprovements\XF:WarningCategoryTree');
+    }
+
+    /**
+     * @return \SV\WarningImprovements\XF\ControllerPlugin\WarningTree
+     */
+    protected function getWarningTreePlugin()
+    {
+        return $this->plugin('SV\WarningImprovements\XF:WarningTree');
     }
 
     /**

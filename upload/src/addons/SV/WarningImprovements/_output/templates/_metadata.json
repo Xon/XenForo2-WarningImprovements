@@ -27,7 +27,7 @@
     "admin/sv_warning_category_sort.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "6dcc22045807c8746cb39e9527fb88e8"
+        "hash": "8678d18225e1323fe9da8dd43f8232c5"
     },
     "admin/sv_warning_edit_inputs.html": {
         "version_id": 2000000,
@@ -39,6 +39,11 @@
         "version_string": "2.0.0 Alpha",
         "hash": "408e7710380b212615f3a4085090287e"
     },
+    "admin/sv_warning_improvements_warning_tree_macros.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "f9a8fee351a1fe79c2a8242c997ae21e"
+    },
     "admin/sv_warning_list_jstree.css": {
         "version_id": 2000000,
         "version_string": "2.0.0",
@@ -48,6 +53,11 @@
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
         "hash": "b1969025c526188bfa661e489898fc0f"
+    },
+    "admin/sv_warning_sort.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "6fe770bc9596ec389ab5d565a8797e30"
     },
     "admin/sv_warningimprovements_criteria.html": {
         "version_id": 2000000,
