@@ -138,7 +138,13 @@ class Warning extends XFCP_Warning
             $nodeRepo = $this->app()->repository('XF:Node');
             $nodes = $nodeRepo->getFullNodeList()->filterViewable();
 
-            $response->setParam('nodeTree', $nodeRepo->createNodeTree($nodes));
+            $categoryRepo = $this->getCategoryRepo();
+            $categoryTree = $categoryRepo->createCategoryTree();
+
+            $response->setParams([
+                'nodeTree' => $nodeRepo->createNodeTree($nodes),
+                'categoryTree' => $categoryTree
+            ]);
         }
 
         return $response;
