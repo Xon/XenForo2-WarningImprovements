@@ -198,6 +198,11 @@ class Warning extends XFCP_Warning
             'allowed_user_group_ids' => 'array-uint'
         ]);
 
+        if (!$input['parent_category_id'])
+        {
+            $input['parent_category_id'] = null;
+        }
+
         $form->basicEntitySave($warningCategory, $input);
 
         $phraseInput = $this->filter([
