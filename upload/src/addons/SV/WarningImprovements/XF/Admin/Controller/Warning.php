@@ -150,6 +150,19 @@ class Warning extends XFCP_Warning
         return $response;
     }
 
+    // underscore prefix to not be confused with actual controller actions
+    protected function _actionSaveProcess(\XF\Entity\WarningAction $action)
+    {
+        $inputFieldNames = ['sv_warning_category_id', 'sv_post_node_id'];
+        \SV\WarningImprovements\Listener::$warningActionData = [];
+        foreach ($inputFieldNames as $inputFieldName)
+        {
+            \SV\WarningImprovements\Listener::$warningActionData[$inputFieldName] = $this->filter($inputFieldName, 'uint');
+        }
+
+        return parent::_actionSaveProcess($action);
+    }
+
     public function defaultActionAddEdit(\SV\WarningImprovements\Entity\WarningDefault $defaultAction)
     {
         $viewParams = [
