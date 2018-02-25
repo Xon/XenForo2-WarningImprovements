@@ -6,14 +6,15 @@
 			</div>
 			<div class="block-container">
 				<div class="block-body">
+					<xf:css src="sv_warning_improvements_category_list.less" />
 					<xf:datalist>
 						<xf:if is="{$globalWarnings} is not empty">
 							<xf:foreach loop="{$globalWarnings}" value="$warningDefinition">
 								<xf:datarow>
 									<xf:cell class="dataList-cell--link dataList-cell--main" hash="warning_definition{$warningDefinition.warning_definition_id}">
 										<a href="{{ link('warnings/edit', $warningDefinition) }}">
-											<div class="u-depth1">
-												<div class="dataList-mainRow">{$warningDefinition.title}</div>
+											<div class="u-depth0">
+												<div class="dataList-mainRow"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Warning"></i> {$warningDefinition.title}</div>
 											</div>
 										</a>
 									</xf:cell>
@@ -33,7 +34,7 @@
 								<xf:cell class="dataList-cell--link dataList-cell--main" hash="{$category.warning_category_id}">
 									<a href="{{ link('warnings/category-edit', null, { 'warning_category_id': $category.warning_category_id }) }}">
 										<div class="u-depth{$treeEntry.depth}">
-											<div class="dataList-mainRow">{$category.title}</div>
+											<div class="dataList-mainRow"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Category"></i> {$category.title}</div>
 										</div>
 									</a>
 								</xf:cell>
@@ -54,7 +55,7 @@
 										<xf:cell class="dataList-cell--link dataList-cell--main" hash="warning_definition{$warningDefinition.warning_definition_id}">
 											<a href="{{ link('warnings/edit', $warningDefinition) }}">
 												<div class="u-depth{{ $treeEntry.depth + 1 }}">
-													<div class="dataList-mainRow">{$warningDefinition.title}</div>
+													<div class="dataList-mainRow"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Warning"></i> {$warningDefinition.title}</div>
 												</div>
 											</a>
 										</xf:cell>

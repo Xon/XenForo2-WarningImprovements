@@ -9,8 +9,8 @@
 							<xf:datarow>
 								<xf:cell class="dataList-cell--link dataList-cell--main" hash="{$category.warning_category_id}">
 									<a>
-										<div class="u-depth0">
-											<div class="dataList-mainRow">{{ phrase('sv_global_warning_actions') }}</div>
+										<div class="dataList-mainRow">
+											<spam class="u-depth0"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Category"></i> {{ phrase('sv_global_warning_actions') }}</spam>
 										</div>
 									</a>
 								</xf:cell>
@@ -21,7 +21,8 @@
 								<xf:datarow>
 									<xf:cell href="{{ link('warnings/actions/edit', $action) }}" class="u-depth0">
 										<div class="dataList-mainRow">
-											<spam class="u-depth1">{{ phrase('points:') }} {$action.points}</spam>
+											<spam class="u-depth1"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Action"></i> {{ phrase('points:') }} {$action.points}</spam>
+											
 											<div class="dataList-hint" dir="auto">
 												<ul class="listInline listInline--bullet listInline--selfInline">
 													<xf:if is="$action.action == 'ban'">
@@ -55,7 +56,7 @@
 								<xf:cell class="dataList-cell--link dataList-cell--main" hash="{$category.warning_category_id}">
 									<a href="{{ link('warnings/category-edit', null, { 'warning_category_id': $category.warning_category_id }) }}">
 										<div class="u-depth{$treeEntry.depth}">
-											<div class="dataList-mainRow">{$category.title}</div>
+											<div class="dataList-mainRow"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Category"></i> {$category.title}</div>
 										</div>
 									</a>
 								</xf:cell>
@@ -66,7 +67,7 @@
 									<xf:datarow>
 										<xf:cell href="{{ link('warnings/actions/edit', $action) }}">
 											<div class="dataList-mainRow">
-												<spam class="u-depth{{ $treeEntry.depth + 1 }}">{{ phrase('points:') }} {$action.points}</spam>
+												<spam class="u-depth{{ $treeEntry.depth + 1 }}"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Action"></i> {{ phrase('points:') }} {$action.points}</spam>
 												<div class="dataList-hint" dir="auto">
 													<ul class="listInline listInline--bullet listInline--selfInline">
 														<xf:if is="$action.action == 'ban'">

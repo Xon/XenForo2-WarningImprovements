@@ -37,12 +37,17 @@
     "admin/sv_warning_improvements_action_tree_macros.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "d004e34a357d98b59e28fa167854f283"
+        "hash": "8deca900183cabe5e3deeb0a1b8a01c4"
+    },
+    "admin/sv_warning_improvements_category_list.less": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "6b0f62904db9b4968c0ad7b235547683"
     },
     "admin/sv_warning_improvements_category_tree_macros.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "c88a03815de65fab5e6ace4ffda3997c"
+        "hash": "1f9e9ff0d4ed93431afbfa08eaefb069"
     },
     "admin/sv_warning_improvements_warning_tree_macros.html": {
         "version_id": 2000000,
