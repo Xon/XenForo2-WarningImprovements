@@ -111,9 +111,22 @@ class WarningCategory extends AbstractCategoryTree
         }
     }
 
-    public function isDeletable()
+    protected function _preDelete()
     {
+        if (empty($this->parent_category_id))
+        {
+            $categoryCount = $this->db()->fetchOne("
+                SELECT COUNT(*)
+                FROM xf_sv_warning_category
+                WHERE sv_warning_category_id <> ?
+            ", $this->sv_warning_category_id);
 
+            if ($categoryCount === 0)
+            {
+                $this->error(\XF::phrase('sv_warning_improvements_last_category_cannot_be_deleted'));
+                return false;
+            }
+        }
     }
 
     protected function _postDelete()
@@ -134,6 +147,22 @@ class WarningCategory extends AbstractCategoryTree
             /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
             if ($warningDefinition->is_custom)
             {
+                if (!empty($this->parent_category_id))
+                {
+                    $newCategoryId = $this->parent_category_id;
+                }
+                else
+                {
+                    $newCategoryId = $this->db()->fetchOne("
+                        SELECT warning_category_id
+                        FROM xf_sv_warning_category
+                        WHERE warning_category_id <> ?
+                    ", $this->warning_category_id);
+                }
+
+                $warningDefinition->sv_warning_category_id = $newCategoryId;
+                $warningDefinition->save();
+
                 continue;
             }
 
