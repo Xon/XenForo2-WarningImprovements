@@ -13,6 +13,12 @@ class Warning extends XFCP_Warning
     public function canViewIssuer()
     {
         $visitor = \XF::visitor();
+
+        if (!$visitor->user_id)
+        {
+            return false;
+        }
+
         return $visitor->hasPermission('general', 'viewWarning_issuer');
     }
 

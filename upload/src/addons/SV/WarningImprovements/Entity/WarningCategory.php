@@ -76,14 +76,14 @@ class WarningCategory extends AbstractCategoryTree
         return $phrase;
     }
 
-    public function warningActionAdded(\XF\Entity\WarningAction $warningAction)
+    public function warningAdded(\XF\Entity\WarningDefinition $warningDefinition)
     {
-        $this->warning_count++;
+        $this->rebuildCounters();
     }
 
-    public function warningActionRemoved(\XF\Entity\WarningAction $warningAction)
+    public function warningRemoved(\XF\Entity\WarningDefinition $warningDefinition)
     {
-        $this->warning_count--;
+        $this->rebuildCounters();
     }
 
     protected function _postSave()
@@ -130,6 +130,26 @@ class WarningCategory extends AbstractCategoryTree
                 'warning_category_id' => $this->warning_category_id
             ]);*/
         }
+    }
+
+    public function rebuildCounters()
+    {
+        $this->rebuildWarningCount();
+
+        return true;
+    }
+
+    public function rebuildWarningCount()
+    {
+        $warningCount = $this->db()->fetchOne("
+			SELECT COUNT(*)
+			FROM xf_warning_definition
+			WHERE sv_warning_category_id = ?
+		", $this->warning_category_id);
+
+        $this->warning_count = max(0, $warningCount);
+
+        return $this->warning_count;
     }
 
     public function getCategoryListExtras()

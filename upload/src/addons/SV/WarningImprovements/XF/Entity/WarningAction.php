@@ -21,28 +21,6 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningAction extends XFCP_WarningAction
 {
-    protected function _postSave()
-    {
-        parent::_postSave();
-
-        if ($this->isInsert() && $this->Category)
-        {
-            $this->Category->warningActionAdded($this);
-            $this->Category->save(false);
-        }
-    }
-
-    protected function _postDelete()
-    {
-        parent::_postDelete();
-
-        if ($this->Category)
-        {
-            $this->Category->warningActionRemoved($this);
-            $this->Category->save(false);
-        }
-    }
-
     /**
      * @param Structure $structure
      * @return Structure

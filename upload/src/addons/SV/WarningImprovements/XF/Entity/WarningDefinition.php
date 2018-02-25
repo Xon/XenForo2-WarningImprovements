@@ -21,6 +21,28 @@ class WarningDefinition extends XFCP_WarningDefinition
         return ($this->warning_definition_id === 0);
     }
 
+    protected function _postSave()
+    {
+        parent::_postSave();
+
+        if ($this->Category)
+        {
+            $this->Category->warningAdded($this);
+            $this->Category->save(false);
+        }
+    }
+
+    protected function _postDelete()
+    {
+        parent::_postDelete();
+
+        if ($this->Category)
+        {
+            $this->Category->warningRemoved($this);
+            $this->Category->save(false);
+        }
+    }
+
     /**
      * @param Structure $structure
      *
@@ -37,7 +59,7 @@ class WarningDefinition extends XFCP_WarningDefinition
         $structure->getters['is_custom'] = true;
 
         $structure->relations['Category'] = [
-            'entity' => 'SV\WarningImprovements:WarningDefault',
+            'entity' => 'SV\WarningImprovements:WarningCategory',
             'type' => self::TO_ONE,
             'conditions' => 'sv_warning_category_id',
             'primary' => true
