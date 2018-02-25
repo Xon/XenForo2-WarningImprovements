@@ -63,18 +63,4 @@ class Listener
     public static $customWarningPhrase_version_string = '1.1.1s';
 
     public static $warningActionData = '';
-
-    public static function entityPreSave_XFWarningAction(\XF\Mvc\Entity\Entity $entity)
-    {
-        if (is_array(self::$warningActionData))
-        {
-            /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entity */
-            foreach (self::$warningActionData as $columnName => $columnValue)
-            {
-                $entity->$columnName = $columnValue;
-            }
-
-            self::$warningActionData = '';
-        }
-    }
 }
