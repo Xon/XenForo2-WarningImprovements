@@ -21,6 +21,18 @@ class WarningDefinition extends XFCP_WarningDefinition
         return ($this->warning_definition_id === 0 && $this->exists());
     }
 
+    public function verifySvWarningCategoryId($sv_warning_category_id)
+    {
+        if (empty($sv_warning_category_id))
+        {
+            $this->error(\XF::phrase('sv_warning_improvements_please_select_valid_category'));
+
+            return false;
+        }
+
+        return true;
+    }
+
     protected function _postSave()
     {
         parent::_postSave();
@@ -52,7 +64,7 @@ class WarningDefinition extends XFCP_WarningDefinition
     {
         $structure = parent::getStructure($structure);
 
-        $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
+        $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'required' => 'sv_warning_improvements_please_select_valid_category', 'nullable' => true];
         $structure->columns['sv_display_order'] = ['type' => self::UINT];
         $structure->columns['sv_custom_title'] = ['type' => self::BOOL, 'default' => false];
 

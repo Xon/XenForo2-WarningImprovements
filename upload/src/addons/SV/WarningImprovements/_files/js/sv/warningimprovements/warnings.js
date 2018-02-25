@@ -1,4 +1,4 @@
-var SV = window.SV || {};
+var SV = SV || {};
 
 /** @param {jQuery} $ jQuery Object */
 !function ($, window, document, _undefined) {

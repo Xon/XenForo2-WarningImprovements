@@ -1,5 +1,5 @@
-<xf:macro name="category_list" arg-globalWarnings="!" arg-warnings="!" arg-categoryTree="!">
-	<xf:if is="$warnings is not empty || $globalWarnings is not empty">
+<xf:macro name="category_list" arg-warnings="!" arg-categoryTree="!">
+	<xf:if is="$warnings is not empty">
 		<div class="block">
 			<div class="block-outer">
 				<xf:macro template="filter_macros" name="quick_filter" arg-key="warning-category" arg-class="block-outer-opposite" />
@@ -7,27 +7,8 @@
 			<div class="block-container">
 				<div class="block-body">
 					<xf:css src="sv_warning_improvements_category_list.less" />
+					
 					<xf:datalist>
-						<xf:if is="{$globalWarnings} is not empty">
-							<xf:foreach loop="{$globalWarnings}" value="$warningDefinition">
-								<xf:datarow>
-									<xf:cell class="dataList-cell--link dataList-cell--main" hash="warning_definition{$warningDefinition.warning_definition_id}">
-										<a href="{{ link('warnings/edit', $warningDefinition) }}">
-											<div class="u-depth0">
-												<div class="dataList-mainRow"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Warning"></i> {$warningDefinition.title}</div>
-											</div>
-										</a>
-									</xf:cell>
-									<xf:cell>&nbsp;</xf:cell>
-									<xf:if is="!{$warningDefinition.is_custom}">
-										<xf:delete href="{{ link('warnings/delete', $warningDefinition) }}" />
-									<xf:else />
-										<xf:cell>&nbsp;</xf:cell>
-									</xf:if>
-								</xf:datarow>
-							</xf:foreach>
-						</xf:if>
-						
 						<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 							<xf:set var="$category" value="{$treeEntry.record}" />
 							<xf:datarow>

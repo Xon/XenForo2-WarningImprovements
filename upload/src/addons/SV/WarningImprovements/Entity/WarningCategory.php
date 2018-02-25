@@ -111,6 +111,11 @@ class WarningCategory extends AbstractCategoryTree
         }
     }
 
+    public function isDeletable()
+    {
+
+    }
+
     protected function _postDelete()
     {
         foreach ($this->_structure->relations AS $name => $relation)
@@ -126,6 +131,12 @@ class WarningCategory extends AbstractCategoryTree
 
         foreach ($this->WarningDefinitions as $warningDefinition)
         {
+            /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
+            if ($warningDefinition->is_custom)
+            {
+                continue;
+            }
+
             $warningDefinition->delete();
         }
 

@@ -22,14 +22,7 @@ class Warn extends XFCP_Warn
             $warningRepo = $this->repository('XF:Warning');
             $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
-            $globalWarnings = [];
-            if (!empty($warnings['']))
-            {
-                $globalWarnings = $warnings[''];
-            }
-
             $response->setParams([
-                'globalWarnings' => $globalWarnings,
                 'warnings' => $warnings,
 
                 'categoryTree' => $categoryTree

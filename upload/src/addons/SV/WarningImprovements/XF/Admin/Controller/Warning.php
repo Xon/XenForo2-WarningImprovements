@@ -36,20 +36,12 @@ class Warning extends XFCP_Warning
                 unset($actions['']);
             }
 
-            $globalWarnings = [];
-            if (!empty($warnings['']))
-            {
-                $globalWarnings = $warnings[''];
-                unset($warnings['']);
-            }
-
             $escalatingDefaults = $this->finder('SV\WarningImprovements:WarningDefault')->fetch();
 
             $response->setParams([
                 'categoryTree' => $categoryTree,
 
                 'warnings' => $warnings,
-                'globalWarnings' => $globalWarnings,
 
                 'actions' => $actions,
                 'globalActions' => $globalActions,
@@ -101,7 +93,7 @@ class Warning extends XFCP_Warning
         $categoryId = $this->filter('sv_warning_category_id', 'uint');
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warning */
-        $warning->sv_warning_category_id = $categoryId ?: null;
+        $warning->sv_warning_category_id = $categoryId;
 
         return parent::warningSaveProcess($warning);
     }
@@ -150,18 +142,10 @@ class Warning extends XFCP_Warning
         }
         else
         {
-            $globalWarnings = [];
-            if (!empty($warnings['']))
-            {
-                $globalWarnings = $warnings[''];
-                unset($warnings['']);
-            }
-
             $viewParams = [
                 'categoryTree' => $categoryTree,
 
-                'warnings' => $warnings,
-                'globalWarnings' => $globalWarnings
+                'warnings' => $warnings
             ];
 
             return $this->view(
