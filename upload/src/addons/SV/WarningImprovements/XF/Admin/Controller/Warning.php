@@ -17,7 +17,9 @@ class Warning extends XFCP_Warning
         if ($response instanceof \XF\Mvc\Reply\View)
         {
             $categoryRepo = $this->getCategoryRepo();
-            $categories = $categoryRepo->findCategoryList()->fetch();
+            $categories = $categoryRepo->findCategoryList()
+                ->where('warning_count', '<>', 0)
+                ->fetch();
             $categoryTree = $categoryRepo->createCategoryTree($categories);
 
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
@@ -96,7 +98,9 @@ class Warning extends XFCP_Warning
     public function actionSort()
     {
         $categoryRepo = $this->getCategoryRepo();
-        $categories = $categoryRepo->findCategoryList()->fetch();
+        $categories = $categoryRepo->findCategoryList()
+            ->where('warning_count', '<>', 0)
+            ->fetch();
         $categoryTree = $categoryRepo->createCategoryTree($categories);
 
         $warningRepo = $this->getWarningRepo();

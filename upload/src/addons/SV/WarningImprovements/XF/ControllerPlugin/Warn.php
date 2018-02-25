@@ -16,7 +16,7 @@ class Warn extends XFCP_Warn
         if ($response instanceof \XF\Mvc\Reply\View)
         {
             $categoryRepo = $this->getWarningCategoryRepo();
-            $categoryTree = $categoryRepo->createCategoryTree();
+            $categoryTree = $categoryRepo->createCategoryTree(null, 0, true);
 
             /** @var \XF\Repository\Warning $warningRepo */
             $warningRepo = $this->repository('XF:Warning');
