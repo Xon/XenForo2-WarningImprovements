@@ -1,7 +1,6 @@
 {
     "additional_files": [
-        "js/sv/warningimprovements",
-        "js/sv/jstree"
+        "js/sv/warningimprovements"
     ],
     "minify": [
         "js/sv/warningimprovements/warnings.js"
