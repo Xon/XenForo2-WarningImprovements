@@ -92,12 +92,12 @@
     "public/sv_member_warn_chooser.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "c69c1ea60cacd25a112a67f588925d15"
+        "hash": "a7d052fbf922452d55784c5c2a825e1f"
     },
     "public/sv_member_warn_chooser.less": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "4c64b9b3a86e8ed843e4d53350e418d8"
+        "hash": "2351f5168684d936fff86d0209420753"
     },
     "public/sv_member_warning_actions.html": {
         "version_id": 2000000,
