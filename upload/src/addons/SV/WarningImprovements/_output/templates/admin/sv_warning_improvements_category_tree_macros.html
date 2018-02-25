@@ -18,7 +18,11 @@
 										</a>
 									</xf:cell>
 									<xf:cell>&nbsp;</xf:cell>
-									<xf:delete href="{{ link('warnings/delete', $warningDefinition) }}" />
+									<xf:if is="!{$warningDefinition.is_custom}">
+										<xf:delete href="{{ link('warnings/delete', $warningDefinition) }}" />
+									<xf:else />
+										<xf:cell>&nbsp;</xf:cell>
+									</xf:if>
 								</xf:datarow>
 							</xf:foreach>
 						</xf:if>
@@ -55,7 +59,11 @@
 											</a>
 										</xf:cell>
 										<xf:cell>&nbsp;</xf:cell>
-										<xf:delete href="{{ link('warnings/delete', $warningDefinition) }}" />
+										<xf:if is="!{$warningDefinition.is_custom}">
+											<xf:delete href="{{ link('warnings/delete', $warningDefinition) }}" />
+										<xf:else />
+											<xf:cell>&nbsp;</xf:cell>
+										</xf:if>
 									</xf:datarow>
 								</xf:foreach>
 							</xf:if>
