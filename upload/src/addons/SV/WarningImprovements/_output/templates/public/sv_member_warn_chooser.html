@@ -24,6 +24,14 @@
 
 <div id="warningViewRadio">
 	<xf:formrow label="{{ phrase('warning_type') }}">
+		<xf:if is="{$globalWarnings}">
+			<xf:radio name="warning_definition_id" value="0" label="{{ phrase('warning_type') }}">
+				<xf:foreach loop="$globalWarnings" value="$warning">
+					<xf:option value="{$warning.warning_definition_id}" class="js-FormFiller">{$warning.title}</xf:option>
+				</xf:foreach>
+			</xf:radio>
+		</xf:if>
+		
 		<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 			<xf:set var="$category" value="{$treeEntry.record}" />
 			<div class="u-depth{$treeEntry.depth}">
@@ -32,15 +40,17 @@
 
 			<xf:if is="{$warnings.{$category.warning_category_id}} is not empty">
 				<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
-					<xf:radio name="warning_definition_id" value="0">
-						<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}">
-							<xf:dependent>
-								<xf:if is="{$warningDefinition.sv_custom_title}">
-									<xf:textbox name="custom_titlez" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" />
-								</xf:if>
-							</xf:dependent>
-						</xf:option>
-					</xf:radio>
+					<div class="u-depth{$treeEntry.depth}">
+						<xf:radio name="warning_definition_id" value="0">
+							<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}">
+								<xf:dependent>
+									<xf:if is="{$warningDefinition.sv_custom_title}">
+										<xf:textbox name="custom_titlez" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" />
+									</xf:if>
+								</xf:dependent>
+							</xf:option>
+						</xf:radio>
+					</div>
 				</xf:foreach>
 			</xf:if>
 		</xf:foreach>

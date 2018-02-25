@@ -1,5 +1,5 @@
 <xf:macro name="action_list" arg-globalActions="!" arg-actions="!" arg-categoryTree="!">
-	<xf:if is="$actions is not empty">
+	<xf:if is="$actions is not empty || $globalActions is not empty">
 		<div class="block">
 			<div class="block-container">
 				<h2 class="block-header">{{ phrase('warning_actions') }}</h2>
@@ -15,7 +15,7 @@
 										</div>
 									</a>
 								</xf:cell>
-								<xf:cell>&nbsp;</xf:cell>
+								
 							</xf:datarow>
 							
 							<xf:foreach loop="$globalActions" value="$action">

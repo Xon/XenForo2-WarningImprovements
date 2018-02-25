@@ -22,8 +22,16 @@ class Warn extends XFCP_Warn
             $warningRepo = $this->repository('XF:Warning');
             $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
+            $globalWarnings = [];
+            if (!empty($warnings['']))
+            {
+                $globalWarnings = $warnings[''];
+            }
+
             $response->setParams([
+                'globalWarnings' => $globalWarnings,
                 'warnings' => $warnings,
+
                 'categoryTree' => $categoryTree
             ]);
         }
@@ -31,7 +39,47 @@ class Warn extends XFCP_Warn
         return $response;
     }
 
-	protected function setupWarnService(\XF\Warning\AbstractHandler $warningHandler, \XF\Entity\User $user, $contentType, \XF\Mvc\Entity\Entity $content, array $input)
+    protected function getWarningFillerReply(
+        \XF\Warning\AbstractHandler $warningHandler,
+        \XF\Entity\User $user,
+        $contentType,
+        \XF\Mvc\Entity\Entity $content,
+        array $input
+    )
+    {
+        $response = parent::getWarningFillerReply($warningHandler, $user, $contentType, $content, $input);
+
+        if ($response instanceof \XF\Mvc\Reply\View && $input['warning_definition_id'] === 0)
+        {
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = $this->repository('XF:Warning');
+
+            /** @var \XF\Entity\WarningDefinition $definition */
+            $definition = $warningRepo->getCustomWarning();
+
+            if ($definition)
+            {
+                list($conversationTitle, $conversationMessage) = $definition->getSpecificConversationContent(
+                    $user, $contentType, $content
+                );
+            }
+            else
+            {
+                $conversationTitle = '';
+                $conversationMessage = '';
+            }
+
+            $response->setParams([
+                'definition' => $definition,
+                'conversationTitle' => $conversationTitle,
+                'conversationMessage' => $conversationMessage
+            ]);
+        }
+
+        return $response;
+    }
+
+    protected function setupWarnService(\XF\Warning\AbstractHandler $warningHandler, \XF\Entity\User $user, $contentType, \XF\Mvc\Entity\Entity $content, array $input)
 	{
 		$options = $this->app->options();
 
