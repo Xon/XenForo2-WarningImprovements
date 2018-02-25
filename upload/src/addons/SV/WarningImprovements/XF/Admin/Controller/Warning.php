@@ -61,6 +61,20 @@ class Warning extends XFCP_Warning
         return $response;
     }
 
+    public function actionEdit(ParameterBag $params)
+    {
+        if ($params->warning_definition_id == 0)
+        {
+            $warning = $this->getCustomWarningDefinition();
+        }
+        else
+        {
+            $warning = $this->assertWarningDefinitionExists($params->warning_definition_id);
+        }
+
+        return $this->warningAddEdit($warning);
+    }
+
     public function warningAddEdit(\XF\Entity\WarningDefinition $warning)
     {
         $response = parent::warningAddEdit($warning);
@@ -69,7 +83,9 @@ class Warning extends XFCP_Warning
         {
             $categoryRepo = $this->getCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
-            $response->setParam('categoryTree', $categoryTree);
+            $response->setParams([
+                'categoryTree' => $categoryTree
+            ]);
         }
 
         return $response;
@@ -77,28 +93,17 @@ class Warning extends XFCP_Warning
 
     protected function warningSaveProcess(\XF\Entity\WarningDefinition $warning)
     {
+        if ($this->filter('is_custom', 'bool'))
+        {
+            $warning = $this->getCustomWarningDefinition();
+        }
+
         $categoryId = $this->filter('sv_warning_category_id', 'uint');
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warning */
         $warning->sv_warning_category_id = $categoryId ?: null;
 
         return parent::warningSaveProcess($warning);
-    }
-
-    public function actionSave(ParameterBag $params)
-    {
-        $this->assertPostOnly();
-
-        if ($this->isCustomWarning($params->warning_definition_id))
-        {
-            $customWarningDefinition = $this->getCustomWarningDefinition();
-
-            $this->warningSaveProcess($customWarningDefinition)->run();
-
-            return $this->redirect($this->buildLink('warnings'));
-        }
-
-        return parent::actionSave($params);
     }
 
     public function actionSort()
@@ -463,41 +468,13 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @param string $id
-     * @param null $with
-     * @param null $phraseKey
-     *
-     * @return \SV\WarningImprovements\XF\Entity\WarningDefinition
-     *
-     * @throws \XF\Mvc\Reply\Exception
-     */
-    protected function assertWarningDefinitionExists($id, $with = null, $phraseKey = null)
-    {
-        if ($this->isCustomWarning($id) && in_array(\XF::app()->router()->routeToController($this->request()->getRoutePath())->getAction(), ['edit', 'save']))
-        {
-            return $this->getCustomWarningDefinition();
-        }
-        else
-        {
-            return $this->assertRecordExists('XF:WarningDefinition', $id, $with, $phraseKey);
-        }
-    }
-
-    /**
      * @return \SV\WarningImprovements\XF\Entity\WarningDefinition
      */
     private function getCustomWarningDefinition()
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->getWarningRepo();
-        return $warningRepo->getCustomWarning();
-    }
 
-    /**
-     * @return bool
-     */
-    private function isCustomWarning($warningDefinitionId)
-    {
-        return ($warningDefinitionId == 0);
+        return $warningRepo->getCustomWarning();
     }
 }

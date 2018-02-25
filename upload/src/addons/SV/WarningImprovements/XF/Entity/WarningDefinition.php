@@ -18,7 +18,7 @@ class WarningDefinition extends XFCP_WarningDefinition
 {
     public function getIsCustom()
     {
-        return ($this->warning_definition_id === 0);
+        return ($this->warning_definition_id === 0 && $this->exists());
     }
 
     protected function _postSave()
