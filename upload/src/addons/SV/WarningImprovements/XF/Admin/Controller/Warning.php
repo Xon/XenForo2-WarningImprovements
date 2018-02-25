@@ -91,9 +91,11 @@ class Warning extends XFCP_Warning
         }
 
         $categoryId = $this->filter('sv_warning_category_id', 'uint');
+        $allowCustomTitle = $this->filter('sv_custom_title', 'bool');
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warning */
         $warning->sv_warning_category_id = $categoryId;
+        $warning->sv_custom_title = $allowCustomTitle;
 
         return parent::warningSaveProcess($warning);
     }
