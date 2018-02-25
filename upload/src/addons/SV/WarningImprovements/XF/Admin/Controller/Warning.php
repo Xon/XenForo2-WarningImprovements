@@ -17,17 +17,12 @@ class Warning extends XFCP_Warning
         if ($response instanceof \XF\Mvc\Reply\View)
         {
             $categoryRepo = $this->getCategoryRepo();
-            $categories = $categoryRepo->findCategoryList()
-                ->where('warning_count', '<>', 0)
-                ->fetch();
+            $categories = $categoryRepo->findCategoryList()->fetch();
             $categoryTree = $categoryRepo->createCategoryTree($categories);
 
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = $this->getWarningRepo();
-            $warnings = $warningRepo->findWarningDefinitionsForList()
-                ->order('sv_display_order', 'asc')
-                ->fetch()
-                ->groupBy('sv_warning_category_id');
+            $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
             $actions = $warningRepo->findWarningActionsForList()
                 ->fetch()
@@ -41,12 +36,20 @@ class Warning extends XFCP_Warning
                 unset($actions['']);
             }
 
+            $globalWarnings = [];
+            if (!empty($warnings['']))
+            {
+                $globalWarnings = $warnings[''];
+                unset($warnings['']);
+            }
+
             $escalatingDefaults = $this->finder('SV\WarningImprovements:WarningDefault')->fetch();
 
             $response->setParams([
                 'categoryTree' => $categoryTree,
 
                 'warnings' => $warnings,
+                'globalWarnings' => $globalWarnings,
 
                 'actions' => $actions,
                 'globalActions' => $globalActions,
@@ -75,7 +78,10 @@ class Warning extends XFCP_Warning
     protected function warningSaveProcess(\XF\Entity\WarningDefinition $warning)
     {
         $categoryId = $this->filter('sv_warning_category_id', 'uint');
-        \SV\WarningImprovements\Listener::$warningDefinitionCategoryId = $categoryId ?: null;
+
+        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warning */
+        $warning->sv_warning_category_id = $categoryId ?: null;
+
         return parent::warningSaveProcess($warning);
     }
 
@@ -98,16 +104,12 @@ class Warning extends XFCP_Warning
     public function actionSort()
     {
         $categoryRepo = $this->getCategoryRepo();
-        $categories = $categoryRepo->findCategoryList()
-            ->where('warning_count', '<>', 0)
-            ->fetch();
+        $categories = $categoryRepo->findCategoryList()->fetch();
         $categoryTree = $categoryRepo->createCategoryTree($categories);
 
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->getWarningRepo();
-        $warnings = $warningRepo->findWarningDefinitionsForList()
-            ->order('sv_display_order')
-            ->fetch()
-            ->groupBy('sv_warning_category_id');
+        $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
         if ($this->isPost())
         {
@@ -116,7 +118,15 @@ class Warning extends XFCP_Warning
 
             foreach ($warnings as $categoryId => $warning)
             {
-                $sortTree = $sorter->buildSortTree($this->filter('category-' . $categoryId, 'json-array'));
+                if ($categoryId == '')
+                {
+                    $sortTree = $sorter->buildSortTree($this->filter('category-0', 'json-array'));
+                }
+                else
+                {
+                    $sortTree = $sorter->buildSortTree($this->filter('category-' . $categoryId, 'json-array'));
+                }
+
                 $sortedTreeData = $sortTree->getAllData();
                 $lastOrder = 0;
 
@@ -135,9 +145,18 @@ class Warning extends XFCP_Warning
         }
         else
         {
+            $globalWarnings = [];
+            if (!empty($warnings['']))
+            {
+                $globalWarnings = $warnings[''];
+                unset($warnings['']);
+            }
+
             $viewParams = [
                 'categoryTree' => $categoryTree,
+
                 'warnings' => $warnings,
+                'globalWarnings' => $globalWarnings
             ];
 
             return $this->view(
@@ -178,17 +197,14 @@ class Warning extends XFCP_Warning
             'sv_post_node_id' => 'uint'
         ];
 
-        $warningActionData = [];
         foreach ($inputFieldNames AS $inputFieldName => $inputFieldFilterName)
         {
-            $warningActionData[$inputFieldName] = $this->filter($inputFieldName, $inputFieldFilterName);
-            if ($inputFieldFilterName == 'uint' && empty($warningActionData[$inputFieldName]))
+            $action->$inputFieldName = $this->filter($inputFieldName, $inputFieldFilterName);
+            if ($inputFieldFilterName == 'uint' && empty($action->$inputFieldName))
             {
-                $warningActionData[$inputFieldName] = null;
+                $action->$inputFieldName = null;
             }
         }
-
-        \SV\WarningImprovements\Listener::$warningActionData = $warningActionData;
 
         return parent::_actionSaveProcess($action);
     }
@@ -235,6 +251,12 @@ class Warning extends XFCP_Warning
             'expiry_type' => 'str',
             'active' => 'bool'
         ]);
+
+        if ($this->filter('expiry_type_base', 'str') == 'never')
+        {
+            $input['expiry_type'] = 'never';
+        }
+
         $form->basicEntitySave($defaultAction, $input);
 
         return $form;

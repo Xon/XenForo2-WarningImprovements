@@ -21,22 +21,6 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningAction extends XFCP_WarningAction
 {
-    protected function _preSave()
-    {
-        parent::_preSave();
-
-        if (is_array(\SV\WarningImprovements\Listener::$warningActionData))
-        {
-            /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entity */
-            foreach (\SV\WarningImprovements\Listener::$warningActionData as $columnName => $columnValue)
-            {
-                $entity->$columnName = $columnValue;
-            }
-
-            \SV\WarningImprovements\Listener::$warningActionData = '';
-        }
-    }
-
     /**
      * @param Structure $structure
      * @return Structure

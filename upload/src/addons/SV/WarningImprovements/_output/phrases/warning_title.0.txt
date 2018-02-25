@@ -1,1 +1,1 @@
-Custom Warning
+Warning without category #1

@@ -1,4 +1,4 @@
-<xf:macro name="sortable_form" arg-categoryTree="!" arg-warnings="!">
+<xf:macro name="sortable_form" arg-categoryTree="!" arg-globalWarnings="!" arg-warnings="!">
 	<xf:css src="sv_warning_improvements_nestable.less" />
 	
 	<xf:macro template="public:nestable_macros" name="setup" />
@@ -6,6 +6,9 @@
 	<xf:form action="{{ link('warnings/sort') }}" class="block" ajax="true">
 		<div class="block-container">
 			<div class="block-body">
+				<xf:if is="$globalWarnings is not empty">
+					<xf:macro name="sortable_global_warning_list" arg-globalWarnings="{$globalWarnings}" />
+				</xf:if>
 				<xf:macro name="sortable_list" arg-children="{$categoryTree}" arg-warnings="{$warnings}" />
 			</div>
 			<xf:submitrow icon="save" rowtype="simple" />
@@ -20,6 +23,20 @@
 				<xf:macro name="sortable_list_entry" arg-child="{$child}" arg-children="{$child.children}" arg-warnings="{$warnings}" />
 			</xf:foreach>
 		</ol>
+	</div>
+</xf:macro>
+
+<xf:macro name="sortable_global_warning_list" arg-globalWarnings="!">
+	<div class="nestable-container" data-xf-init="nestable" data-parent-id="0" data-value-target="#js-category-0-Data">
+		<ol class="nestable-list">
+			<xf:foreach loop="$globalWarnings" value="$warning">
+				<li class="nestable-item" data-id="{$warning.warning_definition_id}">
+					<div class="nestable-handle" aria-label="{{ phrase('drag_handle') }}"><i class="fa fa-bars" aria-hidden="true"></i></div>
+					<div class="nestable-content">{$warning.MasterTitle.phrase_text}</div>
+				</li>
+			</xf:foreach>
+		</ol>
+		<xf:hiddenval name="category-0" value="" id="js-category-{$category.warning_category_id}-Data" />
 	</div>
 </xf:macro>
 
@@ -40,9 +57,7 @@
 <xf:macro name="sortable_list_entry" arg-child="!" arg-children="!" arg-warnings="!">
 	<li class="category-item" data-id="{$child.id}">
 		<div class="category-content block-minorHeader">{$child.record.title}</div>
-		<xf:if is="{$warnings.{$child.id}} is not empty">
-			<xf:macro name="sortable_warning_list" arg-warnings="{$warnings.{$child.id}}" arg-category="{$child.record}" />
-		</xf:if>
+		<xf:macro name="sortable_warning_list" arg-warnings="{$warnings.{$child.id}}" arg-category="{$child.record}" />
 		
 		<xf:if is="$child.children is not empty">
 			<xf:macro name="sortable_list" arg-children="{$child.children}" arg-warnings="{$warnings}" />

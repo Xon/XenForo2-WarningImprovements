@@ -9,18 +9,24 @@
 		<div class="block-body">
 			<xf:numberboxrow name="threshold_points" value="{$default.threshold_points}" min="1" label="{{ phrase('points_threshold') }}" explain="{{ phrase('sv_warning_default_applied_crossing_threshold') }}" />
 
-			<xf:formrow label="{{ phrase('sv_warning_expiry_extension') }}" explain="{{ phrase('sv_warning_expiry_extension_explain') }}">
-				<div class="inputGroup">
-					<xf:numberbox name="expiry_extension" value="{{ $default.expiry_extension }}" min="0" />
-					<span class="inputGroup-splitter"></span>
-					<xf:select name="expiry_type" value="{{ $default.expiry_type }}" class="input--inline">
-						<xf:option value="days">{{ phrase('days') }}</xf:option>
-						<xf:option value="weeks">{{ phrase('weeks') }}</xf:option>
-						<xf:option value="months">{{ phrase('months') }}</xf:option>
-						<xf:option value="years">{{ phrase('years') }}</xf:option>
-					</xf:select>
-				</div>
-			</xf:formrow>
+			<xf:radiorow name="expiry_type_base" label="{{ phrase('sv_warning_expiry_extension') }}" explain="{{ phrase('sv_warning_expiry_extension_explain') }}">
+				<xf:option value="never" selected="$default.expiry_type == 'never'">{{ phrase('never') }}</xf:option>
+				<xf:option value="other" selected="$default.expiry_type != 'never'" label="{{ phrase('after_time:') }}">
+					<xf:dependent>
+						<div class="inputGroup">
+							<xf:numberbox name="expiry_extension" value="{{ $default.expiry_extension }}" min="0" />
+							<span class="inputGroup-splitter"></span>
+							<xf:select name="expiry_type" value="{{ $default.expiry_type }}" class="input--inline">
+								<xf:option value="days">{{ phrase('never') }}</xf:option>
+								<xf:option value="days">{{ phrase('days') }}</xf:option>
+								<xf:option value="weeks">{{ phrase('weeks') }}</xf:option>
+								<xf:option value="months">{{ phrase('months') }}</xf:option>
+								<xf:option value="years">{{ phrase('years') }}</xf:option>
+							</xf:select>
+						</div>
+					</xf:dependent>
+				</xf:option>
+			</xf:radiorow>
 			
 			<xf:checkboxrow>
 				<xf:option name="active" value="1" selected="{$default.active}">{{ phrase('sv_warning_default_is_active') }}</xf:option>

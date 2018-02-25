@@ -1,9 +1,0 @@
-{
-    "event_id": "entity_pre_save",
-    "execute_order": 10,
-    "callback_class": "SV\\WarningImprovements\\Listener",
-    "callback_method": "entityPreSave_XFWarningDefinition",
-    "active": true,
-    "hint": "XF\\Entity\\WarningDefinition",
-    "description": "Extend XF\\Entity\\WarningDefinition _preSave to include category id"
-}

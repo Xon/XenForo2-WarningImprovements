@@ -9,6 +9,17 @@ use \XF\Entity\User as UserEntity;
  */
 class Warning extends XFCP_Warning
 {
+    /**
+     * @return Finder
+     */
+    public function findWarningDefinitionsForListGroupedByCategory()
+    {
+        return parent::findWarningDefinitionsForList()
+            ->order('sv_display_order', 'asc')
+            ->fetch()
+            ->groupBy('sv_warning_category_id');
+    }
+
     public function getCustomWarning()
     {
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */

@@ -18,12 +18,9 @@ class Warn extends XFCP_Warn
             $categoryRepo = $this->getWarningCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree(null, 0, true);
 
-            /** @var \XF\Repository\Warning $warningRepo */
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = $this->repository('XF:Warning');
-            $warnings = $warningRepo->findWarningDefinitionsForList()
-                ->order('sv_display_order', 'asc')
-                ->fetch()
-                ->groupBy('sv_warning_category_id');
+            $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
             $response->setParams([
                 'warnings' => $warnings,

@@ -10,6 +10,11 @@ use XF\Mvc\Entity\Structure;
  */
 class Warning extends XFCP_Warning
 {
+    public function canView(&$error = null)
+    {
+        return (parent::canView($error) && $this->canViewIssuer());
+    }
+
     public function canViewIssuer()
     {
         $visitor = \XF::visitor();
