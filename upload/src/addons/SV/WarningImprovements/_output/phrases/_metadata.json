@@ -647,6 +647,12 @@
         "version_string": "1.2.0",
         "hash": "b4e7a4027bca44f71c03474c54e3a0af"
     },
+    "sv_warning_improvements_category_title.uncategorized.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "17ae220187bc853fbd44bd31455ea617"
+    },
     "sv_warning_improvements_custom_warning_cannot_be_deleted.txt": {
         "global_cache": false,
         "version_id": 2000000,
