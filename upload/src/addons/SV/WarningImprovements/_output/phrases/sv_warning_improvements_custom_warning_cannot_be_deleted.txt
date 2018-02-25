@@ -1,0 +1,1 @@
+Custom warning cannot be deleted.

@@ -124,6 +124,16 @@ class WarningCategory extends AbstractCategoryTree
             }
         }
 
+        foreach ($this->WarningDefinitions as $warningDefinition)
+        {
+            $warningDefinition->delete();
+        }
+
+        foreach ($this->WarningActions AS $warningAction)
+        {
+            $warningAction->delete();
+        }
+
         if ($this->getOption('delete_contents'))
         {
             /*$this->app()->jobManager()->enqueueUnique('sv_WarningImprovementsCategoryDelete' . $this->warning_category_id, 'SVW\WarningImprovements:CategoryDelete', [

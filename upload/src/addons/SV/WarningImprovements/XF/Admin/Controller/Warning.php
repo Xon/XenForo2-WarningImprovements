@@ -172,6 +172,16 @@ class Warning extends XFCP_Warning
         }
     }
 
+    public function actionDelete(ParameterBag $params)
+    {
+        if ($params->warning_definition_id == 0)
+        {
+            return $this->error(\XF::phrase('sv_warning_improvements_custom_warning_cannot_be_deleted'));
+        }
+
+        return parent::actionDelete($params);
+    }
+
     public function _actionAddEdit(\XF\Entity\WarningAction $action)
     {
         $response = parent::_actionAddEdit($action);
