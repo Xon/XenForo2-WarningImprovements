@@ -21,7 +21,7 @@ class Warning extends XFCP_Warning
 
         if ($this->Content)
         {
-            if (isset($this->Content->structure()['user_id']))
+            if (isset($this->Content->structure()->columns['user_id']))
             {
                 if ($this->Content->user_id === $visitor->user_id)
                 {
