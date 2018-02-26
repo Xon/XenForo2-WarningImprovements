@@ -33,6 +33,23 @@ class WarningDefinition extends XFCP_WarningDefinition
         return true;
     }
 
+    public function getSpecificConversationContent(\XF\Entity\User $receiver, $contentType, \XF\Mvc\Entity\Entity $content, \XF\Entity\User $sender = null)
+    {
+        /** @var \SV\WarningImprovements\XF\Entity\User $receiver */
+
+        if (!$receiver->canViewIssuer())
+        {
+            if (empty($sender))
+            {
+                $sender = \XF::visitor();
+            }
+
+            $sender->username = \XF::phrase('WarningStaff')->render();
+        }
+
+        return parent::getSpecificConversationContent($receiver, $contentType, $content, $sender);
+    }
+
     protected function _postSave()
     {
         parent::_postSave();

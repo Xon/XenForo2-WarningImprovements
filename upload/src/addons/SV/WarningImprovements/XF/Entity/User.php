@@ -10,6 +10,16 @@ use XF\Mvc\Entity\Structure;
  */
 class User extends XFCP_User
 {
+    public function canViewIssuer()
+    {
+        if (!$this->user_id)
+        {
+            return false;
+        }
+
+        return $this->hasPermission('general', 'viewWarning_issuer');
+    }
+
     public function canViewWarningActions(&$error = null)
     {
         $visitor = \XF::visitor();

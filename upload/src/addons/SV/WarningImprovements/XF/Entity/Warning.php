@@ -17,14 +17,9 @@ class Warning extends XFCP_Warning
 
     public function canViewIssuer()
     {
+        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
-
-        if (!$visitor->user_id)
-        {
-            return false;
-        }
-
-        return $visitor->hasPermission('general', 'viewWarning_issuer');
+        return $visitor->canViewIssuer();
     }
 
     protected function _postDelete()
