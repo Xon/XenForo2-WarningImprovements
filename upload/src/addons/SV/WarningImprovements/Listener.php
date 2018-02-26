@@ -51,4 +51,7 @@ class Listener
     public static $customWarningPhrase_version_string = '1.1.1s';
 
     public static $profileUserId = null;
+
+    /** @var \SV\WarningImprovements\XF\Entity\Warning */
+    public static $warnngObj = null;
 }

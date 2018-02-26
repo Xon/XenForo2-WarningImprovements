@@ -56,6 +56,11 @@ namespace SV\WarningImprovements\XF\Repository
 	class XFCP_Warning extends \XF\Repository\Warning {}
 }
 
+namespace SV\WarningImprovements\XF\Service\Conversation
+{
+	class XFCP_Notifier extends \XF\Service\Conversation\Notifier {}
+}
+
 namespace SV\WarningImprovements\XF\Service\User
 {
 	class XFCP_Warn extends \XF\Service\User\Warn {}

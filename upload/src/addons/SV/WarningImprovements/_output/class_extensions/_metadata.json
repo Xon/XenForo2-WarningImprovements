@@ -65,6 +65,9 @@
     "XF-Repository-Warning_SV-WarningImprovements-XF-Repository-Warning.json": {
         "hash": "cf8ae48a0eac44709444ec6dad335344"
     },
+    "XF-Service-Conversation-Notifier_SV-WarningImprovements-XF-Service-Conversation-Notifier.json": {
+        "hash": "2fb7f3ac57c9d00554dd155c5879ad7c"
+    },
     "XF-Service-User-Warn_SV-WarningImprovements-XF-Service-User-Warn.json": {
         "hash": "488dfa689cdf18780bac0d95020ad3d4"
     },
