@@ -13,9 +13,12 @@ class Warn extends XFCP_Warn
     {
         $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
 
-        if (!$response instanceof \XF\Mvc\Reply\View)
+        if ($response instanceof \XF\Mvc\Reply\Redirect)
         {
-            $response->setMessage(\XF::phrase('sv_issued_warning'));
+            if (empty($response->getMessage()))
+            {
+                $response->setMessage(\XF::phrase('sv_issued_warning'));
+            }
 
             return $response;
         }

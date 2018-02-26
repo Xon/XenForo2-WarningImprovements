@@ -12,10 +12,16 @@ class User extends XFCP_User
 {
     public function canViewWarnings()
     {
-        if (!empty(\SV\WarningImprovements\Listener::$profileUserId) && \SV\WarningImprovements\Listener::$profileUserId == $this->user_id)
+        $visitor = \XF::visitor();
+
+        if (!$visitor->user_id)
         {
-            \SV\WarningImprovements\Listener::$profileUserId = null;
-            return true;
+            return false;
+        }
+
+        if ($visitor->user_id === \SV\WarningImprovements\Listener::$profileUserId)
+        {
+            return \XF::app()->options()->sv_view_own_warnings;
         }
 
         return parent::canViewWarnings();

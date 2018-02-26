@@ -25,16 +25,13 @@ class Member extends XFCP_Member
         return $this->view('XF:Member\WarningActions', 'sv_member_warning_actions', $viewParams);
     }
 
-    public function actionWarnings(ParameterBag $params)
+    protected function assertViewableUser($userId, array $extraWith = [], $basicProfileOnly = false)
     {
-        \SV\WarningImprovements\Listener::$profileUserId = $params->user_id;
-        return parent::actionWarnings($params);
-    }
+        if ($this->options()->sv_view_own_warnings)
+        {
+            \SV\WarningImprovements\Listener::$profileUserId = intval($userId);
+        }
 
-    public function actionTooltip(ParameterBag $params)
-    {
-        $response = parent::actionTooltip($params);
-
-        return $response;
+        return parent::assertViewableUser($userId, $extraWith, $basicProfileOnly);
     }
 }

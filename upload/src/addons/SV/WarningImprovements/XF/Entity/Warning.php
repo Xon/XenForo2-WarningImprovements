@@ -19,18 +19,7 @@ class Warning extends XFCP_Warning
             return false;
         }
 
-        if ($this->Content)
-        {
-            if (isset($this->Content->structure()->columns['user_id']))
-            {
-                if ($this->Content->user_id === $visitor->user_id)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return parent::canView($error);
+        return ($this->user_id === $visitor->user_id && parent::canView($error));
     }
 
     public function canViewIssuer()
