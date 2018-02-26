@@ -10,6 +10,17 @@ use XF\Mvc\Entity\Structure;
  */
 class User extends XFCP_User
 {
+    public function canViewWarnings()
+    {
+        if (!empty(\SV\WarningImprovements\Listener::$profileUserId) && \SV\WarningImprovements\Listener::$profileUserId == $this->user_id)
+        {
+            \SV\WarningImprovements\Listener::$profileUserId = null;
+            return true;
+        }
+
+        return parent::canViewWarnings();
+    }
+
     public function canViewIssuer()
     {
         if (!$this->user_id)

@@ -13,7 +13,13 @@ class Warn extends XFCP_Warn
     {
         $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
 
-        if ($response instanceof \XF\Mvc\Reply\View)
+        if (!$response instanceof \XF\Mvc\Reply\View)
+        {
+            $response->setMessage(\XF::phrase('sv_issued_warning'));
+
+            return $response;
+        }
+        else if ($response instanceof \XF\Mvc\Reply\View)
         {
             $categoryRepo = $this->getWarningCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree(null, 0, true);

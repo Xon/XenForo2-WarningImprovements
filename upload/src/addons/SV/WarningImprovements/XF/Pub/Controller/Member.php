@@ -27,9 +27,8 @@ class Member extends XFCP_Member
 
     public function actionWarnings(ParameterBag $params)
     {
-        $response = parent::actionWarnings($params);
-
-        return $response;
+        \SV\WarningImprovements\Listener::$profileUserId = $params->user_id;
+        return parent::actionWarnings($params);
     }
 
     public function actionTooltip(ParameterBag $params)

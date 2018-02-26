@@ -12,13 +12,32 @@ class Warning extends XFCP_Warning
 {
     public function canView(&$error = null)
     {
-        return (parent::canView($error) && $this->canViewIssuer());
+        $visitor = \XF::visitor();
+
+        if (!$visitor->user_id)
+        {
+            return false;
+        }
+
+        if ($this->Content)
+        {
+            if (isset($this->Content->structure()['user_id']))
+            {
+                if ($this->Content->user_id === $visitor->user_id)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return parent::canView($error);
     }
 
     public function canViewIssuer()
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
+
         return $visitor->canViewIssuer();
     }
 
