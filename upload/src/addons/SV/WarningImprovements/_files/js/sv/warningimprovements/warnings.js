@@ -86,8 +86,6 @@ var SV = SV || {};
         },
 
         showSelectView: function () {
-
-
             $(this.selectViewContainer).xfFadeDown();
 
             this.$target.text(this.toggleRadioViewPhrase);
@@ -121,5 +119,60 @@ var SV = SV || {};
         }
     });
 
+    // ################################## WARNING SELECT HANDLER ###########################################
+
+    SV.TokenInput = XF.Element.newHandler({
+
+        options: {},
+
+        $container: null,
+
+        init: function()
+        {
+            var config = {
+                tags: false,
+                width: '100%',
+                containerCssClass: 'input',
+                minimumInputLength: 0,
+                selectOnClose: true,
+                openOnEnter: true, // for lazy people like me :/
+                disabled: this.$target.prop('disabled')
+            };
+
+            this.$target.select2(config);
+
+            var api = this.$target.data('select2');
+            this.$container = api.$container;
+            this.$selection = api.$selection;
+
+            api.on('results:message', function(params)
+            {
+                this.dropdown._resizeDropdown();
+                this.dropdown._positionDropdown();
+            });
+
+            api.$selection.addClass('is-focused');
+
+            api.$container.on('focusin focusout', $.proxy(this, 'inputFocusBlur'));
+        },
+
+        inputFocusBlur: function(e)
+        {
+            switch (e.type)
+            {
+                case 'focusout':
+                    this.$selection.removeClass('is-focused');
+                    break;
+
+                case 'focusin':
+                default:
+                    this.$selection.addClass('is-focused');
+                    break;
+            }
+        }
+    });
+
     XF.Element.register('warning-view-toggle', 'SV.WarningViewToggler');
-}(jQuery, window, document);
+    XF.Element.register('warning-view-select', 'SV.TokenInput');
+}
+(jQuery, window, document);
