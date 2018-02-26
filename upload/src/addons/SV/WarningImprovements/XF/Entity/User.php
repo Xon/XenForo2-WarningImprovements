@@ -19,9 +19,9 @@ class User extends XFCP_User
             return false;
         }
 
-        if ($visitor->user_id === \SV\WarningImprovements\Listener::$profileUserId)
+        if ($visitor->user_id === \SV\WarningImprovements\Listener::$profileUserId && \XF::app()->options()->sv_view_own_warnings)
         {
-            return \XF::app()->options()->sv_view_own_warnings;
+            return true;
         }
 
         return parent::canViewWarnings();

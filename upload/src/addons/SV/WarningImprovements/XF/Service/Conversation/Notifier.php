@@ -12,7 +12,8 @@ class Notifier extends XFCP_Notifier
             {
                 $options = $this->app->options();
 
-                if ($options->sv_force_conversation_email_on_warning) // Force conversation email on warning
+                // TODO: need to test this
+                if ($options->sv_force_conversation_email_on_warning)
                 {
                     $receiveAdminEmail = $user->Option->receive_admin_email;
 
@@ -21,9 +22,9 @@ class Notifier extends XFCP_Notifier
                         $receiveAdminEmail = true;
                     }
 
-                    if ($options->sv_only_force_warning_email_on_banned && $user->is_banned)
+                    if ($options->sv_only_force_warning_email_on_banned && !$user->is_banned)
                     {
-                        return $receiveAdminEmail;
+                        $receiveAdminEmail = false;
                     }
 
                     return $receiveAdminEmail;

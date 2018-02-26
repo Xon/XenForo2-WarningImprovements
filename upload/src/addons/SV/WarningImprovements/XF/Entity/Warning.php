@@ -19,9 +19,9 @@ class Warning extends XFCP_Warning
             return false;
         }
 
-        if ($visitor->user_id === $this->user_id)
+        if ($visitor->user_id === $this->user_id && $this->app()->options()->sv_view_own_warnings)
         {
-            return $this->app()->options()->sv_view_own_warnings;
+            return true;
         }
 
         return parent::canView($error);
@@ -33,6 +33,27 @@ class Warning extends XFCP_Warning
         $visitor = \XF::visitor();
 
         return $visitor->canViewIssuer();
+    }
+
+    public function verifyNotes($notes)
+    {
+        $options = \XF::options();
+        if (!empty($minNoteLength = $options->sv_wi_warning_note_chars))
+        {
+            $noteLength = utf8_strlen($notes);
+            if ($noteLength < $minNoteLength)
+            {
+                $underAmount = $minNoteLength - $noteLength;
+                $this->error(\XF::phrase('sv_please_enter_note_with_at_least_x_characters', [
+                    'count' => $minNoteLength,
+                    'under' => $underAmount
+                ]));
+
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected function _postDelete()
@@ -57,11 +78,6 @@ class Warning extends XFCP_Warning
         {
             unset($structure->columns['notes']['default']);
             $structure->columns['notes']['required'] = true;
-
-            if ($options->sv_wi_warning_note_chars)
-            {
-                $structure->columns['notes']['minLength'] = $options->sv_wi_warning_note_chars;
-            }
         }
 
         return $structure;
