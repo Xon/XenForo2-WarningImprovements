@@ -1,0 +1,9 @@
+{
+    "template": "member_warn",
+    "description": "Don't mark \"Warn\" button as a sticky button",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:submitrow submit=\"{{ phrase('warn') }}\" sticky=\"true\" />",
+    "replace": "<xf:submitrow submit=\"{{ phrase('warn') }}\" />"
+}
