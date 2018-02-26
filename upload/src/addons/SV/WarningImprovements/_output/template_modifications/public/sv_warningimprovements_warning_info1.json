@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:username user=\"{$warning.WarnedBy}\" />",
-    "replace": "<xf:if is=\"$warning.canViewIssuer()\">\n\t<xf:username user=\"{$warning.WarnedBy}\" />\n<xf:else />\n\t{{ phrase('WarningStaff') }}\n</xf:if>"
+    "replace": "<xf:if is=\"$warning.canViewIssuer()\">\n\t<xf:username user=\"{$warning.WarnedBy}\" />\n<xf:else />\n\t<xf:username user=\"{$warning.getAnonymizedIssuer()}\" />\n</xf:if>"
 }

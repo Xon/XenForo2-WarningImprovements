@@ -45,6 +45,14 @@ class WarningDefinition extends XFCP_WarningDefinition
             }
 
             $sender->username = \XF::phrase('WarningStaff')->render();
+
+            if (!empty($anonymizeAsUserId = $this->app()->options()->sv_warningimprovements_warning_user))
+            {
+                if ($warningStaff = $this->em()->find('XF:User', $anonymizeAsUserId))
+                {
+                    $sender = $warningStaff;
+                }
+            }
         }
 
         return parent::getSpecificConversationContent($receiver, $contentType, $content, $sender);

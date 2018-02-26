@@ -35,6 +35,22 @@ class Warning extends XFCP_Warning
         return $visitor->canViewIssuer();
     }
 
+    public function getAnonymizedIssuer()
+    {
+        $anonymizedIssuer = $this->em()->create('XF:User');
+        $anonymizedIssuer->username = \XF::phrase('WarningStaff')->render();
+
+        if (!empty($anonymizeAsUserId = $this->app()->options()->sv_warningimprovements_warning_user))
+        {
+            if ($warningStaff = $this->em()->find('XF:User', $anonymizeAsUserId))
+            {
+                $anonymizedIssuer = $warningStaff;
+            }
+        }
+
+        return $anonymizedIssuer;
+    }
+
     public function verifyNotes($notes)
     {
         $options = \XF::options();
@@ -77,8 +93,10 @@ class Warning extends XFCP_Warning
         if ($options->sv_wi_require_warning_notes)
         {
             unset($structure->columns['notes']['default']);
-            $structure->columns['notes']['required'] = 'sv_please_enter_note_for_warning';
+            $structure->columns['notes']['required'] = true;
         }
+
+        $structure->getters['anonymized_issuer'] = true;
 
         return $structure;
     }
