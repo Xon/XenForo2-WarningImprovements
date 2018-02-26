@@ -1,0 +1,9 @@
+{
+    "template": "warning_edit",
+    "description": "Special case editing the Custom Warning - 4",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "you_may_use_placeholders_to_dynamically_insert_warning",
+    "replace": "sv_warning_improvements_you_may_use_placeholders_to_dynamically_insert_warning"
+}
