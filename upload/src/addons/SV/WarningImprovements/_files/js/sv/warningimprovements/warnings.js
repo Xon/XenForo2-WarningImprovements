@@ -120,7 +120,7 @@ var SV = SV || {};
     // ################################## WARNING SELECT HANDLER ###########################################
 
     SV.WarningViewSelect = XF.Element.newHandler({
-
+        eventNameSpace: 'WarningViewSelect',
         options: {},
 
         $container: null,
@@ -172,21 +172,69 @@ var SV = SV || {};
 
         change: function (e) {
             this.$target.trigger('click');
-            updatePublicMessage($('#' + this.$target.attr('id') + ' option:selected').text());
+            $('input[type=text][name=custom_title]').val('');
+        }
+    });
+
+    // ################################## WARNING SELECT HANDLER ###########################################
+
+    SV.WarningTitleWatcher  = XF.Element.newHandler({
+        eventNameSpace: 'WarningTitleWatcher',
+        options: {},
+
+        storageName: "xf_sv_warning_view",
+
+        init: function () {
+            this.$target.on('change', $.proxy(this, 'change'));
+            this.$target.on('input', $.proxy(this, 'input'));
+
+            if (this.$target.is('input:radio'))
+            {
+                this.$target.on('click', $.proxy(this, 'click'));
+            }
+
+            if (localStorage.getItem(this.storageName) === 'radio')
+            {
+                this.setPublicMessage($('input[type=radio][data-warning-radio="true"]:enabled:visible:checked:first').data('warning-label'));
+            }
+            else
+            {
+                this.setPublicMessage($('select[data-warning-select="true"]').find("option:selected").text());
+            }
+        },
+
+        change: function()
+        {
+            this.input();
+        },
+
+        click: function()
+        {
+            this.input();
+        },
+
+        input: function() {
+            if (this.$target.is('input:text'))
+            {
+                this.setPublicMessage(this.$target.val());
+            }
+            else if (this.$target.is('input:radio'))
+            {
+                this.setPublicMessage(this.$target.data('warning-label'));
+            }
+            else if (this.$target.is('select'))
+            {
+                this.setPublicMessage(this.$target.find("option:selected").text());
+            }
+        },
+
+        setPublicMessage: function (message) {
+            $("input[name='action_options[public_message]']").val(message);
         }
     });
 
     XF.Element.register('warning-view-toggle', 'SV.WarningViewToggler');
     XF.Element.register('warning-view-select', 'SV.WarningViewSelect');
-
-    function updatePublicMessage(message)
-    {
-        if ($("input[name='action_options[public_message]']").length)
-        {
-            $("input[name='action_options[public_message]']").val(message);
-        }
-    }
-
-    updatePublicMessage($('input[name=custom_title]:enabled:visible:first').val());
+    XF.Element.register('warning-title-watcher', 'SV.WarningTitleWatcher');
 }
 (jQuery, window, document);

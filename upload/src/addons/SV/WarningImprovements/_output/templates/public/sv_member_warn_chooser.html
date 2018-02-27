@@ -4,7 +4,7 @@
 <xf:js prod="vendor/select2/select2.full.js" dev="vendor/select2/select2.full.min.js" />
 
 <div id="warning-view-select" style="display: none;">
-	<xf:selectrow name="warning_definition_id" class="js-FormFiller" value="0" label="{{ phrase('warning_type') }}" data-no-results-text="{{ phrase('sv_no_results_match') }}" data-place-holder-text="{{ phrase('sv_choose_a_warning') }}" data-xf-init="warning-view-select">
+	<xf:selectrow name="warning_definition_id" class="js-FormFiller" value="0" label="{{ phrase('warning_type') }}" data-no-results-text="{{ phrase('sv_no_results_match') }}" data-place-holder-text="{{ phrase('sv_choose_a_warning') }}" data-xf-init="warning-view-select warning-title-watcher" data-warning-select="true">
 		<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 			<xf:set var="$category" value="{$treeEntry.record}" />
 			<xf:optgroup label="{$category.title}">
@@ -15,7 +15,7 @@
 		</xf:foreach>
 	</xf:selectrow>
 	
-	<xf:textboxrow name="custom_title" label="{{ phrase('custom_warning') }}" />
+	<xf:textboxrow name="custom_title" label="{{ phrase('custom_warning') }}" data-xf-init="warning-title-watcher" />
 </div>
 
 <div id="warning-view-radio">
@@ -40,10 +40,10 @@
 			<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
 				<div class="u-depth{$treeEntry.depth}">
 					<xf:radio name="warning_definition_id" value="0">
-						<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}">
+						<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-warning-label="{$warningDefinition.title}" data-warning-radio="true" data-xf-init="warning-title-watcher">
 							<xf:dependent>
 								<xf:if is="{$warningDefinition.sv_custom_title}">
-									<xf:textbox name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" />
+									<xf:textboxrow label="" name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" data-xf-init="warning-title-watcher" />
 								</xf:if>
 							</xf:dependent>
 						</xf:option>
