@@ -195,7 +195,9 @@ class Warning extends XFCP_Warning
     {
         $inputFieldNames = [
             'sv_warning_category_id' => 'uint',
-            'sv_post_node_id' => 'uint'
+            'sv_post_node_id' => 'uint',
+            'sv_post_thread_id' => 'uint',
+            'sv_post_as_user_id' => 'uint'
         ];
 
         foreach ($inputFieldNames AS $inputFieldName => $inputFieldFilterName)

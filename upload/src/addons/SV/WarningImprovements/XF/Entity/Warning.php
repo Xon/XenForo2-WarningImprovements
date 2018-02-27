@@ -6,7 +6,11 @@ use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
- * Extends \XF\Entity\Warning
+ * GETTERS
+ * @property \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|null anonymized_issuer
+ *
+ * RELATIONS
+ * @property \SV\WarningImprovements\XF\Entity\WarningDefinition|\XF\Entity\WarningDefinition Definition
  */
 class Warning extends XFCP_Warning
 {
@@ -76,6 +80,19 @@ class Warning extends XFCP_Warning
         }
 
         return true;
+    }
+
+    protected function onApplication()
+    {
+        $return = parent::onApplication();
+
+        return $return;
+    }
+
+    protected function updateUserWarningPoints(\XF\Entity\User $user, $adjustment, $isDelete = false)
+    {
+        \SV\WarningImprovements\Listener::$warnngObj = $this;
+        parent::updateUserWarningPoints($user, $adjustment, $isDelete);
     }
 
     protected function _postDelete()

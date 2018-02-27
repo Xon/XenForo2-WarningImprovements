@@ -9,6 +9,15 @@ use XF\Mvc\Entity\Entity;
  */
 class Warn extends XFCP_Warn
 {
+    /**
+     * @param $contentType
+     * @param Entity $content
+     * @param $warnUrl
+     * @param array $breadcrumbs
+     *
+     * @return \XF\Mvc\Reply\Error|\XF\Mvc\Reply\Redirect|\XF\Mvc\Reply\View
+     *
+     */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
         $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
@@ -51,6 +60,15 @@ class Warn extends XFCP_Warn
         return $response;
     }
 
+    /**
+     * @param \XF\Warning\AbstractHandler $warningHandler
+     * @param \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User $user
+     * @param $contentType
+     * @param Entity $content
+     * @param array $input
+     *
+     * @return \XF\Mvc\Reply\View
+     */
     protected function getWarningFillerReply(
         \XF\Warning\AbstractHandler $warningHandler,
         \XF\Entity\User $user,
@@ -91,6 +109,17 @@ class Warn extends XFCP_Warn
         return $response;
     }
 
+    /**
+     * @param \XF\Warning\AbstractHandler $warningHandler
+     * @param \XF\Entity\User $user
+     * @param string $contentType
+     * @param Entity $content
+     * @param array $input
+     *
+     * @return \SV\WarningImprovements\XF\Service\User\Warn|\XF\Service\User\Warn
+     *
+     * @throws \XF\Mvc\Reply\Exception
+     */
     protected function setupWarnService(\XF\Warning\AbstractHandler $warningHandler, \XF\Entity\User $user, $contentType, \XF\Mvc\Entity\Entity $content, array $input)
 	{
 	    \SV\WarningImprovements\Listener::$warningInput = $input;
