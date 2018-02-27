@@ -166,6 +166,7 @@ class Setup extends AbstractSetup
                         $phrase = $phrases[$phraseId];
                         $phrase->title = $newTitle;
                         $phrase->global_cache = false;
+                        $phrase->addon_id = '';
                         $phrase->save(false);
                     }
                 }
