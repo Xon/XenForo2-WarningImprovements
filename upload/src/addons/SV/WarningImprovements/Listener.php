@@ -6,8 +6,7 @@ use XF\Entity\User;
 
 class Listener
 {
-    public static function criteriaUser(/** @noinspection PhpUnusedParameterInspection */
-        $rule, array $data, User $user, &$returnValue)
+    public static function criteriaUser($rule, array $data, User $user, &$returnValue)
     {
         switch ($rule)
         {

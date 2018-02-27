@@ -689,6 +689,12 @@
         "version_string": "2.0.0 Alpha",
         "hash": "ec61116f6371466a8d1ee040f256ddae"
     },
+    "sv_warning_improvements_user_has_received_at_least_x_warnings_count.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "b5aff325359e6f49f95890662c3cf651"
+    },
     "sv_warning_improvements_you_may_use_placeholders_to_dynamically_insert_warning.txt": {
         "global_cache": false,
         "version_id": 2000000,
