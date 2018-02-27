@@ -118,5 +118,15 @@
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
         "hash": "1a80e767c3282ce1227b5cfd28e91421"
+    },
+    "public/sv_warningimprovements_member_warn7.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "4916819f60c95da636b3de7c93cd9b33"
+    },
+    "public/sv_warningimprovements_member_warn7.less": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "6866f50f3e31cc798090ecf87523f974"
     }
 }

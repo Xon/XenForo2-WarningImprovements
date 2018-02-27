@@ -1,0 +1,36 @@
+<xf:css src="sv_warningimprovements_member_warn7.less" />
+
+<h2 class="block-formSectionHeader">
+	<span class="collapseTrigger collapseTrigger--block" data-xf-click="toggle" data-target="< :up :next">
+		<span class="block-formSectionHeader-aligner">{{ phrase('sv_warning_improvements_previous_warnings') }}</span>
+	</span>
+</h2>
+
+<div class="block-body previous-warnings block-body--collapsible">
+	<xf:formrow>
+		<xf:datalist data-xf-init="responsive-data-list">
+			<xf:datarow rowtype="header">
+				<xf:cell>{{ phrase('warning') }}</xf:cell>
+				<xf:cell>{{ phrase('date') }}</xf:cell>
+				<xf:cell>{{ phrase('points') }}</xf:cell>
+				<xf:cell>{{ phrase('expiry') }}</xf:cell>
+			</xf:datarow>
+			<xf:foreach loop="$previousWarnings" value="$previousWarning">
+				<xf:if is="$previousWarning.canView()">
+					<xf:datarow rowclass="{{ $previousWarning.is_expired ? 'dataList-row--disabled' : '' }}">
+						<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">{$previousWarning.title}</xf:cell>
+						<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true"><xf:date time="{$previousWarning.warning_date} " /></xf:cell>
+						<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">{$previousWarning.points|number}</xf:cell>
+						<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">
+							<xf:if is="$previousWarning.expiry_date">
+								<xf:date time="{$previousWarning.expiry_date} " />
+								<xf:else />
+								{{ phrase('n_a') }}
+							</xf:if>
+						</xf:cell>
+					</xf:datarow>
+				</xf:if>
+			</xf:foreach>
+		</xf:datalist>
+	</xf:formrow>
+</div>

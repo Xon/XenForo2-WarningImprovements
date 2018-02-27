@@ -31,8 +31,13 @@ class Warn extends XFCP_Warn
             $warningRepo = $this->repository('XF:Warning');
             $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
+            /** @var \SV\WarningImprovements\XF\Entity\User $user */
+            $user = $response->getParam('user');
+            $previousWarnings = $warningRepo->findUserWarningsForList($user->user_id);
+
             $response->setParams([
                 'warnings' => $warnings,
+                'previousWarnings' => $previousWarnings,
 
                 'categoryTree' => $categoryTree
             ]);
