@@ -16,20 +16,18 @@
 				<xf:cell>{{ phrase('expiry') }}</xf:cell>
 			</xf:datarow>
 			<xf:foreach loop="$previousWarnings" value="$previousWarning">
-				<xf:if is="$previousWarning.canView()">
-					<xf:datarow rowclass="{{ $previousWarning.is_expired ? 'dataList-row--disabled' : '' }}">
-						<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">{$previousWarning.title}</xf:cell>
-						<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true"><xf:date time="{$previousWarning.warning_date} " /></xf:cell>
-						<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">{$previousWarning.points|number}</xf:cell>
-						<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">
-							<xf:if is="$previousWarning.expiry_date">
-								<xf:date time="{$previousWarning.expiry_date} " />
-								<xf:else />
-								{{ phrase('n_a') }}
-							</xf:if>
-						</xf:cell>
-					</xf:datarow>
-				</xf:if>
+				<xf:datarow rowclass="{{ $previousWarning.is_expired ? 'dataList-row--disabled' : '' }}">
+					<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">{$previousWarning.title}</xf:cell>
+					<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true"><xf:date time="{$previousWarning.warning_date} " /></xf:cell>
+					<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">{$previousWarning.points|number}</xf:cell>
+					<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">
+						<xf:if is="$previousWarning.expiry_date">
+							<xf:date time="{$previousWarning.expiry_date} " />
+							<xf:else />
+							{{ phrase('n_a') }}
+						</xf:if>
+					</xf:cell>
+				</xf:datarow>
 			</xf:foreach>
 		</xf:datalist>
 	</xf:formrow>

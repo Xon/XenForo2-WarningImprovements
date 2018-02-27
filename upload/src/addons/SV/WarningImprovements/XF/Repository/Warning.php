@@ -191,6 +191,53 @@ class Warning extends XFCP_Warning
         return $expired;
     }
 
+    protected $userWarningCountCache = [];
+
+    protected function getCachedWarningsForUser(\XF\Entity\User $user, $days, $includeExpired)
+    {
+        if (!isset($this->userWarningCountCache[$user->user_id][$days]))
+        {
+            $params = [$user->user_id, \XF::$time - 86400 * $days];
+            $additionalWhere = '';
+
+            if (!$includeExpired)
+            {
+                $additionalWhere .= ' AND is_expired = 0 ';
+            }
+
+            $this->userWarningCountCache[$user->user_id][$days] = $this->db()->fetchRow("
+                SELECT SUM(points) AS total, COUNT(points) AS `count`
+                FROM xf_warning
+                WHERE user_id = ? AND warning_date > ? {$additionalWhere}
+                GROUP BY user_id
+            ", $params);
+        }
+
+        return $this->userWarningCountCache[$user->user_id][$days];
+    }
+
+    public function getWarningPointsInLastXDays(\XF\Entity\User $user, $days, $includeExpired = false)
+    {
+        $value = $this->getCachedWarningsForUser($user, $days, $includeExpired);
+        if (!empty($value['total']))
+        {
+            return $value['total'];
+        }
+
+        return 0;
+    }
+
+    public function getWarningCountsInLastXDays(\XF\Entity\User $user, $days, $includeExpired = false)
+    {
+        $value = $this->getCachedWarningsForUser($user, $days, $includeExpired);
+        if (!empty($value['count']))
+        {
+            return $value['count'];
+        }
+
+        return 0;
+    }
+
     /**
      * @return \XF\Mvc\Entity\Repository|UserChangeTemp
      */
