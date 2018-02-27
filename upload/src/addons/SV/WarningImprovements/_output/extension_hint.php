@@ -24,7 +24,6 @@ namespace SV\WarningImprovements\XF\Entity
 	class XFCP_Phrase extends \XF\Entity\Phrase {}
 	class XFCP_User extends \XF\Entity\User {}
 	class XFCP_UserBan extends \XF\Entity\UserBan {}
-	class XFCP_UserChangeTemp extends \XF\Entity\UserChangeTemp {}
 	class XFCP_UserOption extends \XF\Entity\UserOption {}
 	class XFCP_Warning extends \XF\Entity\Warning {}
 	class XFCP_WarningAction extends \XF\Entity\WarningAction {}

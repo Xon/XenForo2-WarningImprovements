@@ -1,6 +1,0 @@
-{
-    "from_class": "XF\\Entity\\UserChangeTemp",
-    "to_class": "SV\\WarningImprovements\\XF\\Entity\\UserChangeTemp",
-    "execute_order": 10,
-    "active": true
-}
