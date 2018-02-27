@@ -6,7 +6,9 @@ use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
- * Extends \XF\Entity\User
+ * COLUMNS
+ * @property array warning_actions
+ * @property int warning_actions_count
  */
 class User extends XFCP_User
 {

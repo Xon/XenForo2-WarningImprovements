@@ -1,1 +1,0 @@
-Add continue button on warning

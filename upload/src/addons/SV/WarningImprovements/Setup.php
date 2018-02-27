@@ -160,7 +160,7 @@ class Setup extends AbstractSetup
 
     public function upgrade2000000Step5()
     {
-        
+        $this->renameOption('sv_warningimprovements_continue_button', 'sv_warningimprovements_sticky_button');
     }
 
     public function uninstallStep1()

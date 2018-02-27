@@ -23,9 +23,6 @@
     "sv_warningimprovements_alert_send_default.json": {
         "hash": "9a52663f6720a9c6c6403bfc21b55cba"
     },
-    "sv_warningimprovements_continue_button.json": {
-        "hash": "91a1d2881f49699a1a5b2f942047af55"
-    },
     "sv_warningimprovements_conversation_invite.json": {
         "hash": "b983c4cde805ed09613c01ecdcfae257"
     },
@@ -40,6 +37,9 @@
     },
     "sv_warningimprovements_default_content_action.json": {
         "hash": "da1a9983410d602247efd9a8c0924523"
+    },
+    "sv_warningimprovements_sticky_button.json": {
+        "hash": "91a1d2881f49699a1a5b2f942047af55"
     },
     "sv_warningimprovements_warning_user.json": {
         "hash": "d19726e6285e01668ae83eedf6db9034"

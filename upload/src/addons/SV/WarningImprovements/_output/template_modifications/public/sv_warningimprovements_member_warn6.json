@@ -1,9 +1,9 @@
 {
     "template": "member_warn",
-    "description": "Don't mark \"Warn\" button as a sticky button",
+    "description": "Add/Remove Sticky attribute to \"Warn\" button",
     "execution_order": 10,
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:submitrow submit=\"{{ phrase('warn') }}\" sticky=\"true\" />",
-    "replace": "<xf:submitrow submit=\"{{ phrase('warn') }}\" />"
+    "replace": "<xf:if is=\"$xf.options.sv_warningimprovements_sticky_button\">\n\t<xf:submitrow submit=\"{{ phrase('warn') }}\" sticky=\"true\" />\n<xf:else />\n\t<xf:submitrow submit=\"{{ phrase('warn') }}\" />\n</xf:if>"
 }

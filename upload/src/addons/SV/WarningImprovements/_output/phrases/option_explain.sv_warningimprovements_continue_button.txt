@@ -1,1 +1,0 @@
-Force a continue button to replace the "warn" button for all but the last tab.
