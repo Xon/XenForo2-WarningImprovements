@@ -172,10 +172,21 @@ var SV = SV || {};
 
         change: function (e) {
             this.$target.trigger('click');
+            updatePublicMessage($('#' + this.$target.attr('id') + ' option:selected').text());
         }
     });
 
     XF.Element.register('warning-view-toggle', 'SV.WarningViewToggler');
     XF.Element.register('warning-view-select', 'SV.WarningViewSelect');
+
+    function updatePublicMessage(message)
+    {
+        if ($("input[name='action_options[public_message]']").length)
+        {
+            $("input[name='action_options[public_message]']").val(message);
+        }
+    }
+
+    updatePublicMessage($('input[name=custom_title]:enabled:visible:first').val());
 }
 (jQuery, window, document);
