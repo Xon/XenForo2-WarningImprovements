@@ -30,11 +30,6 @@ namespace SV\WarningImprovements\XF\Entity
 	class XFCP_WarningDefinition extends \XF\Entity\WarningDefinition {}
 }
 
-namespace SV\WarningImprovements\XF\Finder
-{
-	class XFCP_UserChangeTemp extends \XF\Finder\UserChangeTemp {}
-}
-
 namespace SV\WarningImprovements\XF\Pub\Controller
 {
 	class XFCP_Member extends \XF\Pub\Controller\Member {}
