@@ -6,13 +6,14 @@ class Notifier extends XFCP_Notifier
 {
     protected function _canUserReceiveNotification(\XF\Entity\User $user, \XF\Entity\User $sender = null)
     {
-        if (\SV\WarningImprovements\Listener::$warnngObj)
+        if (!empty(\SV\WarningImprovements\Listener::$warnngObj))
         {
             if (\SV\WarningImprovements\Listener::$warnngObj->user_id == $user->user_id)
             {
                 $options = $this->app->options();
 
-                // TODO: need to test this
+                $this->conversation->setOption('warningObj', \SV\WarningImprovements\Listener::$warnngObj);
+
                 if ($options->sv_force_conversation_email_on_warning)
                 {
                     $receiveAdminEmail = $user->Option->receive_admin_email;

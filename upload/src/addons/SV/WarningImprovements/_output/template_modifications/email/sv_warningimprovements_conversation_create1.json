@@ -1,0 +1,9 @@
+{
+    "template": "conversation_create",
+    "description": "Always include full message if the conversation is created when creating warning",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:if is=\"$xf.options.emailConversationIncludeMessage\">\n\t<div class=\"message\">{{ bb_code_type('emailHtml', $message.message, 'conversation_message', $message) }}</div>\n</xf:if>",
+    "replace": "<xf:if is=\"$conversation.is_conversation_for_warning\">\n\t<div class=\"message\">{{ bb_code_type('emailHtml', $message.message, 'conversation_message', $message) }}</div>\n<xf:else />\n\t$0\n</xf:if>"
+}
