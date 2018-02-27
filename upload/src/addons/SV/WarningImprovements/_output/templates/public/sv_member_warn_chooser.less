@@ -245,7 +245,37 @@
 
 .select2-search__field
 {
-	display: none;
+	.xf-input();
+	display: block;
+	width: 100%;
+	line-height: @xf-lineHeightDefault;
+	text-align: left; // this will be flipped in RTL
+	word-wrap: break-word;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	.m-transition();
+	.m-placeholder({color: fade(@_input-textColor, 40%); });
+	margin-top: -38px;
+
+	&:focus,
+	&.is-focused
+	{
+		outline: 0;
+		.xf-inputFocus();
+		.m-placeholder({color: fade(@_input-textColor, 50%); });
+	}
+
+	&[readonly],
+	&.is-readonly
+	{
+		.m-inputReadOnly();
+	}
+
+	&[disabled]
+	{
+		.xf-inputDisabled();
+	}
 }
 
 .select2-results > .select2-results__options
