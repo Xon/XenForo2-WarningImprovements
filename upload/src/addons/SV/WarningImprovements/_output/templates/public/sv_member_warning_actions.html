@@ -10,7 +10,7 @@
 					<xf:cell>{{ phrase('sv_warning_action_expiry') }}</xf:cell>
 					<xf:cell>&nbsp;</xf:cell>
 				</xf:datarow>
-				<xf:foreach loop="$user.WarningActions" value="$warningAction">
+				<xf:foreach loop="$user.warning_actions" value="$warningAction">
 					<xf:datarow rowclass="{{ $warningAction.is_expired ? 'dataList-row--disabled' : '' }}">
 						<xf:cell>{$warningAction.name}</xf:cell>
 						<xf:cell>{$warningAction.result}</xf:cell>
@@ -28,7 +28,7 @@
 		</div>
 		<div class="block-footer">
 			<ul class="listInline listInline--bullet">
-				<li>{{ phrase('sv_total_warning_actions:') }} {{ count($user.WarningActions)|number }}</li>
+				<li>{{ phrase('sv_total_warning_actions:') }} {{ count($user.warning_actions)|number }}</li>
 			</ul>
 		</div>
 	</div>

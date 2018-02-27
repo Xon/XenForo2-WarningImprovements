@@ -15,11 +15,19 @@ class Warn extends XFCP_Warn
      * @param $warnUrl
      * @param array $breadcrumbs
      *
-     * @return \XF\Mvc\Reply\Error|\XF\Mvc\Reply\Redirect|\XF\Mvc\Reply\View
-     *
+     * @return \XF\Mvc\Reply\AbstractReply|\XF\Mvc\Reply\Error|\XF\Mvc\Reply\Redirect|\XF\Mvc\Reply\View
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = $this->repository('XF:Warning');
+        $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
+
+        if (empty($warnings))
+        {
+            return $this->error(\XF::phrase('sv_no_permission_to_give_warnings'));
+        }
+
         $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
 
         if ($response instanceof \XF\Mvc\Reply\Redirect)
@@ -35,10 +43,6 @@ class Warn extends XFCP_Warn
         {
             $categoryRepo = $this->getWarningCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree(null, 0, true);
-
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = $this->repository('XF:Warning');
-            $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
             /** @var \SV\WarningImprovements\XF\Entity\User $user */
             $user = $response->getParam('user');

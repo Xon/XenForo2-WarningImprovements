@@ -43,7 +43,7 @@
 						<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-warning-label="{$warningDefinition.title}" data-warning-radio="true" data-xf-init="warning-title-watcher">
 							<xf:dependent>
 								<xf:if is="{$warningDefinition.sv_custom_title}">
-									<xf:textboxrow label="" name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" data-xf-init="warning-title-watcher" />
+									<xf:textboxrow label="" name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" />
 								</xf:if>
 							</xf:dependent>
 						</xf:option>

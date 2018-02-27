@@ -195,11 +195,11 @@ var SV = SV || {};
 
             if (localStorage.getItem(this.storageName) === 'radio')
             {
-                this.setPublicMessage($('input[type=radio][data-warning-radio="true"]:enabled:visible:checked:first').data('warning-label'));
+                $('input[type=radio][data-warning-radio="true"]:enabled:visible:checked:first').trigger('click');
             }
             else
             {
-                this.setPublicMessage($('select[data-warning-select="true"]').find("option:selected").text());
+                $('select[data-warning-select="true"]').trigger('change');
             }
         },
 
@@ -221,6 +221,8 @@ var SV = SV || {};
             else if (this.$target.is('input:radio'))
             {
                 this.setPublicMessage(this.$target.data('warning-label'));
+                $("input[data-warning-title-input=1][data-for-warning!='" + this.$target.val() + "']").parent().parent().parent().parent().xfFadeUp(XF.config.speed.fast);
+                $("input[data-warning-title-input=1][data-for-warning=" + this.$target.val() + "]").parent().parent().parent().parent().xfFadeDown(XF.config.speed.fast);
             }
             else if (this.$target.is('select'))
             {
