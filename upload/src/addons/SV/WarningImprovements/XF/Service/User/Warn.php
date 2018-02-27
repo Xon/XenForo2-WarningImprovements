@@ -50,10 +50,7 @@ class Warn extends XFCP_Warn
         {
             if (!empty(\SV\WarningImprovements\Listener::$warningInput))
             {
-                if (!empty(\SV\WarningImprovements\Listener::$warningInput['custom_title']))
-                {
-                    $this->warning->title = \SV\WarningImprovements\Listener::$warningInput['custom_title'];
-                }
+                $this->warning->title = \SV\WarningImprovements\Listener::$warningInput['custom_title'];
             }
         }
 

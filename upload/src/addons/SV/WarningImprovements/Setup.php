@@ -173,6 +173,11 @@ class Setup extends AbstractSetup
         }
     }
 
+    public function upgrade2000000Step5()
+    {
+        
+    }
+
     public function uninstallStep1()
     {
         $sm = $this->schemaManager();
@@ -305,5 +310,17 @@ class Setup extends AbstractSetup
         };
 
         return $tables;
+    }
+
+    protected function renameOption($old, $new)
+    {
+        /** @var \XF\Entity\Option $optionOld */
+        $optionOld = \XF::finder('XF:Option')->whereId($old)->fetchOne();
+        $optionNew = \XF::finder('XF:Option')->whereId($new)->fetchOne();
+        if ($optionOld && !$optionNew)
+        {
+            $optionOld->option_id = $new;
+            $optionOld->save();
+        }
     }
 }

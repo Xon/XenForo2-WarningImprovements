@@ -21,8 +21,7 @@ class Warning extends XFCP_Warning
 
         if ($visitor->user_id === $this->user_id && $this->app()->options()->sv_view_own_warnings)
         {
-            $handler = $this->getHandler();
-            return $handler ? $handler->canViewContent($this) : false;
+            return true;
         }
 
         return parent::canView($error);
@@ -38,8 +37,7 @@ class Warning extends XFCP_Warning
 
     public function getAnonymizedIssuer()
     {
-        $anonymizedIssuer = $this->em()->create('XF:User');
-        $anonymizedIssuer->username = \XF::phrase('WarningStaff')->render();
+        $anonymizedIssuer = null;
 
         if (!empty($anonymizeAsUserId = $this->app()->options()->sv_warningimprovements_warning_user))
         {
@@ -47,6 +45,13 @@ class Warning extends XFCP_Warning
             {
                 $anonymizedIssuer = $warningStaff;
             }
+        }
+
+        if (empty($anonymizedIssuer))
+        {
+            /** @var \XF\Repository\User $userRepo */
+            $userRepo = $this->repository('XF:User');
+            $anonymizedIssuer = $userRepo->getGuestUser(\XF::phrase('WarningStaff')->render());
         }
 
         return $anonymizedIssuer;

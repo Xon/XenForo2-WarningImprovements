@@ -119,7 +119,7 @@ var SV = SV || {};
 
     // ################################## WARNING SELECT HANDLER ###########################################
 
-    SV.TokenInput = XF.Element.newHandler({
+    SV.WarningViewSelect = XF.Element.newHandler({
 
         options: {},
 
@@ -176,6 +176,6 @@ var SV = SV || {};
     });
 
     XF.Element.register('warning-view-toggle', 'SV.WarningViewToggler');
-    XF.Element.register('warning-view-select', 'SV.TokenInput');
+    XF.Element.register('warning-view-select', 'SV.WarningViewSelect');
 }
 (jQuery, window, document);
