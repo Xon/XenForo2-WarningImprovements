@@ -37,11 +37,12 @@ class Setup extends AbstractSetup
 
         // insert the defaults for the custom warning. This can't be normally inserted so fiddle with the sql_mode
         $db->query("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_AUTO_VALUE_ON_ZERO'");
+
         $db->query("INSERT IGNORE INTO xf_warning_definition
-                    (warning_definition_id,points_default,expiry_type,expiry_default,extra_user_group_ids,is_editable, sv_custom_title)
-                VALUES
-                    (0,1, 'months',1,'',1, 1);
-            ");
+                          (warning_definition_id,points_default,expiry_type,expiry_default,extra_user_group_ids,is_editable, sv_custom_title)
+                          VALUES
+                          (0,1, 'months',1,'',1, 1)");
+
         $db->query("SET SESSION sql_mode='STRICT_ALL_TABLES'");
     }
 
@@ -50,9 +51,10 @@ class Setup extends AbstractSetup
         $db = $this->db();
 
         // create default warning category, do not use the data writer as that requires the rest of the add-on to be setup
-        $db->query("INSERT IGNORE INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
-                VALUES (1, null, 0, ?)
-            ", [User::GROUP_REG]);
+        $db->query("INSERT IGNORE
+                          INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
+                          VALUES (1, null, 0, ?)
+         ", [User::GROUP_REG]);
     }
 
     public function installStep4()
@@ -69,10 +71,10 @@ class Setup extends AbstractSetup
         ');
 
         // categories have a summary count of thier warnings
-        $db->query('
-        update xf_sv_warning_category
-        set warning_count = (select count(*) from xf_warning_definition where xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)
-        ');
+        $db->query("UPDATE xf_sv_warning_category
+             SET warning_count = (SELECT COUNT(*)
+                                  FROM xf_warning_definition
+                                  WHERE xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)");
     }
 
     public function upgrade2000000Step1()
@@ -96,41 +98,17 @@ class Setup extends AbstractSetup
     {
         $db = $this->db();
 
-        $db->query('
-            UPDATE xf_sv_warning_category
-            SET parent_category_id = NULL
-            WHERE parent_category_id = 0'
-        );
+        $db->update('xf_sv_warning_category', ['parent_category_id' => null], 'parent_category_id = ?', 0);
 
-        $db->query('
-            UPDATE xf_warning_definition
-            SET sv_warning_category_id = NULL
-            WHERE sv_warning_category_id = 0'
-        );
+        $db->update('xf_warning_definition', ['sv_warning_category_id' => null], 'sv_warning_category_id = ?', 0);
 
-        $db->query('
-            UPDATE xf_warning_action
-            SET sv_warning_category_id = NULL
-            WHERE sv_warning_category_id = 0'
-        );
+        $db->update('xf_warning_action', ['sv_warning_category_id' => null], 'sv_warning_category_id = ?', 0);
 
-        $db->query('
-            UPDATE xf_warning_action
-            SET sv_post_node_id = NULL
-            WHERE sv_post_node_id = 0'
-        );
+        $db->update('xf_warning_action', ['sv_post_node_id' => null], 'sv_post_node_id = ?', 0);
 
-        $db->query('
-            UPDATE xf_warning_action
-            SET sv_post_thread_id = NULL
-            WHERE sv_post_thread_id = 0'
-        );
+        $db->update('xf_warning_action', ['sv_post_thread_id' => null], 'sv_post_thread_id = ?', 0);
 
-        $db->query('
-            UPDATE xf_warning_action
-            SET sv_post_as_user_id = NULL
-            WHERE sv_post_as_user_id = 0'
-        );
+        $db->update('xf_warning_action', ['sv_post_as_user_id' => null], 'sv_post_as_user_id = ?', 0);
     }
 
     public function upgrade2000000Step3()
