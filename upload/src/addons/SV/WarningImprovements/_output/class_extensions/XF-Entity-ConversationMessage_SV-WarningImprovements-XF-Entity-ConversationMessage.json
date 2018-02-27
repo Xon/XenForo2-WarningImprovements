@@ -1,6 +1,0 @@
-{
-    "from_class": "XF\\Entity\\ConversationMessage",
-    "to_class": "SV\\WarningImprovements\\XF\\Entity\\ConversationMessage",
-    "execute_order": 10,
-    "active": true
-}
