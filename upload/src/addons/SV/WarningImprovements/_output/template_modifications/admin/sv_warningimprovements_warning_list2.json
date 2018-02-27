@@ -1,9 +1,0 @@
-{
-    "template": "warning_list",
-    "description": "Add \"Warning Defaults\" button",
-    "execution_order": 100,
-    "enabled": true,
-    "action": "str_replace",
-    "find": "</xf:pageaction>",
-    "replace": "\t<xf:button href=\"{{ link('warnings/default/add') }}\" icon=\"add\">{{ phrase('sv_add_warning_default') }}</xf:button>\n$0"
-}

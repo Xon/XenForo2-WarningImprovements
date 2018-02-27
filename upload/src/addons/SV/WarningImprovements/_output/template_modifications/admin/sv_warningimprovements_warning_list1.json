@@ -4,6 +4,6 @@
     "execution_order": 10,
     "enabled": true,
     "action": "str_replace",
-    "find": "</xf:pageaction>",
-    "replace": "\t<xf:button href=\"{{ link('warnings/category-add') }}\" icon=\"add\">{{ phrase('add_category') }}</xf:button>\n\t<xf:button href=\"{{ link('warnings/category-sort') }}\" icon=\"sort\" overlay=\"true\">{{ phrase('sv_warning_improvements_sort_categories') }}</xf:button>\n\t<xf:button href=\"{{ link('warnings/sort') }}\" icon=\"sort\" overlay=\"true\">{{ phrase('sv_warning_improvements_sort_warning_definitions') }}</xf:button>\n$0"
+    "find": "\t<xf:button href=\"{{ link('warnings/add') }}\" icon=\"add\">{{ phrase('add_warning') }}</xf:button>\n\t<xf:button href=\"{{ link('warnings/actions/add') }}\" icon=\"add\">{{ phrase('add_warning_action') }}</xf:button>",
+    "replace": "<xf:include template=\"sv_warningimprovements_warning_list1\" />"
 }

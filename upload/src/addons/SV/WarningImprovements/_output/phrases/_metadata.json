@@ -695,6 +695,24 @@
         "version_string": "2.0.0 Alpha",
         "hash": "b5aff325359e6f49f95890662c3cf651"
     },
+    "sv_warning_improvements_warning_action.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "ca895182b294249eb35c32c321540a0d"
+    },
+    "sv_warning_improvements_warning_default.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "03674075cfae8b66776874cf9be6ab0a"
+    },
+    "sv_warning_improvements_warning_definitions.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "6303821c64158d6c76e0cb1407324e99"
+    },
     "sv_warning_improvements_you_may_use_placeholders_to_dynamically_insert_warning.txt": {
         "global_cache": false,
         "version_id": 2000000,
