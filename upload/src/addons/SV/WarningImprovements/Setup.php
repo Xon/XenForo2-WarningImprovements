@@ -67,6 +67,12 @@ class Setup extends AbstractSetup
                               FROM xf_sv_warning_category
                               WHERE xf_warning_definition.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
         ');
+
+        // categories have a summary count of thier warnings
+        $db->query('
+        update xf_sv_warning_category
+        set warning_count = (select count(*) from xf_warning_definition where xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)
+        ');
     }
 
     public function upgrade2000000Step1()
