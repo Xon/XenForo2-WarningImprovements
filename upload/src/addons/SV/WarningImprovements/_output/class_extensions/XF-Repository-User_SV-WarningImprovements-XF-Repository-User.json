@@ -1,6 +1,0 @@
-{
-    "from_class": "XF\\Repository\\User",
-    "to_class": "SV\\WarningImprovements\\XF\\Repository\\User",
-    "execute_order": 10,
-    "active": true
-}

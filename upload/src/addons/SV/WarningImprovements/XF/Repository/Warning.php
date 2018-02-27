@@ -10,7 +10,7 @@ use \XF\Entity\User as UserEntity;
 class Warning extends XFCP_Warning
 {
     /**
-     * @return Finder
+     * @return \XF\Mvc\Entity\Finder
      */
     public function findWarningDefinitionsForListGroupedByCategory()
     {
