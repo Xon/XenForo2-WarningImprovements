@@ -21,7 +21,8 @@ class Warning extends XFCP_Warning
 
         if ($visitor->user_id === $this->user_id && $this->app()->options()->sv_view_own_warnings)
         {
-            return true;
+            $handler = $this->getHandler();
+            return $handler ? $handler->canViewContent($this) : false;
         }
 
         return parent::canView($error);

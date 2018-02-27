@@ -92,8 +92,6 @@ var SV = SV || {};
         },
 
         showRadioView: function () {
-
-
             $(this.radioViewContainer).xfFadeDown();
 
             this.$target.text(this.toggleSelectViewPhrase);
@@ -154,6 +152,7 @@ var SV = SV || {};
             api.$selection.addClass('is-focused');
 
             api.$container.on('focusin focusout', $.proxy(this, 'inputFocusBlur'));
+            this.$target.on('change', $.proxy(this, 'change'));
         },
 
         inputFocusBlur: function(e)
@@ -169,6 +168,10 @@ var SV = SV || {};
                     this.$selection.addClass('is-focused');
                     break;
             }
+        },
+
+        change: function (e) {
+            this.$target.trigger('click');
         }
     });
 
