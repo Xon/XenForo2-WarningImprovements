@@ -240,7 +240,10 @@ var SV = SV || {};
         },
 
         setPublicMessage: function (message) {
-            $("input[name='action_options[public_message]']").prop('value', message);
+            if (XF.config.sv_warningimprovements_copy_title)
+            {
+                $("input[name='action_options[public_message]']").prop('value', message);
+            }
         }
     });
 

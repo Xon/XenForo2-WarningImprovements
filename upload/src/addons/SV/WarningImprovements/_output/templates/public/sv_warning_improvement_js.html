@@ -1,32 +1,6 @@
 <script>
 !function($, window, document, _undefined)
 {
-	<xf:if is="{$xf.options.sv_warningimprovements_continue_button}">
-	$warningForm = $(".warningHeader").closest('form');
-	$warningSubmitButton = $warningForm.find('dl.submitUnit input[type=submit]').first();
-	$dl = $warningSubmitButton.parent();
-	$dl.append('<input type="button" class="continue button" value="{{ phrase('continue') }}"/>');
-	$warningContinueButton = $dl.find('.continue');
-	$warningSubmitButton.hide();
-
-	$warningForm.find('.tabs li a').click(function(e) {
-		if ($(e.target).parent().next().length === 0){
-			$warningSubmitButton.show();
-			$warningContinueButton.hide();
-		}
-		else {
-			$warningSubmitButton.hide();
-			$warningContinueButton.show();
-		}
-	});
-
-	$warningContinueButton.click(function(e) {
-		var $next = $warningForm.find('.tabs li .active').parent().next();
-		if ($next.length !== 0) {
-			$next.find('a').click().focus();
-		}
-	});
-	</xf:if>
 	XenForo.WarningDefaultActionFormFillerControl = function($input)
 	{
 		if ($input.val() == '{$xf.options.sv_warningimprovements_default_content_action}') {
@@ -39,43 +13,6 @@
 		}
 	}
 	XenForo.register('input[name=content_action]', 'XenForo.WarningDefaultActionFormFillerControl');
-	<xf:if is="{$xf.options.sv_warningimprovements_copy_title}">
-	XenForo.CustomWarningTitle = function($control)
-	{
-		$control.change(function (e){
-			$('input[name=public_warning]').val($control.val());
-		});
-	}
-	XenForo.register('input[name=title]', 'XenForo.CustomWarningTitle');
-	XenForo.WarningDefRadioButton = function($control)
-	{
-		$control.change(function (e){
-			$('input[name=public_warning]').val($(e.target).closest('label').text());
-		});
-	}
-	XenForo.register('input[name=warning_definition_id][id!=customWarning]', 'XenForo.WarningDefRadioButton');
-	XenForo.CustomWarningRadioButton = function($input)
-	{
-		$input.trigger('click');
-	}
-	XenForo.register('input#customWarning', 'XenForo.CustomWarningRadioButton');
-	XenForo.WarningDefSelectOption = function($select)
-	{
-		$select.change(function(e) {
-			var id = $(e.target).val();
-
-			if (id != 0)
-			{
-				$('input[name=public_warning]').val($(e.target).find('option[value="'+id+'"]').text());
-			}
-			else
-			{
-				$('input[name=public_warning]').val($('input[name=title]').val());
-			}
-		});
-	}
-	XenForo.register('select.warningItems', 'XenForo.WarningDefSelectOption');
-	</xf:if>
 }
 (jQuery, this, document);
 </script>

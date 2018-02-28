@@ -25,6 +25,20 @@ class WarnFill extends XFCP_WarnFill
             $response['formValues']['#startConversation'] = false;
         }
 
+        switch ($options->sv_warningimprovements_default_content_action)
+        {
+            case 'delete_content':
+                $response['formValues']['input[name=content_action][value="delete"]'] = 1;
+                break;
+            case 'public_warning':
+                $response['formValues']['input[name=content_action][value="public"]'] = 1;
+                break;
+            case 'none';
+            default:
+                $response['formValues']['input[name=content_action][value=""]'] = 1;
+                break;
+        }
+
         if ($warningDefinition->sv_custom_title)
         {
             $response['formValues']['#customTitle'] = true;

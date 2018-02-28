@@ -3,6 +3,12 @@
 <xf:js addon="SV/WarningImprovements" src="sv/warningimprovements/warnings.js" min="1" />
 <xf:js prod="vendor/select2/select2.full.js" dev="vendor/select2/select2.full.min.js" />
 
+<xf:js>
+jQuery.extend(XF.config, {
+	sv_warningimprovements_copy_title: {{ $xf.options.sv_warningimprovements_copy_title }}
+});
+</xf:js>
+
 <div id="warning-view-select" style="display: none; opacity: 0;">
 	<xf:selectrow name="warning_definition_id" class="js-FormFiller" value="0" label="{{ phrase('warning_type') }}" data-no-results-text="{{ phrase('sv_no_results_match') }}" data-place-holder-text="{{ phrase('sv_choose_a_warning') }}" data-xf-init="warning-view-select warning-title-watcher" data-warning-select="true">
 		<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">

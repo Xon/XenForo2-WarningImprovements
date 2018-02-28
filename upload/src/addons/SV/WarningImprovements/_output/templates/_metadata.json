@@ -102,7 +102,7 @@
     "public/sv_member_warn_chooser.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "fd66d21844fa3578448ff8ab53128c8b"
+        "hash": "3d86769ac86a50a1d1f39b6a6754092f"
     },
     "public/sv_member_warn_chooser.less": {
         "version_id": 2000000,
@@ -122,7 +122,7 @@
     "public/sv_warning_improvement_js.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "8f5bc925e2dfd93437664ac236541180"
+        "hash": "5dc646aa22386a9605a4d0cea4c931ba"
     },
     "public/sv_warningimprovements_member_view_warning_actions.html": {
         "version_id": 2000000,
