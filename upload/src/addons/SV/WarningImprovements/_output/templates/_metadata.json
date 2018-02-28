@@ -49,6 +49,11 @@
         "version_string": "2.0.0 Alpha",
         "hash": "a650144dfad5e7810c58862fcc66d4d6"
     },
+    "admin/sv_warning_improvements_nestable.less": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "9d0b556605d275b717b603db396af688"
+    },
     "admin/sv_warning_improvements_warning_tree_macros.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
