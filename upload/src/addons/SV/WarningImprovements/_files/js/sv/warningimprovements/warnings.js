@@ -56,12 +56,10 @@ var SV = SV || {};
 
             if (this.setting === 'select')
             {
-                this.hideRadioView();
                 this.showSelectView();
             }
             else
             {
-                this.hideSelectView();
                 this.showRadioView();
             }
         },
@@ -87,24 +85,26 @@ var SV = SV || {};
 
         showSelectView: function () {
             $(this.selectViewContainer).xfFadeDown();
-
             this.$target.text(this.toggleRadioViewPhrase);
+
+            $('[data-warning-view-type="radio"]').remove();
+
+            $(this.radioViewContainer).xfFadeUp();
+            $(this.radioViewContainer).remove();
+
+            $('select[data-warning-select="true"]').trigger('change');
         },
 
         showRadioView: function () {
             $(this.radioViewContainer).xfFadeDown();
-
             this.$target.text(this.toggleSelectViewPhrase);
-        },
 
-        hideSelectView: function () {
+            $('[data-warning-view-type="select"]').remove();
+
             $(this.selectViewContainer).xfFadeUp();
             $(this.selectViewContainer).remove();
-        },
 
-        hideRadioView: function () {
-            $(this.radioViewContainer).xfFadeUp();
-            $(this.radioViewContainer).remove();
+            $('input[type=radio][data-warning-radio="true"]:enabled:visible:checked:first').trigger('click');
         },
 
         getSetting: function () {
@@ -182,8 +182,6 @@ var SV = SV || {};
         eventNameSpace: 'WarningTitleWatcher',
         options: {},
 
-        storageName: "xf_sv_warning_view",
-
         init: function () {
             this.$target.on('change', $.proxy(this, 'change'));
             this.$target.on('input', $.proxy(this, 'input'));
@@ -191,15 +189,6 @@ var SV = SV || {};
             if (this.$target.is('input:radio'))
             {
                 this.$target.on('click', $.proxy(this, 'click'));
-            }
-
-            if (localStorage.getItem(this.storageName) === 'radio')
-            {
-                $('input[type=radio][data-warning-radio="true"]:enabled:visible:checked:first').trigger('click');
-            }
-            else
-            {
-                $('select[data-warning-select="true"]').trigger('change');
             }
         },
 
@@ -220,18 +209,38 @@ var SV = SV || {};
             }
             else if (this.$target.is('input:radio'))
             {
+                $("input[data-warning-title-input=1][data-for-warning=" + this.$target.val() + "]").parent().parent().parent().xfFadeDown(XF.config.speed.xxfast, function() {});
+
+                $("input[data-warning-title-input=1][data-for-warning!='" + this.$target.val() + "']").parent().parent().parent().xfFadeUp(XF.config.speed.xxfast);
                 this.setPublicMessage(this.$target.data('warning-label'));
-                $("input[data-warning-title-input=1][data-for-warning!='" + this.$target.val() + "']").parent().parent().parent().parent().xfFadeUp(XF.config.speed.fast);
-                $("input[data-warning-title-input=1][data-for-warning=" + this.$target.val() + "]").parent().parent().parent().parent().xfFadeDown(XF.config.speed.fast);
             }
             else if (this.$target.is('select'))
             {
-                this.setPublicMessage(this.$target.find("option:selected").text());
+                $("input[data-warning-title-input=1][data-for-warning!='" + this.$target.find("option:selected").val() + "']")
+                    .prop('disabled', true)
+                    .parent().parent()
+                    .xfFadeUp(XF.config.speed.xxfast);
+
+                var warningInput = $("input[data-warning-title-input=1][data-for-warning=" + this.$target.find("option:selected").val() + "]"),
+                    publicMessage = this.$target.find("option:selected").text();
+
+                if (warningInput.data('depth-text'))
+                {
+                    publicMessage = publicMessage.replace(warningInput.data('depth-text'), '').substr(1);
+                }
+
+                warningInput
+                    .prop('value', publicMessage)
+                    .prop('disabled', false)
+                    .parent().parent()
+                    .xfFadeDown(XF.config.speed.xxfast);
+
+                this.setPublicMessage(publicMessage);
             }
         },
 
         setPublicMessage: function (message) {
-            $("input[name='action_options[public_message]']").val(message);
+            $("input[name='action_options[public_message]']").prop('value', message);
         }
     });
 

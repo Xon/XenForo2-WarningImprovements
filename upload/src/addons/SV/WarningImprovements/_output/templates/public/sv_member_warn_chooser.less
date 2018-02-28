@@ -10,23 +10,18 @@
 	background: mix(xf-default(@xf-input--background-color, @xf-contentBg), xf-default(@xf-inputDisabled--background-color, @xf-paletteNeutral1));
 }
 
-
-
-.inputChoices-dependencies
+#warning-view-radio
 {
-	.formRow
+	.formRow[data-custom-title-container="1"]
 	{
-		&--input
+		dt
 		{
-			dt
-			{
-				display: none;
-			}
-			
-			dd
-			{
-				padding: 0px;
-			}
+			display: none;
+		}
+
+		dd
+		{
+			padding: 0px;
 		}
 	}
 }

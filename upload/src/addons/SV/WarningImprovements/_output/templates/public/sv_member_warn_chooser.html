@@ -3,11 +3,11 @@
 <xf:js addon="SV/WarningImprovements" src="sv/warningimprovements/warnings.js" min="1" />
 <xf:js prod="vendor/select2/select2.full.js" dev="vendor/select2/select2.full.min.js" />
 
-<div id="warning-view-select" style="display: none;">
+<div id="warning-view-select" style="display: none; opacity: 0;">
 	<xf:selectrow name="warning_definition_id" class="js-FormFiller" value="0" label="{{ phrase('warning_type') }}" data-no-results-text="{{ phrase('sv_no_results_match') }}" data-place-holder-text="{{ phrase('sv_choose_a_warning') }}" data-xf-init="warning-view-select warning-title-watcher" data-warning-select="true">
 		<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 			<xf:set var="$category" value="{$treeEntry.record}" />
-			<xf:optgroup label="{$category.title}">
+			<xf:optgroup label="{{ repeat('--', $treeEntry.depth) }} {$category.title}">
 				<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warning">
 					<xf:option value="{$warning.warning_definition_id}" data-supports-custom-title="{$warningDefinition.sv_custom_title}">{{ repeat('--', $treeEntry.depth) }} {$warning.title}</xf:option>
 				</xf:foreach>
@@ -15,10 +15,19 @@
 		</xf:foreach>
 	</xf:selectrow>
 	
-	<xf:textboxrow name="custom_title" label="{{ phrase('custom_warning') }}" data-xf-init="warning-title-watcher" />
+	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
+		<xf:set var="$category" value="{$treeEntry.record}" />
+		<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
+			<xf:if is="$warningDefinition.sv_custom_title || $warningDefinition.warning_definition_id == 0">
+				<xf:formrow label="" data-custom-title-container="1" data-warning-view-type="select">
+					<xf:textbox name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="" data-warning-label="{$warningDefinition.title}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" data-depth-text="{{ repeat('--', $treeEntry.depth) }}" disabled="disabled" placeholder="{{ phrase('custom_title') }}" />
+				</xf:formrow>
+			</xf:if>
+		</xf:foreach>
+	</xf:foreach>
 </div>
 
-<div id="warning-view-radio">
+<div id="warning-view-radio" style="display: none; opacity: 0;">
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:set var="$category" value="{$treeEntry.record}" />
 		
@@ -40,10 +49,12 @@
 			<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
 				<div class="u-depth{$treeEntry.depth}">
 					<xf:radio name="warning_definition_id" value="0">
-						<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-warning-label="{$warningDefinition.title}" data-warning-radio="true" data-xf-init="warning-title-watcher">
+						<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-warning-radio="true" data-warning-label="{$warningDefinition.title}" data-xf-init="warning-title-watcher">
 							<xf:dependent>
-								<xf:if is="{$warningDefinition.sv_custom_title}">
-									<xf:textboxrow label="" name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" />
+								<xf:if is="$warningDefinition.sv_custom_title || $warningDefinition.warning_definition_id == 0">
+									<xf:formrow label="" data-custom-title-container="1" data-warning-view-type="radio">
+										<xf:textbox label="" name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" />
+									</xf:formrow>
 								</xf:if>
 							</xf:dependent>
 						</xf:option>

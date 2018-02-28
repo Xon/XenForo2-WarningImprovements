@@ -23,9 +23,9 @@ use XF\Mvc\Entity\Structure;
  * @property int rgt
  * @property int depth
  * @property array breadcrumb_data
- * @property bool is_usable
  *
  * GETTERS
+ * @property mixed is_usable
  * @property \XF\Phrase title
  * @property mixed titleRaw
  *
