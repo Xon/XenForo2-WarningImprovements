@@ -184,6 +184,37 @@ class Setup extends AbstractSetup
     }
 
     /**
+     * @param Create|Alter $table
+     * @param string       $name
+     * @param string|null  $type
+     * @param string|null  $length
+     * @return \XF\Db\Schema\Column
+     */
+    protected function addOrChangeColumn($table, $name, $type = null, $length = null)
+    {
+        if ($table instanceof Create)
+        {
+            $table->checkExists(true);
+
+            return $table->addColumn($name, $type, $length);
+        }
+        else if ($table instanceof Alter)
+        {
+            if ($table->getColumnDefinition($name))
+            {
+                return $table->changeColumn($name, $type, $length);
+            }
+
+            return $table->addColumn($name, $type, $length);
+        }
+        else
+        {
+            throw new \LogicException("Unknown schema DDL type ". get_class($table));
+
+        }
+    }
+
+    /**
      * @return array
      */
     protected function getTables()
@@ -198,11 +229,11 @@ class Setup extends AbstractSetup
                 $table->checkExists(true);
             }
 
-            $table->addColumn('warning_default_id', 'int')->autoIncrement();
-            $table->addColumn('threshold_points', 'smallint')->setDefault(0);
-            $table->addColumn('expiry_type', 'enum')->values(['never', 'days', 'weeks', 'months', 'years'])->setDefault('never');
-            $table->addColumn('expiry_extension', 'smallint')->setDefault(0);
-            $table->addColumn('active', 'tinyint', 3)->setDefault(1);
+            $this->addOrChangeColumn($table, 'warning_default_id', 'int')->autoIncrement();
+            $this->addOrChangeColumn($table, 'threshold_points', 'smallint')->setDefault(0);
+            $this->addOrChangeColumn($table, 'expiry_type', 'enum')->values(['never', 'days', 'weeks', 'months', 'years'])->setDefault('never');
+            $this->addOrChangeColumn($table, 'expiry_extension', 'smallint')->setDefault(0);
+            $this->addOrChangeColumn($table, 'active', 'tinyint', 3)->setDefault(1);
 
             $table->addPrimaryKey('warning_default_id');
         };
@@ -215,15 +246,15 @@ class Setup extends AbstractSetup
                 $table->checkExists(true);
             }
 
-            $table->addColumn('warning_category_id', 'int')->autoIncrement();
-            $table->addColumn('parent_category_id', 'int')->nullable(true)->setDefault(null);
-            $table->addColumn('display_order', 'int')->setDefault(0);
-            $table->addColumn('lft', 'int')->setDefault(0);
-            $table->addColumn('rgt', 'int')->setDefault(0);
-            $table->addColumn('depth', 'smallint', 5)->setDefault(0);
-            $table->addColumn('breadcrumb_data', 'blob');
-            $table->addColumn('warning_count', 'int')->setDefault(0);
-            $table->addColumn('allowed_user_group_ids', 'varbinary', 255)->setDefault(strval(User::GROUP_REG));
+            $this->addOrChangeColumn($table, 'warning_category_id', 'int')->autoIncrement();
+            $this->addOrChangeColumn($table, 'parent_category_id', 'int')->nullable(true)->setDefault(null);
+            $this->addOrChangeColumn($table, 'display_order', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'lft', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'rgt', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'depth', 'smallint', 5)->setDefault(0);
+            $this->addOrChangeColumn($table, 'breadcrumb_data', 'blob');
+            $this->addOrChangeColumn($table, 'warning_count', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'allowed_user_group_ids', 'varbinary', 255)->setDefault(strval(User::GROUP_REG));
 
             $table->addPrimaryKey('warning_category_id');
             $table->addKey(['parent_category_id', 'lft']);
