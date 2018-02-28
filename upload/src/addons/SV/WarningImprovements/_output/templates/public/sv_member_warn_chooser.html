@@ -9,7 +9,7 @@
 			<xf:set var="$category" value="{$treeEntry.record}" />
 			<xf:optgroup label="{$category.title}">
 				<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warning">
-					<xf:option value="{$warning.warning_definition_id}">{{ repeat('--', $treeEntry.depth) }} {$warning.title}</xf:option>
+					<xf:option value="{$warning.warning_definition_id}" data-supports-custom-title="{$warningDefinition.sv_custom_title}">{{ repeat('--', $treeEntry.depth) }} {$warning.title}</xf:option>
 				</xf:foreach>
 			</xf:optgroup>
 		</xf:foreach>
