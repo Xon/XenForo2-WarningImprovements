@@ -1,0 +1,19 @@
+<div class="buttonGroup-buttonWrapper">
+	<xf:button class="menuTrigger" data-xf-click="menu" aria-expanded="false" aria-haspopup="true" title="{{ phrase('more_options')|for_attr }}">{{ phrase('add...') }}</xf:button>
+	<div class="menu" data-menu="menu" aria-hidden="true">
+		<div class="menu-content">
+			<a href="{{ link('warnings/category-add') }}" class="menu-linkRow" data-xf-click="overlay">{{ phrase('category') }}</a>
+			<a href="{{ link('warnings/add') }}" class="menu-linkRow">{{ phrase('warning') }}</a>
+			<a href="{{ link('warnings/actions/add') }}" class="menu-linkRow">{{ phrase('sv_warning_improvements_warning_action') }}</a>
+			<a href="{{ link('warnings/default/add') }}" class="menu-linkRow">{{ phrase('sv_warning_improvements_warning_default') }}</a>
+		</div>
+	</div>
+	
+	<xf:button class="menuTrigger" data-xf-click="menu" aria-expanded="false" aria-haspopup="true" title="{{ phrase('more_options')|for_attr }}">{{ phrase('sort...') }}</xf:button>
+	<div class="menu" data-menu="menu" aria-hidden="true">
+		<div class="menu-content">
+			<a href="{{ link('warnings/category-sort') }}" class="menu-linkRow" data-xf-click="overlay">{{ phrase('categories') }}</a>
+			<a href="{{ link('warnings/sort') }}" class="menu-linkRow">{{ phrase('sv_warning_improvements_warning_definitions') }}</a>
+		</div>
+	</div>
+</div>

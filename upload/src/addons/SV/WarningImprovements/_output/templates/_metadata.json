@@ -84,6 +84,11 @@
         "version_string": "2.0.0 Alpha",
         "hash": "907a8d168afbd86eeaba791c955a0db5"
     },
+    "admin/sv_warningimprovements_warning_list1.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
+        "hash": "6e54f76f70c5bdda44a5ebc67e182f48"
+    },
     "public/alert_warning_alert_warning.html": {
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
