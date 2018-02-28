@@ -16,6 +16,35 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {
+    public function canView(&$error = null)
+    {
+        $visitor = \XF::visitor();
+
+        if (empty($visitor->user_id))
+        {
+            return false;
+        }
+
+        return $this->isUsableByUser($visitor, $error);
+    }
+
+    public function isUsableByUser(\XF\Entity\User $user = null, &$error = null)
+    {
+        $user = $user ?: \XF::visitor();
+
+        foreach ($this->Category->allowed_user_group_ids AS $userGroupId)
+        {
+            if ($userGroupId == -1 || $user->isMemberOf($userGroupId))
+            {
+                return true;
+            }
+        }
+
+        $error = \XF::phrase('sv_no_permission_to_give_warning');
+
+        return false;
+    }
+
     public function getIsCustom()
     {
         return ($this->warning_definition_id === 0 && $this->exists());

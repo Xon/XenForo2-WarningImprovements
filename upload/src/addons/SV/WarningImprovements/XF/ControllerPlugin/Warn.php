@@ -21,7 +21,9 @@ class Warn extends XFCP_Warn
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->repository('XF:Warning');
-        $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
+        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        $visitor = \XF::visitor();
+        $warnings = $visitor->getUsableWarningDefinitions();
 
         if (empty($warnings))
         {
