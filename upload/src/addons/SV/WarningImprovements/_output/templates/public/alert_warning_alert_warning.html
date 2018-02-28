@@ -1,16 +1,13 @@
-<xf:if is="{$user.user_id}">
-	{{ phrase('alert_profile_post_insert', {
-			'username': username_link($user, false, {'defaultname': $alert.username}),
-			'warningLinkAttributes': 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"',
-			'points': {$content.points},
-			'warning_title': {$content.title}
-		})
-	}}
-<xf:else/>
-	{{ phrase('warning_alert_text_anonymize', {
-			'warningLinkAttributes': 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"',
-			'points': {$content.points},
-			'warning_title': {$content.title}
-		})
-	}}
+<xf:set var="$issuer" value="{$alert.User}" />
+
+<xf:if is="!$content.canViewIssuer()">
+	<xf:set var="$issuer" value="{$content.getAnonymizedIssuer()}" />
 </xf:if>
+
+{{ phrase('warning_alert_text', {
+		'username': username_link($issuer, false, {'defaultname': $issuer.username}),
+		'warningLinkAttributes': 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"',
+		'points': {$content.points},
+		'warning_title': {$content.title}
+	})
+}}

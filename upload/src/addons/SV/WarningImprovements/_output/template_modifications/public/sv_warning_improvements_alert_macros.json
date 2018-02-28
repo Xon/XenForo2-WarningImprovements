@@ -1,0 +1,9 @@
+{
+    "template": "alert_macros",
+    "description": "Anonymize warning issuer",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:avatar user=\"$alert.User\" size=\"xxs\" defaultname=\"{$alert.username}\" />",
+    "replace": "<xf:if is=\"$alert.content_type === 'warning_alert'\">\n\t<xf:avatar user=\"$alert.Content.getAnonymizedIssuer()\" size=\"xxs\" defaultname=\"{$alert.Content.getAnonymizedIssuer().username}\" />\n<xf:else />\n\t$0\n</xf:if>"
+}

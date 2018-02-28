@@ -38,6 +38,9 @@
     "email/sv_warningimprovements_conversation_create1.json": {
         "hash": "753dabf5e1fa18bfd8039888bb648d88"
     },
+    "public/sv_warning_improvements_alert_macros.json": {
+        "hash": "d08e8034825c9974860aadd06a91b8ea"
+    },
     "public/sv_warningimprovements_member_view1.json": {
         "hash": "75da9bbd1dc5da8088241cc255e60ef8"
     },

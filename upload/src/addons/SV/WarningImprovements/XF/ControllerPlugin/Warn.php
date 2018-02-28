@@ -115,6 +115,15 @@ class Warn extends XFCP_Warn
         return $response;
     }
 
+    protected function getWarnSubmitInput()
+    {
+        $return = parent::getWarnSubmitInput();
+
+        $return['send_warning_alert'] = $this->filter('send_warning_alert', 'bool');
+
+        return $return;
+    }
+
     /**
      * @param \XF\Warning\AbstractHandler $warningHandler
      * @param \XF\Entity\User $user

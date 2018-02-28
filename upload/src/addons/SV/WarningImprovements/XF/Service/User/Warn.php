@@ -72,6 +72,23 @@ class Warn extends XFCP_Warn
             ->fetchOne();
     }
 
+    protected function _save()
+    {
+        $return = parent::_save();
+
+        if ($return instanceof \XF\Entity\Warning)
+        {
+            if (!empty(\SV\WarningImprovements\Listener::$warningInput['send_warning_alert']))
+            {
+                /** @var \XF\Repository\UserAlert $alertRepo */
+                $alertRepo = $this->repository('XF:UserAlert');
+                $alertRepo->alertFromUser($return->User, $return->WarnedBy, 'warning_alert', $return->warning_id, 'warning');
+            }
+        }
+
+        return $return;
+    }
+
     protected function setupConversation(\XF\Entity\Warning $warning)
     {
         /** @var \XF\Service\Conversation\Creator $creator */
