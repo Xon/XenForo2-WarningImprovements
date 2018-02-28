@@ -99,6 +99,7 @@ class User extends XFCP_User
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->repository('XF:Warning');
         $warningDefinitions = $warningRepo->findWarningDefinitionsForList()
+            ->with('Category')
             ->order('sv_display_order')
             ->fetch();
 
@@ -153,7 +154,7 @@ class User extends XFCP_User
         $structure->getters['warning_definitions'] = true;
         $structure->getters['warning_actions'] = true;
         $structure->getters['warning_actions_count'] = true;
-    
+
         return $structure;
     }
 }

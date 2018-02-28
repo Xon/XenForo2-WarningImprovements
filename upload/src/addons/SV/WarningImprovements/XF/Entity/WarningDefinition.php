@@ -127,7 +127,7 @@ class WarningDefinition extends XFCP_WarningDefinition
         $structure->relations['Category'] = [
             'entity' => 'SV\WarningImprovements:WarningCategory',
             'type' => self::TO_ONE,
-            'conditions' => 'sv_warning_category_id',
+            'conditions' => [['warning_category_id', '=', '$sv_warning_category_id']],
             'primary' => true
         ];
 
