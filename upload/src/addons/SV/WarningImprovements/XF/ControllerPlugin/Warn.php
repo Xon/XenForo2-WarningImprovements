@@ -25,7 +25,7 @@ class Warn extends XFCP_Warn
 
         if (empty($warnings))
         {
-            return $this->error(\XF::phrase('sv_no_permission_to_give_warnings'));
+            return $this->error(\XF::phrase('sv_no_permission_to_give_warnings'), 403);
         }
 
         $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
