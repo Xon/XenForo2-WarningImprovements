@@ -25,19 +25,14 @@ class WarningDefinition extends XFCP_WarningDefinition
             return false;
         }
 
-        return $this->isUsableByUser($visitor, $error);
+        return $this->isUsableByUser($error);
     }
 
-    public function isUsableByUser(\XF\Entity\User $user = null, &$error = null)
+    public function isUsableByUser(&$error = null)
     {
-        $user = $user ?: \XF::visitor();
-
-        foreach ($this->Category->allowed_user_group_ids AS $userGroupId)
+        if ($this->Category && $this->Category->is_usable)
         {
-            if ($userGroupId == -1 || $user->isMemberOf($userGroupId))
-            {
-                return true;
-            }
+            return true;
         }
 
         $error = \XF::phrase('sv_no_permission_to_give_warning');

@@ -23,6 +23,7 @@ use XF\Mvc\Entity\Structure;
  * @property int rgt
  * @property int depth
  * @property array breadcrumb_data
+ * @property bool is_usable
  *
  * GETTERS
  * @property \XF\Phrase title
@@ -38,6 +39,25 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningCategory extends AbstractCategoryTree
 {
+    public function getIsUsable()
+    {
+        if ($this->Parent && !$this->Parent->is_usable)
+        {
+            return false;
+        }
+
+        $visitor = \XF::visitor();
+        foreach ($this->allowed_user_group_ids AS $userGroupId)
+        {
+            if ($userGroupId == -1 || $visitor->isMemberOf($userGroupId))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return \XF\Phrase
      */
@@ -227,6 +247,7 @@ class WarningCategory extends AbstractCategoryTree
             ]
         ];
         $structure->getters = [
+            'is_usable' => true,
             'title' => true,
             'titleRaw' => true // onii-chan breadcrumb needs raw KappaPride
         ];
