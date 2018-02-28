@@ -1,7 +1,7 @@
 {
     "template": "warning_list",
     "description": "Display warning items with category they belong in",
-    "execution_order": 10,
+    "execution_order": 20,
     "enabled": true,
     "action": "preg_replace",
     "find": "#<div class=\"block\">.*?<\\/div>\\s*<xf:if is=\"\\$actions is not empty\">#si",

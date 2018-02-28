@@ -1,7 +1,7 @@
 {
     "template": "warning_list",
     "description": "Add \"Add category\", \"Sort categories\" and \"Sort warning definitions\" button",
-    "execution_order": 10,
+    "execution_order": 15,
     "enabled": true,
     "action": "str_replace",
     "find": "\t<xf:button href=\"{{ link('warnings/add') }}\" icon=\"add\">{{ phrase('add_warning') }}</xf:button>\n\t<xf:button href=\"{{ link('warnings/actions/add') }}\" icon=\"add\">{{ phrase('add_warning_action') }}</xf:button>",

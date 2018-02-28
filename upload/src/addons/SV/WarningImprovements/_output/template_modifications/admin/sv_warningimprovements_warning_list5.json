@@ -1,7 +1,7 @@
 {
     "template": "warning_list",
     "description": "Groups warning actions by category",
-    "execution_order": 10,
+    "execution_order": 30,
     "enabled": true,
     "action": "preg_replace",
     "find": "#<xf:if is=\"\\$actions is not empty\">.*<!--.*-->.*<\\/div>.*<\\/div>.*<\\/xf:if>#siU",
