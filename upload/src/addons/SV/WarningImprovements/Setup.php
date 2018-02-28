@@ -87,11 +87,6 @@ class Setup extends AbstractSetup
         {
             $sm->alterTable($tableName, $callback);
         }
-
-        foreach ($this->getAlterTables() as $tableName => $callback)
-        {
-            $sm->alterTable($tableName, $callback);
-        }
     }
 
     public function upgrade2000000Step2()
