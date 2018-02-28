@@ -102,10 +102,6 @@ class Warning extends XFCP_Warning
 
     public function actionSort()
     {
-        $categoryRepo = $this->getCategoryRepo();
-        $categories = $categoryRepo->findCategoryList()->fetch();
-        $categoryTree = $categoryRepo->createCategoryTree($categories);
-
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->getWarningRepo();
         $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
@@ -115,16 +111,13 @@ class Warning extends XFCP_Warning
             /** @var \XF\ControllerPlugin\Sort $sorter */
             $sorter = $this->plugin('XF:Sort');
 
-            foreach ($warnings as $categoryId => $warning)
+            $categoryRepo = $this->getCategoryRepo();
+            $categories = $categoryRepo->findCategoryList();
+
+            /** @var \SV\WarningImprovements\Entity\WarningCategory $category */
+            foreach ($categories as $category)
             {
-                if ($categoryId == '')
-                {
-                    $sortTree = $sorter->buildSortTree($this->filter('category-0', 'json-array'));
-                }
-                else
-                {
-                    $sortTree = $sorter->buildSortTree($this->filter('category-' . $categoryId, 'json-array'));
-                }
+                $sortTree = $sorter->buildSortTree($this->filter('category-' . $category->warning_category_id, 'json-array'));
 
                 $sortedTreeData = $sortTree->getAllData();
                 $lastOrder = 0;
@@ -144,9 +137,12 @@ class Warning extends XFCP_Warning
         }
         else
         {
+            $categoryRepo = $this->getCategoryRepo();
+            $categories = $categoryRepo->findCategoryList()->fetch();
+            $categoryTree = $categoryRepo->createCategoryTree($categories);
+
             $viewParams = [
                 'categoryTree' => $categoryTree,
-
                 'warnings' => $warnings
             ];
 
