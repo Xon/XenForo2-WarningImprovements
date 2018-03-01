@@ -65,10 +65,20 @@ class WarningCategory extends AbstractCategoryTree
         return $output;
     }
 
-    public function getWarningCategoryRoots()
+    public function findCategoryParentList(\SV\WarningImprovements\Entity\WarningCategory $category = null, $with = null)
     {
-        /** @var \SV\WarningImprovements\Finder\WarningCategory $finder */
-        $finder = $this->finder('SV\WarningImprovements:WarningCategory');
-        return $finder->rootOnly()->fetch();
+        $finder = $this->finder($this->getClassName())->setDefaultOrder('rgt');
+        if ($category)
+        {
+            $finder
+                ->where('lft', '<', $category->lft)
+                ->where('rgt', '>', $category->rgt);
+        }
+        if ($with)
+        {
+            $finder->with($with);
+        }
+
+        return $finder;
     }
 }

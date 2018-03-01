@@ -24,18 +24,23 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         {
             if ((empty($this->lastWarningAction) || $action->points > $this->lastWarningAction->points) && (!empty($action->sv_post_node_id) || !empty($action->sv_post_thread_id)))
             {
-                $this->lastWarningAction = $action;
+                $this->lastAction = $action;
             }
         }
     }
 
     protected function processPointsIncrease($oldPoints, $newPoints)
     {
-        parent::processPointsIncrease($oldPoints, $newPoints);
+        if (empty(Globals::$warnngObj))
+        {
+            parent::processPointsIncrease($oldPoints, $newPoints);
+            return;
+        }
 
         if (!empty($this->lastAction))
         {
             $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? Globals::$warnngObj->user_id : $this->lastAction->sv_post_as_user_id;
+
             /** @var User $postAsUser */
             $postAsUser = $this->em()->find('XF:User', $postAsUserId);
 
@@ -69,6 +74,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadCreator->setContent($title, $messageContent);
                             $threadCreator->save();
                         });
+
                         $threadCreator($forum, $params);
                     }
                 }
