@@ -1,64 +1,60 @@
-<xf:title>{{ phrase('sv_warning_action_for_x', {'name':'{$user.username}'}) }}</xf:title>
+<xf:title>{{ phrase('sv_warning_action_for_x', {'name': $user.username}) }}</xf:title>
 
-<xf:breadcrumb href="{{ link('members', $user) }}">{$user.username}</xf:breadcrumb>
-
-<div class="xenForm formOverlay overlayScroll">
-	<dl class="ctrlUnit">
-		<dt>{{ phrase('sv_warning_action_type') }}:</dt>
-		<dd>{$warningAction.name}, {{ date_time("{$warningAction.create_date}") }}</dd>
-	</dl>
-
-	<dl class="ctrlUnit">
-		<dt>{{ phrase('sv_warning_action_result') }}:</dt>
-		<dd>{$warningAction.result}</dd>
-	</dl>
-
-	<dl class="ctrlUnit">
-		<dt>{{ phrase('sv_warning_action_expiry') }}:</dt>
-		<dd><xf:if is="{$warningAction.expiry_date_rounded}">{{ date_time("{$warningAction.expiry_date_rounded}") }}<xf:else />{{ phrase('n_a') }}</xf:if></dd>
-	</dl>
-
-	<xf:if is="{$canEditUserWarningActions}">
-		<ul class="tabs Tabs" data-panes="#WarningActionTabs_{$warningAction.warning_action_id} > form">
-			<li><a href="javascript:">{{ phrase('sv_update_warning_action') }}</a></li>
-		</ul>
-	</xf:if>
-
-	<div id="WarningActionTabs_{$warningAction.warning_action_id}">
-
-		<xf:if is="{$canEditUserWarningActions}">
-			<form action="{xen:link warning-actions/expire, $warningAction}" method="post">
-				<dl class="ctrlUnit">
-					<dt></dt>
-					<dd><ul>
-						<li><label><input type="radio" name="expire" value="now" checked="checked" /> {{ phrase('expire_now') }}</label></li>
-						<li><label><input type="radio" name="expire" value="future" id="ExpireWarningFuture_{$warningAction.warning_action_id}" class="Disabler" /> {{ phrase('expire_in_time') }}:</label>
-							<ul id="ExpireWarningFuture_{$warningAction.warning_action_id}_Disabler">
-								<li>
-									<input type="text" size="5" name="expiry_length" value="1" class="textCtrl autoSize" />
-									<select name="expiry_unit" class="textCtrl autoSize">
-										<option value="minutes">{{ phrase('sv_wa_minutes') }}</option>
-										<option value="hours">{{ phrase('hours') }}</option>
-										<option value="days" selected="selected">{{ phrase('days') }}</option>
-										<option value="weeks">{{ phrase('weeks') }}</option>
-										<option value="months">{{ phrase('months') }}</option>
-									</select>
-								</li>
-							</ul>
-						</li>
-					</ul></dd>
-				</dl>
-				<dl class="ctrlUnit submitUnit">
-					<dt></dt>
-					<dd>
-						<input type="submit" value="{{ phrase('sv_update_warning_action') }}" class="button primary" />
-					</dd>
-				</dl>
-
-				<input type="hidden" name="_xfConfirm" value="1" />
-				<input type="hidden" name="redirect" value="{$redirect}" />
-				<input type="hidden" name="_xfToken" value="{$xf.visitor.csrf_token_page}" />
-			</form>
+<div class="form block">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:formrow label="{{ phrase('sv_warning_action_type') }}">
+				{$warningAction.name}, {{ date_time("{$warningAction.create_date}") }}
+			</xf:formrow>
+			
+			<xf:formrow label="{{ phrase('sv_warning_action_result') }}">
+				{$warningAction.result}
+			</xf:formrow>
+			
+			<xf:formrow label="{{ phrase('sv_warning_action_expiry') }}">
+				<xf:if is="{$warningAction.expiry_date_rounded}">
+					<xf:date time="{$warningAction.expiry_date_rounded}" />
+				<xf:else />
+					{{ phrase('n_a') }}
+				</xf:if>
+			</xf:formrow>
+		</div>
+		
+		<xf:if is="$warningAction.canEditWarningActions()">
+			<h2 class="block-tabHeader tabs" data-xf-init="tabs" role="tablist">
+				<a class="tabs-tab is-active" role="tab" tabindex="0" aria-controls="{{ unique_id('warning-action') }}">{{ phrase('sv_update_warning_action') }}</a>
+			</h2>
+			<ul class="tabPanes">
+				<li role="tabpanel" id="{{ unique_id('warning-action') }}">
+					<xf:macro name="expire" arg-user="{$user}" arg-warningAction="{$warningAction}" />
+				</li>
+			</ul>
 		</xf:if>
 	</div>
 </div>
+
+<xf:macro name="expire" arg-user="!" arg-warningAction="!" arg-redirect="">
+	<xf:form action="{{ link('members/warning-actions/expire', $user, { 'warning_action_id': $warningAction.user_change_temp_id }) }}">
+		<xf:radiorow name="expire" value="now">
+			<xf:option value="now">{{ phrase('expire_now') }}</xf:option>
+			<xf:option value="future" label="{{ phrase('expire_in_time:') }}">
+				<xf:dependent>
+					<div class="inputGroup">
+						<xf:numberbox name="expiry_value" value="1" min="0" />
+						<span class="inputGroup-splitter"></span>
+						<xf:select name="expiry_unit" value="days" class="input--inline">
+							<xf:option value="days">{{ phrase('days') }}</xf:option>
+							<xf:option value="weeks">{{ phrase('weeks') }}</xf:option>
+							<xf:option value="months">{{ phrase('months') }}</xf:option>
+							<xf:option value="years">{{ phrase('years') }}</xf:option>
+						</xf:select>
+					</div>
+				</xf:dependent>
+			</xf:option>
+		</xf:radiorow>
+		
+		<xf:submitrow icon="save" value="{{ phrase('sv_update_warning_action') }}" />
+		
+		<xf:redirect url="{$redirect}" />
+	</xf:form>
+</xf:macro>
