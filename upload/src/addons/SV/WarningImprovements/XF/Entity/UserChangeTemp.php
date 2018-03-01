@@ -69,7 +69,14 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      */
     public function getExpiryDateRounded()
     {
+        $visitor = \XF::visitor();
+
         $expiryDateRound = $this->expiry_date;
+        if (!$visitor->user_id ||
+            $visitor->hasPermission('general', 'viewWarning'))
+        {
+            return $expiryDateRound;
+        }
 
         if (!empty($expiryDateRound))
         {
