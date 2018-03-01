@@ -1,4 +1,4 @@
-# XenForo2-WarningImprovements
+# Warning Improvements
 
 A Collection of improvements to XF2's warning system.
 
@@ -13,13 +13,15 @@ A Collection of improvements to XF2's warning system.
 - Allows the Custom Warning to be customized
 - Copy Warning title/text automatically to the public warning
 - Allow non-custom Warnings to have thier Titles edited, opt-in
-- Use XenForo's AJAX handling on errors instead of breaking the current form.
-- Optional "Continue" button on the warning dialog, instead of a "warn" button for the first few tabs.
+- Optional ability to "unsticky" the Warn button on the warning dialog
 - Allow the default content action to be set
 - Control defaults for user notification
   - Alerts
-  - Lock PMs by default
+  - Lock conversations by default
+  - Send warning conversations by default
+  - Allow invite into warning conversations by default
 - Option to require a note when entering a warning
+ - and enforce a minimum length
 - Ability to see warning actions applied to an account from the front-end
   - users may see warning actions against thier account
   - automatically roll-up identical warning actions to show the latest expiry
