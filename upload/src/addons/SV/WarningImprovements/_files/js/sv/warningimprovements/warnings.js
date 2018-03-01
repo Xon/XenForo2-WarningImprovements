@@ -213,7 +213,12 @@ var SV = SV || {};
 
                 $("input[data-warning-title-input=1][data-for-warning!='" + this.$target.val() + "']").parent().parent().parent().xfFadeUp(XF.config.speed.xxfast);
 
-                this.setPublicMessage(this.$target.data('warning-label'));
+                this.setPublicMessage("");
+
+                if (this.$target.is("[data-warning-label]"))
+                {
+                    this.setPublicMessage(this.$target.data('warning-label'));
+                }
             }
             else if (this.$target.is('select'))
             {
@@ -222,15 +227,23 @@ var SV = SV || {};
                     .parent().parent()
                     .xfFadeUp(XF.config.speed.xxfast);
 
-                var warningInput = $("input[data-warning-title-input=1][data-for-warning=" + this.$target.find("option:selected").val() + "]");
-                var publicMessage = warningInput.parent().parent().data('warning-label');
+                var warningId = this.$target.find("option:selected").val(),
+                    warningInput = $("input[data-warning-title-input=1][data-for-warning=" + warningId + "]"),
+                    warningLabel = $("dl[data-for-warning=" + warningId + "][data-warning-label]"),
+                    warningText = "";
+
+                if (warningLabel.length > 0)
+                {
+                    warningText = warningLabel.data('warning-label');
+                    warningInput.prop('value', warningText);
+                }
+
+                this.setPublicMessage(warningText);
 
                 warningInput
                     .prop('disabled', false)
                     .parent().parent()
                     .xfFadeDown(XF.config.speed.xxfast);
-
-                this.setPublicMessage(publicMessage);
             }
         },
 
