@@ -150,8 +150,8 @@ class WarningCategory extends AbstractCategoryTree
             $categoryCount = $this->db()->fetchOne("
                 SELECT COUNT(*)
                 FROM xf_sv_warning_category
-                WHERE sv_warning_category_id <> ?
-            ", $this->sv_warning_category_id);
+                WHERE warning_category_id <> ?
+            ", $this->warning_category_id);
 
             if ($categoryCount === 0)
             {
