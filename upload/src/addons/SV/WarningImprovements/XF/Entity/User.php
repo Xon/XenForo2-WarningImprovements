@@ -13,6 +13,20 @@ use XF\Mvc\Entity\Structure;
  */
 class User extends XFCP_User
 {
+    public function getWarningDefaultContentAction()
+    {
+        switch (\XF::options()->sv_warningimprovements_default_content_action)
+        {
+            case 'delete_content':
+                return 'delete';
+            case 'public_warning':
+                return 'public';
+            case 'none';
+            default:
+                return '';
+        }
+    }
+
     public function canViewWarnings()
     {
         $visitor = \XF::visitor();

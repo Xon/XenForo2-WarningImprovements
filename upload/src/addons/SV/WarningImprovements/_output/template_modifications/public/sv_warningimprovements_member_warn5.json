@@ -1,9 +1,9 @@
 {
     "template": "member_warn",
-    "description": "Insert extra javascript",
+    "description": "Setup default content action",
     "execution_order": 1,
     "enabled": true,
-    "action": "str_replace",
-    "find": "</script>",
-    "replace": "$0\n<xen:include template=\"sv_warning_improvement_js\"/>"
+    "action": "preg_replace",
+    "find": "#(<xf:radiorow name=\"content_action\" value=)(\"\")#si",
+    "replace": "$1\"{{ $user.getWarningDefaultContentAction() }}\""
 }

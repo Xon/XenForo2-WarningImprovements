@@ -24,7 +24,9 @@ class WarnFill extends XFCP_WarnFill
         {
             $response['formValues']['input[name=start_conversation]'] = 0;
         }
-
+/*
+XF bug; https://xenforo.com/community/threads/form-filler-doesnt-work-well-with-disabler.143576
+Use a template mopdification which calls $user.getWarningDefaultContentAction() instead of this:
         switch ($options->sv_warningimprovements_default_content_action)
         {
             case 'delete_content':
@@ -38,7 +40,7 @@ class WarnFill extends XFCP_WarnFill
                 $response['formValues']['input[name=content_action][value=""]'] = 1;
                 break;
         }
-
+*/
         if ($warningDefinition->sv_custom_title)
         {
             $response['formValues']['#customTitle'] = true;
