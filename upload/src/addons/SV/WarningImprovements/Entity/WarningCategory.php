@@ -26,15 +26,15 @@ use XF\Mvc\Entity\Structure;
  * @property array breadcrumb_data
  *
  * GETTERS
- * @property mixed is_usable
+ * @property bool is_usable
  * @property \XF\Phrase title
- * @property mixed titleRaw
+ * @property string|null titleRaw
  *
  * RELATIONS
  * @property \XF\Entity\Phrase MasterTitle
  * @property \SV\WarningImprovements\Entity\WarningCategory Parent
  * @property \SV\WarningImprovements\Entity\WarningCategory[] ChildCategories
- * @property WarningDefinition[] WarningDefinitions
+ * @property \XF\Entity\WarningDefinition[] WarningDefinitions
  * @property \XF\Entity\WarningAction[] WarningActions
  * @property \XF\Entity\PermissionCacheContent[] Permissions
  */

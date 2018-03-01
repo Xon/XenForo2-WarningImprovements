@@ -7,8 +7,8 @@
     },
     "Warning_Summary_Message.txt": {
         "global_cache": false,
-        "version_id": 1020200,
-        "version_string": "1.2.2",
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
         "hash": "86593835310e601b8882202f30fe3f5b"
     },
     "Warning_Thread_Message.txt": {
@@ -211,8 +211,8 @@
     },
     "option_explain.sv_warningimprovements_warning_user.txt": {
         "global_cache": false,
-        "version_id": 1030006,
-        "version_string": "1.3.0 RC6",
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
         "hash": "ce8a008c2c797a81b849243abf7edd6c"
     },
     "option_explain.sv_wi_require_warning_notes.txt": {
@@ -224,7 +224,7 @@
     "option_explain.sv_wi_warning_note_chars.txt": {
         "global_cache": false,
         "version_id": 2000000,
-        "version_string": "2.0.0",
+        "version_string": "2.0.0 Alpha",
         "hash": "104e4d254b11c68c4268d322feca5ba4"
     },
     "option_group.SV_WarningImprovements.txt": {
@@ -457,8 +457,8 @@
     },
     "sv_please_enter_note_with_at_least_x_characters.txt": {
         "global_cache": false,
-        "version_id": 1060200,
-        "version_string": "1.6.2",
+        "version_id": 2000000,
+        "version_string": "2.0.0 Alpha",
         "hash": "fd75d86189c8d6d2f2c3b83615137ce2"
     },
     "sv_please_enter_valid_parent_warning_category_id.txt": {
@@ -778,12 +778,6 @@
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
         "hash": "0cb8b1994190f08edd6ce56e99a628d8"
-    },
-    "warning_alert_text_anonymize.txt": {
-        "global_cache": false,
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "60c05951bb11dbcc095875adc90d375d"
     },
     "warning_definition_0_title.txt": {
         "global_cache": false,
