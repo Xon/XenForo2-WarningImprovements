@@ -1,6 +1,6 @@
 <xf:set var="$issuer" value="{$alert.User}" />
 
-<xf:if is="!$content.canViewIssuer()">
+<xf:if is="!{$content.canViewIssuer()}">
 	<xf:set var="$issuer" value="{$content.getAnonymizedIssuer()}" />
 </xf:if>
 

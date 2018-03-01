@@ -74,19 +74,19 @@ class Warn extends XFCP_Warn
 
     protected function _save()
     {
-        $return = parent::_save();
+        $warning = parent::_save();
 
-        if ($return instanceof \XF\Entity\Warning)
+        if ($warning instanceof \XF\Entity\Warning)
         {
             if (!empty(\SV\WarningImprovements\Listener::$warningInput['send_warning_alert']))
             {
                 /** @var \XF\Repository\UserAlert $alertRepo */
                 $alertRepo = $this->repository('XF:UserAlert');
-                $alertRepo->alertFromUser($return->User, $return->WarnedBy, 'warning_alert', $return->warning_id, 'warning');
+                $alertRepo->alertFromUser($warning->User, $warning->WarnedBy, 'warning_alert', $warning->warning_id, 'warning');
             }
         }
 
-        return $return;
+        return $warning;
     }
 
     protected function setupConversation(\XF\Entity\Warning $warning)
