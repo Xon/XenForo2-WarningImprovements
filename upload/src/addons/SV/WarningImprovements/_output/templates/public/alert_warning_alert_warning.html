@@ -5,8 +5,8 @@
 </xf:if>
 
 {{ phrase('warning_alert_text', {
-		'username': username_link($issuer, false, {'defaultname': $issuer.username}),
-		'warningLinkAttributes': 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"',
+		'name': username_link($issuer, false, {'defaultname': $issuer.username}),
+		'warning_attributes': 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"',
 		'points': {$content.points},
 		'warning_title': {$content.title}
 	})
