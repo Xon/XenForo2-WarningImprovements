@@ -2,7 +2,8 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
-use SV\WarningImprovements\Entity\WarningCategory;
+use XF\Entity\User;
+use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
@@ -10,12 +11,18 @@ use XF\Mvc\Entity\Structure;
  * @property int sv_warning_category_id
  * @property int sv_display_order
  * @property bool sv_custom_title
+ * @property bool is_custom
+ * @property string custom_title_placeholder
  *
  * RELATIONS
  * @property \SV\WarningImprovements\Entity\WarningCategory Category
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {
+    /**
+     * @param string|null $error
+     * @return bool
+     */
     public function canView(&$error = null)
     {
         $visitor = \XF::visitor();
@@ -25,10 +32,14 @@ class WarningDefinition extends XFCP_WarningDefinition
             return false;
         }
 
-        return $this->isUsableByUser($error);
+        return $this->isUsable($error);
     }
 
-    public function isUsableByUser(&$error = null)
+    /**
+     * @param string|null $error
+     * @return bool
+     */
+    public function isUsable(&$error = null)
     {
         if ($this->Category && $this->Category->is_usable)
         {
@@ -40,11 +51,17 @@ class WarningDefinition extends XFCP_WarningDefinition
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function getIsCustom()
     {
         return ($this->warning_definition_id === 0 && $this->exists());
     }
 
+    /**
+     * @return string|\XF\Phrase
+     */
     public function getCustomTitlePlaceholder()
     {
         return ($this->is_custom) ? '' : $this->title;
@@ -62,7 +79,14 @@ class WarningDefinition extends XFCP_WarningDefinition
         return true;
     }
 
-    public function getSpecificConversationContent(\XF\Entity\User $receiver, $contentType, \XF\Mvc\Entity\Entity $content, \XF\Entity\User $sender = null)
+    /**
+     * @param User      $receiver
+     * @param string    $contentType
+     * @param Entity    $content
+     * @param User|null $sender
+     * @return array
+     */
+    public function getSpecificConversationContent(User $receiver, $contentType, Entity $content, User $sender = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $receiver */
 

@@ -2,21 +2,25 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
+use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Entity\User;
+use XF\Entity\WarningAction;
+
 /**
  * Extends \XF\Service\User\WarningPointsChange
  */
 class WarningPointsChange extends XFCP_WarningPointsChange
 {
     /**
-     * @var \SV\WarningImprovements\XF\Entity\WarningAction|\XF\Entity\WarningAction
+     * @var \SV\WarningImprovements\XF\Entity\WarningAction|WarningAction
      */
     protected $lastAction = null;
 
-    protected function applyWarningAction(\XF\Entity\WarningAction $action)
+    protected function applyWarningAction(WarningAction $action)
     {
         parent::applyWarningAction($action);
 
-        if (!empty(\SV\WarningImprovements\Globals::$warnngObj))
+        if (!empty(Globals::$warnngObj))
         {
             if ((empty($this->lastWarningAction) || $action->points > $this->lastWarningAction->points) && (!empty($action->sv_post_node_id) || !empty($action->sv_post_thread_id)))
             {
@@ -31,7 +35,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         if (!empty($this->lastAction))
         {
-            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? \SV\WarningImprovements\Globals::$warnngObj->user_id : $this->lastAction->sv_post_as_user_id;
+            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? Globals::$warnngObj->user_id : $this->lastAction->sv_post_as_user_id;
+            /** @var User $postAsUser */
             $postAsUser = $this->em()->find('XF:User', $postAsUserId);
 
             if (!empty($postAsUser))
@@ -41,11 +46,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $params = [
                     'username' => $this->user->username,
                     'points' =>  $this->user->warning_count,
-                    'warning' => \SV\WarningImprovements\Globals::$warnngObj,
+                    'warning' => Globals::$warnngObj,
                     'date' => $dateString,
-                    'warning_title' => \SV\WarningImprovements\Globals::$warnngObj->title,
-                    'warning_points' => \SV\WarningImprovements\Globals::$warnngObj->points,
-                    'warning_category' => \SV\WarningImprovements\Globals::$warnngObj->Definition->Category,
+                    'warning_title' => Globals::$warnngObj->title,
+                    'warning_points' => Globals::$warnngObj->points,
+                    'warning_category' => Globals::$warnngObj->Definition->Category,
                     'threshold' => $this->lastAction->points
                 ];
 

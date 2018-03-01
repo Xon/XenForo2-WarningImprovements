@@ -16,7 +16,7 @@ class UserBan extends XFCP_UserBan
 
         if ($this->isInsert() || $this->isChanged('end_date'))
         {
-            $this->_getWarningModel()->updatePendingExpiryFor($this->User, true);
+            $this->getWarningRepo()->updatePendingExpiryFor($this->User, true);
         }
     }
 
@@ -24,13 +24,13 @@ class UserBan extends XFCP_UserBan
     {
         parent::_postDelete();
 
-        $this->_getWarningModel()->updatePendingExpiryFor($this->User, true);
+        $this->getWarningRepo()->updatePendingExpiryFor($this->User, true);
     }
 
     /**
      * @return \SV\WarningImprovements\XF\Repository\Warning|\XF\Repository\Warning|\XF\Mvc\Entity\Repository
      */
-    protected function _getWarningModel()
+    protected function getWarningRepo()
     {
         return $this->repository('XF:Warning');
     }

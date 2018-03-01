@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
+use SV\WarningImprovements\Globals;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
@@ -14,6 +15,10 @@ use XF\Mvc\Entity\Structure;
  */
 class Warning extends XFCP_Warning
 {
+    /**
+     * @param string|null $error
+     * @return bool
+     */
     public function canView(&$error = null)
     {
         $visitor = \XF::visitor();
@@ -31,6 +36,9 @@ class Warning extends XFCP_Warning
         return parent::canView($error);
     }
 
+    /**
+     * @return bool
+     */
     public function canViewIssuer()
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
@@ -91,7 +99,7 @@ class Warning extends XFCP_Warning
 
     protected function updateUserWarningPoints(\XF\Entity\User $user, $adjustment, $isDelete = false)
     {
-        \SV\WarningImprovements\Globals::$warnngObj = $this;
+        Globals::$warnngObj = $this;
         parent::updateUserWarningPoints($user, $adjustment, $isDelete);
     }
 

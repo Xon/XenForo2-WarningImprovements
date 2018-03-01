@@ -2,7 +2,7 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
-use XF\Mvc\Entity\Entity;
+use SV\WarningImprovements\Globals;
 use XF\Mvc\Entity\Structure;
 
 /**
@@ -22,7 +22,7 @@ class User extends XFCP_User
             return false;
         }
 
-        if ($visitor->user_id === \SV\WarningImprovements\Globals::$profileUserId && \XF::app()->options()->sv_view_own_warnings)
+        if ($visitor->user_id === Globals::$profileUserId && \XF::app()->options()->sv_view_own_warnings)
         {
             return true;
         }
@@ -30,7 +30,11 @@ class User extends XFCP_User
         return parent::canViewWarnings();
     }
 
-    public function canViewIssuer()
+    /**
+     * @param string|null $error
+     * @return bool
+     */
+    public function canViewIssuer(/** @noinspection PhpUnusedParameterInspection */&$error = null)
     {
         if (!$this->user_id)
         {
@@ -40,7 +44,11 @@ class User extends XFCP_User
         return $this->hasPermission('general', 'viewWarning_issuer');
     }
 
-    public function canViewWarningActions(&$error = null)
+    /**
+     * @param string|null $error
+     * @return bool
+     */
+    public function canViewWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = null)
     {
         $visitor = \XF::visitor();
 
@@ -57,7 +65,11 @@ class User extends XFCP_User
         return $visitor->hasPermission('general', 'sv_viewWarningActions');
     }
 
-    public function canViewNonSummaryWarningActions(&$error = null)
+    /**
+     * @param string|null $error
+     * @return bool
+     */
+    public function canViewNonSummaryWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = null)
     {
         $visitor = \XF::visitor();
 
@@ -69,7 +81,11 @@ class User extends XFCP_User
         return $visitor->hasPermission('general', 'sv_showAllWarningActions');
     }
 
-    public function canViewDiscouragedWarningActions(&$error = null)
+    /**
+     * @param string|null $error
+     * @return bool
+     */
+    public function canViewDiscouragedWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = null)
     {
         $visitor = \XF::visitor();
 

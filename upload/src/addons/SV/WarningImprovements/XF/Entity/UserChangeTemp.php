@@ -2,7 +2,6 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
-use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
@@ -15,6 +14,9 @@ use XF\Mvc\Entity\Structure;
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {
+    /**
+     * @return \XF\Phrase
+     */
     public function getName()
     {
         $name = 'n_a';
@@ -33,6 +35,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return \XF::phrase($name);
     }
 
+    /**
+     * @return \XF\Phrase
+     */
     public function getResult()
     {
         $result = 'n_a';
@@ -51,11 +56,17 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return \XF::phrase($result);
     }
 
+    /**
+     * @return bool
+     */
     public function getIsExpired()
     {
         return ($this->expiry_date < \XF::$time);
     }
 
+    /**
+     * @return int|null
+     */
     public function getExpiryDateRounded()
     {
         $expiryDateRound = $this->expiry_date;
@@ -68,7 +79,11 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return $expiryDateRound;
     }
 
-    public function canEditWarningActions(&$error = '')
+    /**
+     * @param string $error
+     * @return bool
+     */
+    public function canEditWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = '')
     {
         $visitor = \XF::visitor();
 

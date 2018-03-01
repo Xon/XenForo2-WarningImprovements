@@ -10,6 +10,7 @@
 namespace SV\WarningImprovements\Entity;
 
 use XF\Entity\AbstractCategoryTree;
+use XF\Entity\WarningDefinition;
 use XF\Mvc\Entity\Structure;
 
 /**
@@ -33,12 +34,15 @@ use XF\Mvc\Entity\Structure;
  * @property \XF\Entity\Phrase MasterTitle
  * @property \SV\WarningImprovements\Entity\WarningCategory Parent
  * @property \SV\WarningImprovements\Entity\WarningCategory[] ChildCategories
- * @property \XF\Entity\WarningDefinition[] WarningDefinitions
+ * @property WarningDefinition[] WarningDefinitions
  * @property \XF\Entity\WarningAction[] WarningActions
  * @property \XF\Entity\PermissionCacheContent[] Permissions
  */
 class WarningCategory extends AbstractCategoryTree
 {
+    /**
+     * @return bool
+     */
     public function getIsUsable()
     {
         if ($this->Parent && !$this->Parent->is_usable)
@@ -66,18 +70,25 @@ class WarningCategory extends AbstractCategoryTree
         return \XF::phrase($this->getPhraseName('title'));
     }
 
+    /**
+     * @return string|null
+     */
     public function getTitleRaw()
     {
         return $this->getTitle()->render();
     }
 
+    /**
+     * @param string $type
+     * @return string
+     */
     public function getPhraseName($type)
     {
         return 'sv_warning_category_' . $type . '.' . $this->warning_category_id;
     }
 
     /**
-     * @param $type
+     * @param string $type
      *
      * @return \XF\Entity\Phrase
      */
@@ -88,6 +99,7 @@ class WarningCategory extends AbstractCategoryTree
 
         if (!$phrase)
         {
+            /** @var \XF\Entity\Phrase $phrase */
             $phrase = $this->_em->create('XF:Phrase');
             $phrase->title = $this->_getDeferredValue(function() use ($type) { return $this->getPhraseName($type); });
             $phrase->language_id = 0; // 0 = master
@@ -96,12 +108,12 @@ class WarningCategory extends AbstractCategoryTree
         return $phrase;
     }
 
-    public function warningAdded(\XF\Entity\WarningDefinition $warningDefinition)
+    public function warningAdded(/** @noinspection PhpUnusedParameterInspection */ WarningDefinition $warningDefinition)
     {
         $this->rebuildCounters();
     }
 
-    public function warningRemoved(\XF\Entity\WarningDefinition $warningDefinition)
+    public function warningRemoved(/** @noinspection PhpUnusedParameterInspection */ WarningDefinition $warningDefinition)
     {
         $this->rebuildCounters();
     }
@@ -194,12 +206,14 @@ class WarningCategory extends AbstractCategoryTree
             $warningAction->delete();
         }
 
+        /*
         if ($this->getOption('delete_contents'))
         {
-            /*$this->app()->jobManager()->enqueueUnique('sv_WarningImprovementsCategoryDelete' . $this->warning_category_id, 'SVW\WarningImprovements:CategoryDelete', [
+            $this->app()->jobManager()->enqueueUnique('sv_WarningImprovementsCategoryDelete' . $this->warning_category_id, 'SVW\WarningImprovements:CategoryDelete', [
                 'warning_category_id' => $this->warning_category_id
-            ]);*/
+            ]);
         }
+        */
     }
 
     public function rebuildCounters()
@@ -209,6 +223,9 @@ class WarningCategory extends AbstractCategoryTree
         return true;
     }
 
+    /**
+     * @return int
+     */
     public function rebuildWarningCount()
     {
         $warningCount = $this->db()->fetchOne("
@@ -222,6 +239,9 @@ class WarningCategory extends AbstractCategoryTree
         return $this->warning_count;
     }
 
+    /**
+     * @return array
+     */
     public function getCategoryListExtras()
     {
         return [

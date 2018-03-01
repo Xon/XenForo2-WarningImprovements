@@ -2,6 +2,8 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
+use SV\WarningImprovements\Globals;
+use XF\Entity\Warning;
 use XF\Entity\WarningDefinition;
 
 /**
@@ -49,9 +51,9 @@ class Warn extends XFCP_Warn
 
         if ($definition->sv_custom_title || $definition->warning_definition_id === 0)
         {
-            if (!empty(\SV\WarningImprovements\Globals::$warningInput))
+            if (!empty(Globals::$warningInput))
             {
-                $this->warning->title = \SV\WarningImprovements\Globals::$warningInput['custom_title'];
+                $this->warning->title = Globals::$warningInput['custom_title'];
             }
         }
 
@@ -64,22 +66,25 @@ class Warn extends XFCP_Warn
     }
 
     /**
-     * @return \SV\WarningImprovements\XF\Entity\WarningDefinition|\XF\Entity\WarningDefinition
+     * @return \SV\WarningImprovements\XF\Entity\WarningDefinition
      */
     protected function getCustomWarningDefinition()
     {
-        return $this->finder('XF:WarningDefinition')
-            ->where('warning_definition_id', '=', 0)
-            ->fetchOne();
+        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entity */
+        $entity = $this->finder('XF:WarningDefinition')
+                       ->where('warning_definition_id', '=', 0)
+                       ->fetchOne();
+
+        return $entity;
     }
 
     protected function _save()
     {
         $warning = parent::_save();
 
-        if ($warning instanceof \XF\Entity\Warning)
+        if ($warning instanceof Warning)
         {
-            if (!empty(\SV\WarningImprovements\Globals::$warningInput['send_warning_alert']))
+            if (!empty(Globals::$warningInput['send_warning_alert']))
             {
                 /** @var \XF\Repository\UserAlert $alertRepo */
                 $alertRepo = $this->repository('XF:UserAlert');
@@ -102,7 +107,7 @@ class Warn extends XFCP_Warn
         return $errors;
     }
 
-    protected function setupConversation(\XF\Entity\Warning $warning)
+    protected function setupConversation(Warning $warning)
     {
         /** @var \XF\Service\Conversation\Creator $creator */
         $creator = parent::setupConversation($warning);

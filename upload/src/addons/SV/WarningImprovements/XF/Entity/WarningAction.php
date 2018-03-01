@@ -10,10 +10,13 @@ use XF\Mvc\Entity\Structure;
 /**
  * Extends \XF\Entity\WarningAction
  *
+ * COLUMNS
  * @property int sv_post_node_id
  * @property int sv_post_thread_id
  * @property int sv_post_as_user_id
  * @property int sv_warning_category_id
+ *
+ * RELATIONS
  * @property WarningCategory Category
  * @property Forum PostForum
  * @property Thread PostThread

@@ -2,7 +2,12 @@
 
 namespace SV\WarningImprovements\XF\ControllerPlugin;
 
+use SV\WarningImprovements\Globals;
+use XF\Entity\User;
 use XF\Mvc\Entity\Entity;
+use XF\Mvc\Reply\Redirect;
+use XF\Mvc\Reply\View;
+use XF\Warning\AbstractHandler;
 
 /**
  * Extends \XF\ControllerPlugin\Warn
@@ -14,8 +19,7 @@ class Warn extends XFCP_Warn
      * @param Entity $content
      * @param $warnUrl
      * @param array $breadcrumbs
-     *
-     * @return \XF\Mvc\Reply\AbstractReply|\XF\Mvc\Reply\Error|\XF\Mvc\Reply\Redirect|\XF\Mvc\Reply\View
+     * @return \XF\Mvc\Reply\AbstractReply|\XF\Mvc\Reply\Error|Redirect|View
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
@@ -32,7 +36,7 @@ class Warn extends XFCP_Warn
 
         $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
 
-        if ($response instanceof \XF\Mvc\Reply\Redirect)
+        if ($response instanceof Redirect)
         {
             if (empty($response->getMessage()))
             {
@@ -41,7 +45,7 @@ class Warn extends XFCP_Warn
 
             return $response;
         }
-        else if ($response instanceof \XF\Mvc\Reply\View)
+        else if ($response instanceof View)
         {
             $categoryRepo = $this->getWarningCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
@@ -67,25 +71,24 @@ class Warn extends XFCP_Warn
     }
 
     /**
-     * @param \XF\Warning\AbstractHandler $warningHandler
-     * @param \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User $user
-     * @param $contentType
-     * @param Entity $content
-     * @param array $input
-     *
-     * @return \XF\Mvc\Reply\View
+     * @param AbstractHandler                             $warningHandler
+     * @param \SV\WarningImprovements\XF\Entity\User|User $user
+     * @param string                                      $contentType
+     * @param Entity                                      $content
+     * @param array                                       $input
+     * @return View
      */
     protected function getWarningFillerReply(
-        \XF\Warning\AbstractHandler $warningHandler,
-        \XF\Entity\User $user,
+        AbstractHandler $warningHandler,
+        User $user,
         $contentType,
-        \XF\Mvc\Entity\Entity $content,
+        Entity $content,
         array $input
     )
     {
         $response = parent::getWarningFillerReply($warningHandler, $user, $contentType, $content, $input);
 
-        if ($response instanceof \XF\Mvc\Reply\View && $input['warning_definition_id'] === 0)
+        if ($response instanceof View && $input['warning_definition_id'] === 0)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = $this->repository('XF:Warning');
@@ -115,6 +118,9 @@ class Warn extends XFCP_Warn
         return $response;
     }
 
+    /**
+     * @return array
+     */
     protected function getWarnSubmitInput()
     {
         $return = parent::getWarnSubmitInput();
@@ -125,8 +131,8 @@ class Warn extends XFCP_Warn
     }
 
     /**
-     * @param \XF\Warning\AbstractHandler $warningHandler
-     * @param \XF\Entity\User $user
+     * @param AbstractHandler $warningHandler
+     * @param User $user
      * @param string $contentType
      * @param Entity $content
      * @param array $input
@@ -135,14 +141,14 @@ class Warn extends XFCP_Warn
      *
      * @throws \XF\Mvc\Reply\Exception
      */
-    protected function setupWarnService(\XF\Warning\AbstractHandler $warningHandler, \XF\Entity\User $user, $contentType, \XF\Mvc\Entity\Entity $content, array $input)
+    protected function setupWarnService(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
 	{
-	    \SV\WarningImprovements\Globals::$warningInput = $input;
+	    Globals::$warningInput = $input;
 		return parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
 	}
 
     /**
-     * @return \SV\WarningImprovements\Repository\WarningCategory
+     * @return \SV\WarningImprovements\Repository\WarningCategory|\XF\Mvc\Entity\Repository
      */
     protected function getWarningCategoryRepo()
     {

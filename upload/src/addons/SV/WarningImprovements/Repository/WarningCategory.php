@@ -4,6 +4,7 @@ namespace SV\WarningImprovements\Repository;
 
 use XF\Mvc\Entity\Finder;
 use XF\Repository\AbstractCategoryTree;
+use XF\Tree;
 
 class WarningCategory extends AbstractCategoryTree
 {
@@ -20,7 +21,7 @@ class WarningCategory extends AbstractCategoryTree
      * @param int $rootId
      * @param bool $excludeEmpty
      *
-     * @return \XF\Tree
+     * @return Tree
      */
     public function createCategoryTree($categories = null, $rootId = 0, $excludeEmpty = false)
     {
@@ -32,7 +33,7 @@ class WarningCategory extends AbstractCategoryTree
                     ->where('warning_count', '<>', 0)
                     ->fetch();
             }
-            return new \XF\Tree($categories, 'parent_category_id', $rootId);
+            return new Tree($categories, 'parent_category_id', $rootId);
         }
 
         return parent::createCategoryTree($categories, $rootId);

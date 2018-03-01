@@ -8,6 +8,13 @@ use XF\Entity\User;
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {
+    /**
+     * @param User $user
+     * @param bool $showAll
+     * @param bool $showDiscouraged
+     * @param bool $onlyExpired
+     * @return \XF\Mvc\Entity\Finder|\XF\Finder\UserChangeTemp
+     */
     public function getWarningActions(User $user, $showAll = false, $showDiscouraged = false, $onlyExpired = false)
     {
         $warningActions = $this->finder('XF:UserChangeTemp');
@@ -56,6 +63,12 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return $warningActions;
     }
 
+    /**
+     * @param User $user
+     * @param bool $showAll
+     * @param bool $showDiscouraged
+     * @return int|null
+     */
     public function countWarningActions(User $user, $showAll = false, $showDiscouraged = false)
     {
         return $this->db()->fetchOne($this->getWarningActions($user, $showAll, $showDiscouraged)->getQuery(['countOnly' => true]));

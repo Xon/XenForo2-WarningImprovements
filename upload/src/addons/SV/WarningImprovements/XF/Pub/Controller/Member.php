@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
+use SV\WarningImprovements\Globals;
 use XF\Mvc\ParameterBag;
 
 /**
@@ -11,6 +12,7 @@ class Member extends XFCP_Member
 {
     public function actionWarningActions(ParameterBag $params)
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         /** @var \SV\WarningImprovements\XF\Entity\User $user */
         $user = $this->assertViewableUser($params->user_id);
 
@@ -29,7 +31,7 @@ class Member extends XFCP_Member
     {
         if ($this->options()->sv_view_own_warnings)
         {
-            \SV\WarningImprovements\Globals::$profileUserId = intval($userId);
+            Globals::$profileUserId = intval($userId);
         }
 
         return parent::assertViewableUser($userId, $extraWith, $basicProfileOnly);
