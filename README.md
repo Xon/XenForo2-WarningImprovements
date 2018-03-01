@@ -6,6 +6,7 @@ A Collection of improvements to XF2's warning system.
 - Sortable warnings with categories
   - Drag & drop
   - Permissions per category
+  - per-category warning actions, allowing warning actions to be only triggered from points in that category
 - Updated front-end using smart select menu, or radio boxes
 - User Criteria for warning points
 - Allow users to view their own warnings, and find which posts where warned. 
