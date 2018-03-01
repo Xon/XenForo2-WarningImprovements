@@ -59,7 +59,9 @@ jQuery.extend(XF.config, {
 			</xf:if>
 
 			<xf:formrow label="{$categoryTitleForFormRow}" class="u-depth{$treeEntry.depth}">
-				<label class="u-depth{$treeEntry.depth}">{$categoryTitleForRadio}</label>
+				<xf:if is="!empty({$categoryTitleForRadio})">
+					<label class="u-depth{$treeEntry.depth}">{$categoryTitleForRadio}</label>
+				</xf:if>
 
 				<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
 					<div class="u-depth{$treeEntry.depth}">
