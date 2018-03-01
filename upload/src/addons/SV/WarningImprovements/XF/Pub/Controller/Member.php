@@ -45,6 +45,7 @@ class Member extends XFCP_Member
         /** @var \SV\WarningImprovements\XF\Entity\User $user */
         $user = $this->assertViewableUser($params->user_id);
 
+        /** @var \SV\WarningImprovements\XF\Entity\UserChangeTemp $userChangeTemp */
         $userChangeTemp = $this->assertWarningActionViewable($userChangeTempId);
 
         $viewParams = [
@@ -61,10 +62,9 @@ class Member extends XFCP_Member
         $this->assertPostOnly();
         $userChangeTempId = $this->filter('warning_action_id', 'uint');
 
-        /** @noinspection PhpUndefinedFieldInspection */
-        /** @var \SV\WarningImprovements\XF\Entity\User $user */
-        $user = $this->assertViewableUser($params->user_id);
+        $this->assertViewableUser($params->user_id);
 
+        /** @var \SV\WarningImprovements\XF\Entity\UserChangeTemp $userChangeTemp */
         $userChangeTemp = $this->assertWarningActionViewable($userChangeTempId);
 
         if (!$userChangeTemp->canEditWarningActions($error))

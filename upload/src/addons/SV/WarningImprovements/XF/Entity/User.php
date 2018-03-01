@@ -126,6 +126,22 @@ class User extends XFCP_User
         }
     }
 
+    /**
+     * @param string $error
+     * @return bool
+     */
+    public function canEditWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = '')
+    {
+        $visitor = \XF::visitor();
+
+        if (!$visitor->user_id)
+        {
+            return false;
+        }
+
+        return $visitor->hasPermission('general', 'sv_editWarningActions');
+    }
+
     public function getWarningDefinitions()
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */

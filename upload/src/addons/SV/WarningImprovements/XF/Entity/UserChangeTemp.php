@@ -141,8 +141,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string $error
      * @return bool
      */
-    public function canEditWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = '')
+    public function canEdit(/** @noinspection PhpUnusedParameterInspection */&$error = '')
     {
+        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
 
         if (!$visitor->user_id)
@@ -150,7 +151,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             return false;
         }
 
-        return $visitor->hasPermission('general', 'sv_editWarningActions');
+        return $visitor->canEditWarningActions($error);
     }
 
     protected function _postSave()
