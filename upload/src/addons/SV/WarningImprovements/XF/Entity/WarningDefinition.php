@@ -45,6 +45,11 @@ class WarningDefinition extends XFCP_WarningDefinition
         return ($this->warning_definition_id === 0 && $this->exists());
     }
 
+    public function getCustomTitlePlaceholder()
+    {
+        return ($this->is_custom) ? '' : $this->title;
+    }
+
     public function verifySvWarningCategoryId($sv_warning_category_id)
     {
         if (empty($sv_warning_category_id))
@@ -118,6 +123,7 @@ class WarningDefinition extends XFCP_WarningDefinition
         $structure->columns['sv_custom_title'] = ['type' => self::BOOL, 'default' => false];
 
         $structure->getters['is_custom'] = true;
+        $structure->getters['custom_title_placeholder'] = true;
 
         $structure->relations['Category'] = [
             'entity' => 'SV\WarningImprovements:WarningCategory',

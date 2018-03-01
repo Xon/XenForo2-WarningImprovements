@@ -212,6 +212,7 @@ var SV = SV || {};
                 $("input[data-warning-title-input=1][data-for-warning=" + this.$target.val() + "]").parent().parent().parent().xfFadeDown(XF.config.speed.xxfast, function() {});
 
                 $("input[data-warning-title-input=1][data-for-warning!='" + this.$target.val() + "']").parent().parent().parent().xfFadeUp(XF.config.speed.xxfast);
+
                 this.setPublicMessage(this.$target.data('warning-label'));
             }
             else if (this.$target.is('select'))
@@ -221,16 +222,10 @@ var SV = SV || {};
                     .parent().parent()
                     .xfFadeUp(XF.config.speed.xxfast);
 
-                var warningInput = $("input[data-warning-title-input=1][data-for-warning=" + this.$target.find("option:selected").val() + "]"),
-                    publicMessage = this.$target.find("option:selected").text();
-
-                if (warningInput.data('depth-text'))
-                {
-                    publicMessage = publicMessage.replace(warningInput.data('depth-text'), '').substr(1);
-                }
+                var warningInput = $("input[data-warning-title-input=1][data-for-warning=" + this.$target.find("option:selected").val() + "]");
+                var publicMessage = warningInput.parent().parent().data('warning-label');
 
                 warningInput
-                    .prop('value', publicMessage)
                     .prop('disabled', false)
                     .parent().parent()
                     .xfFadeDown(XF.config.speed.xxfast);
