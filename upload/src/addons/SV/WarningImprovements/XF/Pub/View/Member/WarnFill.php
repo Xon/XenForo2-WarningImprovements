@@ -20,9 +20,9 @@ class WarnFill extends XFCP_WarnFill
             $response['formValues']['input[name=conversation_locked]'] = true;
         }
 
-        if ($options->sv_warningimprovements_conversation_send_default)
+        if (!$options->sv_warningimprovements_conversation_send_default)
         {
-            $response['formValues']['#startConversation'] = false;
+            $response['formValues']['input[name=start_conversation]'] = 0;
         }
 
         switch ($options->sv_warningimprovements_default_content_action)
