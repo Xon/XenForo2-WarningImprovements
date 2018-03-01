@@ -29,7 +29,7 @@ class Member extends XFCP_Member
     {
         if ($this->options()->sv_view_own_warnings)
         {
-            \SV\WarningImprovements\Listener::$profileUserId = intval($userId);
+            \SV\WarningImprovements\Globals::$profileUserId = intval($userId);
         }
 
         return parent::assertViewableUser($userId, $extraWith, $basicProfileOnly);

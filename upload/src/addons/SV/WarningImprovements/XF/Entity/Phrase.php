@@ -10,8 +10,8 @@ class Phrase extends XFCP_Phrase
 
         if ($this->title == 'warning_title.0')
         {
-            $this->version_id = \SV\WarningImprovements\Listener::$customWarningPhrase_version_id;
-            $this->version_string = \SV\WarningImprovements\Listener::$customWarningPhrase_version_string;
+            $this->version_id = \SV\WarningImprovements\Globals::$customWarningPhrase_version_id;
+            $this->version_string = \SV\WarningImprovements\Globals::$customWarningPhrase_version_string;
             $this->addon_id = 'SV/WarningImprovements';
         }
     }

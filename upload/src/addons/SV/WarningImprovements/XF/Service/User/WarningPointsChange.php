@@ -16,7 +16,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     {
         parent::applyWarningAction($action);
 
-        if (!empty(\SV\WarningImprovements\Listener::$warnngObj))
+        if (!empty(\SV\WarningImprovements\Globals::$warnngObj))
         {
             if ((empty($this->lastWarningAction) || $action->points > $this->lastWarningAction->points) && (!empty($action->sv_post_node_id) || !empty($action->sv_post_thread_id)))
             {
@@ -31,7 +31,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         if (!empty($this->lastAction))
         {
-            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? \SV\WarningImprovements\Listener::$warnngObj->user_id : $this->lastAction->sv_post_as_user_id;
+            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? \SV\WarningImprovements\Globals::$warnngObj->user_id : $this->lastAction->sv_post_as_user_id;
             $postAsUser = $this->em()->find('XF:User', $postAsUserId);
 
             if (!empty($postAsUser))
@@ -41,11 +41,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $params = [
                     'username' => $this->user->username,
                     'points' =>  $this->user->warning_count,
-                    'warning' => \SV\WarningImprovements\Listener::$warnngObj,
+                    'warning' => \SV\WarningImprovements\Globals::$warnngObj,
                     'date' => $dateString,
-                    'warning_title' => \SV\WarningImprovements\Listener::$warnngObj->title,
-                    'warning_points' => \SV\WarningImprovements\Listener::$warnngObj->points,
-                    'warning_category' => \SV\WarningImprovements\Listener::$warnngObj->Definition->Category,
+                    'warning_title' => \SV\WarningImprovements\Globals::$warnngObj->title,
+                    'warning_points' => \SV\WarningImprovements\Globals::$warnngObj->points,
+                    'warning_category' => \SV\WarningImprovements\Globals::$warnngObj->Definition->Category,
                     'threshold' => $this->lastAction->points
                 ];
 

@@ -49,9 +49,9 @@ class Warn extends XFCP_Warn
 
         if ($definition->sv_custom_title || $definition->warning_definition_id === 0)
         {
-            if (!empty(\SV\WarningImprovements\Listener::$warningInput))
+            if (!empty(\SV\WarningImprovements\Globals::$warningInput))
             {
-                $this->warning->title = \SV\WarningImprovements\Listener::$warningInput['custom_title'];
+                $this->warning->title = \SV\WarningImprovements\Globals::$warningInput['custom_title'];
             }
         }
 
@@ -79,7 +79,7 @@ class Warn extends XFCP_Warn
 
         if ($warning instanceof \XF\Entity\Warning)
         {
-            if (!empty(\SV\WarningImprovements\Listener::$warningInput['send_warning_alert']))
+            if (!empty(\SV\WarningImprovements\Globals::$warningInput['send_warning_alert']))
             {
                 /** @var \XF\Repository\UserAlert $alertRepo */
                 $alertRepo = $this->repository('XF:UserAlert');

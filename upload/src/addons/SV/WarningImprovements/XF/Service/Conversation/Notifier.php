@@ -17,9 +17,9 @@ class Notifier extends XFCP_Notifier
             return $canUserReceiveNotification;
         }
 
-        if (!empty(\SV\WarningImprovements\Listener::$warnngObj))
+        if (!empty(\SV\WarningImprovements\Globals::$warnngObj))
         {
-            if (\SV\WarningImprovements\Listener::$warnngObj->user_id === $user->user_id)
+            if (\SV\WarningImprovements\Globals::$warnngObj->user_id === $user->user_id)
             {
                 if ($this->sv_force_email_for_user_id === null)
                 {
@@ -29,7 +29,7 @@ class Notifier extends XFCP_Notifier
                     if ($options->sv_force_conversation_email_on_warning)
                     {
                         $this->sv_respect_receive_admin_email = $options->sv_respect_receive_admin_email_on_warning;
-                        $this->sv_force_email_for_user_id = \SV\WarningImprovements\Listener::$warnngObj->user_id;
+                        $this->sv_force_email_for_user_id = \SV\WarningImprovements\Globals::$warnngObj->user_id;
                     }
                     if ($options->sv_only_force_warning_email_on_banned && !$user->is_banned)
                     {

@@ -91,7 +91,7 @@ class Warning extends XFCP_Warning
 
     protected function updateUserWarningPoints(\XF\Entity\User $user, $adjustment, $isDelete = false)
     {
-        \SV\WarningImprovements\Listener::$warnngObj = $this;
+        \SV\WarningImprovements\Globals::$warnngObj = $this;
         parent::updateUserWarningPoints($user, $adjustment, $isDelete);
     }
 

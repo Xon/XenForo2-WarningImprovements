@@ -96,19 +96,4 @@ class Listener
             }
         }
     }
-
-    /** @var int */
-    public static $customWarningPhrase_version_id = 101011;
-
-    /** @var string */
-    public static $customWarningPhrase_version_string = '1.1.1s';
-
-    /** @var int|null */
-    public static $profileUserId = null;
-
-    /** @var \SV\WarningImprovements\XF\Entity\Warning */
-    public static $warnngObj = null;
-
-    /** @var array[] */
-    public static $warningInput = null;
 }

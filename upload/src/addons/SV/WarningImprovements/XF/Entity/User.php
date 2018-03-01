@@ -22,7 +22,7 @@ class User extends XFCP_User
             return false;
         }
 
-        if ($visitor->user_id === \SV\WarningImprovements\Listener::$profileUserId && \XF::app()->options()->sv_view_own_warnings)
+        if ($visitor->user_id === \SV\WarningImprovements\Globals::$profileUserId && \XF::app()->options()->sv_view_own_warnings)
         {
             return true;
         }
