@@ -1,9 +1,0 @@
-{
-    "template": "member_warn",
-    "description": "Set default content action to \"Delete\"",
-    "execution_order": 10,
-    "enabled": true,
-    "action": "preg_replace",
-    "find": "#(<xf:if is=\"\\$contentActions\\.delete\">.*<\\/xf:if>)#sU",
-    "replace": "<xf:if is=\"$xf.options.sv_warningimprovements_default_content_action === 'delete_content' && $contentActions.delete\">\n\t<xf:option value=\"delete\"\n\t\t\t   label=\"{{ phrase('delete_the_content') }}\"\n\t\t\t   hint=\"{{ phrase('item_will_remain_viewable_by_moderators_and_may_be_restored_at_later') }}\" checked=\"checked\">\n\n\t\t<xf:textbox name=\"action_options[delete_reason]\"\n\t\t\t\t\tplaceholder=\"{{ phrase('reason_for_deletion...') }}\"\n\t\t\t\t\tmaxlength=\"{{ max_length('XF:DeletionLog', 'delete_reason') }}\" />\n\t</xf:option>\n<xf:else />\n\t$0\n</xf:if>"
-}
