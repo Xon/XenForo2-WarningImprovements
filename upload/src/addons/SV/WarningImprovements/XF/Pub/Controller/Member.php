@@ -67,7 +67,7 @@ class Member extends XFCP_Member
         /** @var \SV\WarningImprovements\XF\Entity\UserChangeTemp $userChangeTemp */
         $userChangeTemp = $this->assertWarningActionViewable($userChangeTempId);
 
-        if (!$userChangeTemp->canEdit($error))
+        if (!$userChangeTemp->canEditWarningAction($error))
         {
             throw $this->exception($this->noPermission($error));
         }
@@ -121,7 +121,7 @@ class Member extends XFCP_Member
             throw $this->exception($this->noPermission($error));
         }
 
-        $canView = $userChangeTemp->canView($error);
+        $canView = $userChangeTemp->canViewWarningAction($error);
         if (!$canView)
         {
             throw $this->exception($this->noPermission($error));
