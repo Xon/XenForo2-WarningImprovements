@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<!--[XF:user:after_content]-->",
-    "replace": "$0\n<xf:include template=\"sv_warningimprovements_criteria\" />"
+    "replace": "<xf:include template=\"sv_warningimprovements_criteria\" />\n$0"
 }

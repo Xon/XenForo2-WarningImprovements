@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:submitrow submit=\"{{ phrase('warn') }}\" sticky=\"true\" />",
-    "replace": "<xf:if is=\"$xf.options.sv_warningimprovements_sticky_button\">\n\t<xf:submitrow submit=\"{{ phrase('warn') }}\" sticky=\"true\" />\n<xf:else />\n\t<xf:submitrow submit=\"{{ phrase('warn') }}\" />\n</xf:if>"
+    "replace": "<xf:if is=\"$xf.options.sv_warningimprovements_sticky_button\">\n\t$0\n<xf:else />\n\t<xf:submitrow submit=\"{{ phrase('warn') }}\" />\n</xf:if>"
 }

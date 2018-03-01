@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "$warning.isUpdate()",
-    "replace": "$warning.isUpdate() && {{ $warning.is_custom === false }}"
+    "replace": "$warning.isUpdate() && !$warning.is_custom"
 }
