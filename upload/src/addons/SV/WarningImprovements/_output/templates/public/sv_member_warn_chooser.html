@@ -41,7 +41,7 @@ jQuery.extend(XF.config, {
 			<xf:if is="$treeEntry.depth === 0">
 				<xf:set var="$categoryTitleForFormRow">{$category.title}</xf:set>
 			<xf:else />
-				<xf:if is="!{$warnings.{$category.Parent.warning_category_id}} && {$category.Parent.depth} === 0">
+				<xf:if is="(!{$warnings.{$category.Parent.warning_category_id}} && {$category.Parent.depth} === 0) || (!{$warnings.{$category.Parent.warning_category_id}} && {$category.Parent.depth} !== 0)">
 					<xf:set var="$categoryTitleForFormRow">{$category.title}</xf:set>
 				<xf:else />
 					<xf:set var="$categoryTitleForFormRow"></xf:set>
@@ -49,7 +49,7 @@ jQuery.extend(XF.config, {
 			</xf:if>
 
 			<xf:if is="$treeEntry.depth !== 0">
-				<xf:if is="!{$warnings.{$category.Parent.warning_category_id}} && {$category.Parent.depth} === 0">
+				<xf:if is="(!{$warnings.{$category.Parent.warning_category_id}} && {$category.Parent.depth} === 0) || (!{$warnings.{$category.Parent.warning_category_id}} && {$category.Parent.depth} !== 0)">
 					<xf:set var="$categoryTitleForRadio"></xf:set>
 				<xf:else />
 					<xf:set var="$categoryTitleForRadio">{$category.title}:</xf:set>
