@@ -3,6 +3,8 @@
 namespace SV\WarningImprovements\XF\ControllerPlugin;
 
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Entity\WarningDefinition;
+use SV\WarningImprovements\XF\Repository\Warning;
 use XF\Entity\User;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Reply\Redirect;
@@ -23,7 +25,7 @@ class Warn extends XFCP_Warn
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        /** @var Warning $warningRepo */
         $warningRepo = $this->repository('XF:Warning');
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
@@ -88,31 +90,38 @@ class Warn extends XFCP_Warn
     {
         $response = parent::getWarningFillerReply($warningHandler, $user, $contentType, $content, $input);
 
-        if ($response instanceof View && $input['warning_definition_id'] === 0)
+        if ($response instanceof View)
         {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            /** @var Warning $warningRepo */
             $warningRepo = $this->repository('XF:Warning');
+            /** @var WarningDefinition $definition */
+            $definition = $response->getParam('definition');
 
-            /** @var \XF\Entity\WarningDefinition $definition */
-            $definition = $warningRepo->getCustomWarning();
+            if (!$definition || $input['warning_definition_id'] === 0)
+            {
+                $definition = $warningRepo->getCustomWarning();
+                $response->setParam('definition', $definition);
+            }
 
-            if ($definition)
+            if ($definition && $definition->is_custom)
             {
                 list($conversationTitle, $conversationMessage) = $definition->getSpecificConversationContent(
                     $user, $contentType, $content
                 );
-            }
-            else
-            {
-                $conversationTitle = '';
-                $conversationMessage = '';
+
+                $response->setParams(
+                    [
+                        'conversationTitle'   => $conversationTitle,
+                        'conversationMessage' => $conversationMessage
+                    ]);
             }
 
-            $response->setParams([
-                'definition' => $definition,
-                'conversationTitle' => $conversationTitle,
-                'conversationMessage' => $conversationMessage
-            ]);
+            if ($definition)
+            {
+                $newDefinition = $warningRepo->escalateDefaultExpirySettingsForUser($user, $definition);
+                $response->setParam('definition', $newDefinition);
+
+            }
         }
 
         return $response;

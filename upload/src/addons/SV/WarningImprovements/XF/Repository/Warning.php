@@ -2,6 +2,8 @@
 
 namespace SV\WarningImprovements\XF\Repository;
 
+use SV\WarningImprovements\Entity\WarningDefault;
+use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use \XF\Entity\User as UserEntity;
 use XF\Entity\User;
 
@@ -22,11 +24,11 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return \SV\WarningImprovements\XF\Entity\WarningDefinition
+     * @return WarningDefinition
      */
     public function getCustomWarning()
     {
-        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
+        /** @var WarningDefinition $warningDefinition */
         $warningDefinition = $this->finder('XF:WarningDefinition')
             ->where('warning_definition_id', '=', 0)
             ->fetchOne();
@@ -35,15 +37,135 @@ class Warning extends XFCP_Warning
     }
 
     /**
+     * @param int $warningCount
+     * @param int $warningTotals
+     * @return WarningDefault
+     */
+    public function getWarningDefaultExtension(/** @noinspection PhpUnusedParameterInspection */$warningCount, $warningTotals)
+    {
+        /** @var WarningDefault $warningDefault */
+        $warningDefault = $this->finder('SV\WarningImprovements:WarningDefault')
+                               ->where('active', '=', 1)
+                               ->where('threshold_points', '<', $warningTotals)
+                               ->order('threshold_points', 'DESC')
+                               ->fetchOne();
+
+        return $warningDefault;
+    }
+
+    public function _getWarningTotals($userId)
+    {
+        return $this->db()->fetchRow('
+            SELECT count(points) AS `count`, sum(points) AS `total`
+            FROM xf_warning
+            WHERE user_id = ?
+        ', $userId);
+    }
+
+    /**
+     * @param User                   $user
+     * @param WarningDefinition|null $definition
+     * @return WarningDefinition
+     */
+    public function escalateDefaultExpirySettingsForUser($user, WarningDefinition $definition = null)
+    {
+        if ($definition == null)
+        {
+            // todo - copy how getGuestUser works
+            throw new \LogicException('Require a warning definition to be specified');
+        }
+        if ($definition->expiry_type === 'never')
+        {
+            return $definition;
+        }
+
+        $definition = clone $definition;
+
+        $totals = $this->_getWarningTotals($user->user_id);
+        $warningDefault = $this->getWarningDefaultExtension($totals['count'], $totals['total']);
+
+        if ($warningDefault && !empty($warningDefault->expiry_extension))
+        {
+            if ($warningDefault->expiry_type === 'never')
+            {
+                $definition->expiry_type = $warningDefault->expiry_type;
+                $definition->expiry_default = $warningDefault->expiry_extension;
+            }
+            else if ($definition->expiry_type == $warningDefault->expiry_type)
+            {
+                $definition->expiry_default = $definition->expiry_default + $warningDefault->expiry_extension;
+            }
+            else if ($definition->expiry_type === 'months' && $warningDefault->expiry_type === 'years')
+            {
+                $definition->expiry_default = $definition->expiry_default + $warningDefault->expiry_extension * 12;
+            }
+            else if ($definition->expiry_type === 'years' && $warningDefault->expiry_type === 'months')
+            {
+                $definition->expiry_default = $definition->expiry_default * 12 + $warningDefault->expiry_extension;
+                $definition->expiry_type = 'months';
+            }
+            else
+            {
+                $expiryDuration = $this->convertToDays($definition->expiry_type, $definition->expiry_default) +
+                                  $this->convertToDays($warningDefault->expiry_type, $warningDefault->expiry_extension);
+
+                $expiryParts = $this->convertDaysToLargestType($expiryDuration);
+
+                $definition->expiry_type = $expiryParts[0];
+                $definition->expiry_default = $expiryParts[1];
+            }
+        }
+
+        $definition->setReadOnly(true);
+
+        return $definition;
+    }
+
+    /**
+     * @param string $expiryType
+     * @param int $expiryDuration
+     * @return int
+     */
+    protected function convertToDays($expiryType, $expiryDuration)
+    {
+        switch ($expiryType)
+        {
+            case 'days':
+                return $expiryDuration;
+            case 'weeks':
+                return $expiryDuration * 7;
+            case 'months':
+                return $expiryDuration * 30;
+            case 'years':
+                return $expiryDuration * 365;
+        }
+        \XF::logError("Unknown expiry type: " . $expiryType, true);
+
+        return $expiryDuration;
+    }
+
+    /**
+     * @param $expiryDuration
      * @return array
      */
-    public function getWarningDefaultExtensions()
+    protected function convertDaysToLargestType($expiryDuration)
     {
-        return $this->db()->fetchAllKeyed("
-            SELECT *
-            FROM xf_sv_warning_default
-            ORDER BY threshold_points
-        ", 'warning_default_id');
+        if (($expiryDuration % 365) == 0)
+        {
+            return ['years', $expiryDuration / 365];
+        }
+        else if (($expiryDuration % 30) == 0)
+        {
+            return ['months', $expiryDuration / 30];
+        }
+        else if (($expiryDuration % 7) == 0)
+        {
+            return ['weeks', $expiryDuration / 7];
+        }
+        else
+        {
+            return ['days', $expiryDuration];
+        }
     }
 
     /**
