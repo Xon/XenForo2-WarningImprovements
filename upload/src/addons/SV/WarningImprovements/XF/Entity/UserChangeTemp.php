@@ -87,6 +87,57 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     }
 
     /**
+     * @param string|null $error
+     * @return bool
+     */
+    public function canView(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    {
+        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        $visitor = \XF::visitor();
+
+        if (!$visitor->user_id)
+        {
+            return false;
+        }
+
+        return $visitor->canViewWarningActions($error);
+    }
+
+    /**
+     * @param string|null $error
+     * @return bool
+     */
+    public function canViewNonSummary(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    {
+        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        $visitor = \XF::visitor();
+
+        if (!$visitor->user_id)
+        {
+            return false;
+        }
+
+        return $visitor->canViewNonSummaryWarningActions($error);
+    }
+
+    /**
+     * @param string|null $error
+     * @return bool
+     */
+    public function canViewDiscouragedWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    {
+        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        $visitor = \XF::visitor();
+
+        if (!$visitor->user_id)
+        {
+            return false;
+        }
+
+        return $visitor->canViewDiscouragedWarningActions($error);
+    }
+
+    /**
      * @param string $error
      * @return bool
      */

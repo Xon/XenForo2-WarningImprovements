@@ -66,6 +66,8 @@ class User extends XFCP_User
     {
         $visitor = \XF::visitor();
 
+        $error = \XF::phrase('requested_user_not_found');
+
         if (!$visitor->user_id)
         {
             return false;

@@ -23,7 +23,7 @@
 								{{ phrase('n_a') }}
 							</xf:if>
 						</xf:cell>
-						<xf:cell class="dataList-cell--link"><a href="{{ link('warning-actions', $warningAction) }}" data-xf-click="overlay">{{ phrase('view') }}</a></xf:cell>
+						<xf:cell class="dataList-cell--link"><a href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" data-xf-click="overlay">{{ phrase('view') }}</a></xf:cell>
 					</xf:datarow>
 				</xf:foreach>
 			</xf:datalist>
