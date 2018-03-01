@@ -90,12 +90,17 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canView(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewWarningAction(/** @noinspection PhpUnusedParameterInspection */&$error = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
 
         if (!$visitor->user_id)
+        {
+            return false;
+        }
+
+        if ($this->action_modifier === 'is_discouraged' && $this->action_type === 'action_type' && !$this->canViewDiscouragedWarningAction($error))
         {
             return false;
         }
@@ -107,7 +112,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewNonSummary(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewNonSummaryWarningAction(/** @noinspection PhpUnusedParameterInspection */&$error = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
@@ -124,7 +129,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewDiscouragedWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewDiscouragedWarningAction(/** @noinspection PhpUnusedParameterInspection */&$error = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
@@ -141,7 +146,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string $error
      * @return bool
      */
-    public function canEdit(/** @noinspection PhpUnusedParameterInspection */&$error = '')
+    public function canEditWarningAction(/** @noinspection PhpUnusedParameterInspection */&$error = '')
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
