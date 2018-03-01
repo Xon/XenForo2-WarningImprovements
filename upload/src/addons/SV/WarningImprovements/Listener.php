@@ -56,11 +56,13 @@ class Listener
                 }
                 break;
             case 'sv_warning_maximum':
+                /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+                $warningRepo = \XF::app()->repository('XF:Warning');
                 $days = empty($data['days']) ? 0 : intval($data['days']);
 
                 $expired = !empty($data['expired']);
 
-                $points = $days ? self::getWarningModel()->getWarningCountsInLastXDays($user, $days, $expired) : $user->warning_points;
+                $points = $days ? $warningRepo->getWarningCountsInLastXDays($user, $days, $expired) : $user->warning_points;
 
                 if ($points <= $data['count'])
                 {
@@ -76,7 +78,7 @@ class Listener
 
         if (empty($userId))
         {
-            return true;
+            return;
         }
 
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
