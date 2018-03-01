@@ -1,0 +1,9 @@
+{
+    "template": "member_warn",
+    "description": "Set default content action to \"Post public warning\"",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#(<xf:if is=\"\\$contentActions\\.public\">.*<\\/xf:if>)#sU",
+    "replace": "<xf:if is=\"$xf.options.sv_warningimprovements_default_content_action == 'public_warning' && $contentActions.public\">\n\t\t<xf:option value=\"public\"\n\t\t\t\t   label=\"{{ phrase('post_public_warning') }}\"\n\t\t\t\t   hint=\"{{ phrase('this_will_be_visible_to_anyone_who_can_see_content_for_warning') }}\">\n\n\t\t\t<xf:textbox name=\"action_options[public_message]\" maxlength=\"255\"\n\t\t\t\t\t\tplaceholder=\"{{ phrase('public_warning_text...') }}\" />\n\t\t</xf:option>\n<xf:else />\n\t$0\n</xf:if>"
+}
