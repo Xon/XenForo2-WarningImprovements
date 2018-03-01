@@ -9,64 +9,55 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 {
     public function getWarningActions(\XF\Entity\User $user, $showAll = false, $showDiscouraged = false, $onlyExpired = false)
     {
-        $additionalWhereCondition = '';
+        $warningActions = $this->finder('XF:UserChangeTemp');
+
+        $warningActions->where('change_key', 'LIKE', 'warning_action_%');
+
         if (!$showDiscouraged)
         {
-            $additionalWhereCondition = " AND action_type <> 'field' AND action_modifier <> 'is_discouraged' ";
-        }
-
-        if ($showAll)
-        {
-            $additionalWhereCondition = "AND user_id = ?" . $additionalWhereCondition;
-        }
-        else
-        {
-            $additionalWhereCondition = "user_change_temp_id IN (
-                SELECT MAX(user_change_temp_id)
-                FROM xf_user_change_temp
-                WHERE user_id = ? {$additionalWhereCondition}
-                GROUP BY action_type, new_value
-            )";
+            $warningActions->where('action_type', '<>', 'field');
+            $warningActions->where('action_modifier', '<>', 'is_discouraged');
         }
 
         if ($onlyExpired)
         {
-            $additionalWhereCondition .= ' AND expiry_date IS NOT NULL AND expiry_date > 0 AND expiry_date < '. intval(\XF::$time) . ' ';
-        }
-
-        return $this->db()->fetchAllKeyed("
-            SELECT xf_user_change_temp.*, user_change_temp_id as warning_action_id,
-                IFNULL(expiry_date, 0xFFFFFFFF) as expiry_date_sort
-            FROM xf_user_change_temp
-            WHERE {$additionalWhereCondition} and change_key like 'warning_action_%'
-            ORDER BY expiry_date_sort DESC
-        ", 'warning_action_id', [$user->user_id]);
-    }
-
-    public function countWarningActions(\XF\Entity\User $user, $showAll = false, $showDiscouraged = false)
-    {
-        $additionalWhereCondition = '';
-        if (!$showDiscouraged)
-        {
-            $additionalWhereCondition = " AND action_type <> 'field' AND action_modifier <> 'is_discouraged' ";
+            $warningActions->where('expiry_date', '<=', \XF::$time);
+            $warningActions->where('expiry_date', '!=', null);
         }
 
         if ($showAll)
         {
-            $select = "user_change_temp_id";
+            $warningActions->where('user_id','=', $user->user_id);
         }
         else
         {
-            $select = "DISTINCT action_type, new_value";
+            $showDiscouragedWhere = null;
+
+            if (!$showDiscouraged)
+            {
+                $showDiscouragedWhere = 'AND ' . implode(' AND ', [
+                    $warningActions->buildCondition('action_type', '<>', 'field'),
+                    $warningActions->buildCondition('action_modifier', '<>', 'is_discouraged')
+                ]);
+            }
+
+            $warningActions->whereSql("
+                user_change_temp_id IN (
+                    SELECT MAX(user_change_temp_id)
+                    FROM xf_user_change_temp
+                    WHERE user_id = {$warningActions->quote($user->user_id)} {$showDiscouragedWhere}
+                )
+            ");
         }
 
-        return $this->db()->fetchOne("
-            SELECT COUNT({$select})
-            FROM xf_user_change_temp
-            WHERE user_id = ?
-            {$additionalWhereCondition}
-            AND change_key LIKE 'warning_action_%'
-        ", $user->user_id);
+        $warningActions->order('expiry_date', 'DESC');
+
+        return $warningActions;
+    }
+
+    public function countWarningActions(\XF\Entity\User $user, $showAll = false, $showDiscouraged = false)
+    {
+        return $this->db()->fetchOne($this->getWarningActions($user, $showAll, $showDiscouraged)->getQuery(['countOnly' => true]));
     }
 
     public function removeExpiredChangesForUser($userId)

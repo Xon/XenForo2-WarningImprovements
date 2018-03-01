@@ -128,7 +128,7 @@ class User extends XFCP_User
             $this,
             $this->canViewNonSummaryWarningActions(),
             $this->canViewDiscouragedWarningActions()
-        );
+        )->fetch();
     }
 
     public function getWarningActionsCount()

@@ -1,5 +1,7 @@
 <xf:title>{{ phrase('warnings:') }} {$user.username}</xf:title>
 
+<xf:breadcrumb href="{{ link('members', $user) }}">{$user.username}</xf:breadcrumb>
+
 <div class="block">
 	<div class="block-container">
 		<div class="block-body">

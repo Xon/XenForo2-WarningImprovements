@@ -73,10 +73,12 @@ class Listener
     public static function visitorsetup(User &$visitor)
     {
         $userId = $visitor->user_id;
+
         if (empty($userId))
         {
             return true;
         }
+
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         /** @var \SV\WarningImprovements\XF\Entity\UserOption $option */
         $option = $visitor->Option;
