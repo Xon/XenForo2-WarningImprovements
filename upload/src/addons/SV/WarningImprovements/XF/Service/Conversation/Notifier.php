@@ -2,16 +2,24 @@
 
 namespace SV\WarningImprovements\XF\Service\Conversation;
 
+use XF\Entity\User;
+
 class Notifier extends XFCP_Notifier
 {
     protected $sv_force_email_for_user_id = null;
     protected $sv_respect_receive_admin_email = true;
 
-    protected function _canUserReceiveNotification(\XF\Entity\User $user, \XF\Entity\User $sender = null)
+    protected function _canUserReceiveNotification(User $user, User $sender = null)
     {
+        $canUserReceiveNotification = parent::_canUserReceiveNotification($user, $sender);
+        if ($canUserReceiveNotification)
+        {
+            return $canUserReceiveNotification;
+        }
+
         if (!empty(\SV\WarningImprovements\Listener::$warnngObj))
         {
-            if (\SV\WarningImprovements\Listener::$warnngObj->user_id == $user->user_id)
+            if (\SV\WarningImprovements\Listener::$warnngObj->user_id === $user->user_id)
             {
                 if ($this->sv_force_email_for_user_id === null)
                 {
@@ -29,22 +37,32 @@ class Notifier extends XFCP_Notifier
                     }
                 }
 
+                $email_on_conversation = $user->Option->email_on_conversation;
+                $is_banned = $user->is_banned;
+
                 if ($this->sv_force_email_for_user_id)
                 {
                     if ($this->sv_respect_receive_admin_email)
                     {
-                        $user->Option->email_on_conversation = $user->Option->receive_admin_email;
+                        $email_on_conversation = $user->Option->receive_admin_email;
                     }
                     else
                     {
-                        $user->Option->email_on_conversation = true;
+                        $email_on_conversation = true;
                     }
 
-                    $user->is_banned = false;
+                    $is_banned = false;
                 }
+
+                $canUserReceiveNotification = (
+                    $email_on_conversation
+                    && $user->user_state == 'valid'
+                    && !$is_banned
+                    && (!$sender || $sender->user_id != $user->user_id)
+                );
             }
         }
 
-        return parent::_canUserReceiveNotification($user, $sender);
+        return $canUserReceiveNotification;
     }
 }
