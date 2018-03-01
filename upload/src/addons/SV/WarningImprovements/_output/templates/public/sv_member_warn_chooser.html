@@ -37,37 +37,47 @@ jQuery.extend(XF.config, {
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:set var="$category" value="{$treeEntry.record}" />
 		
-		<xf:if is="$treeEntry.depth === 0">
-			<xf:set var="$categoryTitleForFormRow">{$category.title}</xf:set>
-		<xf:else />
-			<xf:set var="$categoryTitleForFormRow"></xf:set>
+		<xf:if is="{$warnings.{$category.warning_category_id}}">
+			<xf:if is="$treeEntry.depth === 0">
+				<xf:set var="$categoryTitleForFormRow">{$category.title}</xf:set>
+			<xf:else />
+				<xf:if is="!{$warnings.{$category.Parent.warning_category_id}} && {$category.Parent.depth} === 0">
+					<xf:set var="$categoryTitleForFormRow">{$category.title}</xf:set>
+				<xf:else />
+					<xf:set var="$categoryTitleForFormRow"></xf:set>
+				</xf:if>
+			</xf:if>
+
+			<xf:if is="$treeEntry.depth !== 0">
+				<xf:if is="!{$warnings.{$category.Parent.warning_category_id}} && {$category.Parent.depth} === 0">
+					<xf:set var="$categoryTitleForRadio"></xf:set>
+				<xf:else />
+					<xf:set var="$categoryTitleForRadio">{$category.title}:</xf:set>
+				</xf:if>
+			<xf:else />
+				<xf:set var="$categoryTitleForRadio"></xf:set>
+			</xf:if>
+
+			<xf:formrow label="{$categoryTitleForFormRow}" class="u-depth{$treeEntry.depth}">
+				<label class="u-depth{$treeEntry.depth}">{$categoryTitleForRadio}</label>
+
+				<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
+					<div class="u-depth{$treeEntry.depth}">
+						<xf:radio name="warning_definition_id" value="0">
+							<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-warning-radio="true" data-warning-label="{$warningDefinition.title}" data-xf-init="warning-title-watcher">
+								<xf:dependent>
+									<xf:if is="$warningDefinition.sv_custom_title || $warningDefinition.warning_definition_id == 0">
+										<xf:formrow label="" data-custom-title-container="1" data-warning-view-type="radio">
+											<xf:textbox label="" name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" />
+										</xf:formrow>
+									</xf:if>
+								</xf:dependent>
+							</xf:option>
+						</xf:radio>
+					</div>
+				</xf:foreach>
+			</xf:formrow>
 		</xf:if>
-		
-		<xf:if is="$treeEntry.depth !== 0">
-			<xf:set var="$categoryTitleForRadio">{$category.title}:</xf:set>
-		<xf:else />
-			<xf:set var="$categoryTitleForRadio"></xf:set>
-		</xf:if>
-		
-		<xf:formrow label="{$categoryTitleForFormRow}" class="u-depth{$treeEntry.depth}">
-			<label class="u-depth{$treeEntry.depth}">{$categoryTitleForRadio}</label>
-			
-			<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
-				<div class="u-depth{$treeEntry.depth}">
-					<xf:radio name="warning_definition_id" value="0">
-						<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-warning-radio="true" data-warning-label="{$warningDefinition.title}" data-xf-init="warning-title-watcher">
-							<xf:dependent>
-								<xf:if is="$warningDefinition.sv_custom_title || $warningDefinition.warning_definition_id == 0">
-									<xf:formrow label="" data-custom-title-container="1" data-warning-view-type="radio">
-										<xf:textbox label="" name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.title}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" />
-									</xf:formrow>
-								</xf:if>
-							</xf:dependent>
-						</xf:option>
-					</xf:radio>
-				</div>
-			</xf:foreach>
-		</xf:formrow>
 	</xf:foreach>
 </div>
 
