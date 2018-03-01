@@ -7,14 +7,55 @@ use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
+ *
+ * @property string notes_
+ *
  * GETTERS
  * @property \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|null anonymized_issuer
+ * @property int expiry_date_rounded
  *
  * RELATIONS
  * @property \SV\WarningImprovements\XF\Entity\WarningDefinition|\XF\Entity\WarningDefinition Definition
  */
 class Warning extends XFCP_Warning
 {
+    /**
+     * @return int|null
+     */
+    public function getExpiryDateRounded()
+    {
+        $visitor = \XF::visitor();
+
+        $expiryDateRound = $this->expiry_date;
+        if (!$visitor->user_id ||
+            $visitor->hasPermission('general', 'viewWarning'))
+        {
+            return $expiryDateRound;
+        }
+
+        if (!empty($expiryDateRound))
+        {
+            $expiryDateRound = ($expiryDateRound - ($expiryDateRound % 3600)) + 3600;
+        }
+
+        return $expiryDateRound;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getNotes()
+    {
+        $visitor = \XF::visitor();
+
+        if ($visitor->user_id && $visitor->hasPermission('general', 'viewWarning'))
+        {
+            return $this->notes_;
+        }
+
+        return '';
+    }
+
     /**
      * @param string|null $error
      * @return bool
@@ -37,14 +78,15 @@ class Warning extends XFCP_Warning
     }
 
     /**
+     * @param string|null $error
      * @return bool
      */
-    public function canViewIssuer()
+    public function canViewIssuer(&$error = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
 
-        return $visitor->canViewIssuer();
+        return $visitor->canViewIssuer($error);
     }
 
     public function getAnonymizedIssuer()
@@ -128,6 +170,8 @@ class Warning extends XFCP_Warning
         }
 
         $structure->getters['anonymized_issuer'] = true;
+        $structure->getters['expiry_date_rounded'] = true;
+        $structure->getters['notes'] = true;
 
         return $structure;
     }

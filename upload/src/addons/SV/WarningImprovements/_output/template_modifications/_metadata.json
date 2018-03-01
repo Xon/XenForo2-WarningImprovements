@@ -68,7 +68,13 @@
     "public/sv_warningimprovements_member_warn7.json": {
         "hash": "ed6bf5fcb60101620aa70748eb6e836f"
     },
+    "public/sv_warningimprovements_member_warnings1.json": {
+        "hash": "70e47f8357ef67c2631ea62e95f4f628"
+    },
     "public/sv_warningimprovements_warning_info1.json": {
         "hash": "9dfdd48f5ffc393f35180a28adecb666"
+    },
+    "public/sv_warningimprovements_warning_info2.json": {
+        "hash": "77684f5d38cbf9cb25c231492d0d4b3c"
     }
 }

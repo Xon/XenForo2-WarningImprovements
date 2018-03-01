@@ -41,7 +41,7 @@ class User extends XFCP_User
             return false;
         }
 
-        return $this->hasPermission('general', 'viewWarning_issuer');
+        return $this->hasPermission('general', 'viewWarning_issuer') || $this->hasPermission('general', 'viewWarning');
     }
 
     /**

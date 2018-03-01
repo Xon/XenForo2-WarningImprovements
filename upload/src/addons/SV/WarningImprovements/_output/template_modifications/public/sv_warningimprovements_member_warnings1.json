@@ -1,0 +1,9 @@
+{
+    "template": "member_warnings",
+    "description": "Use rounded expiry",
+    "execution_order": 15,
+    "enabled": true,
+    "action": "str_replace",
+    "find": ".expiry_date",
+    "replace": ".expiry_date_rounded"
+}
