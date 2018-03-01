@@ -95,17 +95,6 @@ class Warning extends XFCP_Warning
         parent::updateUserWarningPoints($user, $adjustment, $isDelete);
     }
 
-    protected function _preSave()
-    {
-        if (!$this->Definition->canView($error))
-        {
-            $this->error($error);
-            return;
-        }
-
-        parent::_preSave();
-    }
-
     protected function _postDelete()
     {
         parent::_postDelete();

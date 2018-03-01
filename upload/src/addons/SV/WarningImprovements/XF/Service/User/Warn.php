@@ -1,6 +1,7 @@
 <?php
 
 namespace SV\WarningImprovements\XF\Service\User;
+
 use XF\Entity\WarningDefinition;
 
 /**
@@ -87,6 +88,18 @@ class Warn extends XFCP_Warn
         }
 
         return $return;
+    }
+
+    protected function _validate()
+    {
+        $errors = parent::_validate();
+
+        if (!$this->warning->canView($error))
+        {
+            $errors[] = $error;
+        }
+
+        return $errors;
     }
 
     protected function setupConversation(\XF\Entity\Warning $warning)
