@@ -7,6 +7,11 @@ use XF\Mvc\Entity\Structure;
 
 /**
  * Extends \XF\Entity\UserChangeTemp
+ *
+ * @property \XF\Entity\Phrase name
+ * @property \XF\Entity\Phrase result
+ * @property bool is_expired
+ * @property int expiry_date_rounded
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {
