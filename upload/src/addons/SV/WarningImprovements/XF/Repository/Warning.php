@@ -26,9 +26,15 @@ class Warning extends XFCP_Warning
     /**
      * @return WarningDefinition
      */
-    public function getCustomWarning()
+    public function getCustomWarningDefinition()
     {
         /** @var WarningDefinition $warningDefinition */
+        $warningDefinition = $this->em->findCached('XF:WarningDefinition', 0);
+        if ($warningDefinition)
+        {
+            return $warningDefinition;
+        }
+
         $warningDefinition = $this->finder('XF:WarningDefinition')
             ->where('warning_definition_id', '=', 0)
             ->fetchOne();

@@ -99,7 +99,7 @@ class Warn extends XFCP_Warn
 
             if (!$definition || $input['warning_definition_id'] === 0)
             {
-                $definition = $warningRepo->getCustomWarning();
+                $definition = $warningRepo->getCustomWarningDefinition();
                 $response->setParam('definition', $definition);
             }
 

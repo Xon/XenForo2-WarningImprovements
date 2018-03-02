@@ -428,9 +428,7 @@ class Warning extends XFCP_Warning
      * @param $id
      * @param null $with
      * @param null $phraseKey
-     *
-     * @return \SV\WarningImprovements\Entity\WarningCategory
-     *
+     * @return \SV\WarningImprovements\Entity\WarningCategory|\XF\Mvc\Entity\Entity
      * @throws \XF\Mvc\Reply\Exception
      */
     protected function assertCategoryExists($id, $with = null, $phraseKey = null)
@@ -443,9 +441,7 @@ class Warning extends XFCP_Warning
      * @param $id
      * @param null $with
      * @param null $phraseKey
-     *
-     * @return \SV\WarningImprovements\Entity\WarningDefault
-     *
+     * @return \SV\WarningImprovements\Entity\WarningDefault|\XF\Mvc\Entity\Entity
      * @throws \XF\Mvc\Reply\Exception
      */
     protected function assertDefaultExists($id, $with = null, $phraseKey = null)
@@ -461,6 +457,6 @@ class Warning extends XFCP_Warning
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->getWarningRepo();
 
-        return $warningRepo->getCustomWarning();
+        return $warningRepo->getCustomWarningDefinition();
     }
 }

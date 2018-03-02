@@ -123,7 +123,7 @@ class Warning extends XFCP_Warning
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = $this->repository('XF:Warning');
 
-            return $warningRepo->getCustomWarning();
+            return $warningRepo->getCustomWarningDefinition();
         }
 
         return $this->Definition_; // _ = bypass getter
