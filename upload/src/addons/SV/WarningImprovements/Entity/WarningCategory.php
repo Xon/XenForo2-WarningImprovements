@@ -28,7 +28,6 @@ use XF\Mvc\Entity\Structure;
  * GETTERS
  * @property bool is_usable
  * @property \XF\Phrase title
- * @property string|null titleRaw
  *
  * RELATIONS
  * @property \XF\Entity\Phrase MasterTitle
@@ -68,14 +67,6 @@ class WarningCategory extends AbstractCategoryTree
     public function getTitle()
     {
         return \XF::phrase($this->getPhraseName('title'));
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTitleRaw()
-    {
-        return $this->getTitle()->render();
     }
 
     /**
@@ -268,8 +259,7 @@ class WarningCategory extends AbstractCategoryTree
         ];
         $structure->getters = [
             'is_usable' => true,
-            'title' => true,
-            'titleRaw' => true // onii-chan breadcrumb needs raw KappaPride
+            'title' => true
         ];
         $structure->relations = [
             'MasterTitle' => [
@@ -313,7 +303,7 @@ class WarningCategory extends AbstractCategoryTree
 
         $structure->columns['parent_category_id']['nullable'] = true;
 
-        $structure->behaviors['XF:TreeStructured']['titleField'] = 'titleRaw';
+        unset($structure->behaviors['XF:TreeStructured']); // say no to raw!
 
         return $structure;
     }
