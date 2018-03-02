@@ -37,7 +37,18 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         {
             /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
             $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
-            $categories = $warningCategoryRepo->findCategoryParentList(Globals::$warnngObj->Definition->Category);
+
+            if (Globals::$warnngObj->warning_definition_id === 0)
+            {
+                /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+                $warningRepo = $this->repository('XF:Warning');
+                $customWarningDefinition = $warningRepo->getCustomWarning();
+                $categories = $warningCategoryRepo->findCategoryParentList($customWarningDefinition->Category);
+            }
+            else
+            {
+                $categories = $warningCategoryRepo->findCategoryParentList(Globals::$warnngObj->Definition->Category);
+            }
 
             $actions = $this->finder('XF:WarningAction')->order('points');
 
@@ -122,7 +133,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadCreator->save();
                         });
 
-                        $threadCreator();
+                        $threadCreator;
                     }
                 }
                 else if (!empty($this->lastAction->sv_post_thread_id))
@@ -140,7 +151,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadReplier->save();
                         });
 
-                        $threadReplier();
+                        $threadReplier;
                     }
                 }
             }
