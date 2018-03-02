@@ -11,8 +11,8 @@ use XF\Mvc\Entity\AbstractCollection;
 
 class WarningTotal
 {
-    /** @var int */
-    public $categoryId;
+    /** @var WarningCategory */
+    public $category;
     /** @var int */
     public $newCount;
     /** @var int */
@@ -22,9 +22,9 @@ class WarningTotal
     /** @var int */
     public $oldPoints;
 
-    public function __construct($categoryId, $newPoints = 0, $newCount = 0, $oldPoints = 0, $oldCount = 0)
+    public function __construct(WarningCategory $category, $newPoints = 0, $newCount = 0, $oldPoints = 0, $oldCount = 0)
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
         $this->newPoints = $newPoints;
         $this->newCount = $newCount;
         $this->oldPoints = $oldPoints;
@@ -74,11 +74,18 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /** @var Warning */
     protected $warning = null;
 
+    /** @var WarningCategory */
+    protected $nullCategory = null;
+
     public function __construct(\XF\App $app, User $user)
     {
         parent::__construct($app, $user);
 
         $this->setWarning(Globals::$warningObj);
+
+        $this->nullCategory = \XF::em()->create('SV\WarningImprovements:WarningCategory');
+        $this->nullCategory->setTrusted('warning_category_id', null);
+        $this->nullCategory->setReadOnly(true);
     }
 
     /**
@@ -110,6 +117,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     protected $warningCategories = [];
 
     /**
+     * Populates warningCategories
+     *
      * @return AbstractCollection|null
      */
     protected function getActions()
@@ -124,8 +133,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $category = $this->warning->Definition->Category;
             $categories = $warningCategoryRepo->findCategoryParentList($category)->fetch();
             // Must be ordered from least specific category to most specific (ie root => leaf)
-            $this->warningCategories = $categories->toArray();
-            $this->warningCategories[$category->warning_category_id] = $category;
+            $this->warningCategories = \array_values($categories->toArray());
+            array_unshift($this->warningCategories, $category);
 
             $actions = $this->finder('XF:WarningAction')->order('points');
 
@@ -175,17 +184,21 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         }
         $warningPoints = [];
 
-        $warningTotalsCumulative = [0 => new WarningTotal(0)];
-        /** @var WarningTotal $globalTotals */
-        $globalTotals = $warningTotalsCumulative[0];
+        $warningTotalsCumulative = [0 => new WarningTotal($this->nullCategory)];
+        foreach ($this->warningCategories as $category)
+        {
+            $warningPoints[$category->warning_category_id] = new WarningTotal($category);
+        }
 
-        // compute global and per-category totals
+
+        // compute per-category totals (globals map to 0)
         foreach ($warnings as $warning)
         {
-            $categoryId = $warning->Definition->sv_warning_category_id;
+            $category = $warning->Definition->Category;
+            $categoryId = $category->warning_category_id ?: 0;
             if (empty($warningPoints[$categoryId]))
             {
-                $warningPoints[$categoryId] = new WarningTotal($categoryId);
+                $warningPoints[$categoryId] = new WarningTotal($category);
             }
             /** @var WarningTotal $warningTotal */
             $warningTotal = $warningPoints[$categoryId];
@@ -193,43 +206,37 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             if ($newWarning === null ||
                 $warning->warning_id != $newWarning->warning_id)
             {
-                $globalTotals->addOld($warning->points);
-
-                if ($categoryId)
-                {
-                    $warningTotal->addOld($warning->points);
-                }
+                $warningTotal->addOld($warning->points);
             }
             if ($oldWarning === null ||
                 $warning->warning_id != $oldWarning->warning_id)
             {
-                $globalTotals->addNew($warning->points);
-
-                if ($categoryId)
-                {
-                    $warningTotal->addNew($warning->points);
-                }
+                $warningTotal->addNew($warning->points);
             }
         }
 
         // propagate totals from child categories to parent, relying on the order to remove the need for recursion
-        foreach ($this->warningCategories as $categoryId => $category)
+        foreach ($this->warningCategories as $category)
         {
-            if (empty($warningPoints[$categoryId]))
-            {
-                $warningPoints[$categoryId] = new WarningTotal($categoryId);
-            }
+            $categoryId = $category->warning_category_id ?: 0;
+            /** @var WarningTotal $warningTotal */
+            $warningTotals = $warningPoints[$categoryId];
+
+            // if the parent category
             $parentId = $category->parent_category_id;
             if ($parentId)
             {
-                /** @var WarningTotal $warningTotal */
-                $warningTotals = $warningPoints[$categoryId];
-
+                if (empty($warningPoints[$parentId]))
+                {
+                    $warningPoints[$parentId] = new WarningTotal($category->Parent);
+                }
                 /** @var WarningTotal $parentTotals */
                 $parentTotals = $warningPoints[$parentId];
 
                 $parentTotals->addTotals($warningTotals);
             }
+
+            $warningTotalsCumulative[$categoryId] = $warningTotals;
         }
 
         /** @var WarningTotal[] $warningPointsCumulative */
@@ -261,7 +268,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
             $points = isset($categoryPoints[$warningCategoryId])
                 ? $categoryPoints[$warningCategoryId]
-                : new WarningTotal($warningCategoryId, $newPoints,1, $oldPoints, 0);
+                : new WarningTotal($this->nullCategory, $newPoints,1, $oldPoints, 0);
 
             if ($action->points > $points->oldPoints && $action->points <= $points->newPoints)
             {
@@ -367,7 +374,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
             $points = isset($categoryPoints[$warningCategoryId])
                 ? $categoryPoints[$warningCategoryId]
-                : new WarningTotal($warningCategoryId, $newPoints,1, $oldPoints, 0);
+                : new WarningTotal($this->nullCategory, $newPoints,1, $oldPoints, 0);
 
             // If we're deleting, we need to undo warning action effects, even if they're time limited.
             // Points-based will be handled by the triggers so skip. Then only consider where we cross
