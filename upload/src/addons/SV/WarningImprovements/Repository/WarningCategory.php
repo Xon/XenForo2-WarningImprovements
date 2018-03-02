@@ -65,20 +65,17 @@ class WarningCategory extends AbstractCategoryTree
         return $output;
     }
 
-    public function findCategoryParentList(\SV\WarningImprovements\Entity\WarningCategory $category = null, $with = null)
+    /**
+     * @param \SV\WarningImprovements\Entity\WarningCategory|null $category
+     * @param null $with
+     *
+     * @return $this
+     */
+    public function findCategoryParentList(\SV\WarningImprovements\Entity\WarningCategory $category, $with = null)
     {
-        $finder = $this->finder($this->getClassName())->setDefaultOrder('rgt');
-        if ($category)
-        {
-            $finder
-                ->where('lft', '<', $category->lft)
-                ->where('rgt', '>', $category->rgt);
-        }
-        if ($with)
-        {
-            $finder->with($with);
-        }
-
-        return $finder;
+        return $this->findCategoryList(null, $with)
+            ->where('lft', '<', $category->lft)
+            ->where('rgt', '>', $category->rgt)
+            ->order('depth', 'DESC');
     }
 }

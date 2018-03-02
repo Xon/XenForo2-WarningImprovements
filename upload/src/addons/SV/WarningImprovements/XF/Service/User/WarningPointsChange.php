@@ -29,12 +29,59 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         }
     }
 
+    protected function getActions()
+    {
+        $actions = null;
+
+        if (!empty(Globals::$warnngObj))
+        {
+            /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
+            $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
+            $categories = $warningCategoryRepo->findCategoryParentList(Globals::$warnngObj->Definition->Category);
+
+            $actions = $this->finder('XF:WarningAction')->order('points');
+
+            $categoryIds = [0];
+
+            if (!empty($categories))
+            {
+                /** @var \SV\WarningImprovements\Entity\WarningCategory $parentCategory */
+                foreach ($categories as $parentCategory)
+                {
+                    $categoryIds[] = $parentCategory->warning_category_id;
+                }
+            }
+
+            $categoryIds[] = Globals::$warnngObj->Definition->Category->warning_category_id;
+
+            $actions = $actions->where('sv_warning_category_id', $categoryIds)->fetch();
+        }
+
+        return $actions;
+    }
+
     protected function processPointsIncrease($oldPoints, $newPoints)
     {
         if (empty(Globals::$warnngObj))
         {
             parent::processPointsIncrease($oldPoints, $newPoints);
             return;
+        }
+
+        $actions = $this->getActions();
+
+        if (empty($actions))
+        {
+            return;
+        }
+
+        /** @var \XF\Entity\WarningAction $action */
+        foreach ($actions AS $action)
+        {
+            if ($action->points > $oldPoints && $action->points <= $newPoints)
+            {
+                $this->applyWarningAction($action);
+            }
         }
 
         if (!empty($this->lastAction))
@@ -63,7 +110,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 {
                     if ($forum = $this->em()->find('XF:Forum', $this->lastAction->sv_post_node_id, 'Node'))
                     {
-                        $threadCreator = \XF::asVisitor($postAsUser, function($forum, $params){
+                        $threadCreator = \XF::asVisitor($postAsUser, function() use($forum, $params){
                             /** @var \XF\Service\Thread\Creator $threadCreator */
                             $threadCreator = $this->service('XF:Thread\Creator', $forum);
                             $threadCreator->setIsAutomated();
@@ -75,14 +122,14 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadCreator->save();
                         });
 
-                        $threadCreator($forum, $params);
+                        $threadCreator();
                     }
                 }
                 else if (!empty($this->lastAction->sv_post_thread_id))
                 {
                     if ($thread = $this->em()->find('XF:Thread', $this->lastAction->sv_post_thread_id))
                     {
-                        $threadReplier = \XF::asVisitor($postAsUser, function($thread, $params){
+                        $threadReplier = \XF::asVisitor($postAsUser, function() use($thread, $params){
                             /** @var \XF\Service\Thread\Replier $threadReplier */
                             $threadReplier = $this->service('XF:Thread\Replier', $thread);
                             $threadReplier->setIsAutomated();
@@ -93,10 +140,46 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadReplier->save();
                         });
 
-                        $threadReplier($thread, $params);
+                        $threadReplier();
                     }
                 }
             }
+        }
+    }
+
+    protected function processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete = false)
+    {
+        if (empty(Globals::$warnngObj) || $fromWarningDelete === false)
+        {
+            parent::processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete);
+            return;
+        }
+
+        parent::processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete);
+
+        $actions = $this->getActions();
+
+        if (empty($actions))
+        {
+            return;
+        }
+
+        /** @var \XF\Entity\WarningAction $action */
+        foreach ($actions AS $action)
+        {
+            // If we're deleting, we need to undo warning action effects, even if they're time limited.
+            // Points-based will be handled by the triggers so skip. Then only consider where we cross
+            // the points threshold from the old (higher) to the new (lower) point values
+            if (
+                $action->action_length_type == 'points'
+                || $action->points > $oldPoints // threshold above where we were
+                || $action->points <= $newPoints // we're still at/above the threshold
+            )
+            {
+                continue;
+            }
+
+            $this->removeWarningActionEffects($action);
         }
     }
 }
