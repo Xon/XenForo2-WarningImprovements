@@ -97,4 +97,17 @@ class Warn extends XFCP_Warn
 
         return $creator;
     }
+
+    protected function sendConversation(\XF\Entity\Warning $warning)
+    {
+        Globals::$warningObj = $this->warning;
+        try
+        {
+            return parent::sendConversation($warning);
+        }
+        finally
+        {
+            Globals::$warningObj = null;
+        }
+    }
 }

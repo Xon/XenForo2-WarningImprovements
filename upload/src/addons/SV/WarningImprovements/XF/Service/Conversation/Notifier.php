@@ -3,12 +3,32 @@
 namespace SV\WarningImprovements\XF\Service\Conversation;
 
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Entity\Warning;
+use XF\App;
+use XF\Entity\ConversationMaster;
 use XF\Entity\User;
 
 class Notifier extends XFCP_Notifier
 {
+    /** @var Warning */
+    protected $warningObj = null;
     protected $sv_force_email_for_user_id = null;
     protected $sv_respect_receive_admin_email = true;
+
+    public function __construct(App $app, ConversationMaster $conversation)
+    {
+        parent::__construct($app, $conversation);
+
+        $this->setWarning(Globals::$warningObj);
+    }
+
+    /**
+     * @param Warning $warningObj
+     */
+    public function setWarning(Warning $warningObj)
+    {
+        $this->warningObj = $warningObj;
+    }
 
     protected function _canUserReceiveNotification(User $user, User $sender = null)
     {
@@ -18,9 +38,9 @@ class Notifier extends XFCP_Notifier
             return $canUserReceiveNotification;
         }
 
-        if (!empty(Globals::$warningObj))
+        if ($this->warningObj)
         {
-            if (Globals::$warningObj->user_id === $user->user_id)
+            if ($this->warningObj->user_id === $user->user_id)
             {
                 if ($this->sv_force_email_for_user_id === null)
                 {
