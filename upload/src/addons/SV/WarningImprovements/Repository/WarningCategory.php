@@ -69,7 +69,7 @@ class WarningCategory extends AbstractCategoryTree
      * @param \SV\WarningImprovements\Entity\WarningCategory|null $category
      * @param null $with
      *
-     * @return $this
+     * @return Finder
      */
     public function findCategoryParentList(\SV\WarningImprovements\Entity\WarningCategory $category, $with = null)
     {

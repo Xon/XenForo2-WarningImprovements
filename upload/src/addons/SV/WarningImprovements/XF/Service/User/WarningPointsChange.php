@@ -131,6 +131,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadCreator->save();
                         });
 
+                        /** @noinspection PhpExpressionResultUnusedInspection */
                         $threadCreator;
                     }
                 }
@@ -149,6 +150,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadReplier->save();
                         });
 
+                        /** @noinspection PhpExpressionResultUnusedInspection */
                         $threadReplier;
                     }
                 }

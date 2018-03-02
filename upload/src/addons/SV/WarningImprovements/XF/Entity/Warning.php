@@ -13,9 +13,11 @@ use XF\Mvc\Entity\Structure;
  * GETTERS
  * @property \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|null anonymized_issuer
  * @property int expiry_date_rounded
+ * @property \XF\Entity\WarningDefinition definition
  *
  * RELATIONS
  * @property \SV\WarningImprovements\XF\Entity\WarningDefinition|\XF\Entity\WarningDefinition Definition
+ * @property \XF\Entity\WarningDefinition Definition_
  */
 class Warning extends XFCP_Warning
 {

@@ -417,14 +417,6 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return \SV\WarningImprovements\XF\ControllerPlugin\WarningTree
-     */
-    protected function getWarningTreePlugin()
-    {
-        return $this->plugin('SV\WarningImprovements\XF:WarningTree');
-    }
-
-    /**
      * @return \SV\WarningImprovements\Repository\WarningCategory
      */
     protected function getCategoryRepo()
