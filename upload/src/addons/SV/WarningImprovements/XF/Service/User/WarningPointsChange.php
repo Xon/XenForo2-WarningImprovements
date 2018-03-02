@@ -238,7 +238,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function processPointsIncrease($oldPoints, $newPoints)
     {
-        if ($this->warning)
+        if (!$this->warning)
         {
             parent::processPointsIncrease($oldPoints, $newPoints);
 
