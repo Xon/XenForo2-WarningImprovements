@@ -29,6 +29,9 @@ class Globals
     /** @var array[] */
     public static $warningInput = null;
 
+    /** @var \XF\Entity\UserGroup[] */
+    public static $userGroups = null;
+
     /**
      * Private constructor, use statically.
      */

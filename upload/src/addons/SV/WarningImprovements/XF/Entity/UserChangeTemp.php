@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
+use SV\WarningImprovements\Globals;
 use XF\Mvc\Entity\Structure;
 
 /**
@@ -45,7 +46,21 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         switch ($this->action_type)
         {
             case 'groups':
-                $result = 'sv_warning_action_added_to_user_groups';
+                $result = 'n_a';
+
+                if (empty(Globals::$userGroups))
+                {
+                    /** @var \XF\Repository\UserGroup $userGroupRepo */
+                    $userGroupRepo = $this->repository('XF:UserGroup');
+                    Globals::$userGroups = $userGroupRepo->findUserGroupsForList()->fetch();
+                }
+
+                if (substr($this->action_modifier, 0, 15) === 'warning_action_')
+                {
+                    $userGroupId = intval(substr($this->action_modifier, 15));
+                    $result = (!empty(Globals::$userGroups[$userGroupId])) ? Globals::$userGroups[$userGroupId]->title : $result;
+                }
+
                 break;
 
             case 'field':
