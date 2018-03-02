@@ -15,7 +15,7 @@
 				<xf:if is="{$warningAction.is_permanent}">
 					{{ phrase('permanent') }}
 				<xf:elseif is="{$warningAction.expiry_date_rounded}" />
-					<xf:date time="{$warningAction.is_permanent}" />
+					<xf:date time="{$warningAction.expiry_date_rounded}" />
 				<xf:else />
 					{{ phrase('n_a') }}
 				</xf:if>
