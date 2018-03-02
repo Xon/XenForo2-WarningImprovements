@@ -65,7 +65,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
                 break;
 
             case 'field':
-                $result = $this->new_value;
+                $result = ($this->new_value === '1') ? 'yes' : 'no';
                 break;
         }
 
