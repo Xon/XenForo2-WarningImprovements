@@ -11,8 +11,12 @@ use XF\Entity\WarningDefinition;
  */
 class Warn extends XFCP_Warn
 {
+    protected $sendAlert = false;
+
     public function setFromDefinition(WarningDefinition $definition, $points = null, $expiry = null)
     {
+        $this->sendAlert = !empty(Globals::$warningInput['send_warning_alert']);
+        $custom_title = !empty(Globals::$warningInput['custom_title']) ? Globals::$warningInput['custom_title'] : null;
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $definition */
         $return = parent::setFromDefinition($definition, $points, $expiry);
 
@@ -21,12 +25,9 @@ class Warn extends XFCP_Warn
             $this->warning->hydrateRelation('Definition', $definition);
         }
 
-        if ($definition->sv_custom_title || $definition->warning_definition_id === 0)
+        if ($custom_title && ($definition->sv_custom_title || $definition->warning_definition_id === 0))
         {
-            if (!empty(Globals::$warningInput))
-            {
-                $this->warning->title = Globals::$warningInput['custom_title'];
-            }
+            $this->warning->title = $custom_title;
         }
 
         return $return;
@@ -53,7 +54,7 @@ class Warn extends XFCP_Warn
 
         if ($warning instanceof Warning)
         {
-            if (!empty(Globals::$warningInput['send_warning_alert']))
+            if ($this->sendAlert)
             {
                 /** @var \XF\Repository\UserAlert $alertRepo */
                 $alertRepo = $this->repository('XF:UserAlert');

@@ -153,7 +153,14 @@ class Warn extends XFCP_Warn
     protected function setupWarnService(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
 	{
 	    Globals::$warningInput = $input;
-		return parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
+	    try
+        {
+            return parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
+        }
+        finally
+        {
+            Globals::$warningInput = null;
+        }
 	}
 
     /**
