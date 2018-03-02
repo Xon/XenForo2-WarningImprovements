@@ -76,7 +76,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      */
     public function getIsExpired()
     {
-        return ($this->expiry_date < \XF::$time);
+        return ($this->expiry_date < \XF::$time && $this->expiry_date !== null);
     }
 
     /**

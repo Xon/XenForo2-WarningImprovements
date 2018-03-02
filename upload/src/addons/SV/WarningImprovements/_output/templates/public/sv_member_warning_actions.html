@@ -14,16 +14,16 @@
 				</xf:datarow>
 				<xf:foreach loop="$user.warning_actions" value="$warningAction">
 					<xf:datarow rowclass="{{ $warningAction.is_expired ? 'dataList-row--disabled' : '' }}">
-						<xf:cell>{$warningAction.name}</xf:cell>
-						<xf:cell>{$warningAction.result}</xf:cell>
-						<xf:cell>
+						<xf:cell href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" overlay="true">{$warningAction.name}</xf:cell>
+						<xf:cell href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" overlay="true">{$warningAction.result}</xf:cell>
+						<xf:cell href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" overlay="true">
 							<xf:if is="$warningAction.expiry_date_rounded">
 								<xf:date time="{$warningAction.expiry_date_rounded} " />
 							<xf:else />
 								{{ phrase('n_a') }}
 							</xf:if>
 						</xf:cell>
-						<xf:cell class="dataList-cell--link"><a href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" data-xf-click="overlay">{{ phrase('view') }}</a></xf:cell>
+						<xf:cell href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" overlay="true">{{ phrase('view') }}</xf:cell>
 					</xf:datarow>
 				</xf:foreach>
 			</xf:datalist>
