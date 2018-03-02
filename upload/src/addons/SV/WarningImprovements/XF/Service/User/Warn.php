@@ -70,12 +70,9 @@ class Warn extends XFCP_Warn
      */
     protected function getCustomWarningDefinition()
     {
-        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entity */
-        $entity = $this->finder('XF:WarningDefinition')
-                       ->where('warning_definition_id', '=', 0)
-                       ->fetchOne();
-
-        return $entity;
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = $this->repository('XF:Warning');
+        return $warningRepo->getCustomWarningDefinition();
     }
 
     protected function _save()
