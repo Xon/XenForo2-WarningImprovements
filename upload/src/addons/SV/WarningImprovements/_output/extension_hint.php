@@ -8,11 +8,6 @@ namespace SV\WarningImprovements\XF\Admin\Controller
 	class XFCP_Warning extends \XF\Admin\Controller\Warning {}
 }
 
-namespace SV\WarningImprovements\XF\Admin\View\Warning
-{
-	class XFCP_LoadTree extends \XF\Admin\View\Warning\LoadTree {}
-}
-
 namespace SV\WarningImprovements\XF\ControllerPlugin
 {
 	class XFCP_Warn extends \XF\ControllerPlugin\Warn {}
