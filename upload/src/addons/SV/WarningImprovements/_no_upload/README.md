@@ -2,7 +2,7 @@
 
 A Collection of improvements to XF2's warning system.
 
-- Warnings/Bans with time-based expiry are now be removed on the 1st visit after the expiry time, rather than needing to wait for the hourly cron task to run.
+- Warnings/Bans with the time-based expiry are now be removed on the 1st visit after the expiry time, rather than needing to wait for the hourly cron task to run.
 - Sortable warnings with categories
   - Drag & drop
   - Permissions per category
@@ -13,7 +13,7 @@ A Collection of improvements to XF2's warning system.
 - Sends an alert to a user when they receive a warning. (Defaults on, togglable)
 - Allows the Custom Warning to be customized
 - Copy Warning title/text automatically to the public warning
-- Allow non-custom Warnings to have thier Titles edited, opt-in
+- Allow non-custom Warnings to have their Titles edited, opt-in
 - Optional ability to "unsticky" the Warn button on the warning dialog
 - Allow the default content action to be set
 - Control defaults for user notification
@@ -24,7 +24,7 @@ A Collection of improvements to XF2's warning system.
 - Option to require a note when entering a warning
  - and enforce a minimum length
 - Ability to see warning actions applied to an account from the front-end
-  - users may see warning actions against thier account
+  - users may see warning actions against their account
   - automatically roll-up identical warning actions to show the latest expiry
   - per-group moderator permissions for editing/viewing all/disable summarization.
 - Additional conversation substitution replaceable for the warning conversation.
@@ -40,10 +40,10 @@ A Collection of improvements to XF2's warning system.
   - Affects Alerts and Warnings.
   - Does NOT change conversations.
 - Round up warning expiry time to the nearest hour to avoid confusion over delays caused by XenForo task system's hourly schedule.
-- Option to log a warning summary to a thread. Phrase: Warning_Summary_Message, can use bbcode
+- Option to log a warning summary to a thread. Phrase: Warning_Summary_Message, can use BBCode
 - New Warning Action actions triggered for the last valid warning action:
-  - Post a new thread. Phrases Warning_Thread_Message & Warning_Thread_Title, can use bbcode.
-  - Reply to an existing thread. Phrases Warning_Thread_Message, can use bbcode.
+  - Post a new thread. Phrases Warning_Thread_Message & Warning_Thread_Title, can use BBCode.
+  - Reply to an existing thread. Phrases Warning_Thread_Message, can use BBCode.
  
 New Permission to control if a user can see who warned them.
 - View Warning Issuer.
