@@ -86,6 +86,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         if ($this->warning)
         {
             parent::processPointsIncrease($oldPoints, $newPoints);
+
             return;
         }
 
@@ -105,6 +106,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             }
         }
 
+        $this->warningActionNotifications();
+    }
+
+    public function  warningActionNotifications()
+    {
         if (!empty($this->lastAction))
         {
             $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? $this->warning->user_id : $this->lastAction->sv_post_as_user_id;
