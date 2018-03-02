@@ -13,34 +13,6 @@ class Warn extends XFCP_Warn
 {
     public function setFromDefinition(WarningDefinition $definition, $points = null, $expiry = null)
     {
-        if ($definition->warning_definition_id !== 0)
-        {
-            $customWarningDefinition = $this->getCustomWarningDefinition();
-
-            if ($points === null)
-            {
-                $points = $customWarningDefinition->points_default;
-            }
-
-            if ($expiry === null)
-            {
-                if ($customWarningDefinition->expiry_type == 'never')
-                {
-                    $expiry = 0;
-                }
-                else
-                {
-                    $expiry = strtotime('+' . $customWarningDefinition->expiry_default . ' ' . $customWarningDefinition->expiry_type);
-                }
-            }
-
-            // if the expiry is too far in the future, just make it actually be permanent
-            if ($expiry >= pow(2, 32) - 1)
-            {
-                $expiry = 0;
-            }
-        }
-
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $definition */
         $return = parent::setFromDefinition($definition, $points, $expiry);
 
