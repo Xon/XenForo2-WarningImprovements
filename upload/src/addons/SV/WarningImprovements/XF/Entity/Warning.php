@@ -190,7 +190,7 @@ class Warning extends XFCP_Warning
         $structure->getters['anonymized_issuer'] = true;
         $structure->getters['expiry_date_rounded'] = true;
         $structure->getters['notes'] = true;
-        $structure->getters['definition'] = false;
+        $structure->getters['Definition'] = false;
 
         return $structure;
     }
