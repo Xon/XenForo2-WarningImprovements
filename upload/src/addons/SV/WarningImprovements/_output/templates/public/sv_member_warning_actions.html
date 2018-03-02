@@ -17,8 +17,10 @@
 						<xf:cell href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" overlay="true">{$warningAction.name}</xf:cell>
 						<xf:cell href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" overlay="true">{$warningAction.result}</xf:cell>
 						<xf:cell href="{{ link('members/warning-actions', $warningAction.User, { 'warning_action_id': $warningAction.user_change_temp_id }) }}" overlay="true">
-							<xf:if is="$warningAction.expiry_date_rounded">
-								<xf:date time="{$warningAction.expiry_date_rounded} " />
+							<xf:if is="{$warningAction.is_permanent}">
+								{{ phrase('permanent') }}
+							<xf:elseif is="{$warningAction.expiry_date_rounded}" />
+								<xf:date time="{$warningAction.is_permanent}" />
 							<xf:else />
 								{{ phrase('n_a') }}
 							</xf:if>

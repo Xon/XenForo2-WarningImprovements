@@ -11,6 +11,7 @@ use XF\Mvc\Entity\Structure;
  * @property \XF\Entity\Phrase name
  * @property \XF\Entity\Phrase result
  * @property bool is_expired
+ * @property bool is_permanent
  * @property int expiry_date_rounded
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
@@ -76,7 +77,12 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      */
     public function getIsExpired()
     {
-        return ($this->expiry_date < \XF::$time && $this->expiry_date !== null);
+        return ($this->expiry_date < \XF::$time && !$this->is_permanent);
+    }
+
+    public function getIsPermanent()
+    {
+        return ($this->expiry_date === null);
     }
 
     /**
@@ -196,6 +202,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         $structure->getters['result'] = true;
         $structure->getters['is_expired'] = true;
         $structure->getters['expiry_date_rounded'] = true;
+        $structure->getters['is_permanent'] = true;
 
         return $structure;
     }
