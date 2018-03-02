@@ -49,17 +49,14 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             case 'groups':
                 $result = 'n_a';
 
-                if (empty(Globals::$userGroups))
-                {
-                    /** @var \XF\Repository\UserGroup $userGroupRepo */
-                    $userGroupRepo = $this->repository('XF:UserGroup');
-                    Globals::$userGroups = $userGroupRepo->findUserGroupsForList()->fetch();
-                }
+                /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userGroupRepo */
+                $userGroupRepo = $this->repository('XF:UserChangeTemp');
+                $userGroups = $userGroupRepo->getCachedUserGroupsList();
 
                 if (substr($this->action_modifier, 0, 15) === 'warning_action_')
                 {
                     $userGroupId = intval(substr($this->action_modifier, 15));
-                    $result = (!empty(Globals::$userGroups[$userGroupId])) ? Globals::$userGroups[$userGroupId]->title : $result;
+                    $result = isset($userGroups[$userGroupId]) ? $userGroups[$userGroupId]->title : $result;
                 }
 
                 break;

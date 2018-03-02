@@ -8,6 +8,24 @@ use XF\Entity\User;
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {
+    /** @var null|\XF\Entity\UserGroup[] */
+    protected $userGroups = null;
+
+    /**
+     * @return null|\XF\Entity\UserGroup[]|\XF\Mvc\Entity\ArrayCollection
+     */
+    public function getCachedUserGroupsList()
+    {
+        if ($this->userGroups === null)
+        {
+            /** @var \XF\Repository\UserGroup $userGroupRepo */
+            $userGroupRepo = $this->repository('XF:UserGroup');
+            $this->userGroups = $userGroupRepo->findUserGroupsForList()->fetch();
+        }
+
+        return $this->userGroups;
+    }
+
     /**
      * @param User $user
      * @param bool $showAll
