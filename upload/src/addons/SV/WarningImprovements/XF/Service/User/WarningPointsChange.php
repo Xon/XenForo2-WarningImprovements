@@ -341,13 +341,13 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete = false)
     {
-        if (!$this->warning || $fromWarningDelete === false)
+        if (!$this->warning || !$fromWarningDelete)
         {
             parent::processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete);
             return;
         }
 
-        parent::processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete);
+        parent::processPointsDecrease($oldPoints, $newPoints, false);
 
         $actions = $this->getActions();
 
@@ -356,6 +356,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             return;
         }
 
+        // $newPoints are uncategorized, $this->>warning should be set to the warning which inflicted the changes
+        // getCategoryPoints will use this to work out the actual warning points.
         $categoryPoints = $this->getCategoryPoints(true);
 
         /** @var \XF\Entity\WarningAction $action */
