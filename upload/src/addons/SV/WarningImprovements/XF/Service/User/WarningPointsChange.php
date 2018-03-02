@@ -86,7 +86,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
             $actions = $this->finder('XF:WarningAction')->order('points');
 
-            $categoryIds = [0];
+            $categoryIds = [];
 
             if (!empty($categories))
             {
@@ -99,7 +99,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
             $categoryIds[] = $category->warning_category_id;
 
-            $actions = $actions->where('sv_warning_category_id', $categoryIds)->fetch();
+            $actions = $actions->whereOr(['sv_warning_category_id', '=', $categoryIds],['sv_warning_category_id', '=', null])->fetch();
         }
 
         return $actions;
