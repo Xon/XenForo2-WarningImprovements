@@ -40,9 +40,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
             if (Globals::$warningObj->warning_definition_id === 0)
             {
-                /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-                $warningRepo = $this->repository('XF:Warning');
-                $customWarningDefinition = $warningRepo->getCustomWarning();
+                $customWarningDefinition = Globals::$warningObj->definition;
                 $categories = $warningCategoryRepo->findCategoryParentList($customWarningDefinition->Category);
             }
             else

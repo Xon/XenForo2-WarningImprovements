@@ -89,6 +89,9 @@ class Warning extends XFCP_Warning
         return $visitor->canViewIssuer($error);
     }
 
+    /**
+     * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|Entity
+     */
     public function getAnonymizedIssuer()
     {
         $anonymizedIssuer = null;
@@ -109,6 +112,19 @@ class Warning extends XFCP_Warning
         }
 
         return $anonymizedIssuer;
+    }
+
+    public function getDefinition()
+    {
+        if ($this->warning_definition_id === 0)
+        {
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = $this->repository('XF:Warning');
+
+            return $warningRepo->getCustomWarning();
+        }
+
+        return $this->Definition_; // _ = bypass getter
     }
 
     public function verifyNotes($notes)
@@ -165,6 +181,7 @@ class Warning extends XFCP_Warning
         $structure->getters['anonymized_issuer'] = true;
         $structure->getters['expiry_date_rounded'] = true;
         $structure->getters['notes'] = true;
+        $structure->getters['definition'] = false;
 
         return $structure;
     }
