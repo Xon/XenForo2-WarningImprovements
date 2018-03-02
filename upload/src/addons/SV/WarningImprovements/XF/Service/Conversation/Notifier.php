@@ -11,7 +11,8 @@ use XF\Entity\User;
 class Notifier extends XFCP_Notifier
 {
     /** @var Warning */
-    protected $warningObj = null;
+    protected $warning = null;
+
     protected $sv_force_email_for_user_id = null;
     protected $sv_respect_receive_admin_email = true;
 
@@ -23,11 +24,11 @@ class Notifier extends XFCP_Notifier
     }
 
     /**
-     * @param Warning $warningObj
+     * @param Warning $warning
      */
-    public function setWarning(Warning $warningObj)
+    public function setWarning(Warning $warning)
     {
-        $this->warningObj = $warningObj;
+        $this->warning = $warning;
     }
 
     protected function _canUserReceiveNotification(User $user, User $sender = null)
@@ -38,9 +39,9 @@ class Notifier extends XFCP_Notifier
             return $canUserReceiveNotification;
         }
 
-        if ($this->warningObj)
+        if ($this->warning)
         {
-            if ($this->warningObj->user_id === $user->user_id)
+            if ($this->warning->user_id === $user->user_id)
             {
                 if ($this->sv_force_email_for_user_id === null)
                 {
@@ -50,7 +51,7 @@ class Notifier extends XFCP_Notifier
                     if ($options->sv_force_conversation_email_on_warning)
                     {
                         $this->sv_respect_receive_admin_email = $options->sv_respect_receive_admin_email_on_warning;
-                        $this->sv_force_email_for_user_id = Globals::$warningObj->user_id;
+                        $this->sv_force_email_for_user_id = $this->warning->user_id;
                     }
                     if ($options->sv_only_force_warning_email_on_banned && !$user->is_banned)
                     {

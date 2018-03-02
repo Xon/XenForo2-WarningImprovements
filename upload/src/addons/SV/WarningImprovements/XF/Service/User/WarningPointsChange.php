@@ -4,6 +4,7 @@ namespace SV\WarningImprovements\XF\Service\User;
 
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User;
+use SV\WarningImprovements\XF\Entity\Warning;
 use XF\Entity\WarningAction;
 
 /**
@@ -16,11 +17,29 @@ class WarningPointsChange extends XFCP_WarningPointsChange
      */
     protected $lastAction = null;
 
+    /** @var Warning */
+    protected $warning = null;
+
+    public function __construct(\XF\App $app, User $user)
+    {
+        parent::__construct($app, $user);
+
+        $this->setWarning(Globals::$warningObj);
+    }
+
+    /**
+     * @param Warning $warning
+     */
+    public function setWarning(Warning $warning)
+    {
+        $this->warning = $warning;
+    }
+
     protected function applyWarningAction(WarningAction $action)
     {
         parent::applyWarningAction($action);
 
-        if (!empty(Globals::$warningObj))
+        if ($this->warning)
         {
             if ((empty($this->lastWarningAction) || $action->points > $this->lastWarningAction->points) && (!empty($action->sv_post_node_id) || !empty($action->sv_post_thread_id)))
             {
@@ -33,20 +52,13 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     {
         $actions = null;
 
-        if (!empty(Globals::$warningObj))
+        if ($this->warning)
         {
             /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
             $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
 
-            if (Globals::$warningObj->warning_definition_id === 0)
-            {
-                $customWarningDefinition = Globals::$warningObj->definition;
-                $categories = $warningCategoryRepo->findCategoryParentList($customWarningDefinition->Category);
-            }
-            else
-            {
-                $categories = $warningCategoryRepo->findCategoryParentList(Globals::$warningObj->Definition->Category);
-            }
+            $category = $this->warning->Definition->Category;
+            $categories = $warningCategoryRepo->findCategoryParentList($category);
 
             $actions = $this->finder('XF:WarningAction')->order('points');
 
@@ -61,7 +73,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 }
             }
 
-            $categoryIds[] = Globals::$warningObj->Definition->Category->warning_category_id;
+            $categoryIds[] = $category->warning_category_id;
 
             $actions = $actions->where('sv_warning_category_id', $categoryIds)->fetch();
         }
@@ -71,7 +83,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function processPointsIncrease($oldPoints, $newPoints)
     {
-        if (empty(Globals::$warningObj))
+        if ($this->warning)
         {
             parent::processPointsIncrease($oldPoints, $newPoints);
             return;
@@ -95,7 +107,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         if (!empty($this->lastAction))
         {
-            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? Globals::$warningObj->user_id : $this->lastAction->sv_post_as_user_id;
+            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? $this->warning->user_id : $this->lastAction->sv_post_as_user_id;
 
             /** @var User $postAsUser */
             $postAsUser = $this->em()->find('XF:User', $postAsUserId);
@@ -107,11 +119,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $params = [
                     'username' => $this->user->username,
                     'points' =>  $this->user->warning_count,
-                    'warning' => Globals::$warningObj,
+                    'warning' => $this->warning,
                     'date' => $dateString,
-                    'warning_title' => Globals::$warningObj->title,
-                    'warning_points' => Globals::$warningObj->points,
-                    'warning_category' => Globals::$warningObj->Definition->Category,
+                    'warning_title' => $this->warning->title,
+                    'warning_points' => $this->warning->points,
+                    'warning_category' => $this->warning->Definition->Category,
                     'threshold' => $this->lastAction->points
                 ];
 
@@ -160,7 +172,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete = false)
     {
-        if (empty(Globals::$warningObj) || $fromWarningDelete === false)
+        if (!$this->warning || $fromWarningDelete === false)
         {
             parent::processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete);
             return;
