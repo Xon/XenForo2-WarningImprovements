@@ -24,7 +24,7 @@ class Globals
     public static $profileUserId = null;
 
     /** @var \SV\WarningImprovements\XF\Entity\Warning */
-    public static $warnngObj = null;
+    public static $warningObj = null;
 
     /** @var array[] */
     public static $warningInput = null;

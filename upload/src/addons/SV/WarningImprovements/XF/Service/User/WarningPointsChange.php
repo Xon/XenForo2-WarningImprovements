@@ -20,7 +20,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     {
         parent::applyWarningAction($action);
 
-        if (!empty(Globals::$warnngObj))
+        if (!empty(Globals::$warningObj))
         {
             if ((empty($this->lastWarningAction) || $action->points > $this->lastWarningAction->points) && (!empty($action->sv_post_node_id) || !empty($action->sv_post_thread_id)))
             {
@@ -33,12 +33,12 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     {
         $actions = null;
 
-        if (!empty(Globals::$warnngObj))
+        if (!empty(Globals::$warningObj))
         {
             /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
             $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
 
-            if (Globals::$warnngObj->warning_definition_id === 0)
+            if (Globals::$warningObj->warning_definition_id === 0)
             {
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = $this->repository('XF:Warning');
@@ -47,7 +47,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             }
             else
             {
-                $categories = $warningCategoryRepo->findCategoryParentList(Globals::$warnngObj->Definition->Category);
+                $categories = $warningCategoryRepo->findCategoryParentList(Globals::$warningObj->Definition->Category);
             }
 
             $actions = $this->finder('XF:WarningAction')->order('points');
@@ -63,7 +63,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 }
             }
 
-            $categoryIds[] = Globals::$warnngObj->Definition->Category->warning_category_id;
+            $categoryIds[] = Globals::$warningObj->Definition->Category->warning_category_id;
 
             $actions = $actions->where('sv_warning_category_id', $categoryIds)->fetch();
         }
@@ -73,7 +73,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function processPointsIncrease($oldPoints, $newPoints)
     {
-        if (empty(Globals::$warnngObj))
+        if (empty(Globals::$warningObj))
         {
             parent::processPointsIncrease($oldPoints, $newPoints);
             return;
@@ -97,7 +97,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         if (!empty($this->lastAction))
         {
-            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? Globals::$warnngObj->user_id : $this->lastAction->sv_post_as_user_id;
+            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? Globals::$warningObj->user_id : $this->lastAction->sv_post_as_user_id;
 
             /** @var User $postAsUser */
             $postAsUser = $this->em()->find('XF:User', $postAsUserId);
@@ -109,11 +109,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $params = [
                     'username' => $this->user->username,
                     'points' =>  $this->user->warning_count,
-                    'warning' => Globals::$warnngObj,
+                    'warning' => Globals::$warningObj,
                     'date' => $dateString,
-                    'warning_title' => Globals::$warnngObj->title,
-                    'warning_points' => Globals::$warnngObj->points,
-                    'warning_category' => Globals::$warnngObj->Definition->Category,
+                    'warning_title' => Globals::$warningObj->title,
+                    'warning_points' => Globals::$warningObj->points,
+                    'warning_category' => Globals::$warningObj->Definition->Category,
                     'threshold' => $this->lastAction->points
                 ];
 
@@ -160,7 +160,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete = false)
     {
-        if (empty(Globals::$warnngObj) || $fromWarningDelete === false)
+        if (empty(Globals::$warningObj) || $fromWarningDelete === false)
         {
             parent::processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete);
             return;

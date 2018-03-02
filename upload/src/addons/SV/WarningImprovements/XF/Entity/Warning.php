@@ -132,16 +132,9 @@ class Warning extends XFCP_Warning
         return true;
     }
 
-    protected function onApplication()
-    {
-        $return = parent::onApplication();
-
-        return $return;
-    }
-
     protected function updateUserWarningPoints(\XF\Entity\User $user, $adjustment, $isDelete = false)
     {
-        Globals::$warnngObj = $this;
+        Globals::$warningObj = $this;
         parent::updateUserWarningPoints($user, $adjustment, $isDelete);
     }
 
