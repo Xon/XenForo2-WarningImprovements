@@ -136,19 +136,35 @@ class WarningCategory extends AbstractCategoryTree
 
     protected function _preDelete()
     {
-        if (empty($this->parent_category_id))
-        {
-            $categoryCount = $this->db()->fetchOne("
-                SELECT COUNT(*)
-                FROM xf_sv_warning_category
-                WHERE warning_category_id <> ?
-            ", $this->warning_category_id);
+        /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
+        $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
+        /** @var \SV\WarningImprovements\Finder\WarningCategory|\XF\Mvc\Entity\Finder $warningCategoryChildFinder */
+        $warningCategoryChildFinder = $warningCategoryRepo->findChildren($this);
+        $warningCategoryIds = $warningCategoryChildFinder->pluckFrom('warning_category_id')->fetch();
+        $warningCategoryIds[] = $this->warning_category_id;
 
-            if ($categoryCount === 0)
+        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $customWarningDefinition */
+        $customWarningDefinition = $this->finder('XF:WarningDefinition')
+            ->where('warning_definition_id','=', 0)
+            ->where('sv_warning_category_id','=', $warningCategoryIds);
+
+        if ($customWarningDefinition)
+        {
+            /** @var \SV\WarningImprovements\Finder\WarningCategory|\XF\Mvc\Entity\Finder $warningCategoryFinder */
+            $warningCategoryFinder = $this->finder('SV\WarningImprovements:WarningCategory');
+            /** @var \SV\WarningImprovements\Entity\WarningCategory $newParentCategory */
+            $newParentCategory = $warningCategoryFinder
+                ->where('sv_warning_category_id','<>', $warningCategoryIds)
+                ->fetch();
+
+            if (!$newParentCategory)
             {
                 $this->error(\XF::phrase('sv_warning_improvements_last_category_cannot_be_deleted'));
                 return false;
             }
+
+            $customWarningDefinition->sv_warning_category_id = $newParentCategory->warning_category_id;
+            $customWarningDefinition->save();
         }
     }
 
@@ -165,46 +181,12 @@ class WarningCategory extends AbstractCategoryTree
             }
         }
 
-        foreach ($this->WarningDefinitions as $warningDefinition)
-        {
-            /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
-            if ($warningDefinition->is_custom)
-            {
-                if (!empty($this->parent_category_id))
-                {
-                    $newCategoryId = $this->parent_category_id;
-                }
-                else
-                {
-                    $newCategoryId = $this->db()->fetchOne("
-                        SELECT warning_category_id
-                        FROM xf_sv_warning_category
-                        WHERE warning_category_id <> ?
-                    ", $this->warning_category_id);
-                }
-
-                $warningDefinition->sv_warning_category_id = $newCategoryId;
-                $warningDefinition->save();
-
-                continue;
-            }
-
-            $warningDefinition->delete();
-        }
-
-        foreach ($this->WarningActions AS $warningAction)
-        {
-            $warningAction->delete();
-        }
-
-        /*
         if ($this->getOption('delete_contents'))
         {
             $this->app()->jobManager()->enqueueUnique('sv_WarningImprovementsCategoryDelete' . $this->warning_category_id, 'SVW\WarningImprovements:CategoryDelete', [
                 'warning_category_id' => $this->warning_category_id
             ]);
         }
-        */
     }
 
     public function rebuildCounters()
