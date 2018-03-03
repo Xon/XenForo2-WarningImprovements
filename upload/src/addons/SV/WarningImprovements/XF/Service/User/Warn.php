@@ -27,6 +27,11 @@ class Warn extends XFCP_Warn
 
         if ($custom_title && ($definition->sv_custom_title || $definition->warning_definition_id === 0))
         {
+            // force empty because title is already being set from warning definition entity
+            if ($this->warning->warning_definition_id === 0)
+            {
+                $this->warning->title = '';
+            }
             $this->warning->title = $custom_title;
         }
 
