@@ -67,9 +67,10 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /**
      * Populates warningCategories
      *
+     * @param string $direction
      * @return AbstractCollection|null
      */
-    protected function getActions()
+    protected function getActions($direction)
     {
         $actions = null;
 
@@ -84,7 +85,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $this->warningCategories = \array_values($categories->toArray());
             array_unshift($this->warningCategories, $category);
 
-            $actions = $this->finder('XF:WarningAction')->order('points');
+            $actions = $this->finder('XF:WarningAction')->order('points', $direction);
 
             $categoryIds = [];
 
@@ -200,7 +201,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             return;
         }
 
-        $actions = $this->getActions();
+        $actions = $this->getActions('ASC');
 
         if (empty($actions))
         {
@@ -280,7 +281,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadReplier = $this->service('XF:Thread\Replier', $thread);
                             $threadReplier->setIsAutomated();
 
-                            $messageContent = \XF::phrase('Warning_Thread_Message', $params)->render('raw');
+                            $messageContent = \XF::phrase('Warning_Summary_Message', $params)->render('raw');
 
                             $threadReplier->setMessage($messageContent);
                             $threadReplier->save();
@@ -302,9 +303,10 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             return;
         }
 
+        // remove triggers, but replace the 'warning was deleted' logic'
         parent::processPointsDecrease($oldPoints, $newPoints, false);
 
-        $actions = $this->getActions();
+        $actions = $this->getActions('DESC');
 
         if (empty($actions))
         {
