@@ -240,10 +240,13 @@ var SV = SV || {};
 
                 this.setPublicMessage(warningText);
 
-                warningInput
-                    .prop('disabled', false)
-                    .parent().parent()
-                    .xfFadeDown(XF.config.speed.xxfast);
+                if (warningInput.prop('type') !== 'hidden')
+                {
+                    warningInput
+                        .prop('disabled', false)
+                        .parent().parent()
+                        .xfFadeDown(XF.config.speed.xxfast);
+                }
             }
         },
 
