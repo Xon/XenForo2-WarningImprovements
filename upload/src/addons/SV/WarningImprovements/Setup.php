@@ -53,8 +53,24 @@ class Setup extends AbstractSetup
         // create default warning category, do not use the data writer as that requires the rest of the add-on to be setup
         $db->query("INSERT IGNORE
                           INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
-                          VALUES (1, null, 0, ?)
+                          VALUES (1, NULL, 0, ?)
          ", [User::GROUP_REG]);
+
+        /** @var \XF\Entity\Phrase $phrase */
+        $phrase = \XF::app()->finder('XF:Phrase')
+                     ->where('title', '=', 'sv_warning_category_title.0')
+                     ->where('language_id', '=', 0)
+                     ->fetchOne();
+        if (!$phrase)
+        {
+            $phrase = \XF::em()->create('XF:Phrase');
+            $phrase->language_id = 0;
+            $phrase->title = 'sv_warning_category_title.0';
+            $phrase->phrase_text = 'Warnings';
+            $phrase->global_cache = false;
+            $phrase->addon_id = '';
+            $phrase->save(false);
+        }
     }
 
     public function installStep4()
@@ -108,13 +124,6 @@ class Setup extends AbstractSetup
 
     public function upgrade2000000Step3()
     {
-        $this->installStep2();
-        $this->installStep3();
-        $this->installStep4();
-    }
-
-    public function upgrade2000000Step4()
-    {
         $map = [
             'sv_warning_category_*_title' => 'sv_warning_category_title.*'
         ];
@@ -155,9 +164,16 @@ class Setup extends AbstractSetup
         }
     }
 
-    public function upgrade2000000Step5()
+    public function upgrade2000000Step4()
     {
         $this->renameOption('sv_warningimprovements_continue_button', 'sv_warningimprovements_sticky_button');
+    }
+
+    public function upgrade2000000Step5()
+    {
+        $this->installStep2();
+        $this->installStep3();
+        $this->installStep4();
     }
 
     public function uninstallStep1()
