@@ -34,7 +34,10 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         parent::__construct($app, $user);
 
         $this->setWarning(Globals::$warningObj);
-        $this->setReport(Globals::$reportObj);
+        if (!empty(Globals::$reportObj))
+        {
+            $this->setReport(Globals::$reportObj);
+        }
 
         $this->nullCategory = \XF::em()->create('SV\WarningImprovements:WarningCategory');
         $this->nullCategory->setTrusted('warning_category_id', null);
@@ -313,7 +316,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                     'warning_points' => $this->warning->points,
                     'warning_category' => $this->warning->Definition->Category,
                     'threshold' => $this->lastAction->points,
-                    'report' => $this->app->router('public')->buildLink('full:reports', $this->report) // shouldn't we use nopath:reports here?
+                    'report' => (!empty($this->report)) ? $this->app->router('public')->buildLink('full:reports', $this->report) : \XF::phrase('n_a')->render() // shouldn't we use nopath:reports here?
                 ];
 
                 if (!empty($this->lastAction->sv_post_node_id))
