@@ -196,9 +196,8 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     protected function _postSave()
     {
         parent::_postSave();
-        $this->_invalidateCachesOnChange('is_expired');
-        $this->_invalidateCachesOnChange('is_permanent');
-        $this->_invalidateCachesOnChange('result');
+        // big hammer reset the getter cache
+        $this->_getterCache = [];
 
         $this->_getWarningRepo()->updatePendingExpiryFor($this->User, true);
     }
