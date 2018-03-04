@@ -88,8 +88,20 @@ class Member extends XFCP_Member
             }
         }
 
+        $db = \XF::db();
+        $db->beginTransaction();
+
         $userChangeTemp->expiry_date = $expiryDate;
-        $userChangeTemp->save();
+        $userChangeTemp->save(true, false);
+
+        if ($userChangeTemp->expiry_date && $userChangeTemp->expiry_date <= \XF::$time)
+        {
+            /** @var \XF\Service\User\TempChange $changeService */
+            $changeService = $this->app()->service('XF:User\TempChange');
+            $changeService->expireChange($userChangeTemp);
+        }
+
+        $db->commit();
 
         return $this->redirect($this->getDynamicRedirect());
     }
