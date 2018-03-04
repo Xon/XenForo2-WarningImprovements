@@ -70,7 +70,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
      * @param string $direction
      * @return AbstractCollection|null
      */
-    protected function getActions($direction)
+    protected function getActions($direction, $fromDelete = false)
     {
         $actions = null;
 
@@ -87,6 +87,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
             $actions = $this->finder('XF:WarningAction')->order('points', $direction);
 
+            $includeGlobal = true;
             $categoryIds = [];
 
             if (!empty($categories))
@@ -96,11 +97,61 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 {
                     $categoryIds[] = $parentCategory->warning_category_id;
                 }
+
+                if ($fromDelete)
+                {
+                    $previousAppliedWarnings = $this->finder('XF:Warning')
+                        ->where('user_id', $this->warning->user_id)
+                        ->where('warning_id','<>', $this->warning->warning_id)
+                        ->with(['Definition', 'Definition.Category'])
+                        ->fetch();
+
+                    // user has some warnings that aren't the current warning we're dealing with
+                    if (!empty($previousAppliedWarnings))
+                    {
+                        /** @var \SV\WarningImprovements\XF\Entity\Warning|\XF\Entity\Warning $previousAppliedWarning */
+                        foreach ($previousAppliedWarnings as $previousAppliedWarning)
+                        {
+                            if (!empty($previousAppliedWarning->Definition))
+                            {
+                                if (!empty($previousAppliedWarning->Definition->Category))
+                                {
+                                    $previousAppliedWarningCategory = $previousAppliedWarning->Definition->Category;
+                                    $previousAppliedActionCategoryParentList = $warningCategoryRepo->findCategoryParentList($previousAppliedWarningCategory)
+                                        ->where('warning_category_id', '<>', $category->warning_category_id)
+                                        ->where('warning_category_id', '=', $categoryIds)
+                                        ->fetch();
+
+                                    if (!empty($previousAppliedActionCategoryParentList))
+                                    {
+                                        $includeGlobal = false;
+
+                                        /** @var \SV\WarningImprovements\Entity\WarningCategory $previousAppliedActionCategoryParent */
+                                        foreach ($previousAppliedActionCategoryParentList as $previousAppliedActionCategoryParent)
+                                        {
+                                            $categoryIds = array_diff($categoryIds, [$previousAppliedActionCategoryParent->warning_category_id]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             $categoryIds[] = $category->warning_category_id;
 
-            $actions = $actions->whereOr(['sv_warning_category_id', '=', $categoryIds],['sv_warning_category_id', '=', null])->fetch();
+            if ($includeGlobal)
+            {
+                $actions = $actions->whereOr(
+                    ['sv_warning_category_id', '=', $categoryIds],
+                    ['sv_warning_category_id', '=', null]
+                )->fetch();
+            }
+            else
+            {
+                $actions = $actions->where('sv_warning_category_id', '=', $categoryIds)->fetch();
+            }
         }
 
         return $actions;
@@ -138,7 +189,6 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         {
             $warningPoints[$category->warning_category_id] = new WarningTotal($category);
         }
-
 
         // compute per-category totals (globals map to 0)
         foreach ($warnings as $warning)
@@ -306,7 +356,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         // remove triggers, but replace the 'warning was deleted' logic'
         parent::processPointsDecrease($oldPoints, $newPoints, false);
 
-        $actions = $this->getActions('DESC');
+        $actions = $this->getActions('DESC', true);
 
         if (empty($actions))
         {
@@ -317,7 +367,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         // getCategoryPoints will use this to work out the actual warning points.
         $categoryPoints = $this->getCategoryPoints(true);
 
-        /** @var \XF\Entity\WarningAction $action */
+        /** @var \SV\WarningImprovements\XF\Entity\WarningAction|\XF\Entity\WarningAction $action */
         foreach ($actions AS $action)
         {
             $warningCategoryId = $action->warning_action_id ?: 0;
@@ -330,9 +380,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             // Points-based will be handled by the triggers so skip. Then only consider where we cross
             // the points threshold from the old (higher) to the new (lower) point values
             if (
-                $action->action_length_type == 'points'
-                || $action->points > $points->oldPoints // threshold above where we were
-                || $action->points <= $points->newPoints // we're still at/above the threshold
+                (
+                    $action->action_length_type == 'points'
+                    || $action->points > $points->oldPoints // threshold above where we were
+                    || $action->points <= $points->newPoints // we're still at/above the threshold
+                ) && !$fromWarningDelete
             )
             {
                 continue;
