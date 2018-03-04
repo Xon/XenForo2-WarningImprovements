@@ -90,7 +90,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      */
     public function getIsExpired()
     {
-        return ($this->expiry_date < \XF::$time && !$this->is_permanent);
+        return ($this->expiry_date <= \XF::$time && !$this->is_permanent);
     }
 
     public function getIsPermanent()
@@ -196,6 +196,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     protected function _postSave()
     {
         parent::_postSave();
+        $this->_invalidateCachesOnChange('is_expired');
+        $this->_invalidateCachesOnChange('is_permanent');
+        $this->_invalidateCachesOnChange('result');
 
         $this->_getWarningRepo()->updatePendingExpiryFor($this->User, true);
     }

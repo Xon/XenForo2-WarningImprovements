@@ -94,7 +94,7 @@ class Member extends XFCP_Member
         $userChangeTemp->expiry_date = $expiryDate;
         $userChangeTemp->save(true, false);
 
-        if ($userChangeTemp->expiry_date && $userChangeTemp->expiry_date <= \XF::$time)
+        if ($userChangeTemp->is_expired)
         {
             /** @var \XF\Service\User\TempChange $changeService */
             $changeService = $this->app()->service('XF:User\TempChange');
