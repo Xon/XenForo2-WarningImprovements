@@ -40,6 +40,7 @@ namespace SV\WarningImprovements\XF\Repository
 {
 	class XFCP_UserChangeTemp extends \XF\Repository\UserChangeTemp {}
 	class XFCP_Warning extends \XF\Repository\Warning {}
+	class XFCP_WarningAction extends \XF\Repository\WarningAction {}
 }
 
 namespace SV\WarningImprovements\XF\Service\Conversation

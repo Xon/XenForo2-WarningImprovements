@@ -49,14 +49,48 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             case 'groups':
                 $result = 'n_a';
 
-                /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userGroupRepo */
-                $userGroupRepo = $this->repository('XF:UserChangeTemp');
-                $userGroups = $userGroupRepo->getCachedUserGroupsList();
-
                 if (substr($this->action_modifier, 0, 15) === 'warning_action_')
                 {
-                    $userGroupId = intval(substr($this->action_modifier, 15));
-                    $result = isset($userGroups[$userGroupId]) ? $userGroups[$userGroupId]->title : $result;
+                    $warningActionId = intval(substr($this->action_modifier, 15));
+
+                    /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userGroupRepo */
+                    $userGroupRepo = $this->repository('XF:UserChangeTemp');
+                    $userGroups = $userGroupRepo->getCachedUserGroupsList();
+
+                    /** @var \SV\WarningImprovements\XF\Repository\WarningAction $warningActionRepo */
+                    $warningActionRepo = $this->repository('XF:WarningAction');
+                    $warningActions = $warningActionRepo->getCachedActionsList();
+
+                    $userGroupNames = [];
+
+                    if (!empty($warningActions))
+                    {
+                        /** @var \SV\WarningImprovements\XF\Entity\WarningAction $warningAction */
+                        foreach ($warningActions as $warningAction)
+                        {
+                            if (!empty($warningAction))
+                            {
+                                if ($warningAction->warning_action_id === $warningActionId)
+                                {
+                                   if (!empty($warningAction->extra_user_group_ids))
+                                   {
+                                       foreach ($warningAction->extra_user_group_ids as $extra_user_group_id)
+                                       {
+                                           if (!empty($userGroups[$extra_user_group_id]))
+                                           {
+                                               $userGroupNames[] = $userGroups[$extra_user_group_id]->title;
+                                           }
+                                       }
+                                   }
+                                }
+                            }
+                        }
+                    }
+
+                    if (!empty($userGroupNames))
+                    {
+                        $result = implode(',', $userGroupNames);
+                    }
                 }
 
                 break;
