@@ -26,6 +26,40 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return $this->userGroups;
     }
 
+    /** @var null|array */
+    protected $userGroupChangeSet = [];
+
+    /**
+     * @param int $userId
+     * @return null|int[]
+     */
+    public function getCachedUserGroupChangeList($userId)
+    {
+        if (\array_key_exists($userId, $this->userGroupChangeSet))
+        {
+            return $this->userGroupChangeSet[$userId];
+        }
+
+        $this->userGroupChangeSet[$userId] = $this->db()->fetchPairs("select change_key, group_ids
+            from xf_user_group_change
+            where user_id = ? and change_key like 'warning_action_%'
+        ", $userId);
+
+        if (empty( $this->userGroupChangeSet[$userId]))
+        {
+            $this->userGroupChangeSet[$userId] = null;
+        }
+        else
+        {
+            foreach ($this->userGroupChangeSet[$userId] as $key => &$val)
+            {
+                $val = \array_unique(array_filter(array_map('intval', \explode(',', $val))));
+            }
+        }
+
+        return $this->userGroupChangeSet[$userId];
+    }
+
     /**
      * @param User $user
      * @param bool $showAll

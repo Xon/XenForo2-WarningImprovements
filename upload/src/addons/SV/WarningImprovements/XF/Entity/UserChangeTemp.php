@@ -51,38 +51,20 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
                 if (substr($this->action_modifier, 0, 15) === 'warning_action_')
                 {
-                    $warningActionId = intval(substr($this->action_modifier, 15));
+                    $userGroupNames = [];
 
                     /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userGroupRepo */
                     $userGroupRepo = $this->repository('XF:UserChangeTemp');
                     $userGroups = $userGroupRepo->getCachedUserGroupsList();
+                    $userGroupChangeSet = $userGroupRepo->getCachedUserGroupChangeList($this->user_id);
 
-                    /** @var \SV\WarningImprovements\XF\Repository\WarningAction $warningActionRepo */
-                    $warningActionRepo = $this->repository('XF:WarningAction');
-                    $warningActions = $warningActionRepo->getCachedActionsList();
-
-                    $userGroupNames = [];
-
-                    if (!empty($warningActions))
+                    if (isset($userGroupChangeSet[$this->action_modifier]))
                     {
-                        /** @var \SV\WarningImprovements\XF\Entity\WarningAction $warningAction */
-                        foreach ($warningActions as $warningAction)
+                        foreach ($userGroupChangeSet[$this->action_modifier] as $userGroupId)
                         {
-                            if (!empty($warningAction))
+                            if (!empty($userGroups[$userGroupId]))
                             {
-                                if ($warningAction->warning_action_id === $warningActionId)
-                                {
-                                   if (!empty($warningAction->extra_user_group_ids))
-                                   {
-                                       foreach ($warningAction->extra_user_group_ids as $extra_user_group_id)
-                                       {
-                                           if (!empty($userGroups[$extra_user_group_id]))
-                                           {
-                                               $userGroupNames[] = $userGroups[$extra_user_group_id]->title;
-                                           }
-                                       }
-                                   }
-                                }
+                                $userGroupNames[] = $userGroups[$userGroupId]->title;
                             }
                         }
                     }
