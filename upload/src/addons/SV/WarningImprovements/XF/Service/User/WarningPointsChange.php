@@ -7,6 +7,7 @@ use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User;
 use SV\WarningImprovements\XF\Entity\Warning;
 use XF\Entity\WarningAction;
+use XF\Entity\Report;
 use XF\Mvc\Entity\AbstractCollection;
 
 /**
@@ -22,6 +23,9 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /** @var Warning */
     protected $warning = null;
 
+    /** @var Report */
+    protected $report = null;
+
     /** @var WarningCategory */
     protected $nullCategory = null;
 
@@ -30,6 +34,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         parent::__construct($app, $user);
 
         $this->setWarning(Globals::$warningObj);
+        $this->setReport(Globals::$reportObj);
 
         $this->nullCategory = \XF::em()->create('SV\WarningImprovements:WarningCategory');
         $this->nullCategory->setTrusted('warning_category_id', null);
@@ -42,6 +47,14 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     public function setWarning(Warning $warning)
     {
         $this->warning = $warning;
+    }
+
+    /**
+     * @param Report $report
+     */
+    public function setReport(Report $report)
+    {
+        $this->report = $report;
     }
 
     protected function applyWarningAction(WarningAction $action)
@@ -299,7 +312,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                     'warning_title' => $this->warning->title,
                     'warning_points' => $this->warning->points,
                     'warning_category' => $this->warning->Definition->Category,
-                    'threshold' => $this->lastAction->points
+                    'threshold' => $this->lastAction->points,
+                    'report' => $this->app->router('public')->buildLink('full:reports', $this->report) // shouldn't we use nopath:reports here?
                 ];
 
                 if (!empty($this->lastAction->sv_post_node_id))

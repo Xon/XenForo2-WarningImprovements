@@ -26,6 +26,9 @@ class Globals
     /** @var \SV\WarningImprovements\XF\Entity\Warning */
     public static $warningObj = null;
 
+    /** @var \XF\Entity\Report */
+    public static $reportObj = null;
+
     /** @var array[] */
     public static $warningInput = null;
 
