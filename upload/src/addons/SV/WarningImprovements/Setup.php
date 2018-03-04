@@ -197,6 +197,26 @@ class Setup extends AbstractSetup
     }
 
     /**
+     * Removes items associated with this add-on but not directly owned by it.
+     */
+    public function uninstallStep3()
+    {
+        /** @var \XF\Finder\Phrase $phraseFinder */
+        $phraseFinder = \XF::finder('XF:Phrase');
+        /** @var \XF\Entity\Phrase[] $phrases */
+        $phrases = $phraseFinder
+            ->where('language_id', 0)
+            ->whereOr([
+                          ['title', 'LIKE', 'sv_warning_category_title.%'],
+                      ])
+            ->fetch();
+
+        foreach ($phrases as $phrase) {
+            $phrase->delete();
+        }
+    }
+
+    /**
      * @param Create|Alter $table
      * @param string       $name
      * @param string|null  $type
