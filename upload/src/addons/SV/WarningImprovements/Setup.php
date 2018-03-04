@@ -108,6 +108,8 @@ class Setup extends AbstractSetup
 
     public function upgrade2000000Step3()
     {
+        $this->installStep2();
+        $this->installStep3();
         $this->installStep4();
     }
 
