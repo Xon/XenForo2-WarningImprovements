@@ -310,11 +310,10 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $params = [
                     'username' => $this->user->username,
                     'points' =>  $this->user->warning_count,
-                    'warning' => $this->warning,
                     'date' => $dateString,
                     'warning_title' => $this->warning->title,
                     'warning_points' => $this->warning->points,
-                    'warning_category' => $this->warning->Definition->Category,
+                    'warning_category' => $this->warning->Definition->Category->title->render(),
                     'threshold' => $this->lastAction->points,
                     'report' => (!empty($this->report)) ? $this->app->router('public')->buildLink('full:reports', $this->report) : \XF::phrase('n_a')->render() // shouldn't we use nopath:reports here?
                 ];
@@ -348,7 +347,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadReplier = $this->service('XF:Thread\Replier', $thread);
                             $threadReplier->setIsAutomated();
 
-                            $messageContent = \XF::phrase('Warning_Summary_Message', $params)->render('raw');
+                            $messageContent = \XF::phrase('Warning_Thread_Message', $params)->render('raw');
 
                             $threadReplier->setMessage($messageContent);
                             $threadReplier->save();
