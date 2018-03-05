@@ -47,7 +47,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /**
      * @param Warning $warning
      */
-    public function setWarning(Warning $warning)
+    public function setWarning(Warning $warning = null)
     {
         $this->warning = $warning;
     }
@@ -55,7 +55,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /**
      * @param Report $report
      */
-    public function setReport(Report $report)
+    public function setReport(Report $report = null)
     {
         $this->report = $report;
     }

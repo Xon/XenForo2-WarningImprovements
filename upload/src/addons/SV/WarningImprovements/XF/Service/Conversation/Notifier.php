@@ -26,7 +26,7 @@ class Notifier extends XFCP_Notifier
     /**
      * @param Warning $warning
      */
-    public function setWarning(Warning $warning)
+    public function setWarning(Warning $warning = null)
     {
         $this->warning = $warning;
     }
