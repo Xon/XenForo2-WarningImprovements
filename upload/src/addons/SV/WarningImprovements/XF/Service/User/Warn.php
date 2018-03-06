@@ -93,7 +93,8 @@ class Warn extends XFCP_Warn
                     : \XF::phrase('n_a')->render();
                 $warningArray['date'] = $dateString;
 
-                $threadReplier = \XF::asVisitor($this->user, function () use ($thread, $warningArray) {
+                $warningUser = \XF::visitor(); //$this->user;
+                $threadReplier = \XF::asVisitor($warningUser, function () use ($thread, $warningArray) {
                     /** @var \XF\Service\Thread\Replier $threadReplier */
                     $threadReplier = $this->service('XF:Thread\Replier', $thread);
                     $threadReplier->setIsAutomated();
