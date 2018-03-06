@@ -30,9 +30,9 @@
         "hash": "8678d18225e1323fe9da8dd43f8232c5"
     },
     "admin/sv_warning_edit_inputs.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "5feee680492c9869174aa470259b3f91"
+        "version_id": 2000001,
+        "version_string": "2.0.0rc1",
+        "hash": "1972d14996f83976a173de269f4d92f5"
     },
     "admin/sv_warning_improvements_action_tree_macros.html": {
         "version_id": 2000000,

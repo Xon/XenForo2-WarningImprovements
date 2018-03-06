@@ -5,4 +5,4 @@
 	</xf:foreach>
 </xf:selectrow>
 
-<xf:numberboxrow name="sv_display_order" value="{$warning.sv_display_order}" min="0" step="10" label="{{ phrase('display_order:') }}" />
+<xf:macro template="display_order_macros" name="row" arg-name="sv_display_order" arg-value="{$warning.sv_display_order}" />
