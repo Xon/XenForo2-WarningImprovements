@@ -67,42 +67,48 @@ class Warn extends XFCP_Warn
                 $alertRepo->alertFromUser($warning->User, $warning->WarnedBy, 'warning_alert', $warning->warning_id, 'warning');
             }
 
-            $options = $this->app->options();
-
-            if ($postSummaryThreadId = $options->sv_post_warning_summary)
-            {
-                if ($thread = $this->em()->find('XF:Thread', $postSummaryThreadId))
-                {
-                    $dateString = date($options->sv_warning_date_format, \XF::$time);
-
-                    $params = [
-                        'username' => $this->user->username,
-                        'date' => $dateString,
-                        'title' => $this->warning->title,
-                        'points' => $this->warning->points,
-                        'category' => $this->warning->Definition->Category->title->render(),
-                        'report' => (!empty($this->report)) ? $this->app->router('public')->buildLink('full:reports', $this->report) : \XF::phrase('n_a')->render(), // shouldn't we use nopath:reports here?
-                        'notes' => $this->warning->notes
-                    ];
-
-                    $threadReplier = \XF::asVisitor($this->user, function() use($thread, $params){
-                        /** @var \XF\Service\Thread\Replier $threadReplier */
-                        $threadReplier = $this->service('XF:Thread\Replier', $thread);
-                        $threadReplier->setIsAutomated();
-
-                        $messageContent = \XF::phrase('Warning_Summary_Message', $params)->render('raw');
-
-                        $threadReplier->setMessage($messageContent);
-                        $threadReplier->save();
-                    });
-
-                    /** @noinspection PhpExpressionResultUnusedInspection */
-                    $threadReplier;
-                }
-            }
+            $this->warningActionNotifications();
         }
 
         return $warning;
+    }
+
+    public function warningActionNotifications()
+    {
+        $options = $this->app->options();
+
+        if ($postSummaryThreadId = $options->sv_post_warning_summary)
+        {
+            if ($thread = $this->em()->find('XF:Thread', $postSummaryThreadId))
+            {
+                /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
+                $warning = $this->warning;
+
+                $dateString = date($options->sv_warning_date_format, \XF::$time);
+
+                $warningArray = $warning->toArray();
+                $warningArray['username'] = $this->user->username;
+                $warningArray['report'] = $warning->Report
+                    ? $this->app->router('public')->buildLink('full:reports', $warning->Report)
+                    : \XF::phrase('n_a')->render();
+                $warningArray['date'] = $dateString;
+
+                $threadReplier = \XF::asVisitor($this->user, function () use ($thread, $warningArray) {
+                    /** @var \XF\Service\Thread\Replier $threadReplier */
+                    $threadReplier = $this->service('XF:Thread\Replier', $thread);
+                    $threadReplier->setIsAutomated();
+
+                    $messageContent = \XF::phrase('Warning_Summary_Message', $warningArray)->render('raw');
+
+                    $threadReplier->setMessage($messageContent);
+                    $threadReplier->save();
+
+                    return $threadReplier;
+                });
+
+                $threadReplier->sendNotifications();
+            }
+        }
     }
 
     protected function _validate()

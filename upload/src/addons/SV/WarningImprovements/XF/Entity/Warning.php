@@ -18,6 +18,7 @@ use XF\Mvc\Entity\Structure;
  * RELATIONS
  * @property \SV\WarningImprovements\XF\Entity\WarningDefinition|\XF\Entity\WarningDefinition Definition
  * @property \XF\Entity\WarningDefinition Definition_
+ * @property \XF\Entity\Report Report
  */
 class Warning extends XFCP_Warning
 {
@@ -205,6 +206,12 @@ class Warning extends XFCP_Warning
         $structure->getters['expiry_date_rounded'] = true;
         $structure->getters['notes'] = true;
         $structure->getters['Definition'] = false;
+
+        $structure->relations['Report'] = [
+            'entity' => 'XF:Report',
+            'type' => self::TO_ONE,
+            'conditions' => [['content_type', '=', '$content_type'],['content_id', '=', '$content_id'] ],
+        ];
 
         return $structure;
     }
