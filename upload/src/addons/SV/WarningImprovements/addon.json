@@ -11,7 +11,7 @@
     "extra_urls": [],
     "require": {
         "XF": [
-            2000070,
+            2000010,
             "XenForo 2.0.0+"
         ],
         "php": [
