@@ -155,18 +155,6 @@ class Warning extends XFCP_Warning
     {
         Globals::$warningObj = $this;
 
-        /** @var \XF\Finder\Report $reportFinder */
-        $reportFinder = $this->finder('XF:Report');
-        $report = $reportFinder
-            ->where('content_type', $this->content_type)
-            ->where('content_id', $this->content_id)
-            ->fetchOne();
-
-        if (!empty($report))
-        {
-            Globals::$reportObj = $report;
-        }
-
         try
         {
             parent::updateUserWarningPoints($user, $adjustment, $isDelete);
@@ -174,7 +162,6 @@ class Warning extends XFCP_Warning
         finally
         {
             Globals::$warningObj = null;
-            Globals::$reportObj = null;
         }
     }
 

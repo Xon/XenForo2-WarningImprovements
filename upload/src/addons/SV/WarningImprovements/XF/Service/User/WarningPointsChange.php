@@ -7,6 +7,7 @@ use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User;
 use SV\WarningImprovements\XF\Entity\Warning;
 use XF\App;
+use XF\Entity\Forum;
 use XF\Entity\WarningAction;
 use XF\Entity\Report;
 use XF\Mvc\Entity\AbstractCollection;
@@ -38,10 +39,6 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         parent::__construct($app, $user);
 
         $this->setWarning(Globals::$warningObj);
-        if (!empty(Globals::$reportObj))
-        {
-            $this->setReport(Globals::$reportObj);
-        }
 
         $this->nullCategory = \XF::em()->create('SV\WarningImprovements:WarningCategory');
         $this->nullCategory->setTrusted('warning_category_id', null);
@@ -60,24 +57,14 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         $this->warning = $warning;
     }
 
-    /**
-     * @param Report $report
-     */
-    public function setReport(Report $report = null)
-    {
-        $this->report = $report;
-    }
-
     protected function applyWarningAction(WarningAction $action)
     {
         parent::applyWarningAction($action);
 
-        if ($this->warning)
+        if ((empty($this->lastWarningAction) || $action->points > $this->lastWarningAction->points) &&
+            (!empty($action->sv_post_node_id) || !empty($action->sv_post_thread_id)))
         {
-            if ((empty($this->lastWarningAction) || $action->points > $this->lastWarningAction->points) && (!empty($action->sv_post_node_id) || !empty($action->sv_post_thread_id)))
-            {
-                $this->lastAction = $action;
-            }
+            $this->lastAction = $action;
         }
     }
 
@@ -209,57 +196,82 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             }
         }
 
-        $this->warningActionNotifications();
+        \XF::runLater(function () {
+            $this->warningActionNotifications();
+        });
     }
 
     public function  warningActionNotifications()
     {
-        if (!empty($this->lastAction))
+        if ($this->lastAction)
         {
-            $postAsUserId = empty($this->lastAction->sv_post_as_user_id) ? $this->warning->user_id : $this->lastAction->sv_post_as_user_id;
-
             /** @var User $postAsUser */
-            $postAsUser = $this->em()->find('XF:User', $postAsUserId);
+            $postAsUser = null;
+            $postAsUserId = $this->lastAction->sv_post_as_user_id ? $this->lastAction->sv_post_as_user_id : 0;
+            if ($postAsUserId)
+            {
+                $postAsUser = $this->em()->find('XF:User', $postAsUserId);
+            }
 
-            if (!empty($postAsUser))
+            if (!$postAsUserId)
+            {
+                $postAsUser = \XF::visitor();
+            }
+
+            if ($postAsUser)
             {
                 $dateString = date($this->app->options()->sv_warning_date_format, \XF::$time);
+                $warning = $this->warning;
 
                 $params = [
                     'username' => $this->user->username,
-                    'points' =>  $this->user->warning_count,
+                    'points' =>  $this->user->warning_points,
+                    'report' => $warning && $warning->Report
+                        ? $this->app->router('public')->buildLink('full:reports', $warning->Report)
+                        : \XF::phrase('n_a')->render(),
                     'date' => $dateString,
-                    'warning_title' => $this->warning->title,
-                    'warning_points' => $this->warning->points,
-                    'warning_category' => $this->warning->Definition->Category->title->render(),
+                    'warning_title' => $warning ? $warning->title : \XF::phrase('n_a'),
+                    'warning_points' => $warning ? $warning->points : 0,
+                    'warning_category' => $warning ? $warning->Definition->Category->title->render() : \XF::phrase('n_a'),
                     'threshold' => $this->lastAction->points,
-                    'report' => (!empty($this->report)) ? $this->app->router('public')->buildLink('full:reports', $this->report) : \XF::phrase('n_a')->render() // shouldn't we use nopath:reports here?
+
                 ];
 
-                if (!empty($this->lastAction->sv_post_node_id))
+                $nodeId = $this->lastAction->sv_post_node_id;
+                if ($nodeId)
                 {
-                    if ($forum = $this->em()->find('XF:Forum', $this->lastAction->sv_post_node_id, 'Node'))
+                    /** @var Forum $forum */
+                    $forum = $this->em()->find('XF:Forum', $nodeId);
+
+                    if ($forum)
                     {
+                        /** @var \XF\Service\Thread\Creator $threadCreator */
                         $threadCreator = \XF::asVisitor($postAsUser, function() use($forum, $params){
                             /** @var \XF\Service\Thread\Creator $threadCreator */
                             $threadCreator = $this->service('XF:Thread\Creator', $forum);
                             $threadCreator->setIsAutomated();
+
+                            $threadCreator->setPrefix($forum->default_prefix_id);
 
                             $title = \XF::phrase('Warning_Thread_Title', $params)->render('raw');
                             $messageContent = \XF::phrase('Warning_Thread_Message', $params)->render('raw');
 
                             $threadCreator->setContent($title, $messageContent);
                             $threadCreator->save();
+
+                            return $threadCreator;
                         });
 
-                        /** @noinspection PhpExpressionResultUnusedInspection */
-                        $threadCreator;
+                        \XF::runLater(function () use ($threadCreator) {
+                            $threadCreator->sendNotifications();
+                        });
                     }
                 }
-                else if (!empty($this->lastAction->sv_post_thread_id))
+                else if ($this->lastAction->sv_post_thread_id)
                 {
                     if ($thread = $this->em()->find('XF:Thread', $this->lastAction->sv_post_thread_id))
                     {
+                        /** @var \XF\Service\Thread\Replier $threadReplier */
                         $threadReplier = \XF::asVisitor($postAsUser, function() use($thread, $params){
                             /** @var \XF\Service\Thread\Replier $threadReplier */
                             $threadReplier = $this->service('XF:Thread\Replier', $thread);
@@ -269,10 +281,13 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
                             $threadReplier->setMessage($messageContent);
                             $threadReplier->save();
+
+                            return $threadReplier;
                         });
 
-                        /** @noinspection PhpExpressionResultUnusedInspection */
-                        $threadReplier;
+                        \XF::runLater(function () use ($threadReplier){
+                            $threadReplier->sendNotifications();
+                        });
                     }
                 }
             }
