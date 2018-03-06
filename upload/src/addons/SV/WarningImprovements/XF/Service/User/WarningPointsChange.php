@@ -262,9 +262,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             return $threadCreator;
                         });
 
-                        \XF::runLater(function () use ($threadCreator) {
-                            $threadCreator->sendNotifications();
-                        });
+                        $threadCreator->sendNotifications();
                     }
                 }
                 else if ($this->lastAction->sv_post_thread_id)
@@ -285,9 +283,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             return $threadReplier;
                         });
 
-                        \XF::runLater(function () use ($threadReplier){
-                            $threadReplier->sendNotifications();
-                        });
+                        $threadReplier->sendNotifications();
                     }
                 }
             }
