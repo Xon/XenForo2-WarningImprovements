@@ -13,6 +13,8 @@ use SV\WarningImprovements\Entity\WarningCategory;
 
 class WarningTotal
 {
+    /** @var WarningTotal */
+    public $parent;
     /** @var WarningCategory */
     public $category;
     /** @var int */
@@ -40,6 +42,10 @@ class WarningTotal
     {
         $this->oldPoints += $oldPoints;
         $this->oldCount += 1;
+        if ($this->parent)
+        {
+            $this->parent->addOld($oldPoints);
+        }
     }
 
     /**
@@ -49,16 +55,9 @@ class WarningTotal
     {
         $this->newPoints += $newPoints;
         $this->newCount += 1;
-    }
-
-    /**
-     * @param WarningTotal $warningTotal
-     */
-    public function addTotals(WarningTotal $warningTotal)
-    {
-        $this->oldPoints += $warningTotal->oldPoints;
-        $this->oldCount += $warningTotal->oldCount;
-        $this->newPoints += $warningTotal->newPoints;
-        $this->newCount += $warningTotal->newCount;
+        if ($this->parent)
+        {
+            $this->parent->addNew($newPoints);
+        }
     }
 }

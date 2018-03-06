@@ -29,6 +29,9 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /** @var WarningCategory */
     protected $nullCategory = null;
 
+    /** @var WarningCategory[] */
+    protected $warningCategories = [];
+
     public function __construct(\XF\App $app, User $user)
     {
         parent::__construct($app, $user);
@@ -42,6 +45,10 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         $this->nullCategory = \XF::em()->create('SV\WarningImprovements:WarningCategory');
         $this->nullCategory->setTrusted('warning_category_id', null);
         $this->nullCategory->setReadOnly(true);
+
+        /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
+        $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
+        $this->warningCategories = $warningCategoryRepo->findCategoryList()->fetch()->toArray();
     }
 
     /**
@@ -74,106 +81,22 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     }
 
     /**
-     * Must be ordered from parent to child!
-     *
-     * @var WarningCategory[]
-     */
-    protected $warningCategories = [];
-
-    /**
      * Populates warningCategories
      *
      * @param string $direction
+     * @param bool   $fromDelete
      * @return AbstractCollection|null
      */
-    protected function getActions($direction, $fromDelete = false)
+    protected function getActions(/** @noinspection PhpUnusedParameterInspection */ $direction, $fromDelete = false)
     {
-        $actions = null;
-
-        if ($this->warning)
-        {
-            /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
-            $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
-
-            $category = $this->warning->Definition->Category;
-            $categories = $warningCategoryRepo->findCategoryParentList($category)->fetch();
-            // Must be ordered from least specific category to most specific (ie root => leaf)
-            $this->warningCategories = \array_values($categories->toArray());
-            array_unshift($this->warningCategories, $category);
-
-            $actions = $this->finder('XF:WarningAction')->order('points', $direction);
-
-            $includeGlobal = true;
-            $categoryIds = [];
-
-            if (!empty($categories))
-            {
-                /** @var \SV\WarningImprovements\Entity\WarningCategory $parentCategory */
-                foreach ($categories as $parentCategory)
-                {
-                    $categoryIds[] = $parentCategory->warning_category_id;
-                }
-
-                if ($fromDelete)
-                {
-                    $previousAppliedWarnings = $this->finder('XF:Warning')
-                        ->where('user_id', $this->warning->user_id)
-                        ->where('warning_id','<>', $this->warning->warning_id)
-                        ->with(['Definition', 'Definition.Category'])
-                        ->fetch();
-
-                    // user has some warnings that aren't the current warning we're dealing with
-                    if (!empty($previousAppliedWarnings))
-                    {
-                        /** @var \SV\WarningImprovements\XF\Entity\Warning|\XF\Entity\Warning $previousAppliedWarning */
-                        foreach ($previousAppliedWarnings as $previousAppliedWarning)
-                        {
-                            if (!empty($previousAppliedWarning->Definition))
-                            {
-                                if (!empty($previousAppliedWarning->Definition->Category))
-                                {
-                                    $previousAppliedWarningCategory = $previousAppliedWarning->Definition->Category;
-                                    $previousAppliedActionCategoryParentList = $warningCategoryRepo->findCategoryParentList($previousAppliedWarningCategory)
-                                        ->where('warning_category_id', '<>', $category->warning_category_id)
-                                        ->where('warning_category_id', '=', $categoryIds)
-                                        ->fetch();
-
-                                    if (!empty($previousAppliedActionCategoryParentList))
-                                    {
-                                        $includeGlobal = false;
-
-                                        /** @var \SV\WarningImprovements\Entity\WarningCategory $previousAppliedActionCategoryParent */
-                                        foreach ($previousAppliedActionCategoryParentList as $previousAppliedActionCategoryParent)
-                                        {
-                                            $categoryIds = array_diff($categoryIds, [$previousAppliedActionCategoryParent->warning_category_id]);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $categoryIds[] = $category->warning_category_id;
-
-            if ($includeGlobal)
-            {
-                $actions = $actions->whereOr(
-                    ['sv_warning_category_id', '=', $categoryIds],
-                    ['sv_warning_category_id', '=', null]
-                )->fetch();
-            }
-            else
-            {
-                $actions = $actions->where('sv_warning_category_id', '=', $categoryIds)->fetch();
-            }
-        }
-
-        return $actions;
+        return $this->finder('XF:WarningAction')
+                    ->order('points', $direction)
+                    ->fetch();
     }
 
     /**
+     * Works out the total points per category and changes
+     *
      * @param bool $removePoints
      * @return WarningTotal[]
      */
@@ -184,7 +107,26 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         /** @var Warning[] $warnings */
         $warnings = $warningRepo->findUserWarningsForList($this->user->user_id)
                                 ->where('is_expired', '=', 0)
-                                ->fetch();
+                                ->fetch()
+                                ->toArray();
+
+        /** @var WarningTotal[] $warningPoints */
+        $warningPoints = [];
+        $warningPoints[0] = new WarningTotal($this->nullCategory);
+
+        foreach ($this->warningCategories as $categoryId => $category)
+        {
+            $warningPoints[$categoryId] = new WarningTotal($category);
+        }
+        // build the category tree
+        foreach ($this->warningCategories as $categoryId => $category)
+        {
+            $parentId = $category->parent_category_id ?: 0;
+            if (isset($warningPoints[$parentId]))
+            {
+                $warningPoints[$categoryId]->parent = $warningPoints[$parentId];
+            }
+        }
 
         $oldWarning = null;
         $newWarning = null;
@@ -192,29 +134,27 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         {
             $oldWarning = $this->warning;
             $newWarning = null;
+            // warning has been deleted already, so add it to the list of warnings to consider
+            $warnings[$oldWarning->warning_id] = $oldWarning;
         }
         else
         {
             $newWarning = $this->warning;
             $oldWarning = null;
-        }
-        $warningPoints = [];
-
-        $warningTotalsCumulative = [0 => new WarningTotal($this->nullCategory)];
-        foreach ($this->warningCategories as $category)
-        {
-            $warningPoints[$category->warning_category_id] = new WarningTotal($category);
+            // warning has been added already
         }
 
         // compute per-category totals (globals map to 0)
         foreach ($warnings as $warning)
         {
+            /** @var WarningCategory $category */
             $category = $warning->Definition->Category;
-            $categoryId = $category->warning_category_id ?: 0;
+            $categoryId = $category ? ($category->warning_category_id ?: 0) : 0;
             if (empty($warningPoints[$categoryId]))
             {
-                $warningPoints[$categoryId] = new WarningTotal($category);
+                throw new \LogicException("Unable to find warning category {$categoryId} for the warning {$warning->warning_id}" );
             }
+
             /** @var WarningTotal $warningTotal */
             $warningTotal = $warningPoints[$categoryId];
 
@@ -230,32 +170,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             }
         }
 
-        // propagate totals from child categories to parent, relying on the order to remove the need for recursion
-        foreach ($this->warningCategories as $category)
-        {
-            $categoryId = $category->warning_category_id ?: 0;
-            /** @var WarningTotal $warningTotal */
-            $warningTotals = $warningPoints[$categoryId];
-
-            // if the parent category
-            $parentId = $category->parent_category_id;
-            if ($parentId)
-            {
-                if (empty($warningPoints[$parentId]))
-                {
-                    $warningPoints[$parentId] = new WarningTotal($category->Parent);
-                }
-                /** @var WarningTotal $parentTotals */
-                $parentTotals = $warningPoints[$parentId];
-
-                $parentTotals->addTotals($warningTotals);
-            }
-
-            $warningTotalsCumulative[$categoryId] = $warningTotals;
-        }
-
         /** @var WarningTotal[] $warningPointsCumulative */
-        return $warningTotalsCumulative;
+        return $warningPoints;
     }
 
     protected function processPointsIncrease($oldPoints, $newPoints)
@@ -276,15 +192,16 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         $categoryPoints = $this->getCategoryPoints(false);
 
-        /** @var \XF\Entity\WarningAction $action */
+        /** @var \SV\WarningImprovements\XF\Entity\WarningAction $action */
         foreach ($actions AS $action)
         {
-            $warningCategoryId = $action->warning_action_id ?: 0;
+            $categoryId = $action->sv_warning_category_id ?: 0;
+            if (empty($categoryPoints[$categoryId]))
+            {
+                throw new \LogicException("Unable to find warning category {$categoryId} for the warning action {$action->warning_action_id}" );
+            }
 
-            $points = isset($categoryPoints[$warningCategoryId])
-                ? $categoryPoints[$warningCategoryId]
-                : new WarningTotal($this->nullCategory, $newPoints,1, $oldPoints, 0);
-
+            $points = $categoryPoints[$categoryId];
             if ($action->points > $points->oldPoints && $action->points <= $points->newPoints)
             {
                 $this->applyWarningAction($action);
@@ -363,50 +280,72 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete = false)
     {
-        if (!$this->warning || !$fromWarningDelete)
+        if (!$this->warning)
         {
             parent::processPointsDecrease($oldPoints, $newPoints, $fromWarningDelete);
+
             return;
         }
 
-        // remove triggers, but replace the 'warning was deleted' logic'
-        parent::processPointsDecrease($oldPoints, $newPoints, false);
-
-        $actions = $this->getActions('DESC', true);
-
-        if (empty($actions))
-        {
-            return;
-        }
-
-        // $newPoints are uncategorized, $this->>warning should be set to the warning which inflicted the changes
-        // getCategoryPoints will use this to work out the actual warning points.
         $categoryPoints = $this->getCategoryPoints(true);
 
-        /** @var \SV\WarningImprovements\XF\Entity\WarningAction|\XF\Entity\WarningAction $action */
-        foreach ($actions AS $action)
+        $triggers = $this->db()->fetchAllKeyed("
+			SELECT action_trigger.*, warning_action.sv_warning_category_id
+			FROM xf_warning_action_trigger as action_trigger
+			left join xf_warning_action warning_action on warning_action.warning_action_id = action_trigger.warning_action_id
+			WHERE user_id = ?
+			ORDER BY trigger_points DESC
+		", 'action_trigger_id', $this->user->user_id);
+        if ($triggers)
         {
-            $warningCategoryId = $action->warning_action_id ?: 0;
+            $remainingTriggers = $triggers;
 
-            $points = isset($categoryPoints[$warningCategoryId])
-                ? $categoryPoints[$warningCategoryId]
-                : new WarningTotal($this->nullCategory, $newPoints,1, $oldPoints, 0);
+            foreach ($triggers AS $key => $trigger)
+            {
+                $categoryId = $trigger['sv_warning_category_id'] ?: 0;
+                if (empty($categoryPoints[$categoryId]))
+                {
+                    throw new \LogicException("Unable to find warning category {$categoryId} for the warning action trigger {$trigger['action_trigger_id']} (warning_action_id:{$trigger['warning_action_id']}");
+                }
 
-            // If we're deleting, we need to undo warning action effects, even if they're time limited.
-            // Points-based will be handled by the triggers so skip. Then only consider where we cross
-            // the points threshold from the old (higher) to the new (lower) point values
-            if (
-                (
+                $points = $categoryPoints[$categoryId];
+                if ($trigger['trigger_points'] > $points->newPoints)
+                {
+                    unset($remainingTriggers[$key]);
+                    $this->removeActionTrigger($trigger, $remainingTriggers);
+                }
+            }
+        }
+
+
+        if ($fromWarningDelete)
+        {
+            $actions = $this->getActions('DESC', true);
+            /** @var \SV\WarningImprovements\XF\Entity\WarningAction $action */
+            foreach ($actions AS $action)
+            {
+                $categoryId = $action->sv_warning_category_id ?: 0;
+                if (empty($categoryPoints[$categoryId]))
+                {
+                    throw new \LogicException("Unable to find warning category {$categoryId} for the warning action {$action->warning_action_id}" );
+                }
+
+                $points = $categoryPoints[$categoryId];
+
+                // If we're deleting, we need to undo warning action effects, even if they're time limited.
+                // Points-based will be handled by the triggers so skip. Then only consider where we cross
+                // the points threshold from the old (higher) to the new (lower) point values
+                if (
                     $action->action_length_type == 'points'
                     || $action->points > $points->oldPoints // threshold above where we were
                     || $action->points <= $points->newPoints // we're still at/above the threshold
-                ) && !$fromWarningDelete
-            )
-            {
-                continue;
-            }
+                )
+                {
+                    continue;
+                }
 
-            $this->removeWarningActionEffects($action);
+                $this->removeWarningActionEffects($action);
+            }
         }
     }
 }
