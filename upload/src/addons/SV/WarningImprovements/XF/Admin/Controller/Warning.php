@@ -2,8 +2,13 @@
 
 namespace SV\WarningImprovements\XF\Admin\Controller;
 
+use SV\WarningImprovements\Entity\WarningCategory;
+use SV\WarningImprovements\Entity\WarningDefault;
+use XF\Entity\WarningAction;
+use XF\Entity\WarningDefinition;
 use XF\Mvc\FormAction;
 use XF\Mvc\ParameterBag;
+use XF\Mvc\Reply\View;
 
 /**
  * Extends \XF\Admin\Controller\Warning
@@ -14,7 +19,7 @@ class Warning extends XFCP_Warning
     {
         $response = parent::actionIndex($params);
 
-        if ($response instanceof \XF\Mvc\Reply\View)
+        if ($response instanceof View)
         {
             $categoryRepo = $this->getCategoryRepo();
             $categories = $categoryRepo->findCategoryList()->fetch();
@@ -55,23 +60,25 @@ class Warning extends XFCP_Warning
 
     public function actionEdit(ParameterBag $params)
     {
-        if ($params->warning_definition_id == 0)
+        /** @noinspection PhpUndefinedFieldInspection */
+        $warningDefinitionId = $params->warning_definition_id;
+        if ($warningDefinitionId == 0)
         {
             $warning = $this->getCustomWarningDefinition();
         }
         else
         {
-            $warning = $this->assertWarningDefinitionExists($params->warning_definition_id);
+            $warning = $this->assertWarningDefinitionExists($warningDefinitionId);
         }
 
         return $this->warningAddEdit($warning);
     }
 
-    public function warningAddEdit(\XF\Entity\WarningDefinition $warning)
+    public function warningAddEdit(WarningDefinition $warning)
     {
         $response = parent::warningAddEdit($warning);
 
-        if ($response instanceof \XF\Mvc\Reply\View)
+        if ($response instanceof View)
         {
             $categoryRepo = $this->getCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
@@ -83,7 +90,7 @@ class Warning extends XFCP_Warning
         return $response;
     }
 
-    protected function warningSaveProcess(\XF\Entity\WarningDefinition $warning)
+    protected function warningSaveProcess(WarningDefinition $warning)
     {
         if ($this->filter('is_custom', 'bool'))
         {
@@ -114,7 +121,7 @@ class Warning extends XFCP_Warning
             $categoryRepo = $this->getCategoryRepo();
             $categories = $categoryRepo->findCategoryList();
 
-            /** @var \SV\WarningImprovements\Entity\WarningCategory $category */
+            /** @var WarningCategory $category */
             foreach ($categories as $category)
             {
                 $sortTree = $sorter->buildSortTree($this->filter('category-' . $category->warning_category_id, 'json-array'));
@@ -156,6 +163,7 @@ class Warning extends XFCP_Warning
 
     public function actionDelete(ParameterBag $params)
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         if ($params->warning_definition_id == 0)
         {
             return $this->error(\XF::phrase('sv_warning_improvements_custom_warning_cannot_be_deleted'));
@@ -164,11 +172,11 @@ class Warning extends XFCP_Warning
         return parent::actionDelete($params);
     }
 
-    public function _actionAddEdit(\XF\Entity\WarningAction $action)
+    public function _actionAddEdit(WarningAction $action)
     {
         $response = parent::_actionAddEdit($action);
 
-        if ($response instanceof \XF\Mvc\Reply\View)
+        if ($response instanceof View)
         {
             /** @var \XF\Repository\Node $nodeRepo */
             $nodeRepo = $this->app()->repository('XF:Node');
@@ -187,7 +195,7 @@ class Warning extends XFCP_Warning
     }
 
     // underscore prefix to not be confused with actual controller actions
-    protected function _actionSaveProcess(\XF\Entity\WarningAction $action)
+    protected function _actionSaveProcess(WarningAction $action)
     {
         $inputFieldNames = [
             'sv_warning_category_id' => 'uint',
@@ -208,7 +216,7 @@ class Warning extends XFCP_Warning
         return parent::_actionSaveProcess($action);
     }
 
-    public function defaultActionAddEdit(\SV\WarningImprovements\Entity\WarningDefault $defaultAction)
+    public function defaultActionAddEdit(WarningDefault $defaultAction)
     {
         /** @var \XF\Repository\Node $nodeRepo */
         $nodeRepo = $this->app()->repository('XF:Node');
@@ -225,7 +233,7 @@ class Warning extends XFCP_Warning
         return $this->view('SV\WarningImprovements\XF:Warning\Action\DefaultEdit', 'sv_warningimprovements_warning_default_edit', $viewParams);
     }
 
-    public function actionDefaultEdit(ParameterBag $params)
+    public function actionDefaultEdit(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
     {
         $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
@@ -234,13 +242,13 @@ class Warning extends XFCP_Warning
 
     public function actionDefaultAdd()
     {
-        /** @var \SV\WarningImprovements\Entity\WarningDefault $defaultAction */
+        /** @var WarningDefault $defaultAction */
         $defaultAction = $this->em()->create('SV\WarningImprovements:WarningDefault');
 
         return $this->defaultActionAddEdit($defaultAction);
     }
 
-    protected function defaultSaveProcess(\SV\WarningImprovements\Entity\WarningDefault $defaultAction)
+    protected function defaultSaveProcess(WarningDefault $defaultAction)
     {
         $form = $this->formAction();
 
@@ -261,7 +269,7 @@ class Warning extends XFCP_Warning
         return $form;
     }
 
-    public function actionDefaultSave(ParameterBag $params)
+    public function actionDefaultSave(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
     {
         $this->assertPostOnly();
 
@@ -271,7 +279,7 @@ class Warning extends XFCP_Warning
         }
         else
         {
-            /** @var \SV\WarningImprovements\Entity\WarningDefault $defaultAction */
+            /** @var WarningDefault $defaultAction */
             $defaultAction = $this->em()->create('SV\WarningImprovements:WarningDefault');
         }
 
@@ -282,7 +290,7 @@ class Warning extends XFCP_Warning
         );
     }
 
-    public function actionDefaultDelete(ParameterBag $params)
+    public function actionDefaultDelete(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
     {
         $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
@@ -301,23 +309,26 @@ class Warning extends XFCP_Warning
         }
     }
 
-    public function warningCategoryAddEdit(\SV\WarningImprovements\Entity\WarningCategory $warningCategory)
+    public function warningCategoryAddEdit(WarningCategory $warningCategory)
     {
         $categoryRepo = $this->getCategoryRepo();
         $categoryTree = $categoryRepo->createCategoryTree();
+
+        /** @var \XF\Repository\UserGroup $userRepo */
+        $userRepo = $this->repository('XF:UserGroup');
 
         $viewParams = [
             'category' => $warningCategory,
             'categoryTree' => $categoryTree,
 
-            'userGroups' => $this->repository('XF:UserGroup')->getUserGroupTitlePairs()
+            'userGroups' => $userRepo->getUserGroupTitlePairs()
         ];
         return $this->view('XF:Warning\Category\Edit', 'sv_warning_category_edit', $viewParams);
     }
 
     public function actionCategoryAdd()
     {
-        /** @var \SV\WarningImprovements\Entity\WarningCategory $warningCategory */
+        /** @var WarningCategory $warningCategory */
         $warningCategory = $this->em()->create('SV\WarningImprovements:WarningCategory');
 
         if ($parentCategoryId = $this->filter('parent_category_id', 'uint'))
@@ -328,14 +339,14 @@ class Warning extends XFCP_Warning
         return $this->warningCategoryAddEdit($warningCategory);
     }
 
-    public function actionCategoryEdit(ParameterBag $params)
+    public function actionCategoryEdit(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
     {
         $warningCategory = $this->assertCategoryExists($this->filter('warning_category_id', 'uint'));
 
         return $this->warningCategoryAddEdit($warningCategory);
     }
 
-    protected function categorySaveProcess(\SV\WarningImprovements\Entity\WarningCategory $warningCategory)
+    protected function categorySaveProcess(WarningCategory $warningCategory)
     {
         $form = $this->formAction();
 
@@ -375,7 +386,7 @@ class Warning extends XFCP_Warning
         return $form;
     }
 
-    public function actionCategorySave(ParameterBag $params)
+    public function actionCategorySave(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
     {
         $this->assertPostOnly();
 
@@ -387,7 +398,7 @@ class Warning extends XFCP_Warning
         }
         else
         {
-            /** @var \SV\WarningImprovements\Entity\WarningCategory $warningCategory */
+            /** @var WarningCategory $warningCategory */
             $warningCategory = $this->em()->create('SV\WarningImprovements:WarningCategory');
         }
 
@@ -409,7 +420,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return \SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree
+     * @return \SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree|\XF\ControllerPlugin\AbstractPlugin
      */
     protected function getCategoryTreePlugin()
     {
@@ -417,7 +428,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return \SV\WarningImprovements\Repository\WarningCategory
+     * @return \SV\WarningImprovements\Repository\WarningCategory|\XF\Mvc\Entity\Repository
      */
     protected function getCategoryRepo()
     {
@@ -428,7 +439,7 @@ class Warning extends XFCP_Warning
      * @param $id
      * @param null $with
      * @param null $phraseKey
-     * @return \SV\WarningImprovements\Entity\WarningCategory|\XF\Mvc\Entity\Entity
+     * @return WarningCategory|\XF\Mvc\Entity\Entity
      * @throws \XF\Mvc\Reply\Exception
      */
     protected function assertCategoryExists($id, $with = null, $phraseKey = null)
@@ -441,7 +452,7 @@ class Warning extends XFCP_Warning
      * @param $id
      * @param null $with
      * @param null $phraseKey
-     * @return \SV\WarningImprovements\Entity\WarningDefault|\XF\Mvc\Entity\Entity
+     * @return WarningDefault|\XF\Mvc\Entity\Entity
      * @throws \XF\Mvc\Reply\Exception
      */
     protected function assertDefaultExists($id, $with = null, $phraseKey = null)

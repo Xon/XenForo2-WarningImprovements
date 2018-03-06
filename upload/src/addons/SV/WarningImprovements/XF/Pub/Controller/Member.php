@@ -62,6 +62,7 @@ class Member extends XFCP_Member
         $this->assertPostOnly();
         $userChangeTempId = $this->filter('warning_action_id', 'uint');
 
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->assertViewableUser($params->user_id);
 
         /** @var \SV\WarningImprovements\XF\Entity\UserChangeTemp $userChangeTemp */

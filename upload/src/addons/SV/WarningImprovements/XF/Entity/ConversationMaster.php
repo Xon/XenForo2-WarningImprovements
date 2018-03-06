@@ -2,7 +2,6 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
-use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
@@ -26,7 +25,7 @@ class ConversationMaster extends XFCP_ConversationMaster
         $structure->getters['is_conversation_for_warning'] = true;
 
         $structure->options['warningObj'] = null;
-    
+
         return $structure;
     }
 }

@@ -139,7 +139,7 @@ class Warn extends XFCP_Warn
         return $creator;
     }
 
-    protected function sendConversation(\XF\Entity\Warning $warning)
+    protected function sendConversation(Warning $warning)
     {
         Globals::$warningObj = $this->warning;
         try

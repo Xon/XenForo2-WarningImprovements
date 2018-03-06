@@ -2,7 +2,6 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
-use SV\WarningImprovements\Globals;
 use XF\Mvc\Entity\Structure;
 
 /**

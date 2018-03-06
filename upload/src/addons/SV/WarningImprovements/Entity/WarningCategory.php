@@ -10,6 +10,7 @@
 namespace SV\WarningImprovements\Entity;
 
 use XF\Entity\AbstractCategoryTree;
+use XF\Entity\User;
 use XF\Entity\WarningDefinition;
 use XF\Mvc\Entity\Structure;
 
@@ -160,7 +161,7 @@ class WarningCategory extends AbstractCategoryTree
             if (!$newParentCategory)
             {
                 $this->error(\XF::phrase('sv_warning_improvements_last_category_cannot_be_deleted'));
-                return false;
+                return;
             }
 
             $customWarningDefinition->sv_warning_category_id = $newParentCategory->warning_category_id;
@@ -235,7 +236,7 @@ class WarningCategory extends AbstractCategoryTree
             'warning_category_id'        => ['type' => self::UINT, 'autoIncrement' => true, 'nullable' => true],
             'warning_count' => ['type' => self::UINT, 'default' => 0],
             'allowed_user_group_ids'     => [
-                'type' => self::LIST_COMMA, 'default' => [\XF\Entity\User::GROUP_REG],
+                'type' => self::LIST_COMMA, 'default' => [User::GROUP_REG],
                 'list' => ['type' => 'posint', 'unique' => true, 'sort' => SORT_NUMERIC]
             ]
         ];

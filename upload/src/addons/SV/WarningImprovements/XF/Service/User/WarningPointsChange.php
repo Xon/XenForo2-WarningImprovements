@@ -6,6 +6,7 @@ use SV\WarningImprovements\Entity\WarningCategory;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User;
 use SV\WarningImprovements\XF\Entity\Warning;
+use XF\App;
 use XF\Entity\WarningAction;
 use XF\Entity\Report;
 use XF\Mvc\Entity\AbstractCollection;
@@ -32,7 +33,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /** @var WarningCategory[] */
     protected $warningCategories = [];
 
-    public function __construct(\XF\App $app, User $user)
+    public function __construct(App $app, User $user)
     {
         parent::__construct($app, $user);
 
