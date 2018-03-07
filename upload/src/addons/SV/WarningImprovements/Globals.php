@@ -14,12 +14,6 @@ namespace SV\WarningImprovements;
  */
 class Globals
 {
-    /** @var int */
-    public static $customWarningPhrase_version_id = 101011;
-
-    /** @var string */
-    public static $customWarningPhrase_version_string = '1.1.1s';
-
     /** @var int|null */
     public static $profileUserId = null;
 

@@ -16,7 +16,6 @@ namespace SV\WarningImprovements\XF\ControllerPlugin
 namespace SV\WarningImprovements\XF\Entity
 {
 	class XFCP_ConversationMaster extends \XF\Entity\ConversationMaster {}
-	class XFCP_Phrase extends \XF\Entity\Phrase {}
 	class XFCP_User extends \XF\Entity\User {}
 	class XFCP_UserBan extends \XF\Entity\UserBan {}
 	class XFCP_UserChangeTemp extends \XF\Entity\UserChangeTemp {}

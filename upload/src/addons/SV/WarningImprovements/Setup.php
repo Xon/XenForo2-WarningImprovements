@@ -56,21 +56,7 @@ class Setup extends AbstractSetup
                           VALUES (1, NULL, 0, ?)
          ", [User::GROUP_REG]);
 
-        /** @var \XF\Entity\Phrase $phrase */
-        $phrase = \XF::app()->finder('XF:Phrase')
-                     ->where('title', '=', 'sv_warning_category_title.0')
-                     ->where('language_id', '=', 0)
-                     ->fetchOne();
-        if (!$phrase)
-        {
-            $phrase = \XF::em()->create('XF:Phrase');
-            $phrase->language_id = 0;
-            $phrase->title = 'sv_warning_category_title.0';
-            $phrase->phrase_text = 'Warnings';
-            $phrase->global_cache = false;
-            $phrase->addon_id = '';
-            $phrase->save(false);
-        }
+
     }
 
     public function installStep4()
@@ -91,6 +77,14 @@ class Setup extends AbstractSetup
              SET warning_count = (SELECT COUNT(*)
                                   FROM xf_warning_definition
                                   WHERE xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)");
+    }
+
+    public function installStep5()
+    {
+        $this->addDefaultPhrase('warning_title.0', 'Custom Warning');
+        $this->addDefaultPhrase('warning_conv_title.0', '');
+        $this->addDefaultPhrase('warning_conv_text.0',' ');
+        $this->addDefaultPhrase('sv_warning_category_title.0', 'Warnings');
     }
 
     public function upgrade2000000Step1()
@@ -176,6 +170,11 @@ class Setup extends AbstractSetup
         $this->installStep4();
     }
 
+    public function upgrade2000004Step5()
+    {
+        $this->installStep5();
+    }
+
     public function uninstallStep1()
     {
         $sm = $this->schemaManager();
@@ -209,6 +208,9 @@ class Setup extends AbstractSetup
             ->whereOr(
                 [
                     ['title', 'LIKE', 'sv_warning_category_title.%'],
+                    ['title', '=', 'warning_title.0'],
+                    ['title', '=', 'warning_conv_title.0'],
+                    ['title', '=', 'warning_conv_text.0'],
                 ])
             ->fetch();
 
@@ -361,6 +363,30 @@ class Setup extends AbstractSetup
         };
 
         return $tables;
+    }
+
+    protected function addDefaultPhrase($title, $value, $deOwn = true)
+    {
+        /** @var \XF\Entity\Phrase $phrase */
+        $phrase = \XF::app()->finder('XF:Phrase')
+                     ->where('title', '=', $title)
+                     ->where('language_id', '=', 0)
+                     ->fetchOne();
+        if (!$phrase)
+        {
+            $phrase = \XF::em()->create('XF:Phrase');
+            $phrase->language_id = 0;
+            $phrase->title = $title;
+            $phrase->phrase_text = $value;
+            $phrase->global_cache = false;
+            $phrase->addon_id = '';
+            $phrase->save(false);
+        }
+        else if ($deOwn && $phrase->addon_id == 'SV/WarningImprovements')
+        {
+            $phrase->addon_id = '';
+            $phrase->save(false);
+        }
     }
 
     protected function renameOption($old, $new)

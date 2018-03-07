@@ -785,22 +785,10 @@
         "version_string": "2.0.0 Alpha",
         "hash": "14253ef1275365c6fcc4d6526be5dfce"
     },
-    "warning_definition_0_title.txt": {
-        "global_cache": false,
-        "version_id": 101011,
-        "version_string": "1.1.1s",
-        "hash": "f546798c3268ca0d4844de65ffbfab8d"
-    },
     "warning_escalating_defaults.txt": {
         "global_cache": false,
         "version_id": 102001,
         "version_string": "1.2.0",
         "hash": "d42bb4f91139da74698914d1b73241b3"
-    },
-    "warning_title.0.txt": {
-        "global_cache": false,
-        "version_id": 101011,
-        "version_string": "1.1.1s",
-        "hash": "f546798c3268ca0d4844de65ffbfab8d"
     }
 }
