@@ -15,10 +15,10 @@ class CategoryDelete extends AbstractJob
 {
     protected $defaultData = [
         'warning_category_id' => null,
-        'warningsComplete' => false,
-        'actionsComplete' => false,
-        'count' => 0,
-        'total' => null
+        'warningsComplete'    => false,
+        'actionsComplete'     => false,
+        'count'               => 0,
+        'total'               => null
     ];
 
     public function run($maxRunTime)
@@ -37,12 +37,12 @@ class CategoryDelete extends AbstractJob
 
         /** @var \XF\Finder\WarningDefinition|\XF\Mvc\Entity\Finder $warningDefinitionFinder */
         $warningDefinitionFinder = $this->app->finder('XF:WarningDefinition')
-            ->where('sv_warning_category_id','=', $this->data['warning_category_id']);
+                                             ->where('sv_warning_category_id', '=', $this->data['warning_category_id']);
         $warningDefinitionTotal = $warningDefinitionFinder->total();
 
         /** @var \XF\Finder\WarningAction|\XF\Mvc\Entity\Finder $actionFinder */
         $actionFinder = $this->app->finder('XF:WarningAction')
-            ->where('sv_warning_category_id','=', $this->data['warning_category_id']);
+                                  ->where('sv_warning_category_id', '=', $this->data['warning_category_id']);
         $actionTotal = $actionFinder->total();
 
         if ($this->data['total'] === null)
@@ -123,8 +123,9 @@ class CategoryDelete extends AbstractJob
     {
         $actionPhrase = \XF::phrase('deleting');
         $typePhrase = \XF::phrase('xfmg_category_contents');
+
         return sprintf('%s... %s (%s/%s)', $actionPhrase, $typePhrase,
-            \XF::language()->numberFormat($this->data['count']), \XF::language()->numberFormat($this->data['total'])
+                       \XF::language()->numberFormat($this->data['count']), \XF::language()->numberFormat($this->data['total'])
         );
     }
 

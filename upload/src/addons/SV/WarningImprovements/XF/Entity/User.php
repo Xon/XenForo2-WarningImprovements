@@ -55,7 +55,8 @@ class User extends XFCP_User
      * @param string|null $error
      * @return bool
      */
-    public function canViewIssuer(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewIssuer(/** @noinspection PhpUnusedParameterInspection */
+        &$error = null)
     {
         if (!$this->user_id)
         {
@@ -69,7 +70,8 @@ class User extends XFCP_User
      * @param string|null $error
      * @return bool
      */
-    public function canViewWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewWarningActions(/** @noinspection PhpUnusedParameterInspection */
+        &$error = null)
     {
         $visitor = \XF::visitor();
 
@@ -92,7 +94,8 @@ class User extends XFCP_User
      * @param string|null $error
      * @return bool
      */
-    public function canViewNonSummaryWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewNonSummaryWarningActions(/** @noinspection PhpUnusedParameterInspection */
+        &$error = null)
     {
         $visitor = \XF::visitor();
 
@@ -108,7 +111,8 @@ class User extends XFCP_User
      * @param string|null $error
      * @return bool
      */
-    public function canViewDiscouragedWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewDiscouragedWarningActions(/** @noinspection PhpUnusedParameterInspection */
+        &$error = null)
     {
         $visitor = \XF::visitor();
 
@@ -137,7 +141,8 @@ class User extends XFCP_User
      * @param string $error
      * @return bool
      */
-    public function canEditWarningActions(/** @noinspection PhpUnusedParameterInspection */&$error = '')
+    public function canEditWarningActions(/** @noinspection PhpUnusedParameterInspection */
+        &$error = '')
     {
         $visitor = \XF::visitor();
 
@@ -154,9 +159,9 @@ class User extends XFCP_User
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->repository('XF:Warning');
         $warningDefinitions = $warningRepo->findWarningDefinitionsForList()
-            ->with('Category')
-            ->order('sv_display_order')
-            ->fetch();
+                                          ->with('Category')
+                                          ->order('sv_display_order')
+                                          ->fetch();
 
         return $warningDefinitions;
     }
@@ -165,8 +170,7 @@ class User extends XFCP_User
     {
         $warningDefinitions = $this->warning_definitions;
 
-        $warningDefinitions = $warningDefinitions->filter(function ($warningDefinition)
-        {
+        $warningDefinitions = $warningDefinitions->filter(function ($warningDefinition) {
             /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
             return $warningDefinition->canView();
         });

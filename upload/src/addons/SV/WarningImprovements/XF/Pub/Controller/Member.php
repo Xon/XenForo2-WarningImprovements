@@ -41,6 +41,7 @@ class Member extends XFCP_Member
         $viewParams = [
             'user' => $user
         ];
+
         return $this->view('XF:Member\WarningActions\List', 'sv_member_warning_actions', $viewParams);
     }
 

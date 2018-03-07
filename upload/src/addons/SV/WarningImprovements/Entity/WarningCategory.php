@@ -81,7 +81,6 @@ class WarningCategory extends AbstractCategoryTree
 
     /**
      * @param string $type
-     *
      * @return \XF\Entity\Phrase
      */
     public function getMasterPhrase($type)
@@ -93,19 +92,21 @@ class WarningCategory extends AbstractCategoryTree
         {
             /** @var \XF\Entity\Phrase $phrase */
             $phrase = $this->_em->create('XF:Phrase');
-            $phrase->title = $this->_getDeferredValue(function() use ($type) { return $this->getPhraseName($type); });
+            $phrase->title = $this->_getDeferredValue(function () use ($type) { return $this->getPhraseName($type); });
             $phrase->language_id = 0; // 0 = master
         }
 
         return $phrase;
     }
 
-    public function warningAdded(/** @noinspection PhpUnusedParameterInspection */ WarningDefinition $warningDefinition)
+    public function warningAdded(/** @noinspection PhpUnusedParameterInspection */
+        WarningDefinition $warningDefinition)
     {
         $this->rebuildCounters();
     }
 
-    public function warningRemoved(/** @noinspection PhpUnusedParameterInspection */ WarningDefinition $warningDefinition)
+    public function warningRemoved(/** @noinspection PhpUnusedParameterInspection */
+        WarningDefinition $warningDefinition)
     {
         $this->rebuildCounters();
     }
@@ -146,8 +147,8 @@ class WarningCategory extends AbstractCategoryTree
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $customWarningDefinition */
         $customWarningDefinition = $this->finder('XF:WarningDefinition')
-            ->where('warning_definition_id','=', 0)
-            ->where('sv_warning_category_id','=', $warningCategoryIds);
+                                        ->where('warning_definition_id', '=', 0)
+                                        ->where('sv_warning_category_id', '=', $warningCategoryIds);
 
         if ($customWarningDefinition)
         {
@@ -155,12 +156,13 @@ class WarningCategory extends AbstractCategoryTree
             $warningCategoryFinder = $this->finder('SV\WarningImprovements:WarningCategory');
             /** @var \SV\WarningImprovements\Entity\WarningCategory $newParentCategory */
             $newParentCategory = $warningCategoryFinder
-                ->where('sv_warning_category_id','<>', $warningCategoryIds)
+                ->where('sv_warning_category_id', '<>', $warningCategoryIds)
                 ->fetch();
 
             if (!$newParentCategory)
             {
                 $this->error(\XF::phrase('sv_warning_improvements_last_category_cannot_be_deleted'));
+
                 return;
             }
 
@@ -233,49 +235,49 @@ class WarningCategory extends AbstractCategoryTree
         $structure->shortName = 'SV\WarningImprovements:WarningCategory';
         $structure->primaryKey = 'warning_category_id';
         $structure->columns = [
-            'warning_category_id'        => ['type' => self::UINT, 'autoIncrement' => true, 'nullable' => true],
-            'warning_count' => ['type' => self::UINT, 'default' => 0],
-            'allowed_user_group_ids'     => [
+            'warning_category_id'    => ['type' => self::UINT, 'autoIncrement' => true, 'nullable' => true],
+            'warning_count'          => ['type' => self::UINT, 'default' => 0],
+            'allowed_user_group_ids' => [
                 'type' => self::LIST_COMMA, 'default' => [User::GROUP_REG],
                 'list' => ['type' => 'posint', 'unique' => true, 'sort' => SORT_NUMERIC]
             ]
         ];
         $structure->getters = [
             'is_usable' => true,
-            'title' => true
+            'title'     => true
         ];
         $structure->relations = [
-            'MasterTitle' => [
-                'entity' => 'XF:Phrase',
-                'type' => self::TO_ONE,
+            'MasterTitle'        => [
+                'entity'     => 'XF:Phrase',
+                'type'       => self::TO_ONE,
                 'conditions' => [
                     ['language_id', '=', 0], // master
                     ['title', '=', 'sv_warning_category_title.', '$warning_category_id']
                 ]
             ],
-            'Parent' => [
-                'entity' => 'SV\WarningImprovements:WarningCategory',
-                'type' => self::TO_ONE,
+            'Parent'             => [
+                'entity'     => 'SV\WarningImprovements:WarningCategory',
+                'type'       => self::TO_ONE,
                 'conditions' => [['warning_category_id', '=', '$parent_category_id']],
-                'primary' => true
+                'primary'    => true
             ],
-            'ChildCategories' => [
-                'entity' => 'SV\WarningImprovements:WarningCategory',
-                'type' => self::TO_MANY,
+            'ChildCategories'    => [
+                'entity'     => 'SV\WarningImprovements:WarningCategory',
+                'type'       => self::TO_MANY,
                 'conditions' => [['parent_category_id', '=', '$warning_category_id']],
-                'primary' => true
+                'primary'    => true
             ],
             'WarningDefinitions' => [
-                'entity' => 'XF:WarningDefinition',
-                'type' => self::TO_MANY,
+                'entity'     => 'XF:WarningDefinition',
+                'type'       => self::TO_MANY,
                 'conditions' => [['sv_warning_category_id', '=', '$warning_category_id']],
-                'primary' => true
+                'primary'    => true
             ],
-            'WarningActions' => [
-                'entity' => 'XF:WarningAction',
-                'type' => self::TO_MANY,
+            'WarningActions'     => [
+                'entity'     => 'XF:WarningAction',
+                'type'       => self::TO_MANY,
                 'conditions' => [['sv_warning_category_id', '=', '$warning_category_id']],
-                'primary' => true
+                'primary'    => true
             ]
         ];
         $structure->options = [

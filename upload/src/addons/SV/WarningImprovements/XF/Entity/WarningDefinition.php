@@ -142,7 +142,6 @@ class WarningDefinition extends XFCP_WarningDefinition
 
     /**
      * @param Structure $structure
-     *
      * @return Structure
      */
     public static function getStructure(Structure $structure)
@@ -157,10 +156,10 @@ class WarningDefinition extends XFCP_WarningDefinition
         $structure->getters['custom_title_placeholder'] = true;
 
         $structure->relations['Category'] = [
-            'entity' => 'SV\WarningImprovements:WarningCategory',
-            'type' => self::TO_ONE,
+            'entity'     => 'SV\WarningImprovements:WarningCategory',
+            'type'       => self::TO_ONE,
             'conditions' => [['warning_category_id', '=', '$sv_warning_category_id']],
-            'primary' => true
+            'primary'    => true
         ];
 
         return $structure;

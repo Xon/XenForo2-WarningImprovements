@@ -202,9 +202,9 @@ class Warning extends XFCP_Warning
         $structure->getters['Definition'] = false;
 
         $structure->relations['Report'] = [
-            'entity' => 'XF:Report',
-            'type' => self::TO_ONE,
-            'conditions' => [['content_type', '=', '$content_type'],['content_id', '=', '$content_id'] ],
+            'entity'     => 'XF:Report',
+            'type'       => self::TO_ONE,
+            'conditions' => [['content_type', '=', '$content_type'], ['content_id', '=', '$content_id']],
         ];
 
         return $structure;

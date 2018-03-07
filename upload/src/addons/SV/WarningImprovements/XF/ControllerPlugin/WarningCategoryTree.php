@@ -14,11 +14,11 @@ use XF\Mvc\ParameterBag;
 
 class WarningCategoryTree extends AbstractCategoryTree
 {
-    protected $viewFormatter = 'SV\WarningImprovements\XF:WarningCategory\%s';
+    protected $viewFormatter     = 'SV\WarningImprovements\XF:WarningCategory\%s';
     protected $templateFormatter = 'sv_warning_category_%s';
-    protected $routePrefix = 'warnings';
-    protected $entityIdentifier = 'SV\WarningImprovements:WarningCategory';
-    protected $primaryKey = 'warning_category_id';
+    protected $routePrefix       = 'warnings';
+    protected $entityIdentifier  = 'SV\WarningImprovements:WarningCategory';
+    protected $primaryKey        = 'warning_category_id';
 
     public function actionDelete(ParameterBag $params)
     {
@@ -29,6 +29,7 @@ class WarningCategoryTree extends AbstractCategoryTree
             $category->getBehavior('XF:TreeStructured')->setOption('deleteChildAction', $childAction);
 
             $category->delete();
+
             return $this->redirect($this->buildLink($this->routePrefix));
         }
         else
@@ -36,6 +37,7 @@ class WarningCategoryTree extends AbstractCategoryTree
             $viewParams = [
                 'category' => $category
             ];
+
             return $this->view(
                 $this->formatView('Delete'),
                 $this->formatTemplate('delete'),

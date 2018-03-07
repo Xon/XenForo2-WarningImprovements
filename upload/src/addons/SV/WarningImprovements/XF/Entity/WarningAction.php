@@ -45,31 +45,31 @@ class WarningAction extends XFCP_WarningAction
         $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
 
         $structure->relations['Category'] = [
-            'entity' => 'SV\WarningImprovements:WarningDefault',
-            'type' => self::TO_ONE,
+            'entity'     => 'SV\WarningImprovements:WarningDefault',
+            'type'       => self::TO_ONE,
             'conditions' => 'sv_warning_category_id',
-            'primary' => true
+            'primary'    => true
         ];
 
         $structure->relations['PostForum'] = [
-            'entity' => 'XF:Forum',
-            'type' => self::TO_ONE,
+            'entity'     => 'XF:Forum',
+            'type'       => self::TO_ONE,
             'conditions' => 'sv_post_node_id',
-            'primary' => true
+            'primary'    => true
         ];
 
         $structure->relations['PostThread'] = [
-            'entity' => 'XF:Thread',
-            'type' => self::TO_ONE,
+            'entity'     => 'XF:Thread',
+            'type'       => self::TO_ONE,
             'conditions' => 'sv_post_thread_id',
-            'primary' => true
+            'primary'    => true
         ];
 
         $structure->relations['PostAsUser'] = [
-            'entity' => 'XF:User',
-            'type' => self::TO_ONE,
+            'entity'     => 'XF:User',
+            'type'       => self::TO_ONE,
             'conditions' => 'sv_post_as_user_id',
-            'primary' => true
+            'primary'    => true
         ];
 
         return $structure;

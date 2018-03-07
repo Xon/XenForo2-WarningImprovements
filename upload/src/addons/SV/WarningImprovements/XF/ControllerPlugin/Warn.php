@@ -24,10 +24,10 @@ use XF\Warning\AbstractHandler;
 class Warn extends XFCP_Warn
 {
     /**
-     * @param $contentType
+     * @param        $contentType
      * @param Entity $content
-     * @param $warnUrl
-     * @param array $breadcrumbs
+     * @param        $warnUrl
+     * @param array  $breadcrumbs
      * @return \XF\Mvc\Reply\AbstractReply|\XF\Mvc\Reply\Error|Redirect|View
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
@@ -68,12 +68,13 @@ class Warn extends XFCP_Warn
                 $previousWarnings = $warningRepo->findUserWarningsForList($user->user_id)->limit(5); // make this a option?
             }
 
-            $response->setParams([
-                'warnings' => $warnings,
-                'previousWarnings' => $previousWarnings,
+            $response->setParams(
+                [
+                    'warnings'         => $warnings,
+                    'previousWarnings' => $previousWarnings,
 
-                'categoryTree' => $categoryTree
-            ]);
+                    'categoryTree' => $categoryTree
+                ]);
         }
 
         return $response;
@@ -127,7 +128,6 @@ class Warn extends XFCP_Warn
             {
                 $newDefinition = $warningRepo->escalateDefaultExpirySettingsForUser($user, $definition);
                 $response->setParam('definition', $newDefinition);
-
             }
         }
 
@@ -148,19 +148,17 @@ class Warn extends XFCP_Warn
 
     /**
      * @param AbstractHandler $warningHandler
-     * @param User $user
-     * @param string $contentType
-     * @param Entity $content
-     * @param array $input
-     *
+     * @param User            $user
+     * @param string          $contentType
+     * @param Entity          $content
+     * @param array           $input
      * @return \SV\WarningImprovements\XF\Service\User\Warn|\XF\Service\User\Warn
-     *
      * @throws \XF\Mvc\Reply\Exception
      */
     protected function setupWarnService(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
-	{
-	    Globals::$warningInput = $input;
-	    try
+    {
+        Globals::$warningInput = $input;
+        try
         {
             return parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
         }
@@ -168,7 +166,7 @@ class Warn extends XFCP_Warn
         {
             Globals::$warningInput = null;
         }
-	}
+    }
 
     /**
      * @return \SV\WarningImprovements\Repository\WarningCategory|\XF\Mvc\Entity\Repository

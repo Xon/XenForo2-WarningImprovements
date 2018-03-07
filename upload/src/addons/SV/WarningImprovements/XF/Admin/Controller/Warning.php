@@ -37,8 +37,8 @@ class Warning extends XFCP_Warning
             $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
             $actions = $warningRepo->findWarningActionsForList()
-                ->fetch()
-                ->groupBy('sv_warning_category_id');
+                                   ->fetch()
+                                   ->groupBy('sv_warning_category_id');
 
             $globalActions = [];
 
@@ -50,16 +50,17 @@ class Warning extends XFCP_Warning
 
             $escalatingDefaults = $this->finder('SV\WarningImprovements:WarningDefault')->fetch();
 
-            $response->setParams([
-                'categoryTree' => $categoryTree,
+            $response->setParams(
+                [
+                    'categoryTree' => $categoryTree,
 
-                'warnings' => $warnings,
+                    'warnings' => $warnings,
 
-                'actions' => $actions,
-                'globalActions' => $globalActions,
+                    'actions'       => $actions,
+                    'globalActions' => $globalActions,
 
-                'escalatingDefaults' => $escalatingDefaults
-            ]);
+                    'escalatingDefaults' => $escalatingDefaults
+                ]);
         }
 
         return $response;
@@ -89,9 +90,10 @@ class Warning extends XFCP_Warning
         {
             $categoryRepo = $this->getCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
-            $response->setParams([
-                'categoryTree' => $categoryTree
-            ]);
+            $response->setParams(
+                [
+                    'categoryTree' => $categoryTree
+                ]);
         }
 
         return $response;
@@ -159,7 +161,7 @@ class Warning extends XFCP_Warning
 
             $viewParams = [
                 'categoryTree' => $categoryTree,
-                'warnings' => $warnings
+                'warnings'     => $warnings
             ];
 
             return $this->view(
@@ -194,10 +196,11 @@ class Warning extends XFCP_Warning
             $categoryRepo = $this->getCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
 
-            $response->setParams([
-                'nodeTree' => $nodeRepo->createNodeTree($nodes),
-                'categoryTree' => $categoryTree
-            ]);
+            $response->setParams(
+                [
+                    'nodeTree'     => $nodeRepo->createNodeTree($nodes),
+                    'categoryTree' => $categoryTree
+                ]);
         }
 
         return $response;
@@ -208,9 +211,9 @@ class Warning extends XFCP_Warning
     {
         $inputFieldNames = [
             'sv_warning_category_id' => 'uint',
-            'sv_post_node_id' => 'uint',
-            'sv_post_thread_id' => 'uint',
-            'sv_post_as_user_id' => 'uint'
+            'sv_post_node_id'        => 'uint',
+            'sv_post_thread_id'      => 'uint',
+            'sv_post_as_user_id'     => 'uint'
         ];
 
         foreach ($inputFieldNames AS $inputFieldName => $inputFieldFilterName)
@@ -235,14 +238,16 @@ class Warning extends XFCP_Warning
         $categoryTree = $categoryRepo->createCategoryTree();
 
         $viewParams = [
-            'default' => $defaultAction,
-            'nodeTree' => $nodeRepo->createNodeTree($nodes),
+            'default'      => $defaultAction,
+            'nodeTree'     => $nodeRepo->createNodeTree($nodes),
             'categoryTree' => $categoryTree
         ];
+
         return $this->view('SV\WarningImprovements\XF:Warning\Action\DefaultEdit', 'sv_warningimprovements_warning_default_edit', $viewParams);
     }
 
-    public function actionDefaultEdit(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
+    public function actionDefaultEdit(/** @noinspection PhpUnusedParameterInspection */
+        ParameterBag $params)
     {
         $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
@@ -261,12 +266,13 @@ class Warning extends XFCP_Warning
     {
         $form = $this->formAction();
 
-        $input = $this->filter([
-            'threshold_points' => 'uint',
-            'expiry_extension' => 'uint',
-            'expiry_type' => 'str',
-            'active' => 'bool'
-        ]);
+        $input = $this->filter(
+            [
+                'threshold_points' => 'uint',
+                'expiry_extension' => 'uint',
+                'expiry_type'      => 'str',
+                'active'           => 'bool'
+            ]);
 
         if ($this->filter('expiry_type_base', 'str') == 'never')
         {
@@ -278,7 +284,8 @@ class Warning extends XFCP_Warning
         return $form;
     }
 
-    public function actionDefaultSave(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
+    public function actionDefaultSave(/** @noinspection PhpUnusedParameterInspection */
+        ParameterBag $params)
     {
         $this->assertPostOnly();
 
@@ -299,7 +306,8 @@ class Warning extends XFCP_Warning
         );
     }
 
-    public function actionDefaultDelete(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
+    public function actionDefaultDelete(/** @noinspection PhpUnusedParameterInspection */
+        ParameterBag $params)
     {
         $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
@@ -314,6 +322,7 @@ class Warning extends XFCP_Warning
             $viewParams = [
                 'defaultAction' => $defaultAction
             ];
+
             return $this->view('XF:Warning\DefaultDelete', 'sv_warningimprovements_warning_default_delete', $viewParams);
         }
     }
@@ -327,11 +336,12 @@ class Warning extends XFCP_Warning
         $userRepo = $this->repository('XF:UserGroup');
 
         $viewParams = [
-            'category' => $warningCategory,
+            'category'     => $warningCategory,
             'categoryTree' => $categoryTree,
 
             'userGroups' => $userRepo->getUserGroupTitlePairs()
         ];
+
         return $this->view('XF:Warning\Category\Edit', 'sv_warning_category_edit', $viewParams);
     }
 
@@ -348,7 +358,8 @@ class Warning extends XFCP_Warning
         return $this->warningCategoryAddEdit($warningCategory);
     }
 
-    public function actionCategoryEdit(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
+    public function actionCategoryEdit(/** @noinspection PhpUnusedParameterInspection */
+        ParameterBag $params)
     {
         $warningCategory = $this->assertCategoryExists($this->filter('warning_category_id', 'uint'));
 
@@ -359,11 +370,12 @@ class Warning extends XFCP_Warning
     {
         $form = $this->formAction();
 
-        $input = $this->filter([
-            'parent_category_id' => 'uint',
-            'display_order' => 'uint',
-            'allowed_user_group_ids' => 'array-uint'
-        ]);
+        $input = $this->filter(
+            [
+                'parent_category_id'     => 'uint',
+                'display_order'          => 'uint',
+                'allowed_user_group_ids' => 'array-uint'
+            ]);
 
         if (!$input['parent_category_id'])
         {
@@ -372,18 +384,17 @@ class Warning extends XFCP_Warning
 
         $form->basicEntitySave($warningCategory, $input);
 
-        $phraseInput = $this->filter([
-            'title' => 'str'
-        ]);
-        $form->validate(function(FormAction $form) use ($phraseInput)
-        {
+        $phraseInput = $this->filter(
+            [
+                'title' => 'str'
+            ]);
+        $form->validate(function (FormAction $form) use ($phraseInput) {
             if ($phraseInput['title'] === '')
             {
                 $form->logError(\Xf::phrase('please_enter_valid_title'), 'title');
             }
         });
-        $form->apply(function() use ($phraseInput, $warningCategory)
-        {
+        $form->apply(function () use ($phraseInput, $warningCategory) {
             foreach ($phraseInput AS $type => $text)
             {
                 $masterPhrase = $warningCategory->getMasterPhrase($type);
@@ -395,7 +406,8 @@ class Warning extends XFCP_Warning
         return $form;
     }
 
-    public function actionCategorySave(/** @noinspection PhpUnusedParameterInspection */ ParameterBag $params)
+    public function actionCategorySave(/** @noinspection PhpUnusedParameterInspection */
+        ParameterBag $params)
     {
         $this->assertPostOnly();
 
@@ -445,7 +457,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @param $id
+     * @param      $id
      * @param null $with
      * @param null $phraseKey
      * @return WarningCategory|\XF\Mvc\Entity\Entity
@@ -458,9 +470,9 @@ class Warning extends XFCP_Warning
 
 
     /**
-     * @param $id
-     * @param null $with
-     * @param null $phraseKey
+     * @param int               $id
+     * @param string|string[]   $with
+     * @param string|\XF\Phrase $phraseKey
      * @return WarningDefault|\XF\Mvc\Entity\Entity
      * @throws \XF\Mvc\Reply\Exception
      */

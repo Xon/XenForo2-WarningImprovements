@@ -48,12 +48,12 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             return $this->userGroupChangeSet[$userId];
         }
 
-        $this->userGroupChangeSet[$userId] = $this->db()->fetchPairs("select change_key, group_ids
-            from xf_user_group_change
-            where user_id = ? and change_key like 'warning_action_%'
+        $this->userGroupChangeSet[$userId] = $this->db()->fetchPairs("SELECT change_key, group_ids
+            FROM xf_user_group_change
+            WHERE user_id = ? AND change_key LIKE 'warning_action_%'
         ", $userId);
 
-        if (empty( $this->userGroupChangeSet[$userId]))
+        if (empty($this->userGroupChangeSet[$userId]))
         {
             $this->userGroupChangeSet[$userId] = null;
         }
@@ -95,7 +95,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
         if ($showAll)
         {
-            $warningActions->where('user_id','=', $user->user_id);
+            $warningActions->where('user_id', '=', $user->user_id);
         }
         else
         {
@@ -104,9 +104,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             if (!$showDiscouraged)
             {
                 $showDiscouragedWhere = 'AND ' . implode(' AND ', [
-                    $warningActions->buildCondition('action_type', '<>', 'field'),
-                    $warningActions->buildCondition('action_modifier', '<>', 'is_discouraged')
-                ]);
+                        $warningActions->buildCondition('action_type', '<>', 'field'),
+                        $warningActions->buildCondition('action_modifier', '<>', 'is_discouraged')
+                    ]);
             }
 
             $warningActions->whereSql("

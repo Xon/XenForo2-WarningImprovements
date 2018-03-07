@@ -20,7 +20,7 @@ class Notifier extends XFCP_Notifier
     /** @var Warning */
     protected $warning = null;
 
-    protected $sv_force_email_for_user_id = null;
+    protected $sv_force_email_for_user_id     = null;
     protected $sv_respect_receive_admin_email = true;
 
     public function __construct(App $app, ConversationMaster $conversation)

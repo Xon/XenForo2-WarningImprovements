@@ -206,12 +206,14 @@ class Setup extends AbstractSetup
         /** @var \XF\Entity\Phrase[] $phrases */
         $phrases = $phraseFinder
             ->where('language_id', 0)
-            ->whereOr([
-                          ['title', 'LIKE', 'sv_warning_category_title.%'],
-                      ])
+            ->whereOr(
+                [
+                    ['title', 'LIKE', 'sv_warning_category_title.%'],
+                ])
             ->fetch();
 
-        foreach ($phrases as $phrase) {
+        foreach ($phrases as $phrase)
+        {
             $phrase->delete();
         }
     }

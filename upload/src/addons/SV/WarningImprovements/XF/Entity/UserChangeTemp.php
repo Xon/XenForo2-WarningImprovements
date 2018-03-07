@@ -130,7 +130,8 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewWarningAction(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewWarningAction(/** @noinspection PhpUnusedParameterInspection */
+        &$error = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
@@ -152,7 +153,8 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewNonSummaryWarningAction(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewNonSummaryWarningAction(/** @noinspection PhpUnusedParameterInspection */
+        &$error = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
@@ -169,7 +171,8 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewDiscouragedWarningAction(/** @noinspection PhpUnusedParameterInspection */&$error = null)
+    public function canViewDiscouragedWarningAction(/** @noinspection PhpUnusedParameterInspection */
+        &$error = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
@@ -186,7 +189,8 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string $error
      * @return bool
      */
-    public function canEditWarningAction(/** @noinspection PhpUnusedParameterInspection */&$error = '')
+    public function canEditWarningAction(/** @noinspection PhpUnusedParameterInspection */
+        &$error = '')
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();

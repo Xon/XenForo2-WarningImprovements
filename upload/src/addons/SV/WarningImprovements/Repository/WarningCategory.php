@@ -25,9 +25,8 @@ class WarningCategory extends AbstractCategoryTree
 
     /**
      * @param null $categories
-     * @param int $rootId
+     * @param int  $rootId
      * @param bool $excludeEmpty
-     *
      * @return Tree
      */
     public function createCategoryTree($categories = null, $rootId = 0, $excludeEmpty = false)
@@ -37,9 +36,10 @@ class WarningCategory extends AbstractCategoryTree
             if ($categories === null)
             {
                 $categories = $this->findCategoryList()
-                    ->where('warning_count', '<>', 0)
-                    ->fetch();
+                                   ->where('warning_count', '<>', 0)
+                                   ->fetch();
             }
+
             return new Tree($categories, 'parent_category_id', $rootId);
         }
 
@@ -49,15 +49,15 @@ class WarningCategory extends AbstractCategoryTree
     /**
      * @param array $extras
      * @param array $childExtras
-     *
      * @return array
      */
     public function mergeCategoryListExtras(array $extras, array $childExtras)
     {
-        $output = array_merge([
-            'warning_count' => 0,
-            'childCount' => 0
-        ], $extras);
+        $output = array_merge(
+            [
+                'warning_count' => 0,
+                'childCount'    => 0
+            ], $extras);
 
         foreach ($childExtras AS $child)
         {
@@ -74,15 +74,14 @@ class WarningCategory extends AbstractCategoryTree
 
     /**
      * @param \SV\WarningImprovements\Entity\WarningCategory|null $category
-     * @param null $with
-     *
+     * @param null                                                $with
      * @return Finder
      */
     public function findCategoryParentList(\SV\WarningImprovements\Entity\WarningCategory $category, $with = null)
     {
         return $this->findCategoryList(null, $with)
-            ->where('lft', '<', $category->lft)
-            ->where('rgt', '>', $category->rgt)
-            ->order('depth', 'DESC');
+                    ->where('lft', '<', $category->lft)
+                    ->where('rgt', '>', $category->rgt)
+                    ->order('depth', 'DESC');
     }
 }

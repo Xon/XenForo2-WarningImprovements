@@ -24,9 +24,9 @@ class Warning extends XFCP_Warning
     public function findWarningDefinitionsForListGroupedByCategory()
     {
         return parent::findWarningDefinitionsForList()
-            ->order('sv_display_order', 'asc')
-            ->fetch()
-            ->groupBy('sv_warning_category_id');
+                     ->order('sv_display_order', 'asc')
+                     ->fetch()
+                     ->groupBy('sv_warning_category_id');
     }
 
     /**
@@ -34,7 +34,7 @@ class Warning extends XFCP_Warning
      */
     public function getCustomWarningDefinition()
     {
-        /** @var WarningDefinition$warningDefinition */
+        /** @var WarningDefinition $warningDefinition */
         $warningDefinition = $this->em->findCached('XF:WarningDefinition', 0);
         if ($warningDefinition)
         {
@@ -42,8 +42,8 @@ class Warning extends XFCP_Warning
         }
 
         $warningDefinition = $this->finder('XF:WarningDefinition')
-            ->where('warning_definition_id', '=', 0)
-            ->fetchOne();
+                                  ->where('warning_definition_id', '=', 0)
+                                  ->fetchOne();
 
         return $warningDefinition;
     }
@@ -53,7 +53,8 @@ class Warning extends XFCP_Warning
      * @param int $warningTotals
      * @return WarningDefault
      */
-    public function getWarningDefaultExtension(/** @noinspection PhpUnusedParameterInspection */$warningCount, $warningTotals)
+    public function getWarningDefaultExtension(/** @noinspection PhpUnusedParameterInspection */
+        $warningCount, $warningTotals)
     {
         /** @var WarningDefault $warningDefault */
         $warningDefault = $this->finder('SV\WarningImprovements:WarningDefault')
@@ -135,7 +136,7 @@ class Warning extends XFCP_Warning
 
     /**
      * @param string $expiryType
-     * @param int $expiryDuration
+     * @param int    $expiryDuration
      * @return int
      */
     protected function convertToDays($expiryType, $expiryDuration)
@@ -181,7 +182,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @param int $userId
+     * @param int  $userId
      * @param bool $checkBannedStatus
      * @return int|null
      */

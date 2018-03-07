@@ -82,7 +82,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
      * @param bool   $fromDelete
      * @return AbstractCollection|null
      */
-    protected function getActions(/** @noinspection PhpUnusedParameterInspection */ $direction, $fromDelete = false)
+    protected function getActions(/** @noinspection PhpUnusedParameterInspection */
+        $direction, $fromDelete = false)
     {
         return $this->finder('XF:WarningAction')
                     ->order('points', $direction)
@@ -147,7 +148,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $categoryId = $category ? ($category->warning_category_id ?: 0) : 0;
             if (empty($warningPoints[$categoryId]))
             {
-                throw new \LogicException("Unable to find warning category {$categoryId} for the warning {$warning->warning_id}" );
+                throw new \LogicException("Unable to find warning category {$categoryId} for the warning {$warning->warning_id}");
             }
 
             /** @var WarningTotal $warningTotal */
@@ -193,7 +194,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $categoryId = $action->sv_warning_category_id ?: 0;
             if (empty($categoryPoints[$categoryId]))
             {
-                throw new \LogicException("Unable to find warning category {$categoryId} for the warning action {$action->warning_action_id}" );
+                throw new \LogicException("Unable to find warning category {$categoryId} for the warning action {$action->warning_action_id}");
             }
 
             $points = $categoryPoints[$categoryId];
@@ -208,7 +209,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         });
     }
 
-    public function  warningActionNotifications()
+    public function warningActionNotifications()
     {
         if ($this->lastAction)
         {
@@ -231,16 +232,16 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $warning = $this->warning;
 
                 $params = [
-                    'username' => $this->user->username,
-                    'points' =>  $this->user->warning_points,
-                    'report' => $warning && $warning->Report
+                    'username'         => $this->user->username,
+                    'points'           => $this->user->warning_points,
+                    'report'           => $warning && $warning->Report
                         ? $this->app->router('public')->buildLink('full:reports', $warning->Report)
                         : \XF::phrase('n_a')->render(),
-                    'date' => $dateString,
-                    'warning_title' => $warning ? $warning->title : \XF::phrase('n_a'),
-                    'warning_points' => $warning ? $warning->points : 0,
+                    'date'             => $dateString,
+                    'warning_title'    => $warning ? $warning->title : \XF::phrase('n_a'),
+                    'warning_points'   => $warning ? $warning->points : 0,
                     'warning_category' => $warning ? $warning->Definition->Category->title->render() : \XF::phrase('n_a'),
-                    'threshold' => $this->lastAction->points,
+                    'threshold'        => $this->lastAction->points,
 
                 ];
 
@@ -253,7 +254,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                     if ($forum)
                     {
                         /** @var \XF\Service\Thread\Creator $threadCreator */
-                        $threadCreator = \XF::asVisitor($postAsUser, function() use($forum, $params){
+                        $threadCreator = \XF::asVisitor($postAsUser, function () use ($forum, $params) {
                             /** @var \XF\Service\Thread\Creator $threadCreator */
                             $threadCreator = $this->service('XF:Thread\Creator', $forum);
                             $threadCreator->setIsAutomated();
@@ -277,7 +278,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                     if ($thread = $this->em()->find('XF:Thread', $this->lastAction->sv_post_thread_id))
                     {
                         /** @var \XF\Service\Thread\Replier $threadReplier */
-                        $threadReplier = \XF::asVisitor($postAsUser, function() use($thread, $params){
+                        $threadReplier = \XF::asVisitor($postAsUser, function () use ($thread, $params) {
                             /** @var \XF\Service\Thread\Replier $threadReplier */
                             $threadReplier = $this->service('XF:Thread\Replier', $thread);
                             $threadReplier->setIsAutomated();
@@ -310,8 +311,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         $triggers = $this->db()->fetchAllKeyed("
 			SELECT action_trigger.*, warning_action.sv_warning_category_id
-			FROM xf_warning_action_trigger as action_trigger
-			left join xf_warning_action warning_action on warning_action.warning_action_id = action_trigger.warning_action_id
+			FROM xf_warning_action_trigger AS action_trigger
+			LEFT JOIN xf_warning_action warning_action ON warning_action.warning_action_id = action_trigger.warning_action_id
 			WHERE user_id = ?
 			ORDER BY trigger_points DESC
 		", 'action_trigger_id', $this->user->user_id);
@@ -346,7 +347,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $categoryId = $action->sv_warning_category_id ?: 0;
                 if (empty($categoryPoints[$categoryId]))
                 {
-                    throw new \LogicException("Unable to find warning category {$categoryId} for the warning action {$action->warning_action_id}" );
+                    throw new \LogicException("Unable to find warning category {$categoryId} for the warning action {$action->warning_action_id}");
                 }
 
                 $points = $categoryPoints[$categoryId];
