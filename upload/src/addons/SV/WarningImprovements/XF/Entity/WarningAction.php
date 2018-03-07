@@ -1,8 +1,15 @@
 <?php
 
+/*
+ * This file is part of a XenForo add-on.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SV\WarningImprovements\XF\Entity;
 
-use SV\WarningImprovements\Entity\WarningCategory;
+use SV\WarningImprovements\Entity\WarningCategory as WarningCategoryEntity;
 use XF\Entity\Forum;
 use XF\Entity\Thread;
 use XF\Mvc\Entity\Structure;
@@ -17,7 +24,7 @@ use XF\Mvc\Entity\Structure;
  * @property int sv_warning_category_id
  *
  * RELATIONS
- * @property WarningCategory Category
+ * @property WarningCategoryEntity Category
  * @property Forum PostForum
  * @property Thread PostThread
  * @property User PostAsUser

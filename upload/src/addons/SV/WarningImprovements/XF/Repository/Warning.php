@@ -1,11 +1,17 @@
 <?php
 
+/*
+ * This file is part of a XenForo add-on.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SV\WarningImprovements\XF\Repository;
 
 use SV\WarningImprovements\Entity\WarningDefault;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
-use \XF\Entity\User as UserEntity;
-use XF\Entity\User;
+use XF\Entity\User as UserEntity;
 
 /**
  * Extends \XF\Repository\Warning
@@ -28,7 +34,7 @@ class Warning extends XFCP_Warning
      */
     public function getCustomWarningDefinition()
     {
-        /** @var WarningDefinition $warningDefinition */
+        /** @var WarningDefinition$warningDefinition */
         $warningDefinition = $this->em->findCached('XF:WarningDefinition', 0);
         if ($warningDefinition)
         {
@@ -69,7 +75,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @param User                   $user
+     * @param UserEntity             $user
      * @param WarningDefinition|null $definition
      * @return WarningDefinition
      */
@@ -329,12 +335,12 @@ class Warning extends XFCP_Warning
     protected $userWarningCountCache = [];
 
     /**
-     * @param User $user
-     * @param int  $days
-     * @param bool $includeExpired
+     * @param UserEntity $user
+     * @param int        $days
+     * @param bool       $includeExpired
      * @return mixed
      */
-    protected function getCachedWarningsForUser(User $user, $days, $includeExpired)
+    protected function getCachedWarningsForUser(UserEntity $user, $days, $includeExpired)
     {
         if (!isset($this->userWarningCountCache[$user->user_id][$days]))
         {
@@ -358,12 +364,12 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @param User $user
-     * @param int  $days
-     * @param bool $includeExpired
+     * @param UserEntity $user
+     * @param int        $days
+     * @param bool       $includeExpired
      * @return int
      */
-    public function getWarningPointsInLastXDays(User $user, $days, $includeExpired = false)
+    public function getWarningPointsInLastXDays(UserEntity $user, $days, $includeExpired = false)
     {
         $value = $this->getCachedWarningsForUser($user, $days, $includeExpired);
         if (!empty($value['total']))
@@ -375,12 +381,12 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @param User $user
-     * @param int  $days
-     * @param bool $includeExpired
+     * @param UserEntity $user
+     * @param int        $days
+     * @param bool       $includeExpired
      * @return int
      */
-    public function getWarningCountsInLastXDays(User $user, $days, $includeExpired = false)
+    public function getWarningCountsInLastXDays(UserEntity $user, $days, $includeExpired = false)
     {
         $value = $this->getCachedWarningsForUser($user, $days, $includeExpired);
         if (!empty($value['count']))

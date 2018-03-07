@@ -1,8 +1,15 @@
 <?php
 
+/*
+ * This file is part of a XenForo add-on.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SV\WarningImprovements\XF\Entity;
 
-use XF\Entity\User;
+use XF\Entity\User as UserEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
@@ -80,13 +87,13 @@ class WarningDefinition extends XFCP_WarningDefinition
     }
 
     /**
-     * @param User      $receiver
-     * @param string    $contentType
-     * @param Entity    $content
-     * @param User|null $sender
+     * @param UserEntity      $receiver
+     * @param string          $contentType
+     * @param Entity          $content
+     * @param UserEntity|null $sender
      * @return array
      */
-    public function getSpecificConversationContent(User $receiver, $contentType, Entity $content, User $sender = null)
+    public function getSpecificConversationContent(UserEntity $receiver, $contentType, Entity $content, UserEntity $sender = null)
     {
         /** @var \SV\WarningImprovements\XF\Entity\User $receiver */
 
