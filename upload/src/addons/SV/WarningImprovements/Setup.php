@@ -268,11 +268,6 @@ class Setup extends AbstractSetup
         $tables['xf_sv_warning_default'] = function ($table)
         {
             /** @var Create|Alter $table */
-            if ($table instanceof Create)
-            {
-                $table->checkExists(true);
-            }
-
             $this->addOrChangeColumn($table, 'warning_default_id', 'int')->autoIncrement();
             $this->addOrChangeColumn($table, 'threshold_points', 'smallint')->setDefault(0);
             $this->addOrChangeColumn($table, 'expiry_type', 'enum')->values(['never', 'days', 'weeks', 'months', 'years'])->setDefault('never');
@@ -285,11 +280,6 @@ class Setup extends AbstractSetup
         $tables['xf_sv_warning_category'] = function ($table)
         {
             /** @var Create|Alter $table */
-            if ($table instanceof Create)
-            {
-                $table->checkExists(true);
-            }
-
             $this->addOrChangeColumn($table, 'warning_category_id', 'int')->autoIncrement();
             $this->addOrChangeColumn($table, 'parent_category_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'display_order', 'int')->setDefault(0);
@@ -317,22 +307,22 @@ class Setup extends AbstractSetup
 
         $tables['xf_user_option'] = function (Alter $table)
         {
-            $table->addColumn('sv_pending_warning_expiry', 'int')->nullable(true)->setDefault(null);
+            $this->addOrChangeColumn($table, 'sv_pending_warning_expiry', 'int')->nullable(true)->setDefault(null);
         };
 
         $tables['xf_warning_definition'] = function (Alter $table)
         {
-            $table->addColumn('sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
-            $table->addColumn('sv_display_order', 'int')->setDefault(0);
-            $table->addColumn('sv_custom_title', 'tinyint', 1)->setDefault(0);
+            $this->addOrChangeColumn($table, 'sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
+            $this->addOrChangeColumn($table, 'sv_display_order', 'int')->setDefault(0);
+            $this->addOrChangeColumn($table, 'sv_custom_title', 'tinyint', 1)->setDefault(0);
         };
 
         $tables['xf_warning_action'] = function (Alter $table)
         {
-            $table->addColumn('sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
-            $table->addColumn('sv_post_node_id', 'int')->nullable(true)->setDefault(null);
-            $table->addColumn('sv_post_thread_id', 'int')->nullable(true)->setDefault(null);
-            $table->addColumn('sv_post_as_user_id', 'int')->nullable(true)->setDefault(null);
+            $this->addOrChangeColumn($table, 'sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
+            $this->addOrChangeColumn($table, 'sv_post_node_id', 'int')->nullable(true)->setDefault(null);
+            $this->addOrChangeColumn($table, 'sv_post_thread_id', 'int')->nullable(true)->setDefault(null);
+            $this->addOrChangeColumn($table, 'sv_post_as_user_id', 'int')->nullable(true)->setDefault(null);
         };
 
         $tables['xf_sv_warning_category'] = function (Alter $table)
