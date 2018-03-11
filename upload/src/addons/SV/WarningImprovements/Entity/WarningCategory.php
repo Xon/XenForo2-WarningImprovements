@@ -50,16 +50,12 @@ class WarningCategory extends AbstractCategoryTree
             return false;
         }
 
-        $visitor = \XF::visitor();
-        foreach ($this->allowed_user_group_ids AS $userGroupId)
+        if (in_array(-1, $this->allowed_user_group_ids ))
         {
-            if ($userGroupId == -1 || $visitor->isMemberOf($userGroupId))
-            {
-                return true;
-            }
+            return true;
         }
 
-        return false;
+        return \XF::visitor()->isMemberOf($this->allowed_user_group_ids);
     }
 
     /**
