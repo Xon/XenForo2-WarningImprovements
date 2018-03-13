@@ -379,7 +379,7 @@ class Setup extends AbstractSetup
             $phrase->addon_id = '';
             $phrase->save(false);
         }
-        else if ($deOwn && $phrase->addon_id == 'SV/WarningImprovements')
+        else if ($deOwn && $phrase->addon_id == $this->addOn->getAddOnId())
         {
             $phrase->addon_id = '';
             $phrase->save(false);
