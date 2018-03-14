@@ -46,7 +46,7 @@ class Notifier extends XFCP_Notifier
             return $canUserReceiveNotification;
         }
 
-        if ($this->warning)
+        if ($this->warning && $user->email)
         {
             if ($this->warning->user_id === $user->user_id)
             {
