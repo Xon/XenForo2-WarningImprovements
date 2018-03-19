@@ -143,6 +143,7 @@ class Warn extends XFCP_Warn
         $replace = [
             '{points}'        => $warning->points,
             '{warning_title}' => $warning->title,
+            '{userId}'        => $warning->user_id,
             '{warning_link}'  => \XF::app()->router('public')->buildLink('canonical:warnings', $warning),
         ];
 
