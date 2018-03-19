@@ -130,6 +130,11 @@ class WarningCategory extends AbstractCategoryTree
                 }
             }
         }
+
+        if ($this->isChanged(['parent_category_id', 'display_order']))
+        {
+            $this->scheduleNestedSetRebuild();
+        }
     }
 
     protected function _preDelete()
@@ -186,6 +191,17 @@ class WarningCategory extends AbstractCategoryTree
                 'warning_category_id' => $this->warning_category_id
             ]);
         }
+    }
+
+    protected function scheduleNestedSetRebuild()
+    {
+        $entityType = $this->structure()->shortName;
+        \XF::runOnce('rebuildTree-' . $entityType, function()
+        {
+            /** @var \SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet $service */
+            $service = $this->app()->service('SV\WarningImprovements:Warning\CategoryRebuildNestedSet');
+            $service->rebuildNestedSetInfo();
+        });
     }
 
     public function rebuildCounters()
@@ -284,6 +300,8 @@ class WarningCategory extends AbstractCategoryTree
 
         $structure->columns['parent_category_id']['nullable'] = true;
 
+        // The TreeStructured behavior's delete code, and re-sorting code isn't sanely extendable enough to match how
+        // Warning Categories are structured,
         unset($structure->behaviors['XF:TreeStructured']); // say no to raw!
 
         return $structure;
