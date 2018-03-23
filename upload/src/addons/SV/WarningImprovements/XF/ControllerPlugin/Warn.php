@@ -52,6 +52,13 @@ class Warn extends XFCP_Warn
                 $response->setMessage(\XF::phrase('sv_issued_warning'));
             }
 
+            $warningHandler = $warningRepo->getWarningHandler($contentType, true);
+            if ($warningHandler->canViewContent($content) &&
+                ($url = $warningHandler->getContentUrl($content)))
+            {
+                $response->setUrl($url);
+            }
+
             return $response;
         }
         else if ($response instanceof View)
