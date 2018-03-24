@@ -23,6 +23,12 @@
         "version_string": "1.2.2 RC4",
         "hash": "f49df452133ff3dab5e5abf1cdf2f34c"
     },
+    "option.svPreviousWarningLimit.txt": {
+        "global_cache": false,
+        "version_id": 2000005,
+        "version_string": "2.0.0rc5",
+        "hash": "a045f9abc384ed4bcca385d65cd0f67b"
+    },
     "option.sv_force_conversation_email_on_warning.txt": {
         "global_cache": false,
         "version_id": 2000000,
@@ -124,6 +130,12 @@
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
         "hash": "2c1238c667d070728bcc848e5669f84e"
+    },
+    "option_explain.svPreviousWarningLimit.txt": {
+        "global_cache": false,
+        "version_id": 2000005,
+        "version_string": "2.0.0rc5",
+        "hash": "4066b2254c2b9d95664072eb790e370d"
     },
     "option_explain.sv_force_conversation_email_on_warning.txt": {
         "global_cache": false,
@@ -298,6 +310,12 @@
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
         "hash": "882496ee59246a41cdce68df16834a0e"
+    },
+    "sv_all_warnings.txt": {
+        "global_cache": false,
+        "version_id": 2000005,
+        "version_string": "2.0.0rc5",
+        "hash": "17e056d27e20529f71cc0fba032c1c77"
     },
     "sv_allowed_user_groups.txt": {
         "global_cache": false,
@@ -675,7 +693,7 @@
         "global_cache": false,
         "version_id": 2000000,
         "version_string": "2.0.0 Alpha",
-        "hash": "6e2618aa67d4b79e13451668233b81dd"
+        "hash": "7d5caeae8e01a98133c365babdae0be4"
     },
     "sv_warning_improvements_sort_categories.txt": {
         "global_cache": false,

@@ -68,11 +68,17 @@ class Warn extends XFCP_Warn
 
             /** @var \SV\WarningImprovements\XF\Entity\User $user */
             $user = $response->getParam('user');
-            $previousWarnings = null;
+            $previousWarnings = [];
 
             if ($user)
             {
-                $previousWarnings = $warningRepo->findUserWarningsForList($user->user_id)->limit(5); // make this a option?
+                $warningList = $warningRepo->findUserWarningsForList($user->user_id);
+                $warningLimit = \XF::options()->svPreviousWarningLimit;
+                if ($warningLimit)
+                {
+                    $warningList->limit($warningLimit);
+                }
+                $previousWarnings = $warningList->fetch()->toArray();
             }
 
             $response->setParams(

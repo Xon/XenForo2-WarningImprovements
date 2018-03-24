@@ -1,0 +1,2 @@
+When displaying previous warnings, only show upto X warnings.<br/>
+0 to show all.
