@@ -245,8 +245,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
                 ];
 
-                $nodeId = $this->lastAction->sv_post_node_id;
-                if ($nodeId)
+                if ($nodeId = $this->lastAction->sv_post_node_id)
                 {
                     /** @var Forum $forum */
                     $forum = $this->em()->find('XF:Forum', $nodeId);
@@ -273,9 +272,9 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                         $threadCreator->sendNotifications();
                     }
                 }
-                else if ($this->lastAction->sv_post_thread_id)
+                else if ($threadId = $this->lastAction->sv_post_thread_id)
                 {
-                    if ($thread = $this->em()->find('XF:Thread', $this->lastAction->sv_post_thread_id))
+                    if ($thread = $this->em()->find('XF:Thread', $threadId))
                     {
                         /** @var \XF\Service\Thread\Replier $threadReplier */
                         $threadReplier = \XF::asVisitor($postAsUser, function () use ($thread, $params) {

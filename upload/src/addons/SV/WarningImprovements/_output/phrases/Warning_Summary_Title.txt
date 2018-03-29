@@ -1,0 +1,1 @@
+{username} warned {points} points for {title}

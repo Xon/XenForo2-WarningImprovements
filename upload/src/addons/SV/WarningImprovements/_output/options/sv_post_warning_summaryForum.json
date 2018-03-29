@@ -1,12 +1,12 @@
 {
-    "edit_format": "textbox",
-    "edit_format_params": "",
+    "edit_format": "callback",
+    "edit_format_params": "XF\\Option\\Forum::renderSelect",
     "data_type": "integer",
     "sub_options": [],
     "validation_class": "",
     "validation_method": "",
     "default_value": "0",
     "relations": {
-        "SV_WarningImprovements": 440
+        "SV_WarningImprovements": 450
     }
 }

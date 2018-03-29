@@ -1,2 +1,3 @@
-{points} points to @{username} for {title}, {report}
+{points} points to @{username} for [url='{warning_link}']{title}[/url], {report}
+Content: {content_link}
 {notes}

@@ -9,7 +9,10 @@
         "hash": "73f42dc3f39a3acbba6a1d8dd60166f9"
     },
     "sv_post_warning_summary.json": {
-        "hash": "57a62b39c69093e07f9049f9558d3bc4"
+        "hash": "cc3d885ab6c4739160832ea9b98af641"
+    },
+    "sv_post_warning_summaryForum.json": {
+        "hash": "e88ac5af7ce66e48285961d1c8835b8f"
     },
     "sv_respect_receive_admin_email_on_warning.json": {
         "hash": "f68291d93f4f840fbe69d84772389af3"

@@ -84,39 +84,70 @@ class Warn extends XFCP_Warn
     public function warningActionNotifications()
     {
         $options = $this->app->options();
+        $postSummaryForumId = $options->sv_post_warning_summaryForum;
+        $postSummaryThreadId = $options->sv_post_warning_summary;
 
-        if ($postSummaryThreadId = $options->sv_post_warning_summary)
+        if (!$postSummaryForumId && !$postSummaryThreadId)
         {
-            if ($thread = $this->em()->find('XF:Thread', $postSummaryThreadId))
-            {
-                /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
-                $warning = $this->warning;
+            return;
+        }
+        /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
+        $warning = $this->warning;
 
-                $dateString = date($options->sv_warning_date_format, \XF::$time);
+        $dateString = date($options->sv_warning_date_format, \XF::$time);
 
-                $warningArray = $warning->toArray();
-                $warningArray['username'] = $this->user->username;
-                $warningArray['report'] = $warning->Report
-                    ? $this->app->router('public')->buildLink('full:reports', $warning->Report)
-                    : \XF::phrase('n_a')->render();
-                $warningArray['date'] = $dateString;
+        $warningArray = $warning->toArray();
+        $warningArray['username'] = $this->user->username;
+        $warningArray['report'] = $warning->Report
+            ? $this->app->router('public')->buildLink('full:reports', $warning->Report)
+            : \XF::phrase('n_a')->render();
+        $warningArray['warning_link'] = \XF::app()->router('public')->buildLink('canonical:warnings', $warning);
+        $warningArray['content_link'] = $this->handler->getContentUrl($warning->Content, true);
+        $warningArray['date'] = $dateString;
 
-                $warningUser = \XF::visitor(); //$this->user;
-                $threadReplier = \XF::asVisitor($warningUser, function () use ($thread, $warningArray) {
-                    /** @var \XF\Service\Thread\Replier $threadReplier */
-                    $threadReplier = $this->service('XF:Thread\Replier', $thread);
-                    $threadReplier->setIsAutomated();
+        $warningUser = \XF::visitor(); //$this->user;
 
-                    $messageContent = \XF::phrase('Warning_Summary_Message', $warningArray)->render('raw');
+        if ($postSummaryForumId &&
+            ($forum = $this->em()->find('XF:Forum', $postSummaryForumId)))
+        {
+            /** @var \XF\Entity\Forum $forum */
+            /** @var \XF\Service\Thread\Creator $threadCreator */
+            $threadCreator = \XF::asVisitor($warningUser, function () use ($forum, $warningArray) {
+                /** @var \XF\Service\Thread\Creator $threadCreator */
+                $threadCreator = $this->service('XF:Thread\Creator', $forum);
+                $threadCreator->setIsAutomated();
 
-                    $threadReplier->setMessage($messageContent);
-                    $threadReplier->save();
+                $threadCreator->setPrefix($forum->default_prefix_id);
 
-                    return $threadReplier;
-                });
+                $title = \XF::phrase('Warning_Summary_Title', $warningArray)->render('raw');
+                $messageContent = \XF::phrase('Warning_Summary_Message', $warningArray)->render('raw');
 
-                $threadReplier->sendNotifications();
-            }
+                $threadCreator->setContent($title, $messageContent);
+                $threadCreator->save();
+
+                return $threadCreator;
+            });
+
+            $threadCreator->sendNotifications();
+        }
+        else if ($postSummaryThreadId &&
+                 ($thread = $this->em()->find('XF:Thread', $postSummaryThreadId)))
+        {
+            /** @var \XF\Entity\Thread $thread */
+            $threadReplier = \XF::asVisitor($warningUser, function () use ($thread, $warningArray) {
+                /** @var \XF\Service\Thread\Replier $threadReplier */
+                $threadReplier = $this->service('XF:Thread\Replier', $thread);
+                $threadReplier->setIsAutomated();
+
+                $messageContent = \XF::phrase('Warning_Summary_Message', $warningArray)->render('raw');
+
+                $threadReplier->setMessage($messageContent);
+                $threadReplier->save();
+
+                return $threadReplier;
+            });
+
+            $threadReplier->sendNotifications();
         }
     }
 
