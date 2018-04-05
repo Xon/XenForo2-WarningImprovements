@@ -122,21 +122,21 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             {
                 // compute when the minimum level of points expire.
                 $effectiveExpiryDate = $this->db()->fetchOne(
-                    'select if(effective_expiry_date = 9223372036854775807, null, effective_expiry_date)
+                    'select expiry_date
                             from
                             (
-                                select @pointSum := @pointSum+ points AS pointSum, points, effective_expiry_date
-                                from 
+                                select @pointSum := @pointSum+ points AS pointSum, permanent, expiry_date 
+                                from
                                 (
-                                    select points, if(expiry_date = 0, 9223372036854775807, expiry_date) as effective_expiry_date 
+                                    select points, if(expiry_date = 0, 1, 0) as permanent, expiry_date 
                                     from xf_warning 
                                     where user_id = ? and (expiry_date >= unix_timestamp() or expiry_date = 0)
-                                    order by effective_expiry_date
+                                    order by permanent, expiry_date
                                 ) a, (SELECT @pointSum :=0) AS dummy
-                                order by effective_expiry_date
+                                order by permanent, expiry_date
                             ) b
                             where pointSum >= ?
-                            order by effective_expiry_date
+                            order by permanent, expiry_date
                             limit 1', [$this->user_id, $warningAction->points]);
                 if (!$effectiveExpiryDate)
                 {
