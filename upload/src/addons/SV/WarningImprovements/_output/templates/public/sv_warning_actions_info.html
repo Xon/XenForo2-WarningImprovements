@@ -12,13 +12,13 @@
 			</xf:formrow>
 
 			<xf:formrow label="{{ phrase('sv_warning_action_expiry') }}">
-				<xf:if is="{$warningAction.effective_expiry_date}" />
+				<xf:if is="{$warningAction.effective_expiry_date}" >
 					<xf:date time="{$warningAction.effective_expiry_date}" />
-				<xf:elseif is="{$warningAction.is_permanent}">
+				<xf:elseif is="{$warningAction.is_permanent}" />
 					{{ phrase('permanent') }}
 				<xf:else />
 					{{ phrase('n_a') }}
-				</xf:elseif>
+				</xf:if>
 			</xf:formrow>
 		</div>
 

@@ -110,14 +110,14 @@
         "hash": "9e7deff4b5b73240c0f6bc3978925446"
     },
     "public/sv_member_warning_actions.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "2322008475f3ee182eb42a9a795c4be4"
+        "version_id": 2010000,
+        "version_string": "2.1.0",
+        "hash": "350fca2371045ca2c9524f9b2cdedb70"
     },
     "public/sv_warning_actions_info.html": {
-        "version_id": 2000100,
-        "version_string": "2.0.1",
-        "hash": "75d6acf6ee0372fea18f9d635997f36f"
+        "version_id": 2010000,
+        "version_string": "2.1.0",
+        "hash": "073a7c18a19d84e58beff5a0356404c4"
     },
     "public/sv_warningimprovements_member_view_warning_actions.html": {
         "version_id": 2000000,
