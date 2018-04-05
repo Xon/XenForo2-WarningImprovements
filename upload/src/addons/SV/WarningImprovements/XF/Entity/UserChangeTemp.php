@@ -18,7 +18,7 @@ use XF\Mvc\Entity\Structure;
  * @property \XF\Entity\Phrase result
  * @property bool is_expired
  * @property bool is_permanent
- * @property int expiry_date_rounded
+ * @property int effective_expiry_date
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {
@@ -101,24 +101,34 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
     public function getIsPermanent()
     {
-        return ($this->expiry_date === null);
+        return ($this->effective_expiry_date === null);
     }
 
     /**
      * @return int|null
      */
-    public function getExpiryDateRounded()
+    public function getEffectiveExpiryDate()
     {
         $visitor = \XF::visitor();
 
         $expiryDateRound = $this->expiry_date;
+        if ($expiryDateRound === null)
+        {
+            // need to check how this expires
+            if (substr($this->action_modifier, 0, 15) === 'warning_action_')
+            {
+                $warningActionId = substr($this->action_modifier, 15);
+                //
+            }
+        }
+
         if (!$visitor->user_id ||
             $visitor->hasPermission('general', 'viewWarning'))
         {
             return $expiryDateRound;
         }
 
-        if (!empty($expiryDateRound))
+        if ($expiryDateRound)
         {
             $expiryDateRound = ($expiryDateRound - ($expiryDateRound % 3600)) + 3600;
         }
@@ -226,7 +236,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         $structure->getters['name'] = true;
         $structure->getters['result'] = true;
         $structure->getters['is_expired'] = true;
-        $structure->getters['expiry_date_rounded'] = true;
+        $structure->getters['effective_expiry_date'] = true;
         $structure->getters['is_permanent'] = true;
 
         return $structure;
