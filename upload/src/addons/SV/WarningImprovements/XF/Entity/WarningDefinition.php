@@ -148,6 +148,7 @@ class WarningDefinition extends XFCP_WarningDefinition
     {
         $structure = parent::getStructure($structure);
 
+        $structure->columns['expiry_type']['allowedValues'][] = 'hours';
         $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'required' => 'sv_warning_improvements_please_select_valid_category', 'nullable' => true];
         $structure->columns['sv_display_order'] = ['type' => self::UINT];
         $structure->columns['sv_custom_title'] = ['type' => self::BOOL, 'default' => false];

@@ -39,6 +39,7 @@ class WarningAction extends XFCP_WarningAction
     {
         $structure = parent::getStructure($structure);
 
+        $structure->columns['action_length_type']['allowedValues'][] = 'hours';
         $structure->columns['sv_post_node_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
         $structure->columns['sv_post_thread_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];
         $structure->columns['sv_post_as_user_id'] = ['type' => self::UINT, 'default' => null, 'nullable' => true];

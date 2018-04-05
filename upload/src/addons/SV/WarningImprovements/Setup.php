@@ -182,7 +182,27 @@ class Setup extends AbstractSetup
         $this->installStep5();
     }
 
+    public function upgrade2010000Step1()
+    {
+        $this->installStep1();
+    }
+
+    public function upgrade2010000Step2()
+    {
+        $sm = $this->schemaManager();
+
+        foreach ($this->getTables() as $tableName => $callback)
+        {
+            $sm->alterTable($tableName, $callback);
+        }
+    }
+
     public function uninstallStep1()
+    {
+        $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");
+    }
+
+    public function uninstallStep2()
     {
         $sm = $this->schemaManager();
 
@@ -192,7 +212,7 @@ class Setup extends AbstractSetup
         }
     }
 
-    public function uninstallStep2()
+    public function uninstallStep3()
     {
         $sm = $this->schemaManager();
 
@@ -205,7 +225,7 @@ class Setup extends AbstractSetup
     /**
      * Removes items associated with this add-on but not directly owned by it.
      */
-    public function uninstallStep3()
+    public function uninstallStep4()
     {
         /** @var \XF\Finder\Phrase $phraseFinder */
         $phraseFinder = \XF::finder('XF:Phrase');
@@ -270,7 +290,7 @@ class Setup extends AbstractSetup
             /** @var Create|Alter $table */
             $this->addOrChangeColumn($table, 'warning_default_id', 'int')->autoIncrement();
             $this->addOrChangeColumn($table, 'threshold_points', 'smallint')->setDefault(0);
-            $this->addOrChangeColumn($table, 'expiry_type', 'enum')->values(['never', 'days', 'weeks', 'months', 'years'])->setDefault('never');
+            $this->addOrChangeColumn($table, 'expiry_type', 'enum')->values(['never', 'hours', 'days', 'weeks', 'months', 'years'])->setDefault('never');
             $this->addOrChangeColumn($table, 'expiry_extension', 'smallint')->setDefault(0);
             $this->addOrChangeColumn($table, 'active', 'tinyint', 3)->setDefault(1);
 
@@ -315,6 +335,7 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_display_order', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'sv_custom_title', 'tinyint', 1)->setDefault(0);
+            $table->changeColumn('expiry_type')->addValues(['hours']);
         };
 
         $tables['xf_warning_action'] = function (Alter $table)
@@ -323,6 +344,7 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'sv_post_node_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_post_thread_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_post_as_user_id', 'int')->nullable(true)->setDefault(null);
+            $table->changeColumn('action_length_type')->addValues(['hours']);
         };
 
         $tables['xf_sv_warning_category'] = function (Alter $table)
@@ -347,6 +369,7 @@ class Setup extends AbstractSetup
         $tables['xf_warning_definition'] = function (Alter $table)
         {
             $table->dropColumns(['sv_warning_category_id', 'sv_display_order', 'sv_custom_title']);
+            $table->changeColumn('expiry_type')->removeValues(['hours']);
         };
 
         $tables['xf_warning_definition'] = function (Alter $table)
@@ -356,6 +379,7 @@ class Setup extends AbstractSetup
 
         $tables['xf_warning_action'] = function (Alter $table)
         {
+            $table->changeColumn('action_length_type')->removeValues(['hours']);
             $table->dropColumns(['sv_warning_category_id', 'sv_post_node_id', 'sv_post_thread_id', 'sv_post_as_user_id']);
         };
 

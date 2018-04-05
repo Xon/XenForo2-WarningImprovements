@@ -6,11 +6,11 @@
 			<xf:formrow label="{{ phrase('sv_warning_action_type') }}">
 				{$warningAction.name}, {{ date_time("{$warningAction.create_date}") }}
 			</xf:formrow>
-			
+
 			<xf:formrow label="{{ phrase('sv_warning_action_result') }}">
 				{$warningAction.result}
 			</xf:formrow>
-			
+
 			<xf:formrow label="{{ phrase('sv_warning_action_expiry') }}">
 				<xf:if is="{$warningAction.is_permanent}">
 					{{ phrase('permanent') }}
@@ -21,7 +21,7 @@
 				</xf:if>
 			</xf:formrow>
 		</div>
-		
+
 		<xf:if is="$warningAction.canEditWarningAction()">
 			<h2 class="block-tabHeader tabs" data-xf-init="tabs" role="tablist">
 				<a class="tabs-tab is-active" role="tab" tabindex="0" aria-controls="{{ unique_id('warning-action') }}">{{ phrase('sv_update_warning_action') }}</a>
@@ -45,6 +45,7 @@
 						<xf:numberbox name="expiry_value" value="1" min="0" />
 						<span class="inputGroup-splitter"></span>
 						<xf:select name="expiry_unit" value="days" class="input--inline">
+							<xf:option value="hours">{{ phrase('units_hours') }}</xf:option>
 							<xf:option value="days">{{ phrase('days') }}</xf:option>
 							<xf:option value="weeks">{{ phrase('weeks') }}</xf:option>
 							<xf:option value="months">{{ phrase('months') }}</xf:option>
@@ -54,9 +55,9 @@
 				</xf:dependent>
 			</xf:option>
 		</xf:radiorow>
-		
+
 		<xf:submitrow icon="save" value="{{ phrase('sv_update_warning_action') }}" />
-		
+
 		<xf:redirect url="{$redirect}" />
 	</xf:form>
 </xf:macro>

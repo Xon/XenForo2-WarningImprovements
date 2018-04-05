@@ -1,0 +1,9 @@
+{
+    "template": "warning_action_edit",
+    "description": "Add hourly warning option",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#[\\t ]*<xf:option value=\"days\"#si",
+    "replace": "<xf:option value=\"hours\">{{ phrase('units_hours') }}</xf:option>\n$0"
+}

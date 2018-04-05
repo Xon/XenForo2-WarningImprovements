@@ -115,9 +115,9 @@
         "hash": "2322008475f3ee182eb42a9a795c4be4"
     },
     "public/sv_warning_actions_info.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "966c1d5817a876dd8f9acc64d6c4c2e5"
+        "version_id": 2000100,
+        "version_string": "2.0.1",
+        "hash": "75d6acf6ee0372fea18f9d635997f36f"
     },
     "public/sv_warningimprovements_member_view_warning_actions.html": {
         "version_id": 2000000,
