@@ -1,6 +1,6 @@
 {
     "from_class": "XF\\Service\\User\\WarningPointsChange",
     "to_class": "SV\\WarningImprovements\\XF\\Service\\User\\WarningPointsChange",
-    "execute_order": 10,
+    "execute_order": 6240,
     "active": true
 }

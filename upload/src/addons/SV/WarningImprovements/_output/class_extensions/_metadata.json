@@ -1,56 +1,56 @@
 {
     "XF-Admin-Controller-Warning_SV-WarningImprovements-XF-Admin-Controller-Warning.json": {
-        "hash": "01d2641e5f6de4d125b5e34fb5913bd2"
+        "hash": "076ae53ff73d2c617e4713fbf408595e"
     },
     "XF-ControllerPlugin-Warn_SV-WarningImprovements-XF-ControllerPlugin-Warn.json": {
-        "hash": "1fc619db54a09671bb99887bd729d1ea"
+        "hash": "7cbd16558c1b7e828276ced71addbb57"
     },
     "XF-Entity-ConversationMaster_SV-WarningImprovements-XF-Entity-ConversationMaster.json": {
-        "hash": "885cc8103affc9ea21875ed853a81e0f"
+        "hash": "9f7b7f405e2ec8bc20c842dea3219cec"
     },
     "XF-Entity-ConversationMesssage_SV-WarningImprovements-XF-Entity-ConversationMesssage.json": {
         "hash": "12eabeaca5f61d8e97428f5aa5b4ace0"
     },
     "XF-Entity-UserBan_SV-WarningImprovements-XF-Entity-UserBan.json": {
-        "hash": "e6716b2aa6a3dab93d21fb5c69a86eb6"
+        "hash": "673bcb3e942fef64dc1aec7becc91e91"
     },
     "XF-Entity-UserChangeTemp_SV-WarningImprovements-XF-Entity-UserChangeTemp.json": {
-        "hash": "30588cbdc84619b7aecf111cedb39f8d"
+        "hash": "c9446742d8538deb88ea1cd641c3061d"
     },
     "XF-Entity-UserOption_SV-WarningImprovements-XF-Entity-UserOption.json": {
-        "hash": "c74637baf4602102591f3d639fcc5ad8"
+        "hash": "8d6479dcb2762ae5e557c0a5347b9732"
     },
     "XF-Entity-User_SV-WarningImprovements-XF-Entity-User.json": {
-        "hash": "326fa410e036fa6889120435173c066c"
+        "hash": "a79d885a59182be90adb3b294e0f7c4f"
     },
     "XF-Entity-WarningAction_SV-WarningImprovements-XF-Entity-WarningAction.json": {
-        "hash": "5c81fad2a6befabf13573cbe60135398"
+        "hash": "1bbca6d8822726aa6f0e398e4d739ea9"
     },
     "XF-Entity-WarningDefinition_SV-WarningImprovements-XF-Entity-WarningDefinition.json": {
-        "hash": "e60ee436354c75ca30171f39887ccad0"
+        "hash": "6dcecac6d53e377136169b5a0f30fd61"
     },
     "XF-Entity-Warning_SV-WarningImprovements-XF-Entity-Warning.json": {
-        "hash": "b52f9dfb9449f0bef288c5010005e2bc"
+        "hash": "b3f9e080358468a6b7422f179d19b787"
     },
     "XF-Pub-Controller-Member_SV-WarningImprovements-XF-Pub-Controller-Member.json": {
-        "hash": "6acf1a671119a27be17b079d32213971"
+        "hash": "a4cec8871a9ff6d23aadf7804d99096b"
     },
     "XF-Pub-View-Member-WarnFill_SV-WarningImprovements-XF-Pub-View-Member-WarnFill.json": {
-        "hash": "80375824d0c41348625cb484a321e312"
+        "hash": "73362d5eb77ec1125318e11882161bc4"
     },
     "XF-Repository-UserChangeTemp_SV-WarningImprovements-XF-Repository-UserChangeTemp.json": {
-        "hash": "c58e8acc95f6692e77b0a9fefda2ba75"
+        "hash": "d06077317faccce729922aa3ca096181"
     },
     "XF-Repository-Warning_SV-WarningImprovements-XF-Repository-Warning.json": {
-        "hash": "cf8ae48a0eac44709444ec6dad335344"
+        "hash": "d3dce212380af0861bd87f5e5971f3a9"
     },
     "XF-Service-Conversation-Notifier_SV-WarningImprovements-XF-Service-Conversation-Notifier.json": {
-        "hash": "2fb7f3ac57c9d00554dd155c5879ad7c"
+        "hash": "ce1c4761a9dc4682569778d63c68b23e"
     },
     "XF-Service-User-Warn_SV-WarningImprovements-XF-Service-User-Warn.json": {
-        "hash": "488dfa689cdf18780bac0d95020ad3d4"
+        "hash": "90ab6f6e4900be06c54d3bf705aadf17"
     },
     "XF-Service-User-WarningPointsChange_SV-WarningImprovements-XF-Service-User-WarningPointsChange.json": {
-        "hash": "761ba096fa2994869c819d3a104d0ca9"
+        "hash": "8362fb4847b2233e4dc40b3c6463f61f"
     }
 }

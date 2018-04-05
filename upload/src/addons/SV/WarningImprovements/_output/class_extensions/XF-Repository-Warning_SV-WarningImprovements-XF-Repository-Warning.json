@@ -1,6 +1,6 @@
 {
     "from_class": "XF\\Repository\\Warning",
     "to_class": "SV\\WarningImprovements\\XF\\Repository\\Warning",
-    "execute_order": 10,
+    "execute_order": 6240,
     "active": true
 }

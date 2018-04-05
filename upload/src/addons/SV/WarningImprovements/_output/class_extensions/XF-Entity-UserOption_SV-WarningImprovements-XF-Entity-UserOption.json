@@ -1,6 +1,6 @@
 {
     "from_class": "XF\\Entity\\UserOption",
     "to_class": "SV\\WarningImprovements\\XF\\Entity\\UserOption",
-    "execute_order": 10,
+    "execute_order": 6240,
     "active": true
 }
