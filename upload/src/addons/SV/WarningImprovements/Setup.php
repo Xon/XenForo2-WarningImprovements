@@ -344,7 +344,6 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'sv_post_node_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_post_thread_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_post_as_user_id', 'int')->nullable(true)->setDefault(null);
-            $table->changeColumn('action_length_type')->addValues(['hours']);
         };
 
         $tables['xf_sv_warning_category'] = function (Alter $table)
