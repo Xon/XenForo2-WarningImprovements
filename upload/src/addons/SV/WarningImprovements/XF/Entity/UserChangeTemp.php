@@ -111,29 +111,52 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     {
         $visitor = \XF::visitor();
 
-        $expiryDateRound = $this->expiry_date;
-        if ($expiryDateRound === null)
+        $effectiveExpiryDate = $this->expiry_date;
+        // need to check how this expires
+        if ($effectiveExpiryDate === null && preg_match('#^warning_action_(\d+)$#', $this->action_modifier, $matches))
         {
-            // need to check how this expires
-            if (substr($this->action_modifier, 0, 15) === 'warning_action_')
+            $warningActionId = $matches[1];
+            /** @var WarningAction $warningAction */
+            $warningAction = $this->em()->find('XF:WarningAction', $warningActionId);
+            if ($warningAction && $warningAction->action_length_type === 'points')
             {
-                $warningActionId = substr($this->action_modifier, 15);
-                //
+                // compute when the minimum level of points expire.
+                $effectiveExpiryDate = $this->db()->fetchOne(
+                    'select if(effective_expiry_date = 9223372036854775807, null, effective_expiry_date)
+                            from
+                            (
+                                select @pointSum := @pointSum+ points AS pointSum, points, effective_expiry_date
+                                from 
+                                (
+                                    select points, if(expiry_date = 0, 9223372036854775807, expiry_date) as effective_expiry_date 
+                                    from xf_warning 
+                                    where user_id = ? and (expiry_date >= unix_timestamp() or expiry_date = 0)
+                                    order by effective_expiry_date
+                                ) a, (SELECT @pointSum :=0) AS dummy
+                                order by effective_expiry_date
+                            ) b
+                            where pointSum >= ?
+                            order by effective_expiry_date
+                            limit 1', [$this->user_id, $warningAction->points]);
+                if (!$effectiveExpiryDate)
+                {
+                    $effectiveExpiryDate = null;
+                }
             }
         }
 
         if (!$visitor->user_id ||
             $visitor->hasPermission('general', 'viewWarning'))
         {
-            return $expiryDateRound;
+            return $effectiveExpiryDate;
         }
 
-        if ($expiryDateRound)
+        if ($effectiveExpiryDate)
         {
-            $expiryDateRound = ($expiryDateRound - ($expiryDateRound % 3600)) + 3600;
+            $effectiveExpiryDate = ($effectiveExpiryDate - ($effectiveExpiryDate % 3600)) + 3600;
         }
 
-        return $expiryDateRound;
+        return $effectiveExpiryDate;
     }
 
     /**
