@@ -35,6 +35,12 @@
         "version_string": "2.0.0rc5",
         "hash": "a045f9abc384ed4bcca385d65cd0f67b"
     },
+    "option.svWarningRedirect.txt": {
+        "global_cache": false,
+        "version_id": 2010100,
+        "version_string": "2.1.1",
+        "hash": "4915bfb6eebf1b0f0f78f68a086d35c1"
+    },
     "option.sv_force_conversation_email_on_warning.txt": {
         "global_cache": false,
         "version_id": 2000000,
@@ -148,6 +154,12 @@
         "version_id": 2000005,
         "version_string": "2.0.0rc5",
         "hash": "4066b2254c2b9d95664072eb790e370d"
+    },
+    "option_explain.svWarningRedirect.txt": {
+        "global_cache": false,
+        "version_id": 2010100,
+        "version_string": "2.1.1",
+        "hash": "56ac5f5c2bc416da58fc745b6110d667"
     },
     "option_explain.sv_force_conversation_email_on_warning.txt": {
         "global_cache": false,

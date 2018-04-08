@@ -1,0 +1,2 @@
+XF warnings attempt to redirect to the previous page, this sometimes doesn't work as expected. <br/>
+Warnings understand how to link to their own content, so instead of a dynamic redirect this can be used again.
