@@ -1,7 +1,7 @@
 var SV = SV || {};
 
 /** @param {jQuery} $ jQuery Object */
-!function ($, window, document, _undefined) {
+(function ($, window, document, _undefined) {
     "use strict";
 
     SV.WarningViewToggler = XF.Element.newHandler({
@@ -261,5 +261,4 @@ var SV = SV || {};
     XF.Element.register('warning-view-toggle', 'SV.WarningViewToggler');
     XF.Element.register('warning-view-select', 'SV.WarningViewSelect');
     XF.Element.register('warning-title-watcher', 'SV.WarningTitleWatcher');
-}
-(jQuery, window, document);
+} (jQuery, window, document));
