@@ -1,6 +1,5 @@
 var SV = SV || {};
 
-/** @param {jQuery} $ jQuery Object */
 (function ($, window, document, _undefined) {
     "use strict";
 
