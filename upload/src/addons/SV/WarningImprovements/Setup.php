@@ -30,7 +30,13 @@ class Setup extends AbstractSetup
         foreach ($this->getTables() as $tableName => $callback)
         {
             $sm->createTable($tableName, $callback);
+            $sm->alterTable($tableName, $callback);
         }
+    }
+
+    public function installStep2()
+    {
+        $sm = $this->schemaManager();
 
         foreach ($this->getAlterTables() as $tableName => $callback)
         {
@@ -38,7 +44,7 @@ class Setup extends AbstractSetup
         }
     }
 
-    public function installStep2()
+    public function installStep3()
     {
         $db = $this->db();
 
@@ -53,7 +59,7 @@ class Setup extends AbstractSetup
         $db->query("SET SESSION sql_mode='STRICT_ALL_TABLES'");
     }
 
-    public function installStep3()
+    public function installStep4()
     {
         $db = $this->db();
 
@@ -62,11 +68,9 @@ class Setup extends AbstractSetup
                           INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
                           VALUES (1, NULL, 0, ?)
          ", [User::GROUP_REG]);
-
-
     }
 
-    public function installStep4()
+    public function installStep5()
     {
         $db = $this->db();
 
@@ -84,31 +88,6 @@ class Setup extends AbstractSetup
              SET warning_count = (SELECT COUNT(*)
                                   FROM xf_warning_definition
                                   WHERE xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)");
-    }
-
-    public function installStep5()
-    {
-        $this->addDefaultPhrase('warning_title.0', 'Custom Warning');
-        $this->addDefaultPhrase('warning_conv_title.0', '');
-        $this->addDefaultPhrase('warning_conv_text.0',' ');
-        $this->addDefaultPhrase('sv_warning_category_title.0', 'Warnings');
-    }
-
-    public function upgrade2000000Step1()
-    {
-        $this->installStep1();
-
-        $sm = $this->schemaManager();
-
-        foreach ($this->getTables() as $tableName => $callback)
-        {
-            $sm->alterTable($tableName, $callback);
-        }
-    }
-
-    public function upgrade2000000Step2()
-    {
-        $db = $this->db();
 
         $db->update('xf_sv_warning_category', ['parent_category_id' => null], 'parent_category_id = ?', 0);
 
@@ -123,7 +102,26 @@ class Setup extends AbstractSetup
         $db->update('xf_warning_action', ['sv_post_as_user_id' => null], 'sv_post_as_user_id = ?', 0);
     }
 
-    public function upgrade2000000Step3()
+    public function installStep6()
+    {
+        $this->addDefaultPhrase('warning_title.0', 'Custom Warning');
+        $this->addDefaultPhrase('warning_conv_title.0', '');
+        $this->addDefaultPhrase('warning_conv_text.0',' ');
+        $this->addDefaultPhrase('sv_warning_category_title.0', 'Warnings');
+        $this->renameLegecyPhrases();
+    }
+
+    public function upgrade2000000Step1()
+    {
+        $this->installStep1();
+    }
+
+    public function upgrade2000000Step2()
+    {
+        $this->installStep2();
+    }
+
+    public function renameLegecyPhrases()
     {
         $map = [
             'sv_warning_category_*_title' => 'sv_warning_category_title.*'
@@ -165,21 +163,21 @@ class Setup extends AbstractSetup
         }
     }
 
-    public function upgrade2000000Step4()
+    public function upgrade2000000Step3()
     {
         $this->renameOption('sv_warningimprovements_continue_button', 'sv_warningimprovements_sticky_button');
     }
 
-    public function upgrade2000000Step5()
+    public function upgrade2000000Step4()
     {
-        $this->installStep2();
         $this->installStep3();
         $this->installStep4();
+        $this->installStep5();
     }
 
-    public function upgrade2000004Step5()
+    public function upgrade2000000Step5()
     {
-        $this->installStep5();
+        $this->installStep6();
     }
 
     public function upgrade2010000Step1()
@@ -189,12 +187,7 @@ class Setup extends AbstractSetup
 
     public function upgrade2010000Step2()
     {
-        $sm = $this->schemaManager();
-
-        foreach ($this->getTables() as $tableName => $callback)
-        {
-            $sm->alterTable($tableName, $callback);
-        }
+        $this->installStep2();
     }
 
     public function uninstallStep1()
