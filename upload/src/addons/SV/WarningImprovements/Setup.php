@@ -371,7 +371,6 @@ class Setup extends AbstractSetup
 
         $tables['xf_warning_action'] = function (Alter $table)
         {
-            $table->changeColumn('action_length_type')->removeValues(['hours']);
             $table->dropColumns(['sv_warning_category_id', 'sv_post_node_id', 'sv_post_thread_id', 'sv_post_as_user_id']);
         };
 
