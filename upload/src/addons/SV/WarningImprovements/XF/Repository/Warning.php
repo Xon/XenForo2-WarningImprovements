@@ -317,8 +317,8 @@ class Warning extends XFCP_Warning
         if ($checkBannedStatus)
         {
             $bans = $this->finder('XF:UserBan')
-                         ->where('expiry_date', '<=', \XF::$time)
-                         ->where('expiry_date', '>', 0)
+                         ->where('end_date', '<=', \XF::$time)
+                         ->where('end_date', '>', 0)
                          ->where('user_id', $userId)
                          ->fetch();
             $expired = $expired || $bans->count() > 0;

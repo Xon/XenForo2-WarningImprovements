@@ -72,7 +72,7 @@ class Listener
         }
     }
 
-    public static function visitorsetup(User &$visitor)
+    public static function visitorSetup(User &$visitor)
     {
         $userId = $visitor->user_id;
 
