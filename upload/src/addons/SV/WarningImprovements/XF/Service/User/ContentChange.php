@@ -34,6 +34,10 @@ class ContentChange extends XFCP_ContentChange
         $userChangeTempRepo = $this->repository('XF:UserChangeTemp');
         /** @var \SV\WarningImprovements\XF\Entity\User $targetUser */
         $targetUser = $this->em()->find('XF:User', $this->newUserId);
+        if (!$targetUser)
+        {
+            return;
+        }
 
         $warningActionsAppliedToSource = $userChangeTempRepo->getWarningActions($this->originalUserId, true, true)->fetch();
         if ($warningActionsAppliedToSource->count())
