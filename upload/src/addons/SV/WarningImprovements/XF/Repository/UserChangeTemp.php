@@ -69,14 +69,20 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     }
 
     /**
-     * @param UserEntity $user
-     * @param bool       $showAll
-     * @param bool       $showDiscouraged
-     * @param bool       $onlyExpired
+     * @param UserEntity|int $user
+     * @param bool           $showAll
+     * @param bool           $showDiscouraged
+     * @param bool           $onlyExpired
+     *
      * @return \XF\Mvc\Entity\Finder|\XF\Finder\UserChangeTemp
      */
-    public function getWarningActions(UserEntity $user, $showAll = false, $showDiscouraged = false, $onlyExpired = false)
+    public function getWarningActions($user, $showAll = false, $showDiscouraged = false, $onlyExpired = false)
     {
+        $userId = $user;
+        if ($user instanceof \XF\Entity\User)
+        {
+            $userId = $user->user_id;
+        }
         $warningActions = $this->finder('XF:UserChangeTemp');
 
         $warningActions->where('change_key', 'LIKE', 'warning_action_%');
@@ -95,7 +101,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
         if ($showAll)
         {
-            $warningActions->where('user_id', '=', $user->user_id);
+            $warningActions->where('user_id', '=', $userId);
         }
         else
         {
@@ -113,7 +119,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
                 user_change_temp_id IN (
                     SELECT MAX(user_change_temp_id)
                     FROM xf_user_change_temp
-                    WHERE user_id = {$warningActions->quote($user->user_id)} {$showDiscouragedWhere}
+                    WHERE user_id = {$warningActions->quote($userId)} {$showDiscouragedWhere}
                 )
             ");
         }

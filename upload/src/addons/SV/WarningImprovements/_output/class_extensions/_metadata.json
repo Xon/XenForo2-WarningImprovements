@@ -47,6 +47,9 @@
     "XF-Service-Conversation-Notifier_SV-WarningImprovements-XF-Service-Conversation-Notifier.json": {
         "hash": "ce1c4761a9dc4682569778d63c68b23e"
     },
+    "XF-Service-User-ContentChange_SV-WarningImprovements-XF-Service-User-ContentChange.json": {
+        "hash": "50469039b47a124be1583167aa556360"
+    },
     "XF-Service-User-Warn_SV-WarningImprovements-XF-Service-User-Warn.json": {
         "hash": "90ab6f6e4900be06c54d3bf705aadf17"
     },

@@ -48,6 +48,7 @@ namespace SV\WarningImprovements\XF\Service\Conversation
 
 namespace SV\WarningImprovements\XF\Service\User
 {
+	class XFCP_ContentChange extends \XF\Service\User\ContentChange {}
 	class XFCP_Warn extends \XF\Service\User\Warn {}
 	class XFCP_WarningPointsChange extends \XF\Service\User\WarningPointsChange {}
 }

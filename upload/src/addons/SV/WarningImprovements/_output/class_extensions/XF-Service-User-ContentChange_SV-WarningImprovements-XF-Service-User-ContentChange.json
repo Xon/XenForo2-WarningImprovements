@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Service\\User\\ContentChange",
+    "to_class": "SV\\WarningImprovements\\XF\\Service\\User\\ContentChange",
+    "execute_order": 10,
+    "active": true
+}
