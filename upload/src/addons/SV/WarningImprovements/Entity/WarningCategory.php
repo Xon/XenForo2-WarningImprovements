@@ -27,6 +27,7 @@ use XF\Mvc\Entity\Structure;
  * @property array breadcrumb_data
  *
  * GETTERS
+ * @property int|null category_id
  * @property bool is_usable
  * @property \XF\Phrase title
  *
@@ -137,28 +138,38 @@ class WarningCategory extends AbstractCategoryTree
         }
     }
 
+    /**
+     * @return int|null
+     */
+    protected function getCategoryId()
+    {
+        return $this->warning_category_id;
+    }
+
     protected function _preDelete()
     {
         /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
         $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
         /** @var \SV\WarningImprovements\Finder\WarningCategory|\XF\Mvc\Entity\Finder $warningCategoryChildFinder */
         $warningCategoryChildFinder = $warningCategoryRepo->findChildren($this);
-        $warningCategoryIds = $warningCategoryChildFinder->pluckFrom('warning_category_id')->fetch();
+        $warningCategoryIds = $warningCategoryChildFinder->pluckFrom('warning_category_id')
+                                                         ->fetch()
+                                                         ->toArray();
         $warningCategoryIds[] = $this->warning_category_id;
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $customWarningDefinition */
         $customWarningDefinition = $this->finder('XF:WarningDefinition')
                                         ->where('warning_definition_id', '=', 0)
-                                        ->where('sv_warning_category_id', '=', $warningCategoryIds);
+                                        ->where('sv_warning_category_id', '=', $warningCategoryIds)
+                                        ->fetchOne();
 
         if ($customWarningDefinition)
         {
             /** @var \SV\WarningImprovements\Finder\WarningCategory|\XF\Mvc\Entity\Finder $warningCategoryFinder */
             $warningCategoryFinder = $this->finder('SV\WarningImprovements:WarningCategory');
             /** @var \SV\WarningImprovements\Entity\WarningCategory $newParentCategory */
-            $newParentCategory = $warningCategoryFinder
-                ->where('sv_warning_category_id', '<>', $warningCategoryIds)
-                ->fetch();
+            $newParentCategory = $warningCategoryFinder->where('warning_category_id', '<>', $warningCategoryIds)
+                                                       ->fetch();
 
             if (!$newParentCategory)
             {
@@ -255,6 +266,7 @@ class WarningCategory extends AbstractCategoryTree
             ]
         ];
         $structure->getters = [
+            'category_id' => true,
             'is_usable' => true,
             'title'     => true
         ];
@@ -299,6 +311,7 @@ class WarningCategory extends AbstractCategoryTree
         static::addCategoryTreeStructureElements($structure);
 
         $structure->columns['parent_category_id']['nullable'] = true;
+
 
         // The TreeStructured behavior's delete code, and re-sorting code isn't sanely extendable enough to match how
         // Warning Categories are structured,

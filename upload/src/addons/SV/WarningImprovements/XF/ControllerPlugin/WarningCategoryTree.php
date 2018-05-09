@@ -26,7 +26,7 @@ class WarningCategoryTree extends AbstractCategoryTree
         if ($this->isPost())
         {
             $childAction = $this->filter('child_nodes_action', 'str');
-            $category->getBehavior('XF:TreeStructured')->setOption('deleteChildAction', $childAction);
+            $category->setOption('delete_contents', $childAction);
 
             $category->delete();
 
