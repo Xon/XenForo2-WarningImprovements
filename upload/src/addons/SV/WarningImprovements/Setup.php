@@ -193,6 +193,7 @@ class Setup extends AbstractSetup
     public function uninstallStep1()
     {
         $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");
+        $this->db()->query("delete from xf_warning_definition where warning_definition_id = 0 ");
     }
 
     public function uninstallStep2()
