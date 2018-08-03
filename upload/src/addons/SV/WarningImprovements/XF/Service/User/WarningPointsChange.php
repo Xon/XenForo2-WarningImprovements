@@ -144,7 +144,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         foreach ($warnings as $warning)
         {
             /** @var WarningCategory $category */
-            $category = $warning->Definition->Category;
+            $category = $warning->Definition ? $warning->Definition->Category : null;
             $categoryId = $category ? ($category->warning_category_id ?: 0) : 0;
             if (empty($warningPoints[$categoryId]))
             {
@@ -240,7 +240,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                     'date'             => $dateString,
                     'warning_title'    => $warning ? $warning->title : \XF::phrase('n_a'),
                     'warning_points'   => $warning ? $warning->points : 0,
-                    'warning_category' => $warning ? $warning->Definition->Category->title->render() : \XF::phrase('n_a'),
+                    'warning_category' => $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category->title->render() : \XF::phrase('n_a'),
                     'threshold'        => $this->lastAction->points,
 
                 ];
