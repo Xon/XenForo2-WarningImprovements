@@ -20,9 +20,17 @@ class Warn extends XFCP_Warn
 {
     protected $sendAlert = false;
 
+    /**
+     * @param bool $sendAlert
+     */
+    public function setSendAlert($sendAlert)
+    {
+        $this->sendAlert = $sendAlert;
+    }
+
     public function setFromDefinition(WarningDefinition $definition, $points = null, $expiry = null)
     {
-        $this->sendAlert = !empty(Globals::$warningInput['send_warning_alert']);
+        $this->setSendAlert(!empty(Globals::$warningInput['send_warning_alert']));
         $custom_title = !empty(Globals::$warningInput['custom_title']) ? Globals::$warningInput['custom_title'] : null;
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $definition */
         $return = parent::setFromDefinition($definition, $points, $expiry);
