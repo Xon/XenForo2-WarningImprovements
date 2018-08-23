@@ -48,6 +48,7 @@ class Warn extends XFCP_Warn
 
     public function setFromCustom($title, $points, $expiry)
     {
+        Globals::$warningInput['custom_title'] = $title;
         return $this->setFromDefinition($this->getCustomWarningDefinition(), $points, $expiry);
     }
 
