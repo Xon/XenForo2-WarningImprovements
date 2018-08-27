@@ -28,7 +28,7 @@
 										</div>
 									</div>
 								</xf:popup>
-								<xf:delete href="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}" />
+								<xf:delete href="{{ $category.warning_category_id > 1 ? link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) : '' }}" />
 							</xf:datarow>
 							<xf:if is="{$warnings.{$category.warning_category_id}} is not empty">
 								<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">

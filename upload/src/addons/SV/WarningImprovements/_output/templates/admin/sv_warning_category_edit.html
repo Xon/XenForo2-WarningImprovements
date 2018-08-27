@@ -4,7 +4,7 @@
 	<xf:title>{{ phrase('edit_category:') }} {$category.title}</xf:title>
 </xf:if>
 
-<xf:pageaction if="$category.warning_category_id">
+<xf:pageaction if="$category.warning_category_id > 1">
 	<xf:button href="{{ link('warnings/category-delete', null, { 'warning_category_id': $category.warning_category_id }) }}"
 		icon="delete"
 		data-xf-click="overlay" />
