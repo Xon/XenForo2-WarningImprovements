@@ -46,48 +46,12 @@ class Setup extends AbstractSetup
 
     public function installStep3()
     {
-        $db = $this->db();
-
-        // insert the defaults for the custom warning. This can't be normally inserted so fiddle with the sql_mode
-        $db->query("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_AUTO_VALUE_ON_ZERO'");
-
-        $db->query("INSERT IGNORE INTO xf_warning_definition
-                          (warning_definition_id,points_default,expiry_type,expiry_default,extra_user_group_ids,is_editable, sv_custom_title)
-                          VALUES
-                          (0,1, 'months',1,'',1, 1)");
-
-        $db->query("SET SESSION sql_mode='STRICT_ALL_TABLES'");
+        $this->cleanupWarningCategories();
     }
 
     public function installStep4()
     {
         $db = $this->db();
-
-        // create default warning category, do not use the data writer as that requires the rest of the add-on to be setup
-        $db->query("INSERT IGNORE
-                          INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
-                          VALUES (1, NULL, 0, ?)
-         ", [-1]);
-    }
-
-    public function installStep5()
-    {
-        $db = $this->db();
-
-        // set all warning definitions to be in default warning category, note; the phrase is defined in the XML
-        $db->query('UPDATE xf_warning_definition
-            SET sv_warning_category_id = 1
-            WHERE sv_warning_category_id is null OR
-                  NOT exists (SELECT *
-                              FROM xf_sv_warning_category
-                              WHERE xf_warning_definition.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
-        ');
-
-        // categories have a summary count of thier warnings
-        $db->query("UPDATE xf_sv_warning_category
-             SET warning_count = (SELECT COUNT(*)
-                                  FROM xf_warning_definition
-                                  WHERE xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)");
 
         $db->update('xf_sv_warning_category', ['parent_category_id' => null], 'parent_category_id = ?', 0);
 
@@ -109,6 +73,43 @@ class Setup extends AbstractSetup
         $this->addDefaultPhrase('warning_conv_text.0',' ');
         $this->addDefaultPhrase('sv_warning_category_title.0', 'Warnings');
         $this->renameLegecyPhrases();
+    }
+
+    public function cleanupWarningCategories()
+    {
+        $db = $this->db();
+
+        // insert the defaults for the custom warning. This can't be normally inserted so fiddle with the sql_mode
+        $db->query("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_AUTO_VALUE_ON_ZERO'");
+
+        $db->query("INSERT IGNORE INTO xf_warning_definition
+                          (warning_definition_id,points_default,expiry_type,expiry_default,extra_user_group_ids,is_editable, sv_custom_title)
+                          VALUES
+                          (0,1, 'months',1,'',1, 1)");
+
+        $db->query("SET SESSION sql_mode='STRICT_ALL_TABLES'");
+
+        // create default warning category, do not use the data writer as that requires the rest of the add-on to be setup
+        $db->query("INSERT IGNORE
+                          INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
+                          VALUES (1, NULL, 0, ?)
+         ", [-1]);
+
+        // set all warning definitions to be in default warning category, note; the phrase is defined in the XML
+        $db->query('UPDATE xf_warning_definition
+            SET sv_warning_category_id = 1
+            WHERE sv_warning_category_id is null OR
+                  NOT exists (SELECT *
+                              FROM xf_sv_warning_category
+                              WHERE xf_warning_definition.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
+        ');
+
+        // categories have a summary count of thier warnings
+        $db->query("UPDATE xf_sv_warning_category
+             SET warning_count = (SELECT COUNT(*)
+                                  FROM xf_warning_definition
+                                  WHERE xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)");
+
     }
 
     public function renameLegecyPhrases()
@@ -174,21 +175,6 @@ class Setup extends AbstractSetup
     }
 
     public function upgrade2010800Step3()
-    {
-        $this->installStep3();
-    }
-
-    public function upgrade2010800Step4()
-    {
-        $this->installStep4();
-    }
-
-    public function upgrade2010800Step5()
-    {
-        $this->installStep5();
-    }
-
-    public function upgrade2010800Step6()
     {
         /** @var \XF\repository\UserGroup $userGroupRepo */
         $userGroupRepo = \XF::repository('XF:UserGroup');
@@ -257,6 +243,11 @@ class Setup extends AbstractSetup
         {
             $phrase->delete();
         }
+    }
+
+    public function postUpgrade($previousVersion, array &$stateChanges)
+    {
+        $this->cleanupWarningCategories();
     }
 
     /**
