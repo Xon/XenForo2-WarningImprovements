@@ -111,16 +111,6 @@ class Setup extends AbstractSetup
         $this->renameLegecyPhrases();
     }
 
-    public function upgrade2000000Step1()
-    {
-        $this->installStep1();
-    }
-
-    public function upgrade2000000Step2()
-    {
-        $this->installStep2();
-    }
-
     public function renameLegecyPhrases()
     {
         $map = [
@@ -163,19 +153,12 @@ class Setup extends AbstractSetup
         }
     }
 
-    public function upgrade2000000Step3()
+    public function upgrade2000000Step1()
     {
         $this->renameOption('sv_warningimprovements_continue_button', 'sv_warningimprovements_sticky_button');
     }
 
-    public function upgrade2000000Step4()
-    {
-        $this->installStep3();
-        $this->installStep4();
-        $this->installStep5();
-    }
-
-    public function upgrade2000000Step5()
+    public function upgrade2000000Step2()
     {
         $this->installStep6();
     }
@@ -201,6 +184,11 @@ class Setup extends AbstractSetup
     }
 
     public function upgrade2010800Step5()
+    {
+        $this->installStep5();
+    }
+
+    public function upgrade2010800Step6()
     {
         /** @var \XF\repository\UserGroup $userGroupRepo */
         $userGroupRepo = \XF::repository('XF:UserGroup');
