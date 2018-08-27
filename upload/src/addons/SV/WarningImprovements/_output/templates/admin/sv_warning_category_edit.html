@@ -26,9 +26,9 @@
 
 			<xf:macro template="display_order_macros" name="row" arg-value="{$category.display_order}" />
 			
-			<xf:checkboxrow name="allowed_user_group_ids" value="{$category.allowed_user_group_ids}" listclass="listColumns" label="{{ phrase('sv_allowed_user_groups') }}">
-				<xf:options source="$userGroups" />
-			</xf:checkboxrow>
+			<xf:macro template="helper_user_group_edit"
+					  name="checkboxes"
+					  arg-selectedUserGroups="{{ $category.isUpdate() ? $category.allowed_user_group_ids : [-1] }}" />
 		</div>
 		<xf:submitrow sticky="true" icon="save" />
 	</div>

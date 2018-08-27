@@ -19,6 +19,7 @@ use XF\Mvc\Entity\Structure;
  * @property int|null warning_category_id
  * @property int warning_count
  * @property array allowed_user_group_ids
+ * @property array allowed_user_group_ids_
  * @property int|null parent_category_id
  * @property int display_order
  * @property int lft
@@ -41,6 +42,11 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningCategory extends AbstractCategoryTree
 {
+    public function getAllowedUserGroupIds()
+    {
+        return array_map('\intval', $this->allowed_user_group_ids_);
+    }
+
     /**
      * @return bool
      */
@@ -261,14 +267,15 @@ class WarningCategory extends AbstractCategoryTree
             'warning_category_id'    => ['type' => self::UINT, 'autoIncrement' => true, 'nullable' => true],
             'warning_count'          => ['type' => self::UINT, 'default' => 0],
             'allowed_user_group_ids' => [
-                'type' => self::LIST_COMMA, 'default' => [User::GROUP_REG],
-                'list' => ['type' => 'posint', 'unique' => true, 'sort' => SORT_NUMERIC]
+                'type' => self::LIST_COMMA, 'default' => [-1],
+                'list' => ['type' => 'int', 'unique' => true, 'sort' => SORT_NUMERIC]
             ]
         ];
         $structure->getters = [
-            'category_id' => true,
-            'is_usable' => true,
-            'title'     => true
+            'category_id'            => true, // used in sorting?
+            'is_usable'              => ['getter' => 'getIsUsable', 'cache' => true],
+            'title'                  => ['getter' => 'getTitle', 'cache' => true],
+            'allowed_user_group_ids' => ['getter' => 'getAllowedUserGroupIds', 'cache' => true],
         ];
         $structure->relations = [
             'MasterTitle'        => [

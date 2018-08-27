@@ -20,9 +20,9 @@
         "hash": "cb4f0d8ce2223947e7dcaedb1b4e8143"
     },
     "admin/sv_warning_category_edit.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "51fdc2e487e3c4912ff60af789bc8476"
+        "version_id": 2010700,
+        "version_string": "2.1.7",
+        "hash": "68e64d58bf272547574986087aa75dee"
     },
     "admin/sv_warning_category_sort.html": {
         "version_id": 2000000,

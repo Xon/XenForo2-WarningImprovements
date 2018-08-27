@@ -347,12 +347,6 @@
         "version_string": "2.0.0rc5",
         "hash": "17e056d27e20529f71cc0fba032c1c77"
     },
-    "sv_allowed_user_groups.txt": {
-        "global_cache": false,
-        "version_id": 1040100,
-        "version_string": "1.4.1",
-        "hash": "6ea2c3986d3e9ec41060c14c28eff79c"
-    },
     "sv_choose_a_warning.txt": {
         "global_cache": false,
         "version_id": 1040000,

@@ -67,7 +67,7 @@ class Setup extends AbstractSetup
         $db->query("INSERT IGNORE
                           INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
                           VALUES (1, NULL, 0, ?)
-         ", [User::GROUP_REG]);
+         ", [-1]);
     }
 
     public function installStep5()

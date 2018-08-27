@@ -332,14 +332,9 @@ class Warning extends XFCP_Warning
         $categoryRepo = $this->getCategoryRepo();
         $categoryTree = $categoryRepo->createCategoryTree();
 
-        /** @var \XF\Repository\UserGroup $userRepo */
-        $userRepo = $this->repository('XF:UserGroup');
-
         $viewParams = [
             'category'     => $warningCategory,
             'categoryTree' => $categoryTree,
-
-            'userGroups' => $userRepo->getUserGroupTitlePairs()
         ];
 
         return $this->view('XF:Warning\Category\Edit', 'sv_warning_category_edit', $viewParams);
