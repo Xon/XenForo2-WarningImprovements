@@ -124,7 +124,7 @@ class Setup extends AbstractSetup
     public function renameLegecyPhrases()
     {
         $map = [
-            'sv_warning_category_*_title' => 'sv_warning_category_title.*'
+            'sv_warning_category_*_title' => 'sv_warning_category_title.*',
         ];
 
         $db = $this->db();
@@ -180,14 +180,44 @@ class Setup extends AbstractSetup
         $this->installStep6();
     }
 
-    public function upgrade2010000Step1()
+    public function upgrade2010800Step1()
     {
         $this->installStep1();
     }
 
-    public function upgrade2010000Step2()
+    public function upgrade2010800Step2()
     {
         $this->installStep2();
+    }
+
+    public function upgrade2010800Step3()
+    {
+        $this->installStep3();
+    }
+
+    public function upgrade2010800Step4()
+    {
+        $this->installStep4();
+    }
+
+    public function upgrade2010800Step5()
+    {
+        /** @var \XF\repository\UserGroup $userGroupRepo */
+        $userGroupRepo = \XF::repository('XF:UserGroup');
+        $allGroups = array_keys($userGroupRepo->getUserGroupTitlePairs());
+        /** @var \SV\WarningImprovements\Entity\WarningCategory $group */
+        foreach(\XF::finder('SV\WarningImprovements:WarningCategory')->fetch() as $group)
+        {
+            $groups = $group->allowed_user_group_ids;
+
+            if ($groups == $allGroups)
+            {
+                $groups = [-1];
+            }
+
+            $group->allowed_user_group_ids = $groups;
+            $group->saveIfChanged();
+        }
     }
 
     public function uninstallStep1()
