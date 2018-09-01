@@ -379,11 +379,11 @@ class Warning extends XFCP_Warning
         $usableUserGroups = $this->filter('usable_user_group', 'str');
         if ($usableUserGroups === 'all')
         {
-            $entityInput['allowed_user_group_ids'] = [-1];
+            $input['allowed_user_group_ids'] = [-1];
         }
         else
         {
-            $entityInput['allowed_user_group_ids'] = $this->filter('usable_user_group_ids', 'array-uint');
+            $input['allowed_user_group_ids'] = $this->filter('usable_user_group_ids', 'array-uint');
         }
 
         $form->basicEntitySave($warningCategory, $input);
