@@ -52,12 +52,12 @@ class WarningCategory extends AbstractCategoryTree
      */
     public function getIsUsable()
     {
-        if ($this->Parent && !$this->Parent->is_usable)
+        if ($this->Parent && !$this->Parent->is_usable || !$this->allowed_user_group_ids)
         {
             return false;
         }
 
-        if (in_array(-1, $this->allowed_user_group_ids ))
+        if ($this->allowed_user_group_ids[0] === -1)
         {
             return true;
         }
