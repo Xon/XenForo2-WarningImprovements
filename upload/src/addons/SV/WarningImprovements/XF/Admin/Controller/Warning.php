@@ -369,12 +369,21 @@ class Warning extends XFCP_Warning
             [
                 'parent_category_id'     => 'uint',
                 'display_order'          => 'uint',
-                'allowed_user_group_ids' => 'array-uint'
             ]);
 
         if (!$input['parent_category_id'])
         {
             $input['parent_category_id'] = null;
+        }
+
+        $usableUserGroups = $this->filter('usable_user_group', 'str');
+        if ($usableUserGroups === 'all')
+        {
+            $entityInput['allowed_user_group_ids'] = [-1];
+        }
+        else
+        {
+            $entityInput['allowed_user_group_ids'] = $this->filter('usable_user_group_ids', 'array-uint');
         }
 
         $form->basicEntitySave($warningCategory, $input);
