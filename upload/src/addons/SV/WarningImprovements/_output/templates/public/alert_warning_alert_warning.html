@@ -6,7 +6,7 @@
 
 {{ phrase('warning_alert_text', {
 		'name': username_link($issuer, false, {'defaultname': $issuer.username}),
-		'warning_attributes': 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"',
+		'warning_attributes': $content.canView() ? 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"' : '',
 		'points': {$content.points},
 		'warning_title': {$content.title}
 	})
