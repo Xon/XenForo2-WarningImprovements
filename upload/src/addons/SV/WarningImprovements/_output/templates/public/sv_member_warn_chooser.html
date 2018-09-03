@@ -20,7 +20,7 @@ jQuery.extend(XF.config, {
 			</xf:optgroup>
 		</xf:foreach>
 	</xf:selectrow>
-	
+
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:set var="$category" value="{$treeEntry.record}" />
 		<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
@@ -38,7 +38,7 @@ jQuery.extend(XF.config, {
 <div id="warning-view-radio" style="display: none; opacity: 0;">
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:set var="$category" value="{$treeEntry.record}" />
-		
+
 		<xf:if is="{$warnings.{$category.warning_category_id}}">
 			<xf:if is="$treeEntry.depth === 0">
 				<xf:set var="$categoryTitleForFormRow">{$category.title}</xf:set>
@@ -89,6 +89,6 @@ jQuery.extend(XF.config, {
 	<a class="u-jsOnly" data-xf-init="warning-view-toggle" href="#"
 	data-select-view="#warning-view-select"
 	data-radio-view="#warning-view-radio"
-	data-toggle-select-phrase="{{ phrase('sv_toggle_select_view') }}"
-	data-toggle-radio-phrase="{{ phrase('sv_toggle_radio_view') }}"></a>
+	data-toggle-select-phrase="{{ phrase('sv_toggle_select_view')|for_attr }}"
+	data-toggle-radio-phrase="{{ phrase('sv_toggle_radio_view')|for_attr }}"></a>
 </xf:formrow>

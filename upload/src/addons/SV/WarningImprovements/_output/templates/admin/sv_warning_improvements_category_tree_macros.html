@@ -7,7 +7,7 @@
 			<div class="block-container">
 				<div class="block-body">
 					<xf:css src="sv_warning_improvements_category_list.less" />
-					
+
 					<xf:datalist>
 						<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 							<xf:set var="$category" value="{$treeEntry.record}" />
@@ -85,7 +85,7 @@
 
 <xf:macro name="sortable_list_entry" arg-child="!" arg-children="!">
 	<li class="nestable-item" data-id="{$child.id}">
-		<div class="nestable-handle" aria-label="{{ phrase('drag_handle') }}"><i class="fa fa-bars" aria-hidden="true"></i></div>
+		<div class="nestable-handle" aria-label="{{ phrase('drag_handle')|for_attr }}"><i class="fa fa-bars" aria-hidden="true"></i></div>
 		<div class="nestable-content">{$child.record.title}</div>
 		<xf:if is="$child.children is not empty">
 			<xf:macro name="sortable_list" arg-children="{$child.children}" />
