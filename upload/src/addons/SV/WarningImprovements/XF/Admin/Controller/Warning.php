@@ -320,7 +320,7 @@ class Warning extends XFCP_Warning
         else
         {
             $viewParams = [
-                'defaultAction' => $defaultAction
+                'default' => $defaultAction
             ];
 
             return $this->view('XF:Warning\DefaultDelete', 'sv_warningimprovements_warning_default_delete', $viewParams);
