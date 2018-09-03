@@ -353,12 +353,6 @@
         "version_string": "1.4.0",
         "hash": "332cb46624e9dea6bd05e2f4e5819ef2"
     },
-    "sv_confirm_delete_warning_category_footnote.txt": {
-        "global_cache": false,
-        "version_id": 1050004,
-        "version_string": "1.5.0 RC 4",
-        "hash": "7ab181a041a6743ea7f4080059ed3267"
-    },
     "sv_confirm_deletion_of_warning_category.txt": {
         "global_cache": false,
         "version_id": 1040000,

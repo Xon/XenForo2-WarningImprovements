@@ -2,12 +2,16 @@
 
 <xf:css src="public:delete_confirmation.css" />
 
-<xen:form action="{xen:adminlink 'warnings/default/delete', $default}" class="deleteConfirmForm formOverlay">
+<xf:form action="{{ link('warnings/default/delete', null, { 'warning_default_id': $default.warning_default_id }) }}" class="block" ajax="true">
 
-	<p>{{ phrase('please_confirm_that_you_want_to_delete_following_warning_action') }}:</p>
-	<strong><a href="{xen:adminlink 'warnings/default/edit', $default}">{{ phrase('points') }}: {$default.threshold_points}</a></strong>
-
-	<xen:submitunit save="{{ phrase('sv_delete_warning_default') }}" />
-	<input type="hidden" name="_xfConfirm" value="1" />
-
-</xen:form>
+    <div class="block-container">
+        <div class="block-body">
+            <xf:inforow rowtype="confirm">
+                {{ phrase('please_confirm_that_you_want_to_delete_following:') }}
+                <strong><a href="{{ link('warnings/category-edit', null, { 'warning_default_id': $default.warning_default_id }) }}">{{ phrase('sv_edit_warning_default:') }} {{ phrase('points_threshold') }} {$default.threshold_points}</a></strong>
+            </xf:inforow>
+        </div>
+        <xf:submitrow rowtype="simple" icon="delete" />
+    </div>
+    <xf:redirect />
+</xf:form>

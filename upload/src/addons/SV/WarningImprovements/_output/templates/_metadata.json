@@ -15,9 +15,9 @@
         "hash": "ad453e8b833a49928284b8c9ebe0079a"
     },
     "admin/sv_warning_category_delete.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "cb4f0d8ce2223947e7dcaedb1b4e8143"
+        "version_id": 2011100,
+        "version_string": "2.1.11",
+        "hash": "cc4ac41a8ed9b6d42bc6e60a1ab5cebb"
     },
     "admin/sv_warning_category_edit.html": {
         "version_id": 2010700,
@@ -45,9 +45,9 @@
         "hash": "32668293682cb25a3cc9f4b4402c969c"
     },
     "admin/sv_warning_improvements_category_tree_macros.html": {
-        "version_id": 2010700,
-        "version_string": "2.1.7",
-        "hash": "3ca49b9054e07184592ca9566e6adb4b"
+        "version_id": 2011000,
+        "version_string": "2.1.10",
+        "hash": "f6bae43398e589e5a8090a067c944bbb"
     },
     "admin/sv_warning_improvements_nestable.less": {
         "version_id": 2000000,
@@ -55,9 +55,9 @@
         "hash": "9d0b556605d275b717b603db396af688"
     },
     "admin/sv_warning_improvements_warning_tree_macros.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "91ba1b6257f5e98a02bb83d86a982927"
+        "version_id": 2011000,
+        "version_string": "2.1.10",
+        "hash": "1455db47b7ec68350089914734545b08"
     },
     "admin/sv_warning_list.html": {
         "version_id": 2000000,
@@ -80,14 +80,14 @@
         "hash": "65a9db0155c79c49ac501285c2702a2b"
     },
     "admin/sv_warningimprovements_warning_default_delete.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "0419956a9302e92bfc2cb4ed8d57407a"
+        "version_id": 2011100,
+        "version_string": "2.1.11",
+        "hash": "26117337b496f2d9730dccbdb239c707"
     },
     "admin/sv_warningimprovements_warning_default_edit.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "907a8d168afbd86eeaba791c955a0db5"
+        "version_id": 2011100,
+        "version_string": "2.1.11",
+        "hash": "f1d8b4ca748895b0a458cf12adcc5c88"
     },
     "admin/sv_warningimprovements_warning_list1.html": {
         "version_id": 2000000,
@@ -100,9 +100,9 @@
         "hash": "f74570ba0f9985ce9aa0f489aa67cbe8"
     },
     "public/sv_member_warn_chooser.html": {
-        "version_id": 2000000,
-        "version_string": "2.0.0 Alpha",
-        "hash": "c1b4491d483d076b40d83159212f15b3"
+        "version_id": 2011000,
+        "version_string": "2.1.10",
+        "hash": "079dd527d567d3f83ba839fd016788f7"
     },
     "public/sv_member_warn_chooser.less": {
         "version_id": 2000000,

@@ -4,6 +4,12 @@
 	<xf:title>{{ phrase('sv_edit_warning_default:') }} {{ phrase('points_threshold') }} {$default.threshold_points}</xf:title>
 </xf:if>
 
+<xf:pageaction>
+	<xf:button href="{{ link('warnings/default/delete', null, { 'warning_default_id': $default.warning_default_id }) }}"
+		icon="delete"
+		data-xf-click="overlay" />
+</xf:pageaction>
+
 <xf:form action="{{ link('warnings/default/save', null, { 'warning_default_id': $default.warning_default_id }) }}" ajax="true" class="block">
 	<div class="block-container">
 		<div class="block-body">
@@ -27,7 +33,7 @@
 					</xf:dependent>
 				</xf:option>
 			</xf:radiorow>
-			
+
 			<xf:checkboxrow>
 				<xf:option name="active" value="1" selected="{$default.active}">{{ phrase('sv_warning_default_is_active') }}</xf:option>
 			</xf:checkboxrow>
