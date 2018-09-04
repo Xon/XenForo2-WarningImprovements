@@ -9,6 +9,7 @@
 
 namespace SV\WarningImprovements;
 
+use SV\Utils\InstallerHelper;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
@@ -19,6 +20,8 @@ use XF\Entity\User;
 
 class Setup extends AbstractSetup
 {
+    // from https://github.com/Xon/XenForo2-Utils cloned to src/addons/SV/Utils
+    use InstallerHelper;
     use StepRunnerInstallTrait;
     use StepRunnerUpgradeTrait;
     use StepRunnerUninstallTrait;
@@ -70,9 +73,11 @@ class Setup extends AbstractSetup
     {
         $this->addDefaultPhrase('warning_title.0', 'Custom Warning');
         $this->addDefaultPhrase('warning_conv_title.0', '');
-        $this->addDefaultPhrase('warning_conv_text.0',' ');
+        $this->addDefaultPhrase('warning_conv_text.0', ' ');
         $this->addDefaultPhrase('sv_warning_category_title.0', 'Warnings');
-        $this->renameLegecyPhrases();
+        $this->renamePhrases([
+            'sv_warning_category_*_title' => 'sv_warning_category_title.*'
+        ]);
     }
 
     public function cleanupWarningCategories()
@@ -110,48 +115,6 @@ class Setup extends AbstractSetup
                                   FROM xf_warning_definition
                                   WHERE xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)");
 
-    }
-
-    public function renameLegecyPhrases()
-    {
-        $map = [
-            'sv_warning_category_*_title' => 'sv_warning_category_title.*',
-        ];
-
-        $db = $this->db();
-
-        foreach ($map AS $from => $to)
-        {
-            $mySqlRegex = '^' . str_replace('*', '[a-zA-Z0-9_]+', $from) . '$';
-            $phpRegex = '/^' . str_replace('*', '([a-zA-Z0-9_]+)', $from) . '$/';
-            $replace = str_replace('*', '$1', $to);
-
-            $results = $db->fetchPairs("
-				SELECT phrase_id, title
-				FROM xf_phrase
-				WHERE title RLIKE ?
-					AND addon_id = ''
-			", $mySqlRegex);
-
-            if ($results)
-            {
-                /** @var \XF\Entity\Phrase[] $phrases */
-                $phrases = \XF::em()->findByIds('XF:Phrase', array_keys($results));
-                foreach ($results AS $phraseId => $oldTitle)
-                {
-                    if (isset($phrases[$phraseId]))
-                    {
-                        $newTitle = preg_replace($phpRegex, $replace, $oldTitle);
-
-                        $phrase = $phrases[$phraseId];
-                        $phrase->title = $newTitle;
-                        $phrase->global_cache = false;
-                        $phrase->addon_id = '';
-                        $phrase->save(false);
-                    }
-                }
-            }
-        }
     }
 
     public function upgrade2000000Step1()
@@ -225,60 +188,17 @@ class Setup extends AbstractSetup
      */
     public function uninstallStep4()
     {
-        /** @var \XF\Finder\Phrase $phraseFinder */
-        $phraseFinder = \XF::finder('XF:Phrase');
-        /** @var \XF\Entity\Phrase[] $phrases */
-        $phrases = $phraseFinder
-            ->where('language_id', 0)
-            ->whereOr(
-                [
-                    ['title', 'LIKE', 'sv_warning_category_title.%'],
-                    ['title', '=', 'warning_title.0'],
-                    ['title', '=', 'warning_conv_title.0'],
-                    ['title', '=', 'warning_conv_text.0'],
-                ])
-            ->fetch();
-
-        foreach ($phrases as $phrase)
-        {
-            $phrase->delete();
-        }
+        $this->deletePhrases([
+            'sv_warning_category_title.%',
+            'warning_title.0',
+            'warning_conv_title.0',
+            'warning_conv_text.0',
+        ]);
     }
 
     public function postUpgrade($previousVersion, array &$stateChanges)
     {
         $this->cleanupWarningCategories();
-    }
-
-    /**
-     * @param Create|Alter $table
-     * @param string       $name
-     * @param string|null  $type
-     * @param string|null  $length
-     * @return \XF\Db\Schema\Column
-     */
-    protected function addOrChangeColumn($table, $name, $type = null, $length = null)
-    {
-        if ($table instanceof Create)
-        {
-            $table->checkExists(true);
-
-            return $table->addColumn($name, $type, $length);
-        }
-        else if ($table instanceof Alter)
-        {
-            if ($table->getColumnDefinition($name))
-            {
-                return $table->changeColumn($name, $type, $length);
-            }
-
-            return $table->addColumn($name, $type, $length);
-        }
-        else
-        {
-            throw new \LogicException("Unknown schema DDL type ". get_class($table));
-
-        }
     }
 
     /**
@@ -385,41 +305,5 @@ class Setup extends AbstractSetup
         };
 
         return $tables;
-    }
-
-    protected function addDefaultPhrase($title, $value, $deOwn = true)
-    {
-        /** @var \XF\Entity\Phrase $phrase */
-        $phrase = \XF::app()->finder('XF:Phrase')
-                     ->where('title', '=', $title)
-                     ->where('language_id', '=', 0)
-                     ->fetchOne();
-        if (!$phrase)
-        {
-            $phrase = \XF::em()->create('XF:Phrase');
-            $phrase->language_id = 0;
-            $phrase->title = $title;
-            $phrase->phrase_text = $value;
-            $phrase->global_cache = false;
-            $phrase->addon_id = '';
-            $phrase->save(false);
-        }
-        else if ($deOwn && $phrase->addon_id == $this->addOn->getAddOnId())
-        {
-            $phrase->addon_id = '';
-            $phrase->save(false);
-        }
-    }
-
-    protected function renameOption($old, $new)
-    {
-        /** @var \XF\Entity\Option $optionOld */
-        $optionOld = \XF::finder('XF:Option')->whereId($old)->fetchOne();
-        $optionNew = \XF::finder('XF:Option')->whereId($new)->fetchOne();
-        if ($optionOld && !$optionNew)
-        {
-            $optionOld->option_id = $new;
-            $optionOld->save();
-        }
     }
 }
