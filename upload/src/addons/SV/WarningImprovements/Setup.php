@@ -71,13 +71,18 @@ class Setup extends AbstractSetup
 
     public function installStep6()
     {
-        $this->addDefaultPhrase('warning_title.0', 'Custom Warning');
-        $this->addDefaultPhrase('warning_conv_title.0', '');
-        $this->addDefaultPhrase('warning_conv_text.0', ' ');
-        $this->addDefaultPhrase('sv_warning_category_title.0', 'Warnings');
+        $this->addDefaultPhrases();
         $this->renamePhrases([
             'sv_warning_category_*_title' => 'sv_warning_category_title.*'
         ]);
+    }
+
+    public function addDefaultPhrases()
+    {
+        $this->addDefaultPhrase('warning_title.0', 'Custom Warning', true);
+        $this->addDefaultPhrase('warning_conv_title.0', '', true);
+        $this->addDefaultPhrase('warning_conv_text.0', '', true);
+        $this->addDefaultPhrase('sv_warning_category_title.0', 'Warnings', true);
     }
 
     public function cleanupWarningCategories()
@@ -198,6 +203,7 @@ class Setup extends AbstractSetup
 
     public function postUpgrade($previousVersion, array &$stateChanges)
     {
+        $this->addDefaultPhrases();
         $this->cleanupWarningCategories();
     }
 
