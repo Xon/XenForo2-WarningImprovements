@@ -1,0 +1,9 @@
+{
+    "template": "member_view",
+    "description": "Warning count in header",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "{{ phrase('warnings') }}",
+    "replace": "$0 ({$user->warning_count|number})"
+}
