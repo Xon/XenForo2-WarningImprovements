@@ -246,7 +246,7 @@ class Warning extends XFCP_Warning
      * @param bool            $checkBannedStatus
      * @return int|null
      */
-    public function updatePendingExpiryFor(UserEntity $user = null, $checkBannedStatus)
+    public function updatePendingExpiryFor(/** @noinspection PhpOptionalBeforeRequiredParametersInspection */UserEntity $user = null, $checkBannedStatus)
     {
         if (!$user || !$user->Option)
         {

@@ -74,8 +74,7 @@ class ContentChange extends XFCP_ContentChange
 
     /**
      * @param \XF\Entity\User          $targetUser
-     * @param \XF\Entity\WarningAction $action
-     *
+     * @param \XF\Entity\WarningAction $warningAction
      * @throws \XF\PrintableException
      */
     protected function applyWarningActionForSVWI(\XF\Entity\User &$targetUser, \XF\Entity\WarningAction $warningAction)

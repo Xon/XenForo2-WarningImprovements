@@ -10,7 +10,6 @@
 namespace SV\WarningImprovements\Entity;
 
 use XF\Entity\AbstractCategoryTree;
-use XF\Entity\User;
 use XF\Entity\WarningDefinition;
 use XF\Mvc\Entity\Structure;
 

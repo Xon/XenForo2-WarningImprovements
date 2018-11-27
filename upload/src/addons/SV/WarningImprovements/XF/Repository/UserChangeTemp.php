@@ -79,7 +79,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     public function getWarningActions($user, $showAll = false, $showDiscouraged = false, $onlyExpired = false)
     {
         $userId = $user;
-        if ($user instanceof \XF\Entity\User)
+        if ($user instanceof UserEntity)
         {
             $userId = $user->user_id;
         }
