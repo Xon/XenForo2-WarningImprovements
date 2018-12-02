@@ -26,20 +26,27 @@ class Warning extends XFCP_Warning
     {
         if (!$this->isPost())
         {
-            if (\XF::$versionId < 2010000)
+            try
             {
-                /** @noinspection PhpMethodParametersCountMismatchInspection */
-                $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements');
-            }
-            else
-            {
-                /** @noinspection PhpMethodParametersCountMismatchInspection */
-                $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
-            }
+                if (\XF::$versionId < 2010000)
+                {
+                    /** @noinspection PhpMethodParametersCountMismatchInspection */
+                    $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements');
+                }
+                else
+                {
+                    /** @noinspection PhpMethodParametersCountMismatchInspection */
+                    $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
+                }
 
-            $setup = new \SV\WarningImprovements\Setup($addOn, $this->app());
-            $setup->addDefaultPhrases();
-            $setup->cleanupWarningCategories();
+                $setup = new \SV\WarningImprovements\Setup($addOn, $this->app());
+                $setup->addDefaultPhrases();
+                $setup->cleanupWarningCategories();
+            }
+            catch(\Exception $e)
+            {
+                // swallow exceptions
+            }
         }
 
         $response = parent::actionIndex($params);
