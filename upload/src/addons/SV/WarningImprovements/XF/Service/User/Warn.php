@@ -180,12 +180,9 @@ class Warn extends XFCP_Warn
         $conversationTitle = $this->conversationTitle;
         $conversationMessage = $this->conversationMessage;
 
-        $replace = [
-            '{points}'        => $warning->points,
-            '{warning_title}' => $warning->title,
-            '{userId}'        => $warning->user_id,
-            '{warning_link}'  => \XF::app()->router('public')->buildLink('canonical:warnings', $warning),
-        ];
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = \XF::repository('XF:Warning');
+        $replace = $warningRepo->getSvWarningReplaceables($warning);
 
         $conversationTitle = strtr(strval($conversationTitle), $replace);
         $conversationMessage = strtr(strval($conversationMessage), $replace);

@@ -228,22 +228,9 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
             if ($postAsUser)
             {
-                $dateString = date($this->app->options()->sv_warning_date_format, \XF::$time);
-                $warning = $this->warning;
-
-                $params = [
-                    'username'         => $this->user->username,
-                    'points'           => $this->user->warning_points,
-                    'report'           => $warning && $warning->Report
-                        ? $this->app->router('public')->buildLink('full:reports', $warning->Report)
-                        : \XF::phrase('n_a')->render(),
-                    'date'             => $dateString,
-                    'warning_title'    => $warning ? $warning->title : \XF::phrase('n_a'),
-                    'warning_points'   => $warning ? $warning->points : 0,
-                    'warning_category' => $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category->title->render() : \XF::phrase('n_a'),
-                    'threshold'        => $this->lastAction->points,
-
-                ];
+                /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+                $warningRepo = \XF::repository('XF:Warning');
+                $params = $warningRepo->getSvWarningReplaceables($this->user, $this->warning, $this->lastAction->points, true);
 
                 if ($nodeId = $this->lastAction->sv_post_node_id)
                 {

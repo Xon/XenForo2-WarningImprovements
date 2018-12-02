@@ -12,12 +12,69 @@ namespace SV\WarningImprovements\XF\Repository;
 use SV\WarningImprovements\Entity\WarningDefault;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Entity\User as UserEntity;
+use SV\WarningImprovements\XF\Entity\Warning as WarningEntity;
 
 /**
  * Extends \XF\Repository\Warning
  */
 class Warning extends XFCP_Warning
 {
+    /**
+     * @param UserEntity                            $user
+     * @param \XF\Entity\Warning|WarningEntity|null $warning
+     * @param int|null                              $pointThreshold
+     * @param bool                                  $forPhrase
+     * @return array
+     */
+    public function getSvWarningReplaceables(UserEntity $user, WarningEntity $warning = null, $pointThreshold = null, $forPhrase = false)
+    {
+        $app = $this->app();
+        $router = $app->router('public');
+        $dateString = date($app->options()->sv_warning_date_format, \XF::$time);
+        $staffUser = $warning ? $warning->WarnedBy : \XF::visitor();
+
+        $handler = $warning ? $warning->getHandler() : null;
+        $content = $warning ? $warning->Content : null;
+
+        $params = [
+            'title'            => $warning && $content ? $handler->getStoredTitle($content) : '',
+            'content'          => $handler && $content ? $handler->getContentForConversation($content) : '',
+            'url'              => $handler && $content ? $handler->getContentUrl($content, true) : '',
+            'user_id'          => $user->user_id,
+            'name'             => $user->username,
+            'username'         => $user->username,
+            'staff'            => $staffUser->username,
+            'staff_user_id'    => $staffUser->username,
+            'points'           => $user->warning_points,
+            'report'           => $warning && $warning->Report ? $router->buildLink('full:reports', $warning->Report) : \XF::phrase('n_a'),
+            'date'             => $dateString,
+            'warning_title'    => $warning ? $warning->title : \XF::phrase('n_a'),
+            'warning_points'   => $warning ? $warning->points : 0,
+            'warning_category' => $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category->title : \XF::phrase('n_a'),
+            'threshold'        => $pointThreshold,
+            'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : null,
+        ];
+
+        if (!$forPhrase)
+        {
+            $replacables = [];
+            foreach ($params as $key => $value)
+            {
+                $replacables['{' . $key . '}'] = $value;
+            }
+            $params = $replacables;
+        }
+        else
+        {
+            foreach ($params as $key => &$value)
+            {
+                $value = (string)$value;
+            }
+        }
+
+        return $params;
+    }
+
     /**
      * @return \XF\Mvc\Entity\Finder
      */
