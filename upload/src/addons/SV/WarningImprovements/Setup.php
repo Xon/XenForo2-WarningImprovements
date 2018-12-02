@@ -82,7 +82,7 @@ class Setup extends AbstractSetup
         $this->addDefaultPhrase('warning_title.0', 'Custom Warning', true);
         $this->addDefaultPhrase('warning_conv_title.0', '', true);
         $this->addDefaultPhrase('warning_conv_text.0', '', true);
-        $this->addDefaultPhrase('sv_warning_category_title.0', 'Warnings', true);
+        $this->addDefaultPhrase('sv_warning_category_title.1', 'Warnings', true);
     }
 
     public function cleanupWarningCategories()
