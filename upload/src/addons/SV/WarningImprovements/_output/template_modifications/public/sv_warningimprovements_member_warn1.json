@@ -1,6 +1,6 @@
 {
     "template": "member_warn",
-    "description": "Display warning items by category with Chosen support",
+    "description": "Display warning items by category with select2 support",
     "execution_order": 9,
     "enabled": true,
     "action": "preg_replace",
