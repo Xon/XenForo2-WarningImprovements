@@ -1,7 +1,7 @@
 {
     "template": "member_warn",
     "description": "Display warning items by category with Chosen support",
-    "execution_order": 10,
+    "execution_order": 9,
     "enabled": true,
     "action": "preg_replace",
     "find": "#<xf:radiorow name=\"warning_definition_id\" value=\"0\"\\s*label=\"{{ phrase\\('warning_type'\\) }}\">.*<\\/xf:option>\\s*<\\/xf:radiorow>#si",
