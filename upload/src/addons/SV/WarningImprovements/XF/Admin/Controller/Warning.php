@@ -39,6 +39,7 @@ class Warning extends XFCP_Warning
 
             $setup = new \SV\WarningImprovements\Setup($addOn, $this->app());
             $setup->addDefaultPhrases();
+            $setup->cleanupWarningCategories();
         }
 
         $response = parent::actionIndex($params);
