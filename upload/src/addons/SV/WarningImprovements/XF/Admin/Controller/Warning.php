@@ -24,6 +24,23 @@ class Warning extends XFCP_Warning
 {
     public function actionIndex(ParameterBag $params)
     {
+        if (!$this->isPost())
+        {
+            if (\XF::$versionId < 2010000)
+            {
+                /** @noinspection PhpMethodParametersCountMismatchInspection */
+                $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements');
+            }
+            else
+            {
+                /** @noinspection PhpMethodParametersCountMismatchInspection */
+                $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
+            }
+
+            $setup = new \SV\WarningImprovements\Setup($addOn, $this->app());
+            $setup->addDefaultPhrases();
+        }
+
         $response = parent::actionIndex($params);
 
         if ($response instanceof View)
