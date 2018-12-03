@@ -35,8 +35,9 @@ class Warning extends XFCP_Warning
 
         $handler = $warning ? $warning->getHandler() : null;
         $content = $warning ? $warning->Content : null;
+        $params = $warning ? $warning->toArray() : [];
 
-        $params = [
+        $params = \array_merge($params, [
             'title'            => $warning && $content ? $handler->getStoredTitle($content) : '',
             'content'          => $handler && $content ? $handler->getContentForConversation($content) : '',
             'url'              => $handler && $content ? $handler->getContentUrl($content, true) : '',
@@ -53,7 +54,7 @@ class Warning extends XFCP_Warning
             'warning_category' => $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category->title : \XF::phrase('n_a'),
             'threshold'        => $pointThreshold,
             'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : null,
-        ];
+        ]);
 
         if (!$forPhrase)
         {
