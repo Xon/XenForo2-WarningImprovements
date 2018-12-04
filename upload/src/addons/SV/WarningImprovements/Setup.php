@@ -115,6 +115,7 @@ class Setup extends AbstractSetup
         ');
 
         // categories have a summary count of thier warnings
+        /** @noinspection SqlWithoutWhere */
         $db->query("UPDATE xf_sv_warning_category
              SET warning_count = (SELECT COUNT(*)
                                   FROM xf_warning_definition

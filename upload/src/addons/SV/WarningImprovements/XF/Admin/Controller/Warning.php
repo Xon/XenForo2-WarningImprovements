@@ -31,11 +31,13 @@ class Warning extends XFCP_Warning
                 if (\XF::$versionId < 2010000)
                 {
                     /** @noinspection PhpMethodParametersCountMismatchInspection */
+                    /** @noinspection PhpParamsInspection */
                     $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements');
                 }
                 else
                 {
                     /** @noinspection PhpMethodParametersCountMismatchInspection */
+                    /** @noinspection PhpParamsInspection */
                     $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
                 }
 
