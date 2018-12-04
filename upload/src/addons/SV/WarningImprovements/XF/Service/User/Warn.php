@@ -182,7 +182,7 @@ class Warn extends XFCP_Warn
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = \XF::repository('XF:Warning');
-        $replace = $warningRepo->getSvWarningReplaceables($warning);
+        $replace = $warningRepo->getSvWarningReplaceables($warning->User, $warning);
 
         $conversationTitle = strtr(strval($conversationTitle), $replace);
         $conversationMessage = strtr(strval($conversationMessage), $replace);
