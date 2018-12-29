@@ -100,19 +100,10 @@ class Warn extends XFCP_Warn
         {
             return;
         }
-        /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
-        $warning = $this->warning;
 
-        $dateString = date($options->sv_warning_date_format, \XF::$time);
-
-        $warningArray = $warning->toArray();
-        $warningArray['username'] = $this->user->username;
-        $warningArray['report'] = $warning->Report
-            ? $this->app->router('public')->buildLink('full:reports', $warning->Report)
-            : \XF::phrase('n_a')->render();
-        $warningArray['warning_link'] = \XF::app()->router('public')->buildLink('canonical:warnings', $warning);
-        $warningArray['content_link'] = $this->handler->getContentUrl($warning->Content, true);
-        $warningArray['date'] = $dateString;
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = \XF::repository('XF:Warning');
+        $params = $warningRepo->getSvWarningReplaceables($this->user, $this->warning, null, true);
 
         $warningUser = \XF::visitor(); //$this->user;
 
@@ -121,15 +112,15 @@ class Warn extends XFCP_Warn
         {
             /** @var \XF\Entity\Forum $forum */
             /** @var \XF\Service\Thread\Creator $threadCreator */
-            $threadCreator = \XF::asVisitor($warningUser, function () use ($forum, $warningArray) {
+            $threadCreator = \XF::asVisitor($warningUser, function () use ($forum, $params) {
                 /** @var \XF\Service\Thread\Creator $threadCreator */
                 $threadCreator = $this->service('XF:Thread\Creator', $forum);
                 $threadCreator->setIsAutomated();
 
                 $threadCreator->setPrefix($forum->default_prefix_id);
 
-                $title = \XF::phrase('Warning_Summary_Title', $warningArray)->render('raw');
-                $messageContent = \XF::phrase('Warning_Summary_Message', $warningArray)->render('raw');
+                $title = \XF::phrase('Warning_Summary_Title', $params)->render('raw');
+                $messageContent = \XF::phrase('Warning_Summary_Message', $params)->render('raw');
 
                 $threadCreator->setContent($title, $messageContent);
                 $threadCreator->save();
@@ -143,12 +134,12 @@ class Warn extends XFCP_Warn
                  ($thread = $this->em()->find('XF:Thread', $postSummaryThreadId)))
         {
             /** @var \XF\Entity\Thread $thread */
-            $threadReplier = \XF::asVisitor($warningUser, function () use ($thread, $warningArray) {
+            $threadReplier = \XF::asVisitor($warningUser, function () use ($thread, $params) {
                 /** @var \XF\Service\Thread\Replier $threadReplier */
                 $threadReplier = $this->service('XF:Thread\Replier', $thread);
                 $threadReplier->setIsAutomated();
 
-                $messageContent = \XF::phrase('Warning_Summary_Message', $warningArray)->render('raw');
+                $messageContent = \XF::phrase('Warning_Summary_Message', $params)->render('raw');
 
                 $threadReplier->setMessage($messageContent);
                 $threadReplier->save();

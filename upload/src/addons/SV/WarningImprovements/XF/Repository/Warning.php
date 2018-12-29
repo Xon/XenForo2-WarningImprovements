@@ -54,6 +54,7 @@ class Warning extends XFCP_Warning
             'warning_category' => $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category->title : \XF::phrase('n_a'),
             'threshold'        => $pointThreshold,
             'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : null,
+            'content_link'     => $handler ? $handler->getContentUrl($warning->Content, true) : null,
         ]);
 
         if (!$forPhrase)
