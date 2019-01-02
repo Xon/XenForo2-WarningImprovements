@@ -36,7 +36,13 @@ class Warning extends XFCP_Warning
         $handler = $warning ? $warning->getHandler() : null;
         $content = $warning ? $warning->Content : null;
         $params = $warning ? $warning->toArray() : [];
-
+        foreach ($params as $key => $value)
+        {
+            if (is_array($value) || is_object($value))
+            {
+                unset($params[$key]);
+            }
+        }
         $params = \array_merge($params, [
             'title'            => $warning && $content ? $handler->getStoredTitle($content) : '',
             'content'          => $handler && $content ? $handler->getContentForConversation($content) : '',
