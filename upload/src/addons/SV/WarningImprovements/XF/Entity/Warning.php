@@ -51,19 +51,11 @@ class Warning extends XFCP_Warning
         return $expiryDateRound;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getNotes()
+    public function canViewNotes()
     {
         $visitor = \XF::visitor();
 
-        if ($visitor->user_id && $visitor->hasPermission('general', 'viewWarning'))
-        {
-            return $this->notes_;
-        }
-
-        return '';
+        return $visitor->user_id && $visitor->hasPermission('general', 'viewWarning');
     }
 
     /**
@@ -198,7 +190,6 @@ class Warning extends XFCP_Warning
 
         $structure->getters['anonymized_issuer'] = true;
         $structure->getters['expiry_date_rounded'] = true;
-        $structure->getters['notes'] = true;
         $structure->getters['Definition'] = false;
 
         $structure->relations['Report'] = [
