@@ -1,0 +1,9 @@
+{
+    "template": "warning_info",
+    "description": "Inject notes permission check",
+    "execution_order": 6240,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:if is=\"{$warning.notes}\">",
+    "replace": "<xf:if is=\"$warning.notes && $warning.canViewNotes()\">"
+}
