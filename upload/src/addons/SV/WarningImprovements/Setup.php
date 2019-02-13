@@ -69,12 +69,12 @@ class Setup extends AbstractSetup
         $db->update('xf_warning_action', ['sv_post_as_user_id' => null], 'sv_post_as_user_id = ?', 0);
     }
 
-    public function installStep6()
+    public function installStep5()
     {
-        $this->addDefaultPhrases();
         $this->renamePhrases([
             'sv_warning_category_*_title' => 'sv_warning_category_title.*'
         ]);
+        $this->addDefaultPhrases();
     }
 
     public function addDefaultPhrases()
@@ -130,7 +130,7 @@ class Setup extends AbstractSetup
 
     public function upgrade2000000Step2()
     {
-        $this->installStep6();
+        $this->installStep5();
     }
 
     public function upgrade2010800Step1()
