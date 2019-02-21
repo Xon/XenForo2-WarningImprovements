@@ -131,8 +131,8 @@ class Warning extends XFCP_Warning
 
     public function verifyNotes($notes)
     {
-        $options = \XF::options();
-        if (!empty($minNoteLength = $options->sv_wi_warning_note_chars))
+        $minNoteLength = (int)\XF::options()->sv_wi_warning_note_chars;
+        if ($minNoteLength > 0)
         {
             $noteLength = utf8_strlen($notes);
             if ($noteLength < $minNoteLength)
@@ -185,7 +185,11 @@ class Warning extends XFCP_Warning
         if ($options->sv_wi_require_warning_notes)
         {
             unset($structure->columns['notes']['default']);
-            $structure->columns['notes']['required'] = 'sv_please_enter_note_for_warning';
+            $minNoteLength = (int)\XF::options()->sv_wi_warning_note_chars;
+            if ($minNoteLength > 0)
+            {
+                $structure->columns['notes']['required'] = 'sv_please_enter_note_for_warning';
+            }
         }
 
         $structure->getters['anonymized_issuer'] = true;
