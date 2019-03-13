@@ -73,11 +73,11 @@ class Warn extends XFCP_Warn
             $user = $response->getParam('user');
             $previousWarnings = [];
 
-            if ($user)
+            $warningLimit = (int)\XF::options()->svPreviousWarningLimit;
+            if ($user && $warningLimit >= 0)
             {
                 $warningList = $warningRepo->findUserWarningsForList($user->user_id);
-                $warningLimit = \XF::options()->svPreviousWarningLimit;
-                if ($warningLimit)
+                if ($warningLimit > 0)
                 {
                     $warningList->limit($warningLimit);
                 }
