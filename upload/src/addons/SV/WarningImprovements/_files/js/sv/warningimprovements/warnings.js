@@ -1,5 +1,6 @@
 var SV = SV || {};
 
+// noinspection JSUnusedLocalSymbols
 (function ($, window, document, _undefined) {
     "use strict";
 
@@ -103,7 +104,7 @@ var SV = SV || {};
             $(this.selectViewContainer).xfFadeUp();
             $(this.selectViewContainer).remove();
 
-            $('input[type=radio][data-warning-radio="true"]:enabled:visible:checked:first').trigger('click');
+            $('input[type=radio][data-warning-radio="true"]:enabled:visible:checked').first().trigger('click');
         },
 
         getSetting: function () {
