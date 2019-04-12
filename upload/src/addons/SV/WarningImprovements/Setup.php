@@ -162,7 +162,7 @@ class Setup extends AbstractSetup
         }
     }
 
-    public function upgrade2021000Step3()
+    public function upgrade2021001Step1()
     {
         // convert a number of columns which had 0 default to null
         $this->installStep4();
