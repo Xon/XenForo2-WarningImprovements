@@ -120,7 +120,6 @@ class Setup extends AbstractSetup
              SET warning_count = (SELECT COUNT(*)
                                   FROM xf_warning_definition
                                   WHERE xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)");
-
     }
 
     public function upgrade2000000Step1()
@@ -161,6 +160,12 @@ class Setup extends AbstractSetup
             $group->allowed_user_group_ids = $groups;
             $group->saveIfChanged();
         }
+    }
+
+    public function upgrade2021000Step3()
+    {
+        // convert a number of columns which had 0 default to null
+        $this->installStep4();
     }
 
     public function uninstallStep1()
