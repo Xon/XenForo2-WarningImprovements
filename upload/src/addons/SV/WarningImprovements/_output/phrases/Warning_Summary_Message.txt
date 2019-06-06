@@ -1,3 +1,3 @@
-{warning_points} points to @{username} for [url='{warning_link}']{title}[/url], {report}
+{warning_points} points to @{username} for [url='{warning_link}']{warning_title}[/url], {report}
 Content: {content_link}
 {notes}
