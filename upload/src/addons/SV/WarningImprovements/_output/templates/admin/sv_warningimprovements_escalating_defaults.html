@@ -13,7 +13,7 @@
 							<xf:set var="$expiry_extension_phrase">{{ phrase('x_months', {'months': $escalatingDefault.expiry_extension}) }}</xf:set>
 						</xf:if>
 						<xf:if is="{$escalatingDefault.expiry_type} == 'years'">
-							<xf:set var="$expiry_extension_phrase">{{ phrase('sv_x_years', {'years': $escalatingDefault.expiry_extension}) }}</xf:set>
+							<xf:set var="$expiry_extension_phrase">{{ phrase('x_years', {'years': $escalatingDefault.expiry_extension}) }}</xf:set>
 						</xf:if>
 						
 						<xf:datarow>
