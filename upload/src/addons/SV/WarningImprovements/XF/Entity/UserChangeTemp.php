@@ -166,10 +166,10 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     public function canViewWarningAction(/** @noinspection PhpUnusedParameterInspection */
         &$error = null)
     {
-        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
-        $visitor = \XF::visitor();
+        /** @var \SV\WarningImprovements\XF\Entity\User $user */
+        $user = $this->User;
 
-        if (!$visitor->user_id)
+        if (!$user->user_id)
         {
             return false;
         }
@@ -178,8 +178,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         {
             return false;
         }
-
-        return $visitor->canViewWarningActions($error);
+        return $user->canViewWarningActions($error);
     }
 
     /**

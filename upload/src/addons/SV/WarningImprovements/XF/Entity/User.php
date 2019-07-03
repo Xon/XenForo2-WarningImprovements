@@ -82,12 +82,18 @@ class User extends XFCP_User
             return false;
         }
 
+        if ($visitor->hasPermission('general', 'sv_viewWarningActions'))
+        {
+
+            return true;
+        }
+
         if ($visitor->user_id == $this->user_id)
         {
             return \XF::options()->sv_view_own_warnings;
         }
 
-        return $visitor->hasPermission('general', 'sv_viewWarningActions');
+        return false;
     }
 
     /**
