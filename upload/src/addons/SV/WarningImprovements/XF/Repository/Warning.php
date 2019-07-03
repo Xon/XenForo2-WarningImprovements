@@ -169,19 +169,6 @@ class Warning extends XFCP_Warning
                 $definition->expiry_type = $warningDefault->expiry_type;
                 $definition->expiry_default = $warningDefault->expiry_extension;
             }
-            else if ($definition->expiry_type == $warningDefault->expiry_type)
-            {
-                $definition->expiry_default = $definition->expiry_default + $warningDefault->expiry_extension;
-            }
-            else if ($definition->expiry_type === 'months' && $warningDefault->expiry_type === 'years')
-            {
-                $definition->expiry_default = $definition->expiry_default + $warningDefault->expiry_extension * 12;
-            }
-            else if ($definition->expiry_type === 'years' && $warningDefault->expiry_type === 'months')
-            {
-                $definition->expiry_default = $definition->expiry_default * 12 + $warningDefault->expiry_extension;
-                $definition->expiry_type = 'months';
-            }
             else
             {
                 $expiryDuration = $this->convertToDays($definition->expiry_type, $definition->expiry_default) +
