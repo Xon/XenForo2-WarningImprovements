@@ -208,6 +208,8 @@ class Warning extends XFCP_Warning
     {
         switch ($expiryType)
         {
+            case 'hours':
+                return $expiryDuration / 24;
             case 'days':
                 return $expiryDuration;
             case 'weeks':
