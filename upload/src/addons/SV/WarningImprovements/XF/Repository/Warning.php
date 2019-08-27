@@ -53,7 +53,7 @@ class Warning extends XFCP_Warning
             'staff'            => $staffUser->username,
             'staff_user_id'    => $staffUser->username,
             'points'           => $user->warning_points,
-            'report'           => $warning && $warning->Report ? $router->buildLink('full:reports', $warning->Report) : \XF::phrase('n_a'),
+            'report'           => $warning && $warning->isValidRelation('Report') && $warning->Report ? $router->buildLink('full:reports', $warning->Report) : \XF::phrase('n_a'),
             'date'             => $dateString,
             'warning_title'    => $warning ? $warning->title : \XF::phrase('n_a'),
             'warning_points'   => $warning ? $warning->points : 0,
