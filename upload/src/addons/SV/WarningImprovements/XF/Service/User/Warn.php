@@ -132,7 +132,11 @@ class Warn extends XFCP_Warn
                 return $threadCreator;
             });
 
-            $threadCreator->sendNotifications();
+            \XF::runLater(function () use ($threadCreator, $warningUser){
+                \XF::asVisitor($warningUser, function () use ($threadCreator) {
+                    $threadCreator->sendNotifications();
+                });
+            });
         }
         else if ($postSummaryThreadId &&
                  ($thread = $this->em()->find('XF:Thread', $postSummaryThreadId)))
@@ -151,7 +155,11 @@ class Warn extends XFCP_Warn
                 return $threadReplier;
             });
 
-            $threadReplier->sendNotifications();
+            \XF::runLater(function () use ($threadReplier, $warningUser){
+                \XF::asVisitor($warningUser, function () use ($threadReplier) {
+                    $threadReplier->sendNotifications();
+                });
+            });
         }
     }
 

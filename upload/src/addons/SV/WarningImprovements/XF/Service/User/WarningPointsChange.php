@@ -204,9 +204,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             }
         }
 
-        \XF::runLater(function () {
-            $this->warningActionNotifications();
-        });
+        $this->warningActionNotifications();
     }
 
     public function warningActionNotifications()
@@ -259,8 +257,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
                             return $threadCreator;
                         });
-
-                        $threadCreator->sendNotifications();
+                        \XF::runLater(function () use ($threadCreator, $postAsUser){
+                            \XF::asVisitor($postAsUser, function () use ($threadCreator) {
+                                $threadCreator->sendNotifications();
+                            });
+                        });
                     }
                 }
                 else if ($threadId = $this->lastAction->sv_post_thread_id)
@@ -281,7 +282,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             return $threadReplier;
                         });
 
-                        $threadReplier->sendNotifications();
+                        \XF::runLater(function () use ($threadReplier, $postAsUser){
+                            \XF::asVisitor($postAsUser, function () use ($threadReplier) {
+                                $threadReplier->sendNotifications();
+                            });
+                        });
                     }
                 }
             }
