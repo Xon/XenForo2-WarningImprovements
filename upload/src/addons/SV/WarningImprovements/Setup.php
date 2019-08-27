@@ -168,6 +168,16 @@ class Setup extends AbstractSetup
         $this->installStep4();
     }
 
+    public function upgrade2021501Step1()
+    {
+        $this->renamePhrases([
+            'Warning_Summary_Title' => 'Warning_Summary.Title',
+            'Warning_Summary_Message' => 'Warning_Summary.Message',
+            'Warning_Thread_Title' => 'Warning_Thread.Title',
+            'Warning_Thread_Message' => 'Warning_Thread.Message',
+        ]);
+    }
+
     public function uninstallStep1()
     {
         $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");

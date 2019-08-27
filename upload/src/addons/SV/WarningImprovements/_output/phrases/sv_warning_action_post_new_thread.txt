@@ -4,6 +4,6 @@ New Thread trumps replying to a thread. Only the last warning action is applied 
 <br/>
 Edit the phases:
 <ul class="inputChoices">
-<li><strong>Warning_Thread_Message</strong></li>
-<li><strong>Warning_Thread_Title</strong></li>
+<li><strong>Warning_Thread.Message</strong></li>
+<li><strong>Warning_Thread.Title</strong></li>
 </ul>

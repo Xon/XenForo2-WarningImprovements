@@ -2,5 +2,5 @@ Post message to an existing thread when this warning action is triggered. Zero t
 <br/>
 Edit the phases:
 <ul class="inputChoices">
-<li><strong>Warning_Thread_Message</strong></li>
+<li><strong>Warning_Thread.Message</strong></li>
 </ul>

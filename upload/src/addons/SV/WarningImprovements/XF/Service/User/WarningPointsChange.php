@@ -249,8 +249,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                                 $threadCreator->setPrefix($defaultPrefix);
                             }
 
-                            $title = \XF::phrase('Warning_Thread_Title', $params)->render('raw');
-                            $messageContent = \XF::phrase('Warning_Thread_Message', $params)->render('raw');
+                            $title = \XF::phrase('Warning_Thread.Title', $params)->render('raw');
+                            $messageContent = \XF::phrase('Warning_Thread.Message', $params)->render('raw');
 
                             $threadCreator->setContent($title, $messageContent);
                             $threadCreator->save();
@@ -274,7 +274,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadReplier = $this->service('XF:Thread\Replier', $thread);
                             $threadReplier->setIsAutomated();
 
-                            $messageContent = \XF::phrase('Warning_Thread_Message', $params)->render('raw');
+                            $messageContent = \XF::phrase('Warning_Thread.Message', $params)->render('raw');
 
                             $threadReplier->setMessage($messageContent);
                             $threadReplier->save();

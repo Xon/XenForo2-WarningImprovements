@@ -123,8 +123,8 @@ class Warn extends XFCP_Warn
                     $threadCreator->setPrefix($defaultPrefix);
                 }
 
-                $title = \XF::phrase('Warning_Summary_Title', $params)->render('raw');
-                $messageContent = \XF::phrase('Warning_Summary_Message', $params)->render('raw');
+                $title = \XF::phrase('Warning_Summary.Title', $params)->render('raw');
+                $messageContent = \XF::phrase('Warning_Summary.Message', $params)->render('raw');
 
                 $threadCreator->setContent($title, $messageContent);
                 $threadCreator->save();
@@ -147,7 +147,7 @@ class Warn extends XFCP_Warn
                 $threadReplier = $this->service('XF:Thread\Replier', $thread);
                 $threadReplier->setIsAutomated();
 
-                $messageContent = \XF::phrase('Warning_Summary_Message', $params)->render('raw');
+                $messageContent = \XF::phrase('Warning_Summary.Message', $params)->render('raw');
 
                 $threadReplier->setMessage($messageContent);
                 $threadReplier->save();

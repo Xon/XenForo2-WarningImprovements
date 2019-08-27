@@ -40,10 +40,10 @@ A Collection of improvements to XF2's warning system.
   - Affects Alerts and Warnings.
   - Does NOT change conversations.
 - Round up warning expiry time to the nearest hour to avoid confusion over delays caused by XenForo task system's hourly schedule.
-- Option to log a warning summary to a thread. Phrase: Warning_Summary_Message, can use BBCode
+- Option to log a warning summary to a thread. Phrase: Warning_Summary.Message, can use BBCode
 - New Warning Action actions triggered for the last valid warning action:
-  - Post a new thread. Phrases Warning_Thread_Message & Warning_Thread_Title, can use BBCode.
-  - Reply to an existing thread. Phrases Warning_Thread_Message, can use BBCode.
+  - Post a new thread. Phrases Warning_Thread.Message & Warning_Thread.Title, can use BBCode.
+  - Reply to an existing thread. Phrases Warning_Thread.Message, can use BBCode.
  
 New Permission to control if a user can see who warned them.
 - View Warning Issuer.
