@@ -23,6 +23,9 @@ use XF\Mvc\Entity\Structure;
  * @property int sv_post_as_user_id
  * @property int sv_warning_category_id
  *
+ * GETTERS
+ * @property string title
+ *
  * RELATIONS
  * @property WarningCategoryEntity Category
  * @property Forum PostForum
@@ -31,6 +34,20 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningAction extends XFCP_WarningAction
 {
+    /**
+     * @return string|\XF\Phrase
+     */
+    public function getTitle()
+    {
+        if (is_callable('parent::getTitle'))
+        {
+            return parent::getTitle();
+        }
+
+        // getto as fuck
+        return \XF::Phrase('points:') . ' '. $this->points;
+    }
+
     /**
      * @param Structure $structure
      * @return Structure
@@ -72,6 +89,11 @@ class WarningAction extends XFCP_WarningAction
             'conditions' => 'sv_post_as_user_id',
             'primary'    => true
         ];
+
+        if (!isset($structure->getters['title']))
+        {
+            $structure->getters['title'] = true;
+        }
 
         return $structure;
     }
