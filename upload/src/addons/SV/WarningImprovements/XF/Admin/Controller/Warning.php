@@ -1,12 +1,5 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements\XF\Admin\Controller;
 
 use SV\WarningImprovements\Entity\WarningCategory;
@@ -28,18 +21,7 @@ class Warning extends XFCP_Warning
         {
             try
             {
-                if (\XF::$versionId < 2010000)
-                {
-                    /** @noinspection PhpMethodParametersCountMismatchInspection */
-                    /** @noinspection PhpParamsInspection */
-                    $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements');
-                }
-                else
-                {
-                    /** @noinspection PhpMethodParametersCountMismatchInspection */
-                    /** @noinspection PhpParamsInspection */
-                    $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
-                }
+               $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
 
                 $setup = new \SV\WarningImprovements\Setup($addOn, $this->app());
                 $setup->addDefaultPhrases();
