@@ -72,9 +72,14 @@ class Warn extends XFCP_Warn
         {
             if ($this->sendAlert)
             {
+                /** @var \SV\WarningImprovements\XF\Entity\User $warnedUser */
+                /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
+                $warnedUser = $warning->User;
+                $warnedBy = $warnedUser->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer();
+
                 /** @var \XF\Repository\UserAlert $alertRepo */
                 $alertRepo = $this->repository('XF:UserAlert');
-                $alertRepo->alertFromUser($warning->User, $warning->WarnedBy, 'warning_alert', $warning->warning_id, 'warning');
+                $alertRepo->alertFromUser($warnedUser, $warnedBy, 'warning_alert', $warning->warning_id, 'warning');
             }
 
             $this->warningActionNotifications();
