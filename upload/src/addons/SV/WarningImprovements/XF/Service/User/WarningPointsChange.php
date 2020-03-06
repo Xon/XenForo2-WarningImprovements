@@ -1,12 +1,5 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements\XF\Service\User;
 
 use SV\WarningImprovements\Entity\WarningCategory;
@@ -14,7 +7,6 @@ use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User;
 use SV\WarningImprovements\XF\Entity\Warning;
 use XF\App;
-use XF\Entity\Forum;
 use XF\Entity\WarningAction;
 use XF\Entity\Report;
 use XF\Mvc\Entity\AbstractCollection;
@@ -66,6 +58,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function applyWarningAction(WarningAction $action)
     {
+        /** @var \SV\WarningImprovements\XF\Entity\WarningAction $action */
         parent::applyWarningAction($action);
 
         if ((empty($this->lastWarningAction) || $action->points > $this->lastWarningAction->points) &&
@@ -232,7 +225,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
                 if ($nodeId = $this->lastAction->sv_post_node_id)
                 {
-                    /** @var Forum $forum */
+                    /** @var \SV\MultiPrefix\XF\Entity\Forum $forum */
                     $forum = $this->em()->find('XF:Forum', $nodeId);
 
                     if ($forum)

@@ -1,12 +1,5 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements\XF\Entity;
 
 use SV\WarningImprovements\Globals;
@@ -70,13 +63,11 @@ class User extends XFCP_User
      * @param string|null $error
      * @return bool
      */
-    public function canViewWarningActions(/** @noinspection PhpUnusedParameterInspection */
-        &$error = null)
+    public function canViewWarningActions(&$error = null)
     {
         $visitor = \XF::visitor();
 
         $error = \XF::phrase('requested_user_not_found');
-
         if (!$visitor->user_id)
         {
             return false;
@@ -84,13 +75,14 @@ class User extends XFCP_User
 
         if ($visitor->hasPermission('general', 'sv_viewWarningActions'))
         {
-
+            $error = null;
             return true;
         }
 
-        if ($visitor->user_id == $this->user_id)
+        if ($visitor->user_id === $this->user_id && \XF::options()->sv_view_own_warnings)
         {
-            return \XF::options()->sv_view_own_warnings;
+            $error = null;
+            return true;
         }
 
         return false;
@@ -164,12 +156,11 @@ class User extends XFCP_User
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->repository('XF:Warning');
-        $warningDefinitions = $warningRepo->findWarningDefinitionsForList()
-                                          ->with('Category')
-                                          ->order('sv_display_order')
-                                          ->fetch();
 
-        return $warningDefinitions;
+        return $warningRepo->findWarningDefinitionsForList()
+                           ->with('Category')
+                           ->order('sv_display_order')
+                           ->fetch();
     }
 
     public function getUsableWarningDefinitions()
@@ -177,7 +168,7 @@ class User extends XFCP_User
         $warningDefinitions = $this->warning_definitions;
 
         $warningDefinitions = $warningDefinitions->filter(function ($warningDefinition) {
-            /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
+            /** @var WarningDefinition $warningDefinition */
             return $warningDefinition->canView();
         });
 

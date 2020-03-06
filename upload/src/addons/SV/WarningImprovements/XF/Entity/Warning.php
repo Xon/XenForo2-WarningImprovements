@@ -1,31 +1,23 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements\XF\Entity;
 
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Entity\User as UserExtended;
+use SV\WarningImprovements\XF\Entity\WarningDefinition as WarningDefinitionExtended;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
- *
- * @property string notes_
- *
+ * @property string                                                 notes_
  * GETTERS
- * @property \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|null anonymized_issuer
- * @property int expiry_date_rounded
- * @property \XF\Entity\WarningDefinition definition
- *
+ * @property UserExtended|\XF\Entity\User|null                      anonymized_issuer
+ * @property int                                                    expiry_date_rounded
+ * @property \XF\Entity\WarningDefinition                           definition
  * RELATIONS
- * @property \SV\WarningImprovements\XF\Entity\WarningDefinition|\XF\Entity\WarningDefinition Definition
- * @property \XF\Entity\WarningDefinition Definition_
- * @property \XF\Entity\Report Report
+ * @property WarningDefinitionExtended|\XF\Entity\WarningDefinition Definition
+ * @property \XF\Entity\WarningDefinition                           Definition_
+ * @property \XF\Entity\Report                                      Report
  */
 class Warning extends XFCP_Warning
 {
@@ -85,22 +77,23 @@ class Warning extends XFCP_Warning
      */
     public function canViewIssuer(&$error = null)
     {
-        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        /** @var UserExtended $visitor */
         $visitor = \XF::visitor();
 
         return $visitor->canViewIssuer($error);
     }
 
     /**
-     * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|Entity
+     * @return UserExtended|\XF\Entity\User|Entity
      */
     public function getAnonymizedIssuer()
     {
         $anonymizedIssuer = null;
 
-        if (!empty($anonymizeAsUserId = $this->app()->options()->sv_warningimprovements_warning_user))
+        $options = $this->app()->options();
+        if (!empty($options->sv_warningimprovements_warning_user))
         {
-            if ($warningStaff = $this->em()->find('XF:User', $anonymizeAsUserId))
+            if ($warningStaff = $this->em()->find('XF:User', $options->sv_warningimprovements_warning_user))
             {
                 $anonymizedIssuer = $warningStaff;
             }

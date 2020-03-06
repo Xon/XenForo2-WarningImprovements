@@ -1,12 +1,5 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements\XF\Entity;
 
 use XF\Mvc\Entity\Structure;
@@ -163,10 +156,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewWarningAction(/** @noinspection PhpUnusedParameterInspection */
-        &$error = null)
+    public function canViewWarningAction(&$error = null)
     {
-        /** @var \SV\WarningImprovements\XF\Entity\User $user */
+        /** @var User $user */
         $user = $this->User;
 
         if (!$user->user_id)
@@ -178,6 +170,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         {
             return false;
         }
+
         return $user->canViewWarningActions($error);
     }
 
@@ -185,10 +178,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewNonSummaryWarningAction(/** @noinspection PhpUnusedParameterInspection */
-        &$error = null)
+    public function canViewNonSummaryWarningAction(&$error = null)
     {
-        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        /** @var User $visitor */
         $visitor = \XF::visitor();
 
         if (!$visitor->user_id)
@@ -203,10 +195,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewDiscouragedWarningAction(/** @noinspection PhpUnusedParameterInspection */
-        &$error = null)
+    public function canViewDiscouragedWarningAction(&$error = null)
     {
-        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        /** @var User $visitor */
         $visitor = \XF::visitor();
 
         if (!$visitor->user_id)
@@ -221,10 +212,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string $error
      * @return bool
      */
-    public function canEditWarningAction(/** @noinspection PhpUnusedParameterInspection */
-        &$error = '')
+    public function canEditWarningAction(&$error = '')
     {
-        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        /** @var User $visitor */
         $visitor = \XF::visitor();
 
         if (!$visitor->user_id)

@@ -81,7 +81,6 @@ class Listener
             return;
         }
 
-        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         /** @var \SV\WarningImprovements\XF\Entity\UserOption $option */
         $option = $visitor->Option;
 

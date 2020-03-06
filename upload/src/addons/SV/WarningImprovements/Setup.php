@@ -1,12 +1,5 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements;
 
 use SV\Utils\InstallerHelper;
@@ -101,9 +94,9 @@ class Setup extends AbstractSetup
 
         // create default warning category, do not use the data writer as that requires the rest of the add-on to be setup
         $db->query("INSERT IGNORE
-                          INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids)
-                          VALUES (1, NULL, 0, ?)
-         ", [-1]);
+                          INTO xf_sv_warning_category (warning_category_id, parent_category_id, display_order, allowed_user_group_ids, breadcrumb_data)
+                          VALUES (1, NULL, 0, ?, ?)
+         ", [-1, ':0:{}']);
 
         // set all warning definitions to be in default warning category, note; the phrase is defined in the XML
         $db->query('UPDATE xf_warning_definition

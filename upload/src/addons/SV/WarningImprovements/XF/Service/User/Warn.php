@@ -1,12 +1,5 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements\XF\Service\User;
 
 use SV\WarningImprovements\Globals;
@@ -110,7 +103,7 @@ class Warn extends XFCP_Warn
         if ($postSummaryForumId &&
             ($forum = $this->em()->find('XF:Forum', $postSummaryForumId)))
         {
-            /** @var \XF\Entity\Forum $forum */
+            /** @var \XF\Entity\Forum|\SV\MultiPrefix\XF\Entity\Forum $forum */
             /** @var \XF\Service\Thread\Creator $threadCreator */
             $threadCreator = \XF::asVisitor($warningUser, function () use ($forum, $params) {
                 /** @var \XF\Service\Thread\Creator $threadCreator */

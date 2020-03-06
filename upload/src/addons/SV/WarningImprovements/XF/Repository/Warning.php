@@ -1,12 +1,5 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements\XF\Repository;
 
 use SV\WarningImprovements\Entity\WarningDefault;
@@ -84,7 +77,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return \XF\Mvc\Entity\Finder
+     * @return WarningDefinition[]
      */
     public function findWarningDefinitionsForListGroupedByCategory()
     {

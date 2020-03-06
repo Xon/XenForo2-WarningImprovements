@@ -1,12 +1,5 @@
 <?php
 
-/*
- * This file is part of a XenForo add-on.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace SV\WarningImprovements\XF\Entity;
 
 use XF\Entity\User as UserEntity;
@@ -95,7 +88,7 @@ class WarningDefinition extends XFCP_WarningDefinition
      */
     public function getSpecificConversationContent(UserEntity $receiver, $contentType, Entity $content, UserEntity $sender = null)
     {
-        /** @var \SV\WarningImprovements\XF\Entity\User $receiver */
+        /** @var User $receiver */
 
         if (!$receiver->canViewIssuer())
         {
@@ -106,9 +99,10 @@ class WarningDefinition extends XFCP_WarningDefinition
 
             $sender->username = \XF::phrase('WarningStaff')->render();
 
-            if (!empty($anonymizeAsUserId = $this->app()->options()->sv_warningimprovements_warning_user))
+            $options = $this->app()->options();
+            if (!empty($options->sv_warningimprovements_warning_user))
             {
-                if ($warningStaff = $this->em()->find('XF:User', $anonymizeAsUserId))
+                if ($warningStaff = $this->em()->find('XF:User', $options->sv_warningimprovements_warning_user))
                 {
                     $sender = $warningStaff;
                 }
