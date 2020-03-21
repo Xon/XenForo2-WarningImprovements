@@ -101,7 +101,13 @@ class Warn extends XFCP_Warn
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = \XF::repository('XF:Warning');
-        $params = $warningRepo->getSvWarningReplaceables($this->user, $this->warning, null, true);
+        $params = $warningRepo->getSvWarningReplaceables(
+            $this->user,
+            $this->warning,
+            null,
+            true,
+            $this->contentAction, $this->contentActionOptions
+        );
 
         $warningUser = \XF::visitor(); //$this->user;
 
@@ -183,7 +189,13 @@ class Warn extends XFCP_Warn
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = \XF::repository('XF:Warning');
-        $replace = $warningRepo->getSvWarningReplaceables($warning->User, $warning);
+        $replace = $warningRepo->getSvWarningReplaceables(
+            $warning->User,
+            $warning,
+            null,
+            false,
+            $this->contentAction, $this->contentActionOptions
+        );
 
         $conversationTitle = strtr(strval($conversationTitle), $replace);
         $conversationMessage = strtr(strval($conversationMessage), $replace);

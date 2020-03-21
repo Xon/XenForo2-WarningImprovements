@@ -6,6 +6,7 @@ use SV\WarningImprovements\Entity\WarningDefault;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Entity\User as UserEntity;
 use SV\WarningImprovements\XF\Entity\Warning as WarningEntity;
+use XF\Phrase;
 
 /**
  * Extends \XF\Repository\Warning
@@ -17,9 +18,11 @@ class Warning extends XFCP_Warning
      * @param \XF\Entity\Warning|WarningEntity|null $warning
      * @param int|null                              $pointThreshold
      * @param bool                                  $forPhrase
+     * @param null|string                           $contentAction
+     * @param null|array                            $contentActionOptions
      * @return array
      */
-    public function getSvWarningReplaceables(UserEntity $user, WarningEntity $warning = null, $pointThreshold = null, $forPhrase = false)
+    public function getSvWarningReplaceables(UserEntity $user, WarningEntity $warning = null, $pointThreshold = null, $forPhrase = false, $contentAction = null, array $contentActionOptions = null)
     {
         $app = $this->app();
         $router = $app->router('public');
@@ -54,6 +57,7 @@ class Warning extends XFCP_Warning
             'threshold'        => $pointThreshold,
             'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : null,
             'content_link'     => $handler ? $handler->getContentUrl($warning->Content, true) : null,
+            'content_action'   => $contentAction
         ]);
 
         if (!$forPhrase)
@@ -64,16 +68,38 @@ class Warning extends XFCP_Warning
                 $replacables['{' . $key . '}'] = $value;
             }
             $params = $replacables;
+            $params['content_action_options'] = $contentActionOptions;
         }
         else
         {
             foreach ($params as $key => &$value)
             {
+                if ($key === 'content_action')
+                {
+                    $value = $this->getContentActionForPhrase($value, $contentActionOptions);
+                    if ($value === ''
+                        || $value instanceof Phrase && $value->getName() === $value->render()
+                    )
+                    {
+                        continue;
+                    }
+                }
                 $value = (string)$value;
             }
         }
 
         return $params;
+    }
+
+    /**
+     * @param $contentAction
+     * @param array $contentOptions
+     *
+     * @return string
+     */
+    protected function getContentActionForPhrase($contentAction, array $contentOptions)
+    {
+        return '';
     }
 
     /**
