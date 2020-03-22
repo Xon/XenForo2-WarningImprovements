@@ -88,16 +88,10 @@ class Warning extends XFCP_Warning
      */
     protected function getReadableContentAction($contentAction, array $contentOptions)
     {
-        $readableContentAction = \XF::phrase('svWarningImprovements_warning_content_action.' . $contentAction, $contentOptions);
-        $fallback = '__NULL_' . strval(\time());
-        $readableContentAction->fallback($fallback);
-        $renderedReadableContentAction = $readableContentAction->render();
-        if ($renderedReadableContentAction === $fallback)
-        {
-            return null;
-        }
-
-        return $readableContentAction;
+        return \XF::phrase(
+            'svWarningImprovements_warning_content_action.' . $contentAction,
+            $contentOptions
+        )->render('html', ['nameOnInvalid' => false]);
     }
 
     /**
