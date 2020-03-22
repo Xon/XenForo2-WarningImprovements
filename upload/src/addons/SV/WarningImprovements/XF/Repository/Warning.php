@@ -57,34 +57,19 @@ class Warning extends XFCP_Warning
             'threshold'        => $pointThreshold,
             'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : null,
             'content_link'     => $handler ? $handler->getContentUrl($warning->Content, true) : null,
-            'content_action'   => $contentAction
+            'content_action'   => $this->getReadableContentAction($contentAction, $contentActionOptions)
         ]);
 
-        if (!$forPhrase)
+        foreach ($params AS $key => $value)
         {
-            $replacables = [];
-            foreach ($params as $key => $value)
+            if ($forPhrase)
             {
-                $replacables['{' . $key . '}'] = $value;
+                $params[$key] = (string) $value;
             }
-            $params = $replacables;
-            $params['content_action_options'] = $contentActionOptions;
-        }
-        else
-        {
-            foreach ($params as $key => &$value)
+            else
             {
-                if ($key === 'content_action')
-                {
-                    $value = $this->getContentActionForPhrase($value, $contentActionOptions);
-                    if ($value === ''
-                        || $value instanceof Phrase && $value->getName() === $value->render()
-                    )
-                    {
-                        continue;
-                    }
-                }
-                $value = (string)$value;
+                $params['{' . $key . '}'] = $value;
+                unset($params[$key]);
             }
         }
 
@@ -95,11 +80,20 @@ class Warning extends XFCP_Warning
      * @param $contentAction
      * @param array $contentOptions
      *
-     * @return string
+     * @return null|Phrase
      */
-    protected function getContentActionForPhrase($contentAction, array $contentOptions)
+    protected function getReadableContentAction($contentAction, array $contentOptions)
     {
-        return '';
+        $readableContentAction = \XF::phrase('svWarningImprovements_warning_content_action.' . $contentAction, $contentOptions);
+        $fallback = '__NULL_' . strval(\time());
+        $readableContentAction->fallback($fallback);
+        $renderedReadableContentAction = $readableContentAction->render();
+        if ($renderedReadableContentAction === $fallback)
+        {
+            return null;
+        }
+
+        return $readableContentAction;
     }
 
     /**
