@@ -60,16 +60,20 @@ class Warning extends XFCP_Warning
             'content_action'   => $this->getReadableContentAction($contentAction, $contentActionOptions)
         ]);
 
-        foreach ($params AS $key => $value)
+        if (!$forPhrase)
         {
-            if ($forPhrase)
+            $replacables = [];
+            foreach ($params as $key => $value)
             {
-                $params[$key] = (string) $value;
+                $replacables['{' . $key . '}'] = $value;
             }
-            else
+            $params = $replacables;
+        }
+        else
+        {
+            foreach ($params as $key => &$value)
             {
-                $params['{' . $key . '}'] = $value;
-                unset($params[$key]);
+                $value = (string)$value;
             }
         }
 
