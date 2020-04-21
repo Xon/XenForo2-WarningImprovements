@@ -74,6 +74,7 @@ class Warn extends XFCP_Warn
     protected function getWarnedByForUser()
     {
         /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
+        $warning = $this->warning;
         return $warning->User->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer();
     }
 
