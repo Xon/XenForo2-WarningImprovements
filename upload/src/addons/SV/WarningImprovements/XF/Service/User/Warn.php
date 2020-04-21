@@ -68,6 +68,15 @@ class Warn extends XFCP_Warn
         return $warningRepo->getCustomWarningDefinition();
     }
 
+    /**
+     * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|\XF\Mvc\Entity\Entity
+     */
+    protected function getWarnedByForUser()
+    {
+        /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
+        return $warning->User->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer();
+    }
+
     protected function _save()
     {
         $db = \XF::db();
@@ -75,28 +84,22 @@ class Warn extends XFCP_Warn
 
         $warning = parent::_save();
 
-        if ($warning instanceof Warning)
+        $warnedBy = $this->getWarnedByForUser();
+
+        if ($this->sendAlert)
         {
-            if ($this->sendAlert)
-            {
-                /** @var \SV\WarningImprovements\XF\Entity\User $warnedUser */
-                /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
-                $warnedUser = $warning->User;
-                $warnedBy = $warnedUser->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer();
-
-                /** @var \XF\Repository\UserAlert $alertRepo */
-                $alertRepo = $this->repository('XF:UserAlert');
-                $alertRepo->alertFromUser($warnedUser, $warnedBy, 'warning_alert', $warning->warning_id, 'warning');
-            }
-
-            $this->warningActionNotifications();
+            /** @var \XF\Repository\UserAlert $alertRepo */
+            $alertRepo = $this->repository('XF:UserAlert');
+            $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $warning->warning_id, 'warning');
         }
+
+        $this->warningActionNotifications();
 
         $db->commit();
 
         if ($this->conversationCreator)
         {
-            \XF::asVisitor($this->warningBy, function () {
+            \XF::asVisitor($warnedBy, function () {
                 $this->conversationCreator->sendNotifications();
             });
         }
@@ -197,8 +200,20 @@ class Warn extends XFCP_Warn
 
     protected function setupConversation(Warning $warning)
     {
-        /** @var \XF\Service\Conversation\Creator $creator */
-        $creator = parent::setupConversation($warning);
+        $warnedBy = $this->getWarnedByForUser();
+        $realWarningBy = $this->warningBy;
+        $this->warningBy = $warnedBy;
+        try
+        {
+            /** @var \XF\Service\Conversation\Creator $creator */
+            $creator = \XF::asVisitor($warnedBy, function () use ($warning) {
+                return parent::setupConversation($warning);
+            });
+        }
+        finally
+        {
+            $this->warningBy = $realWarningBy;
+        }
 
         $conversationTitle = $this->conversationTitle;
         $conversationMessage = $this->conversationMessage;

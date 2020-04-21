@@ -18,6 +18,7 @@ use XF\Mvc\Entity\Structure;
  * @property WarningDefinitionExtended|\XF\Entity\WarningDefinition Definition
  * @property \XF\Entity\WarningDefinition                           Definition_
  * @property \XF\Entity\Report                                      Report
+ * @property UserExtended                                           User
  */
 class Warning extends XFCP_Warning
 {
