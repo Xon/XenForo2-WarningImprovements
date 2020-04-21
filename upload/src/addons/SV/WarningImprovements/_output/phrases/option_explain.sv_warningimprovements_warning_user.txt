@@ -1,4 +1,3 @@
 Anonymise warnings and warning alerts as a given user if the warned user does not have the 'View warning issuer' permission.<br/>
-If Empty, uses the phrase 'WarningStaff'.<br/>
-Conversations can <b>not</b> be anonymised.<br/>
-Changing this is only retroactive for Warnings, not Warning Alerts.
+If Empty, uses the phrase <i>WarningStaff</i>.<br/>
+Changing this is only retroactive for Warnings, Warning Alerts but not Warning Conversations.
