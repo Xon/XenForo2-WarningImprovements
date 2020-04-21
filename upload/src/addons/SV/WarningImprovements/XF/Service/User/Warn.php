@@ -12,6 +12,10 @@ use XF\Entity\WarningDefinition;
 class Warn extends XFCP_Warn
 {
     protected $sendAlert = false;
+    /**
+     * @var \XF\Service\Conversation\Creator
+     */
+    protected $conversationCreator;
 
     /**
      * @param bool $sendAlert
@@ -89,6 +93,13 @@ class Warn extends XFCP_Warn
         }
 
         $db->commit();
+
+        if ($this->conversationCreator)
+        {
+            \XF::asVisitor($this->warningBy, function () {
+                $this->conversationCreator->sendNotifications();
+            });
+        }
 
         return $warning;
     }
@@ -206,6 +217,8 @@ class Warn extends XFCP_Warn
         $conversationMessage = strtr(strval($conversationMessage), $replace);
 
         $creator->setContent($conversationTitle, $conversationMessage);
+        $this->conversationCreator = $creator;
+        $creator->setAutoSendNotifications(false);
 
         return $creator;
     }
