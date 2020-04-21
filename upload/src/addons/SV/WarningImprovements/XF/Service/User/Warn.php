@@ -66,6 +66,9 @@ class Warn extends XFCP_Warn
 
     protected function _save()
     {
+        $db = \XF::db();
+        $db->beginTransaction();
+
         $warning = parent::_save();
 
         if ($warning instanceof Warning)
@@ -84,6 +87,8 @@ class Warn extends XFCP_Warn
 
             $this->warningActionNotifications();
         }
+
+        $db->commit();
 
         return $warning;
     }
