@@ -1,1 +1,1 @@
-Wanring message shown in public
+Warning message shown in public
