@@ -57,7 +57,7 @@ class Warning extends XFCP_Warning
             'threshold'        => $pointThreshold,
             'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : null,
             'content_link'     => $handler ? $handler->getContentUrl($warning->Content, true) : null,
-            'content_action'   => $this->getReadableContentAction($contentAction, $contentActionOptions)
+            'content_action'   => $contentAction ? $this->getReadableContentAction($contentAction, $contentActionOptions ?: []) : '',
         ]);
 
         if (!$forPhrase)
