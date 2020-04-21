@@ -2,7 +2,7 @@
     "legacy_addon_id": "SV_WarningImprovements",
     "title": "Warning Improvements",
     "description": "A (large) collection of improvements to XF's warning system.",
-    "version_id": 2030000,
+    "version_id": 2040000,
     "version_string": "2.4.0",
     "dev": "Xon",
     "dev_url": "https://atelieraphelion.com",
