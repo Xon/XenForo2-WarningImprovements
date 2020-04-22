@@ -55,9 +55,9 @@ class Warning extends XFCP_Warning
             'warning_points'   => $warning ? $warning->points : 0,
             'warning_category' => $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category->title : \XF::phrase('n_a'),
             'threshold'        => $pointThreshold,
-            'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : null,
-            'content_link'     => $handler ? $handler->getContentUrl($warning->Content, true) : null,
-            'content_action'   => $contentAction ? $this->getReadableContentAction($contentAction, $contentActionOptions ?: []) : '',
+            'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : '',
+            'content_link'     => $handler ? $handler->getContentUrl($warning->Content, true) : '',
+            'content_action'   => $contentAction ? $this->getReadableContentAction($contentAction, $contentActionOptions ?: []) : \XF::phrase('n_a'),
         ]);
 
         if (!$forPhrase)
@@ -65,7 +65,7 @@ class Warning extends XFCP_Warning
             $replacables = [];
             foreach ($params as $key => $value)
             {
-                $replacables['{' . $key . '}'] = $value;
+                $replacables['{' . $key . '}'] = (string)$value;
             }
             $params = $replacables;
         }
@@ -91,7 +91,7 @@ class Warning extends XFCP_Warning
         return \XF::phrase(
             'svWarningImprovements_warning_content_action.' . $contentAction,
             $contentOptions
-        )->render('html', ['nameOnInvalid' => false]);
+        )->render('html', ['nameOnInvalid' => false]) ?: \XF::phrase('n_a');
     }
 
     /**
