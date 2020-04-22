@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Repository\\Conversation",
+    "to_class": "SV\\WarningImprovements\\XF\\Repository\\Conversation",
+    "execute_order": 624000,
+    "active": true
+}

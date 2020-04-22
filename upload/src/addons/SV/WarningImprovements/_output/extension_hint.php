@@ -37,6 +37,7 @@ namespace SV\WarningImprovements\XF\Pub\View\Member
 
 namespace SV\WarningImprovements\XF\Repository
 {
+	class XFCP_Conversation extends \XF\Repository\Conversation {}
 	class XFCP_UserChangeTemp extends \XF\Repository\UserChangeTemp {}
 	class XFCP_Warning extends \XF\Repository\Warning {}
 }

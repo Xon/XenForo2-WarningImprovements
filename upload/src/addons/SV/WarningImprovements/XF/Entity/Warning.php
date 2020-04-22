@@ -94,13 +94,14 @@ class Warning extends XFCP_Warning
         $options = $this->app()->options();
         if (!empty($options->sv_warningimprovements_warning_user))
         {
-            if ($warningStaff = $this->em()->find('XF:User', $options->sv_warningimprovements_warning_user))
+            $warningStaff = $this->em()->find('XF:User', $options->sv_warningimprovements_warning_user);
+            if ($warningStaff)
             {
                 $anonymizedIssuer = $warningStaff;
             }
         }
 
-        if (empty($anonymizedIssuer))
+        if (!$anonymizedIssuer)
         {
             /** @var \XF\Repository\User $userRepo */
             $userRepo = $this->repository('XF:User');
