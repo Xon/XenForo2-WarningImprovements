@@ -57,19 +57,26 @@ class Warning extends XFCP_Warning
      */
     public function canView(&$error = null)
     {
-        $visitor = \XF::visitor();
+        $canView = parent::canView($error);
+        if ($canView)
+        {
+            return $canView;
+        }
 
-        if (!$visitor->user_id)
+        $visitor = \XF::visitor();
+        $userId = $visitor->user_id;
+
+        if (!$userId)
         {
             return false;
         }
 
-        if ($visitor->user_id === $this->user_id && $this->app()->options()->sv_view_own_warnings)
+        if ($userId === $this->user_id && $this->app()->options()->sv_view_own_warnings)
         {
             return true;
         }
 
-        return parent::canView($error);
+        return false;
     }
 
     /**

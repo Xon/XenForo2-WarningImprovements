@@ -3,13 +3,32 @@
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
 use SV\WarningImprovements\Globals;
+use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\ParameterBag;
+use XF\Mvc\Reply\View;
 
 /**
  * Extends \XF\Pub\Controller\Member
  */
 class Member extends XFCP_Member
 {
+    public function actionWarnings(ParameterBag $params)
+    {
+        $reply = parent::actionWarnings($params);
+
+        if ($reply instanceof View)
+        {
+            /** @var AbstractCollection $warnings */
+            $warnings = $reply->getParam('warnings');
+            if ($warnings)
+            {
+                $reply->setParam('warnings', $warnings->filterViewable());
+            }
+        }
+
+        return $reply;
+    }
+
     public function actionWarningActions(ParameterBag $params)
     {
         if ($this->filter('warning_action_id', 'uint'))

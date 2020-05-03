@@ -74,7 +74,9 @@ class Warn extends XFCP_Warn
                 {
                     $warningList->limit($warningLimit);
                 }
-                $previousWarnings = $warningList->fetch()->toArray();
+                $previousWarnings = $warningList->fetch()
+                                                ->filterViewable()
+                                                ->toArray();
             }
 
             $response->setParams(
