@@ -69,12 +69,20 @@ class Warn extends XFCP_Warn
     }
 
     /**
+     * @param bool $conversation
      * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|\XF\Mvc\Entity\Entity
      */
-    protected function getWarnedByForUser()
+    protected function getWarnedByForUser($conversation)
     {
         /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
         $warning = $this->warning;
+
+        if ($conversation && empty(\XF::options()->svWarningImprovAnonymizeConversations))
+        {
+            return $warning->WarnedBy;
+        }
+
+
         return $warning->User->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer();
     }
 
@@ -85,10 +93,9 @@ class Warn extends XFCP_Warn
 
         $warning = parent::_save();
 
-        $warnedBy = $this->getWarnedByForUser();
-
         if ($this->sendAlert)
         {
+            $warnedBy = $this->getWarnedByForUser(false);
             /** @var \XF\Repository\UserAlert $alertRepo */
             $alertRepo = $this->repository('XF:UserAlert');
             $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $warning->warning_id, 'warning');
@@ -100,6 +107,7 @@ class Warn extends XFCP_Warn
 
         if ($this->conversationCreator)
         {
+            $warnedBy = $this->getWarnedByForUser(true);
             // workaround for \XF\Service\Conversation\Pusher::setInitialProperties requiring a user to be set on the Message's User attribute
             $this->conversationCreator->getMessage()->hydrateRelation('User', $warnedBy);
 
@@ -204,7 +212,7 @@ class Warn extends XFCP_Warn
 
     protected function setupConversation(Warning $warning)
     {
-        $warnedBy = $this->getWarnedByForUser();
+        $warnedBy = $this->getWarnedByForUser(true);
         $realWarningBy = $this->warningBy;
         $this->warningBy = $warnedBy;
         try

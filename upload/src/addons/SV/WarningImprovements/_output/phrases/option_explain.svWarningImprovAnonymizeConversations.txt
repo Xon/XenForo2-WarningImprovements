@@ -1,0 +1,1 @@
+An anonymized warning conversation is created with a guest or from a separate issuer, which can be very confusing for some configurations. Changing who a conversation is started by is not retroactive.
