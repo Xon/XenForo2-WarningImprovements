@@ -38,7 +38,7 @@ class WarningAction extends XFCP_WarningAction
         }
 
         // getto as fuck
-        return \XF::Phrase('points:') . ' '. $this->points;
+        return \XF::Phrase('svWarningPoints:') . ' '. $this->points;
     }
 
     /**

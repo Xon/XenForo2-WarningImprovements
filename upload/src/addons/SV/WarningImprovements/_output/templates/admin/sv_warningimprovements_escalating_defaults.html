@@ -18,7 +18,7 @@
 						
 						<xf:datarow>
 							<xf:main href="{{ link('warnings/default/edit', null, { 'warning_default_id': $escalatingDefault.warning_default_id }) }}">
-								<xf:label>{{ phrase('points:') }} {$escalatingDefault.threshold_points}</xf:label>
+								<xf:label>{{ phrase('svWarningPoints:') }} {$escalatingDefault.threshold_points}</xf:label>
 								<xf:hint>{{ phrase('sv_increase_default_expiry_by_x', {'length': $expiry_extension_phrase}) }}</xf:hint>
 							</xf:main>
 							<xf:toggle name="active[{$escalatingDefault.warning_default_id}]" selected="$escalatingDefault.active"

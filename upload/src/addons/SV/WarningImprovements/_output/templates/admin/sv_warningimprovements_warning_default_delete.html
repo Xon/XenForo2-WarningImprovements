@@ -8,7 +8,7 @@
         <div class="block-body">
             <xf:inforow rowtype="confirm">
                 {{ phrase('please_confirm_that_you_want_to_delete_following:') }}
-                <strong><a href="{{ link('warnings/default/edit', null, { 'warning_default_id': $default.warning_default_id }) }}">{{ phrase('points:') }} {$default.threshold_points}</a></strong>
+                <strong><a href="{{ link('warnings/default/edit', null, { 'warning_default_id': $default.warning_default_id }) }}">{{ phrase('svWarningPoints:') }} {$default.threshold_points}</a></strong>
             </xf:inforow>
         </div>
         <xf:submitrow rowtype="simple" icon="delete" />

@@ -22,7 +22,7 @@
 								<xf:datarow>
 									<xf:cell href="{{ link('warnings/actions/edit', $action) }}" class="u-depth0">
 										<div class="dataList-mainRow">
-											<spam class="u-depth1"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Action"></i> {{ phrase('points:') }} {$action.points}</spam>
+											<spam class="u-depth1"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Action"></i> {{ phrase('svWarningPoints:') }} {$action.points}</spam>
 											
 											<div class="dataList-hint" dir="auto">
 												<ul class="listInline listInline--bullet listInline--selfInline">
@@ -68,7 +68,7 @@
 									<xf:datarow>
 										<xf:cell href="{{ link('warnings/actions/edit', $action) }}">
 											<div class="dataList-mainRow">
-												<spam class="u-depth{{ $treeEntry.depth + 1 }}"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Action"></i> {{ phrase('points:') }} {$action.points}</spam>
+												<spam class="u-depth{{ $treeEntry.depth + 1 }}"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Action"></i> {{ phrase('svWarningPoints:') }} {$action.points}</spam>
 												<div class="dataList-hint" dir="auto">
 													<ul class="listInline listInline--bullet listInline--selfInline">
 														<xf:if is="$action.action == 'ban'">
