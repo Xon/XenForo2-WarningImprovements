@@ -1,0 +1,9 @@
+{
+    "template": "member_warnings",
+    "description": "Replace points phrase with svWarningPoints",
+    "execution_order": 6240,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "phrase('points')",
+    "replace": "phrase('svWarningPoints')"
+}
