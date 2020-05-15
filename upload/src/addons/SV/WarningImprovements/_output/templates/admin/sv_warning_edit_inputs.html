@@ -1,4 +1,4 @@
-<xf:selectrow name="sv_warning_category_id" value="{$warning.sv_warning_category_id}" label="{{ phrase('sv_warning_category:') }}">
+<xf:selectrow name="sv_warning_category_id" value="{$warning.sv_warning_category_id}" label="{{ phrase('sv_warning_category') }}">
 	<xf:option value="0">{{ phrase('(none)') }}</xf:option>
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:option value="{$treeEntry.record.warning_category_id}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
