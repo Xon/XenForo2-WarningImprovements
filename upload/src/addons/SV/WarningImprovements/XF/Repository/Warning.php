@@ -145,11 +145,14 @@ class Warning extends XFCP_Warning
 
     public function _getWarningTotals($userId)
     {
+        $ageLimit = (int)\XF::options()->svWarningEscalatingDefaultsLimit;
+        $timeLimit = $ageLimit > 0 ? \XF::$time - $ageLimit * 2629746 : 0;
+
         return $this->db()->fetchRow('
             SELECT count(points) AS `count`, sum(points) AS `total`
             FROM xf_warning
-            WHERE user_id = ?
-        ', $userId);
+            WHERE user_id = ? and xf_warning.warning_date >= ?
+        ', [$userId, $timeLimit]);
     }
 
     /**
