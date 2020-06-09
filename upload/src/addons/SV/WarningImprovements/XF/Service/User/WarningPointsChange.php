@@ -133,7 +133,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             // warning has been added already
         }
 
-        // compute per-category totals (globals map to 0)
+        // compute per-category totals (deleted warning categories and globals map to 0)
         foreach ($warnings as $warning)
         {
             /** @var WarningCategory $category */
@@ -141,10 +141,10 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $categoryId = $category ? ($category->warning_category_id ?: 0) : 0;
             if (empty($warningPoints[$categoryId]))
             {
-                throw new \LogicException("Unable to find warning category {$categoryId} for the warning {$warning->warning_id}");
+                // the warning definition has been deleted, dump points into global points pool and don't error
+                $categoryId = 0;
             }
 
-            /** @var WarningTotal $warningTotal */
             $warningTotal = $warningPoints[$categoryId];
 
             if ($newWarning === null ||
@@ -187,7 +187,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $categoryId = $action->sv_warning_category_id ?: 0;
             if (empty($categoryPoints[$categoryId]))
             {
-                throw new \LogicException("Unable to find warning category {$categoryId} for the warning action {$action->warning_action_id}");
+                // category has been deleted, but the warning action hasn't been updated, consider it as a global action
+                $categoryId = 0;
             }
 
             $points = $categoryPoints[$categoryId];
@@ -313,7 +314,9 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $categoryId = $trigger['sv_warning_category_id'] ?: 0;
                 if (empty($categoryPoints[$categoryId]))
                 {
-                    throw new \LogicException("Unable to find warning category {$categoryId} for the warning action trigger {$trigger['action_trigger_id']} (warning_action_id:{$trigger['warning_action_id']}");
+                    // the warning action has been deleted after the warning has been issued, as such the category is now AWOL
+                    // dump into global
+                    $categoryId = 0;
                 }
 
                 $points = $categoryPoints[$categoryId];
@@ -335,7 +338,9 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 $categoryId = $action->sv_warning_category_id ?: 0;
                 if (empty($categoryPoints[$categoryId]))
                 {
-                    throw new \LogicException("Unable to find warning category {$categoryId} for the warning action {$action->warning_action_id}");
+                    // the warning action has been deleted after the warning has been issued, as such the category is now AWOL
+                    // dump into global
+                    $categoryId = 0;
                 }
 
                 $points = $categoryPoints[$categoryId];

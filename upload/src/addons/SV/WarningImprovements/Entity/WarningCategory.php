@@ -194,13 +194,15 @@ class WarningCategory extends AbstractCategoryTree
             return;
         }
 
+        $parentCategoryId = $this->parent_category_id;
+
         if ($this->getOption('delete_contents'))
         {
             foreach ($this->WarningDefinitions as $warning)
             {
                 if ($warning->is_custom)
                 {
-                    $warning->sv_warning_category_id = $this->parent_category_id;
+                    $warning->sv_warning_category_id = $parentCategoryId;
                     $warning->save(true, false);
                 }
                 else
@@ -221,20 +223,22 @@ class WarningCategory extends AbstractCategoryTree
         {
             foreach ($this->WarningDefinitions as $warning)
             {
-                $warning->sv_warning_category_id = $this->parent_category_id;
+                $warning->sv_warning_category_id = $parentCategoryId;
                 $warning->save(true, false);
             }
             foreach ($this->ChildCategories as $childCategory)
             {
-                $childCategory->parent_category_id = $this->parent_category_id;
+                $childCategory->parent_category_id = $parentCategoryId;
                 $childCategory->save(true, false);
             }
             foreach ($this->WarningActions as $action)
             {
-                $action->sv_warning_category_id = $this->parent_category_id;
+                $action->sv_warning_category_id = $parentCategoryId;
                 $action->save(true, false);
             }
         }
+        // xf_warning_action_trigger will refer to invalid warning categories
+        // WarningPointsChange will dump into global category/actions as there isn't much else that can be done
     }
 
     protected function scheduleNestedSetRebuild()
