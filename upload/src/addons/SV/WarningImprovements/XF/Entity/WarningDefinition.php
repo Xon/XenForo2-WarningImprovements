@@ -123,6 +123,18 @@ class WarningDefinition extends XFCP_WarningDefinition
         }
     }
 
+    protected function _preDelete()
+    {
+        parent::_preDelete();
+
+        if ($this->is_custom)
+        {
+            $this->error(\XF::phrase('sv_warning_improvements_custom_warning_cannot_be_deleted'));
+
+            return;
+        }
+    }
+
     protected function _postDelete()
     {
         parent::_postDelete();

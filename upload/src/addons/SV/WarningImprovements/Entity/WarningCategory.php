@@ -3,7 +3,7 @@
 namespace SV\WarningImprovements\Entity;
 
 use XF\Entity\AbstractCategoryTree;
-use XF\Entity\WarningDefinition;
+use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Mvc\Entity\Structure;
 
 /**
@@ -28,7 +28,7 @@ use XF\Mvc\Entity\Structure;
  * @property WarningCategory                     Parent
  * @property WarningCategory[]                   ChildCategories
  * @property WarningDefinition[]                 WarningDefinitions
- * @property \XF\Entity\WarningAction[]          WarningActions
+ * @property \SV\WarningImprovements\XF\Entity\WarningAction[]          WarningActions
  * @property \XF\Entity\PermissionCacheContent[] Permissions
  */
 class WarningCategory extends AbstractCategoryTree
@@ -145,38 +145,34 @@ class WarningCategory extends AbstractCategoryTree
 
     protected function _preDelete()
     {
-        /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
-        $warningCategoryRepo = $this->repository('SV\WarningImprovements:WarningCategory');
-        /** @var \SV\WarningImprovements\Finder\WarningCategory|\XF\Mvc\Entity\Finder $warningCategoryChildFinder */
-        $warningCategoryChildFinder = $warningCategoryRepo->findChildren($this);
-        $warningCategoryIds = $warningCategoryChildFinder->pluckFrom('warning_category_id')
-                                                         ->fetch()
-                                                         ->toArray();
-        $warningCategoryIds[] = $this->warning_category_id;
-
-        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $customWarningDefinition */
-        $customWarningDefinition = $this->finder('XF:WarningDefinition')
-                                        ->where('warning_definition_id', '=', 0)
-                                        ->where('sv_warning_category_id', '=', $warningCategoryIds)
-                                        ->fetchOne();
-
-        if ($customWarningDefinition)
+        $warningCategoryCount = $this->finder('SV\WarningImprovements:WarningCategory')
+                                     ->where('sv_warning_category_id', '!=', $this->warning_category_id)
+                                     ->total();
+        if (!$warningCategoryCount)
         {
-            /** @var \SV\WarningImprovements\Finder\WarningCategory|\XF\Mvc\Entity\Finder $warningCategoryFinder */
-            $warningCategoryFinder = $this->finder('SV\WarningImprovements:WarningCategory');
-            /** @var WarningCategory $newParentCategory */
-            $newParentCategory = $warningCategoryFinder->where('warning_category_id', '<>', $warningCategoryIds)
-                                                       ->fetch();
+            $this->error(\XF::phrase('sv_warning_improvements_last_category_cannot_be_deleted'));
 
-            if (!$newParentCategory)
+            return;
+        }
+
+        if ($this->getOption('delete_contents') && $this->warning_category_id)
+        {
+            foreach ($this->WarningDefinitions as $warning)
             {
-                $this->error(\XF::phrase('sv_warning_improvements_last_category_cannot_be_deleted'));
-
-                return;
+                if (!$warning->is_custom)
+                {
+                    $warning->preDelete();
+                }
             }
-
-            $customWarningDefinition->sv_warning_category_id = $newParentCategory->warning_category_id;
-            $customWarningDefinition->save();
+            foreach ($this->ChildCategories as $childCategory)
+            {
+                $childCategory->setOption('delete_contents', true);
+                $childCategory->preDelete();
+            }
+            foreach ($this->WarningActions as $action)
+            {
+                $action->preDelete();
+            }
         }
     }
 
@@ -193,11 +189,51 @@ class WarningCategory extends AbstractCategoryTree
             }
         }
 
+        if (!$this->warning_category_id)
+        {
+            return;
+        }
+
         if ($this->getOption('delete_contents'))
         {
-            $this->app()->jobManager()->enqueueUnique('sv_WarningImprovementsCategoryDelete' . $this->warning_category_id, 'SVW\WarningImprovements:CategoryDelete', [
-                'warning_category_id' => $this->warning_category_id
-            ]);
+            foreach ($this->WarningDefinitions as $warning)
+            {
+                if ($warning->is_custom)
+                {
+                    $warning->sv_warning_category_id = $this->parent_category_id;
+                    $warning->save(true, false);
+                }
+                else
+                {
+                    $warning->delete(true, false);
+                }
+            }
+            foreach ($this->ChildCategories as $childCategory)
+            {
+                $childCategory->delete(true, false);
+            }
+            foreach ($this->WarningActions as $action)
+            {
+                $action->delete(true, false);
+            }
+        }
+        else
+        {
+            foreach ($this->WarningDefinitions as $warning)
+            {
+                $warning->sv_warning_category_id = $this->parent_category_id;
+                $warning->save(true, false);
+            }
+            foreach ($this->ChildCategories as $childCategory)
+            {
+                $childCategory->parent_category_id = $this->parent_category_id;
+                $childCategory->save(true, false);
+            }
+            foreach ($this->WarningActions as $action)
+            {
+                $action->sv_warning_category_id = $this->parent_category_id;
+                $action->save(true, false);
+            }
         }
     }
 
@@ -241,7 +277,7 @@ class WarningCategory extends AbstractCategoryTree
     public function getCategoryListExtras()
     {
         return [
-            'warning_count' => $this->warning_count
+            'warning_count' => $this->warning_count,
         ];
     }
 
@@ -259,8 +295,8 @@ class WarningCategory extends AbstractCategoryTree
             'warning_count'          => ['type' => self::UINT, 'default' => 0],
             'allowed_user_group_ids' => [
                 'type' => self::LIST_COMMA, 'default' => [-1],
-                'list' => ['type' => 'int', 'unique' => true, 'sort' => SORT_NUMERIC]
-            ]
+                'list' => ['type' => 'int', 'unique' => true, 'sort' => SORT_NUMERIC],
+            ],
         ];
         $structure->getters = [
             'category_id'            => true, // used in sorting?
@@ -274,36 +310,36 @@ class WarningCategory extends AbstractCategoryTree
                 'type'       => self::TO_ONE,
                 'conditions' => [
                     ['language_id', '=', 0], // master
-                    ['title', '=', 'sv_warning_category_title.', '$warning_category_id']
-                ]
+                    ['title', '=', 'sv_warning_category_title.', '$warning_category_id'],
+                ],
             ],
             'Parent'             => [
                 'entity'     => 'SV\WarningImprovements:WarningCategory',
                 'type'       => self::TO_ONE,
                 'conditions' => [['warning_category_id', '=', '$parent_category_id']],
-                'primary'    => true
+                'primary'    => true,
             ],
             'ChildCategories'    => [
                 'entity'     => 'SV\WarningImprovements:WarningCategory',
                 'type'       => self::TO_MANY,
                 'conditions' => [['parent_category_id', '=', '$warning_category_id']],
-                'primary'    => true
+                'primary'    => true,
             ],
             'WarningDefinitions' => [
                 'entity'     => 'XF:WarningDefinition',
                 'type'       => self::TO_MANY,
                 'conditions' => [['sv_warning_category_id', '=', '$warning_category_id']],
-                'primary'    => true
+                'primary'    => true,
             ],
             'WarningActions'     => [
                 'entity'     => 'XF:WarningAction',
                 'type'       => self::TO_MANY,
                 'conditions' => [['sv_warning_category_id', '=', '$warning_category_id']],
-                'primary'    => true
-            ]
+                'primary'    => true,
+            ],
         ];
         $structure->options = [
-            'delete_contents' => true
+            'delete_contents' => true,
         ];
 
         static::addCategoryTreeStructureElements($structure);
