@@ -107,12 +107,21 @@ class Setup extends AbstractSetup
                               WHERE xf_warning_definition.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
         ');
 
-        // categories have a summary count of thier warnings
+        // categories have a summary count of their warnings
         /** @noinspection SqlWithoutWhere */
         $db->query("UPDATE xf_sv_warning_category
              SET warning_count = (SELECT COUNT(*)
                                   FROM xf_warning_definition
                                   WHERE xf_sv_warning_category.warning_category_id = xf_warning_definition.sv_warning_category_id)");
+
+        // ensure warning actions are not orphaned
+        $db->query('UPDATE xf_warning_action
+            SET sv_warning_category_id = null
+            WHERE sv_warning_category_id is not null AND
+                  NOT exists (SELECT *
+                              FROM xf_sv_warning_category
+                              WHERE xf_warning_action.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
+        ');
     }
 
     public function upgrade2000000Step1()
