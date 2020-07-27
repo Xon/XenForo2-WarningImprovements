@@ -146,13 +146,12 @@ class ContentChange extends XFCP_ContentChange
      * @param \XF\Entity\User $targetUser
      * @param                 $endDate
      * @param                 $setTriggered
-     *
      * @return mixed|\XF\Entity\UserBan
      * @throws \XF\PrintableException
+     * @noinspection PhpParameterByRefIsNotUsedAsReferenceInspection
      */
     protected function applyUserBanForSVWI(\XF\Entity\User &$targetUser, $endDate, $setTriggered)
     {
-        /** @var \XF\Entity\UserBan $ban */
         $ban = $targetUser->Ban;
         if (!$ban)
         {

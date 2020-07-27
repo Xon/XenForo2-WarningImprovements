@@ -72,6 +72,11 @@ class Listener
         }
     }
 
+    /**
+     * @param User $visitor
+     * @throws \XF\PrintableException
+     * @noinspection PhpParameterByRefIsNotUsedAsReferenceInspection
+     */
     public static function visitorSetup(User &$visitor)
     {
         $userId = $visitor->user_id;
