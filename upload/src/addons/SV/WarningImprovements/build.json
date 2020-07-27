@@ -1,6 +1,5 @@
 {
     "additional_files": [
-        "src/addons/SV/Utils/",
         "js/sv/warningimprovements"
     ],
     "minify": [
