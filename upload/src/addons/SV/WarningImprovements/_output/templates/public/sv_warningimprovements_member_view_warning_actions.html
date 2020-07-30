@@ -1,4 +1,4 @@
-<xf:if is="{$user.warning_actions_count}">
+<xf:if is="$user.canViewWarningActions() && $user.warning_actions_count">
 	<li data-href="{{ link('members/warning-actions', $user) }}" role="tabpanel" aria-labelledby="warningActions">
 		<div class="blockMessage">{{ phrase('loading...') }}</div>
 	</li>

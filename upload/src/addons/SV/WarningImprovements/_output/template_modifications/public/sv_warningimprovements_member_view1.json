@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<!--[XF:tabs:end]-->",
-    "replace": "<xf:if is=\"{$user.warning_actions_count} && {$user.canViewWarningActions()}\">\n\t\t\t\t\t<a href=\"{{ link('members/warning-actions', $user) }}\"\n\t\t\t\t\t\tclass=\"tabs-tab\"\n\t\t\t\t\t\tid=\"warningsActions\"\n\t\t\t\t\t\trole=\"tab\">{{ phrase('sv_user_warning_actions', {'count': {$user.warning_actions_count}}) }}</a>\n\t\t\t\t</xf:if>\n\t\t\t\t$0"
+    "replace": "<xf:if is=\"$user.canViewWarningActions() && $user.warning_actions_count\">\n\t\t\t\t\t<a href=\"{{ link('members/warning-actions', $user) }}\"\n\t\t\t\t\t\tclass=\"tabs-tab\"\n\t\t\t\t\t\tid=\"warningsActions\"\n\t\t\t\t\t\trole=\"tab\">{{ phrase('sv_user_warning_actions', {'count': {$user.warning_actions_count}}) }}</a>\n\t\t\t\t</xf:if>\n\t\t\t\t$0"
 }
