@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "{{ phrase('warnings') }}",
-    "replace": "$0 ({$user->warning_count|number})"
+    "replace": "$0 ({$user.warning_count|number})"
 }
