@@ -59,16 +59,14 @@ class Warning extends XFCP_Warning
             return $title;
         }
 
-        $censorListSr = $this->app()->options()->svWarningImprov_censorWarningTitle;
-        if (empty($censorListSr))
+        $censorList = ArrUtil::stringToArray(
+            $this->app()->options()->svWarningImprov_censorWarningTitle,
+            '/\r?\n/'
+        );
+        if (!\count($censorList))
         {
             return $title;
         }
-
-        $censorList = ArrUtil::stringToArray(
-            $censorListSr,
-            '/\r?\n/'
-        );
 
         foreach ($censorList AS $phrase)
         {

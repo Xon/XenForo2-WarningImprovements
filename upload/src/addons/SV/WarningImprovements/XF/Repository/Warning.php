@@ -53,6 +53,7 @@ class Warning extends XFCP_Warning
             'report'           => $warning && $warning->isValidRelation('Report') && $warning->Report ? $router->buildLink('full:reports', $warning->Report) : \XF::phrase('n_a'),
             'date'             => $dateString,
             'warning_title'    => $warning ? $warning->title_censored : \XF::phrase('n_a'),
+            'warning_title_uncensored' => $warning ? $warning->title : \XF::phrase('n_a'),
             'warning_points'   => $warning ? $warning->points : 0,
             'warning_category' => $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category->title : \XF::phrase('n_a'),
             'threshold'        => (int)$pointThreshold,
