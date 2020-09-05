@@ -50,8 +50,6 @@ class Warning extends XFCP_Warning
 
     public function getTitleCensored() : string
     {
-        return 'xdddddddddd';
-
         $title = $this->title;
         if (!$this->warning_definition_id) // manually filled by the mod
         {
