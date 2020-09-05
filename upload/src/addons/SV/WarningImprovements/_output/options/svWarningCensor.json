@@ -1,0 +1,14 @@
+{
+    "edit_format": "callback",
+    "edit_format_params": "XF\\Option\\CensorWords::renderOption",
+    "data_type": "array",
+    "sub_options": [
+        "*"
+    ],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "[]",
+    "relations": {
+        "SV_WarningImprovements": 420
+    }
+}

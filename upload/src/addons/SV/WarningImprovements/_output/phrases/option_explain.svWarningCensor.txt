@@ -1,0 +1,1 @@
+When any of these phrases are entered in the warning title, the replacement or an empty value is used. You may use a * as a wild card to match any words. If you start the line with /, the line will be treated as a regular expression (example: /test/i).
