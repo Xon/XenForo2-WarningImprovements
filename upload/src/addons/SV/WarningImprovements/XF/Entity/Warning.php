@@ -144,14 +144,14 @@ class Warning extends XFCP_Warning
      */
     public function canViewIssuer(&$error = null)
     {
-        /** @var UserExtended $visitor */
+        /** @var UserExtendedEntity $visitor */
         $visitor = \XF::visitor();
 
         return $visitor->canViewIssuer($error);
     }
 
     /**
-     * @return UserExtended|\XF\Entity\User|Entity
+     * @return UserExtendedEntity|\XF\Entity\User|Entity
      */
     public function getAnonymizedIssuer()
     {
