@@ -27,6 +27,18 @@ class Warn extends XFCP_Warn
     {
         /** @var Warning $warningRepo */
         $warningRepo = $this->repository('XF:Warning');
+
+        if ($this->isPost())
+        {
+            /** @var \XF\Service\FloodCheck $floodChecker */
+            $floodChecker = $this->service('XF:FloodCheck');
+            $timeRemaining = $floodChecker->checkFlooding('warn.'.$contentType, $content->getEntityId(), 5);
+            if ($timeRemaining)
+            {
+                throw $this->exception($this->controller->responseFlooding($timeRemaining));
+            }
+        }
+
         /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
         $visitor = \XF::visitor();
         $warnings = $visitor->getUsableWarningDefinitions();
