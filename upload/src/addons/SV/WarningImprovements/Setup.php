@@ -182,7 +182,7 @@ class Setup extends AbstractSetup
         ]);
     }
 
-    public function upgrade2050100Step1()
+    public function upgrade2050200Step1()
     {
         $this->applyGlobalPermission(
             'general',
