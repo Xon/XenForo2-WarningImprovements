@@ -1,0 +1,9 @@
+{
+    "template": "sv_warningAcknowledge_warning_notice",
+    "description": "When viewing acknowledge warning inside notice censor warning title",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": ": $warning.title",
+    "replace": ": is_addon_active('SV/WarningImprovements', 2050100) ? $warning.title_censored : $warning.title"
+}

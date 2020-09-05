@@ -1,0 +1,9 @@
+{
+    "template": "warning_info",
+    "description": "When viewing warning info, censor warning title",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "{$warning.title}",
+    "replace": "{{ is_addon_active('SV/WarningImprovements', 2050100) ? $warning.title_censored : $warning.title }}"
+}

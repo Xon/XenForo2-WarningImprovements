@@ -4,6 +4,7 @@ namespace SV\WarningImprovements\XF\Entity;
 
 use SV\WarningImprovements\Globals;
 use XF\Mvc\Entity\Structure;
+use XF\Phrase;
 
 /**
  * GETTERS
@@ -150,6 +151,17 @@ class User extends XFCP_User
         }
 
         return $visitor->hasPermission('general', 'sv_editWarningActions');
+    }
+
+    public function canByassWarningTitleCensor(Phrase &$error = null) : bool
+    {
+        $visitor = \XF::visitor();
+        if (!$visitor->user_id)
+        {
+            return false;
+        }
+
+        return $visitor->hasPermission('general', 'svBypassWarnTitleCensor');
     }
 
     public function getWarningDefinitions()

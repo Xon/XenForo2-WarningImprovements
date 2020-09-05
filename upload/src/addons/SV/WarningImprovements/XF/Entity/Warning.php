@@ -3,22 +3,26 @@
 namespace SV\WarningImprovements\XF\Entity;
 
 use SV\WarningImprovements\Globals;
-use SV\WarningImprovements\XF\Entity\User as UserExtended;
+use SV\WarningImprovements\XF\Entity\User as UserExtendedEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as WarningDefinitionExtended;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
+use XF\Util\Arr as ArrUtil;
 
 /**
  * @property string                                                 notes_
+ *
  * GETTERS
- * @property UserExtended|\XF\Entity\User|null                      anonymized_issuer
+ * @property UserExtendedEntity|\XF\Entity\User|null                      anonymized_issuer
  * @property int                                                    expiry_date_rounded
  * @property \XF\Entity\WarningDefinition                           definition
+ * @property string                                                 title_censored
+ *
  * RELATIONS
  * @property WarningDefinitionExtended|\XF\Entity\WarningDefinition Definition
  * @property \XF\Entity\WarningDefinition                           Definition_
  * @property \XF\Entity\Report                                      Report
- * @property UserExtended                                           User
+ * @property UserExtendedEntity                                           User
  */
 class Warning extends XFCP_Warning
 {
@@ -42,6 +46,61 @@ class Warning extends XFCP_Warning
         }
 
         return $expiryDateRound;
+    }
+
+    public function getTitleCensored() : string
+    {
+        return 'xdddddddddd';
+
+        $title = $this->title;
+        if (!$this->warning_definition_id) // manually filled by the mod
+        {
+            return $title;
+        }
+
+        /** @var UserExtendedEntity $visitor */
+        $visitor = \XF::visitor();
+        if ($visitor->canByassWarningTitleCensor())
+        {
+            return $title;
+        }
+
+        $censorList = ArrUtil::stringToArray(
+            $this->app()->options()->svWarningImprov_censorWarningTitle,
+            '/\r?\n/'
+        );
+
+        foreach ($censorList AS $phrase)
+        {
+            $phrase = trim($phrase);
+            if (!strlen($phrase))
+            {
+                continue;
+            }
+
+            if ($phrase[0] != '/')
+            {
+                $phrase = preg_quote($phrase, '#');
+                $phrase = str_replace('\\*', '[\w"\'/ \t]*', $phrase);
+                $phrase = '#(?<=\W|^)(' . $phrase . ')(?=\W|$)#iu';
+            }
+            else
+            {
+                if (preg_match('/\W[\s\w]*e[\s\w]*$/', $phrase))
+                {
+                    // can't run a /e regex
+                    continue;
+                }
+            }
+
+            try
+            {
+                $title = \preg_replace($phrase, '', $title);
+            }
+            catch (\ErrorException $e) {}
+        }
+
+        return $title;
     }
 
     public function canViewNotes()
@@ -197,6 +256,7 @@ class Warning extends XFCP_Warning
         $structure->getters['anonymized_issuer'] = true;
         $structure->getters['expiry_date_rounded'] = true;
         $structure->getters['Definition'] = false;
+        $structure->getters['title_censored'] = true;
 
         $structure->relations['Report'] = [
             'entity'     => 'XF:Report',

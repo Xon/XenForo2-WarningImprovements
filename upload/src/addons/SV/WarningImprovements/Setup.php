@@ -179,6 +179,16 @@ class Setup extends AbstractSetup
         ]);
     }
 
+    public function upgrade2050100Step1()
+    {
+        $this->applyGlobalPermission(
+            'general',
+            'svBypassWarnTitleCensor',
+            'general',
+            'viewWarning_issuer'
+        );
+    }
+
     public function uninstallStep1()
     {
         $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");
