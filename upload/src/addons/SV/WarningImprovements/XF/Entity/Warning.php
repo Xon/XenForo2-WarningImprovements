@@ -51,7 +51,7 @@ class Warning extends XFCP_Warning
     public function getTitleCensored() : string
     {
         $title = $this->title;
-        
+
         /** @var UserExtendedEntity $visitor */
         $visitor = \XF::visitor();
         if ($visitor->canByassWarningTitleCensor())
@@ -59,8 +59,14 @@ class Warning extends XFCP_Warning
             return $title;
         }
 
+        $censorListSr = $this->app()->options()->svWarningImprov_censorWarningTitle;
+        if (empty($censorListSr))
+        {
+            return $title;
+        }
+
         $censorList = ArrUtil::stringToArray(
-            $this->app()->options()->svWarningImprov_censorWarningTitle,
+            $censorListSr,
             '/\r?\n/'
         );
 
@@ -257,6 +263,9 @@ class Warning extends XFCP_Warning
             'type'       => self::TO_ONE,
             'conditions' => [['content_type', '=', '$content_type'], ['content_id', '=', '$content_id']],
         ];
+
+        // translator note: not really, this is just to avoid is_processing throwing template error
+        $structure->options['hasCensoredTitle'] = true;
 
         return $structure;
     }

@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": ": $warning.title",
-    "replace": ": is_addon_active('SV/WarningImprovements', 2050100) ? $warning.title_censored : $warning.title"
+    "replace": ": $warning.hasOption('hasCensoredTitle') ? $warning.title_censored : phrase('n_a')"
 }

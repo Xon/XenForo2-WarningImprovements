@@ -8,6 +8,6 @@
 		'name': username_link($issuer, false, {'defaultname': $issuer.username}),
 		'warning_attributes': $content.canView() ? 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"' : '',
 		'points': {$content.points},
-		'warning_title': is_addon_active('SV/WarningImprovements', 2050100) ? $content.title_censored : $content.title
+		'warning_title': $content.hasOption('hasCensoredTitle') ? $content.title_censored : phrase('n_a')
 	})
 }}
