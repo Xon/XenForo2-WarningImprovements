@@ -28,7 +28,7 @@ class Warn extends XFCP_Warn
         /** @var Warning $warningRepo */
         $warningRepo = $this->repository('XF:Warning');
 
-        if ($this->isPost())
+        if ($this->isPost() && !$this->filter('fill', 'bool'))
         {
             /** @var \XF\Service\FloodCheck $floodChecker */
             $floodChecker = $this->service('XF:FloodCheck');
