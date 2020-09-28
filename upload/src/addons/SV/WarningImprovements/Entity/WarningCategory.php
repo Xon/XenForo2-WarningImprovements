@@ -146,7 +146,7 @@ class WarningCategory extends AbstractCategoryTree
     protected function _preDelete()
     {
         $warningCategoryCount = $this->finder('SV\WarningImprovements:WarningCategory')
-                                     ->where('sv_warning_category_id', '!=', $this->warning_category_id)
+                                     ->where('warning_category_id', '!=', $this->warning_category_id)
                                      ->total();
         if (!$warningCategoryCount)
         {
