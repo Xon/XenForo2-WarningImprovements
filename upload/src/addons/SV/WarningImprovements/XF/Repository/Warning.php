@@ -400,6 +400,11 @@ class Warning extends XFCP_Warning
             }
         }
 
+        if (!$expired)
+        {
+            $this->updatePendingExpiryFor($user, $checkBannedStatus);
+        }
+
         return $expired;
     }
 
