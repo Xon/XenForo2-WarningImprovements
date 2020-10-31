@@ -28,6 +28,7 @@ namespace SV\WarningImprovements\XF\Entity
 namespace SV\WarningImprovements\XF\Pub\Controller
 {
 	class XFCP_Member extends \XF\Pub\Controller\Member {}
+	class XFCP_Warning extends \XF\Pub\Controller\Warning {}
 }
 
 namespace SV\WarningImprovements\XF\Pub\View\Member
