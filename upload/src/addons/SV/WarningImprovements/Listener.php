@@ -88,11 +88,9 @@ class Listener
 
         /** @var \SV\WarningImprovements\XF\Entity\UserOption $option */
         $option = $visitor->Option;
+        $pendingWarningExpiry = $option->sv_pending_warning_expiry ?? 0;
 
-        if ($option->offsetExists('sv_pending_warning_expiry') &&
-            ($sv_pending_warning_expiry = $option->sv_pending_warning_expiry) &&
-            $sv_pending_warning_expiry <= \XF::$time
-        )
+        if ($pendingWarningExpiry && $pendingWarningExpiry <= \XF::$time)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = \XF::repository('XF:Warning');
