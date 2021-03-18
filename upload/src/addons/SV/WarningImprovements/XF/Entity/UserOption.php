@@ -14,6 +14,7 @@ class UserOption extends XFCP_UserOption
     /**
      * @param Structure $structure
      * @return Structure
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public static function getStructure(Structure $structure)
     {

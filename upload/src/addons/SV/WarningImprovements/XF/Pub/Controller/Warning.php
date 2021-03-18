@@ -1,11 +1,11 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
 use SV\WarningImprovements\Globals;
-use XF\Mvc\ParameterBag;
-use XF\Mvc\Reply\AbstractReply;
-
 /**
  * Extends \XF\Pub\Controller\Warning
  */

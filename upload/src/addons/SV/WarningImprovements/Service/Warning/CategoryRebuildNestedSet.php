@@ -3,6 +3,7 @@
 namespace SV\WarningImprovements\Service\Warning;
 
 use XF\App;
+use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Entity\Entity;
 use XF\Service\AbstractService;
 use XF\Tree;
@@ -28,7 +29,7 @@ class CategoryRebuildNestedSet extends AbstractService
         $this->tree = new Tree($entities, 'parent_category_id', 0);
     }
 
-    protected function getEntities()
+    protected function getEntities(): AbstractCollection
     {
         return $this->finder('SV\WarningImprovements:WarningCategory')
                     ->order('display_order')
@@ -44,7 +45,7 @@ class CategoryRebuildNestedSet extends AbstractService
         $this->db()->commit();
     }
 
-    protected function _rebuildNestedSetInfo($id, $depth = -1, &$counter = 0)
+    protected function _rebuildNestedSetInfo(int $id, int $depth = -1, int &$counter = 0)
     {
         /** @var Entity $entity */
         $entity = $this->tree->getData($id);

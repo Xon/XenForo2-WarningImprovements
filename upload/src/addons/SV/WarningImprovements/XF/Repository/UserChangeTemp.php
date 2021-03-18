@@ -1,4 +1,8 @@
 <?php
+/**
+ * @noinspection PhpRedundantOptionalArgumentInspection
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Repository;
 
@@ -34,7 +38,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param int $userId
      * @return null|int[]
      */
-    public function getCachedUserGroupChangeList($userId)
+    public function getCachedUserGroupChangeList(int $userId)
     {
         if (\array_key_exists($userId, $this->userGroupChangeSet))
         {

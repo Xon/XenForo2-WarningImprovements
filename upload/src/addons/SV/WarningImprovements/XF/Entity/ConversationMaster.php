@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Entity;
 
@@ -9,7 +12,7 @@ use XF\Mvc\Entity\Structure;
  */
 class ConversationMaster extends XFCP_ConversationMaster
 {
-    public function getIsConversationForWarning()
+    public function getIsConversationForWarning(): bool
     {
         return !empty($this->getOption('warningObj'));
     }

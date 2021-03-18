@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\Repository;
 
@@ -8,10 +11,7 @@ use XF\Tree;
 
 class WarningCategory extends AbstractCategoryTree
 {
-    /**
-     * @return string
-     */
-    protected function getClassName()
+    protected function getClassName(): string
     {
         return 'SV\WarningImprovements:WarningCategory';
     }

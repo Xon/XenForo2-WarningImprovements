@@ -68,15 +68,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         }
     }
 
-    /**
-     * Populates warningCategories
-     *
-     * @param string $direction
-     * @param bool   $fromDelete
-     * @return AbstractCollection|null
-     */
-    protected function getActions(/** @noinspection PhpUnusedParameterInspection */
-        $direction, $fromDelete = false)
+    /** @noinspection PhpUnusedParameterInspection */
+    protected function getActions(string $direction, bool $fromDelete = false): AbstractCollection
     {
         return $this->finder('XF:WarningAction')
                     ->order('points', $direction)
@@ -89,7 +82,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
      * @param bool $removePoints
      * @return WarningTotal[]
      */
-    protected function getCategoryPoints($removePoints = false)
+    protected function getCategoryPoints(bool $removePoints = false): array
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = \XF::repository('XF:Warning');
@@ -179,7 +172,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             return;
         }
 
-        $categoryPoints = $this->getCategoryPoints(false);
+        $categoryPoints = $this->getCategoryPoints();
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningAction $action */
         foreach ($actions AS $action)

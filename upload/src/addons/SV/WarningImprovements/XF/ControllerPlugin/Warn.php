@@ -1,4 +1,8 @@
 <?php
+/**
+ * @noinspection PhpMissingParamTypeInspection
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\ControllerPlugin;
 
@@ -35,7 +39,7 @@ class Warn extends XFCP_Warn
             $timeRemaining = $floodChecker->checkFlooding('warn.'.$contentType, $content->getEntityId(), 5);
             if ($timeRemaining)
             {
-                throw $this->exception($this->controller->responseFlooding($timeRemaining));
+                throw $this->exception($this->controller->error(\XF::phrase('must_wait_x_seconds_before_performing_this_action', ['count' => $timeRemaining])));
             }
         }
 

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Entity;
 
@@ -54,7 +57,7 @@ class Warning extends XFCP_Warning
 
         /** @var UserExtendedEntity $visitor */
         $visitor = \XF::visitor();
-        if ($visitor->canByassWarningTitleCensor())
+        if ($visitor->canBypassWarningTitleCensor())
         {
             return $title;
         }
@@ -95,7 +98,7 @@ class Warning extends XFCP_Warning
             {
                 $title = \preg_replace($phrase, '', $title);
             }
-            catch (\ErrorException $e) {}
+            catch (\Throwable $e) {}
         }
 
         return $title;

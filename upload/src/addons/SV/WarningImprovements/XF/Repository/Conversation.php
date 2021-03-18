@@ -1,8 +1,9 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Repository;
-
-
 
 /**
  * Extends \XF\Repository\Conversation

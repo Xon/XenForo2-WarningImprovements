@@ -33,15 +33,12 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningCategory extends AbstractCategoryTree
 {
-    public function getAllowedUserGroupIds()
+    public function getAllowedUserGroupIds(): array
     {
         return array_map('\intval', $this->allowed_user_group_ids_);
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsUsable()
+    public function getIsUsable(): bool
     {
         if ($this->Parent && !$this->Parent->is_usable || !$this->allowed_user_group_ids)
         {
@@ -56,28 +53,17 @@ class WarningCategory extends AbstractCategoryTree
         return \XF::visitor()->isMemberOf($this->allowed_user_group_ids);
     }
 
-    /**
-     * @return \XF\Phrase
-     */
-    public function getTitle()
+    public function getTitle(): \XF\Phrase
     {
         return \XF::phrase($this->getPhraseName('title'));
     }
 
-    /**
-     * @param string $type
-     * @return string
-     */
-    public function getPhraseName($type)
+    public function getPhraseName(string $type): string
     {
         return 'sv_warning_category_' . $type . '.' . $this->warning_category_id;
     }
 
-    /**
-     * @param string $type
-     * @return \XF\Entity\Phrase
-     */
-    public function getMasterPhrase($type)
+    public function getMasterPhrase(string $type): \XF\Entity\Phrase
     {
         $relation = 'Master' . ucfirst($type);
         $phrase = $this->$relation;
@@ -93,14 +79,14 @@ class WarningCategory extends AbstractCategoryTree
         return $phrase;
     }
 
-    public function warningAdded(/** @noinspection PhpUnusedParameterInspection */
-        WarningDefinition $warningDefinition)
+    /** @noinspection PhpUnusedParameterInspection */
+    public function warningAdded(WarningDefinition $warningDefinition)
     {
         $this->rebuildCounters();
     }
 
-    public function warningRemoved(/** @noinspection PhpUnusedParameterInspection */
-        WarningDefinition $warningDefinition)
+    /** @noinspection PhpUnusedParameterInspection */
+    public function warningRemoved(WarningDefinition $warningDefinition)
     {
         $this->rebuildCounters();
     }
@@ -137,6 +123,7 @@ class WarningCategory extends AbstractCategoryTree
 
     /**
      * @return int|null
+     * @noinspection PhpMissingReturnTypeInspection
      */
     protected function getCategoryId()
     {
@@ -255,13 +242,8 @@ class WarningCategory extends AbstractCategoryTree
     public function rebuildCounters()
     {
         $this->rebuildWarningCount();
-
-        return true;
     }
 
-    /**
-     * @return int
-     */
     public function rebuildWarningCount()
     {
         $warningCount = $this->db()->fetchOne("
@@ -271,25 +253,16 @@ class WarningCategory extends AbstractCategoryTree
 		", $this->warning_category_id);
 
         $this->warning_count = max(0, $warningCount);
-
-        return $this->warning_count;
     }
 
-    /**
-     * @return array
-     */
-    public function getCategoryListExtras()
+    public function getCategoryListExtras(): array
     {
         return [
             'warning_count' => $this->warning_count,
         ];
     }
 
-    /**
-     * @param Structure $structure
-     * @return Structure
-     */
-    public static function getStructure(Structure $structure)
+    public static function getStructure(Structure $structure): Structure
     {
         $structure->table = 'xf_sv_warning_category';
         $structure->shortName = 'SV\WarningImprovements:WarningCategory';

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Service\Conversation;
 
@@ -36,7 +39,7 @@ class Notifier extends XFCP_Notifier
         $canUserReceiveNotification = parent::_canUserReceiveNotification($user, $sender);
         if ($canUserReceiveNotification)
         {
-            return $canUserReceiveNotification;
+            return true;
         }
 
         if ($this->warning && $user->email)

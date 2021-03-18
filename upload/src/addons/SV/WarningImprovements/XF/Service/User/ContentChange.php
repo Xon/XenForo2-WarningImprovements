@@ -25,9 +25,6 @@ class ContentChange extends XFCP_ContentChange
         }
     }
 
-    /**
-     * @throws \XF\PrintableException
-     */
     protected function stepReassignWarningActions()
     {
         /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
@@ -72,11 +69,6 @@ class ContentChange extends XFCP_ContentChange
         }
     }
 
-    /**
-     * @param \XF\Entity\User          $targetUser
-     * @param \XF\Entity\WarningAction $warningAction
-     * @throws \XF\PrintableException
-     */
     protected function applyWarningActionForSVWI(\XF\Entity\User &$targetUser, \XF\Entity\WarningAction $warningAction)
     {
         $permanent = ($warningAction->action_length_type == 'permanent');
@@ -142,21 +134,15 @@ class ContentChange extends XFCP_ContentChange
         }
     }
 
-    /**
-     * @param \XF\Entity\User $targetUser
-     * @param                 $endDate
-     * @param                 $setTriggered
-     * @return mixed|\XF\Entity\UserBan
-     * @throws \XF\PrintableException
-     * @noinspection PhpParameterByRefIsNotUsedAsReferenceInspection
-     */
-    protected function applyUserBanForSVWI(\XF\Entity\User &$targetUser, $endDate, $setTriggered)
+    /** @noinspection PhpParameterByRefIsNotUsedAsReferenceInspection */
+    protected function applyUserBanForSVWI(\XF\Entity\User &$targetUser, int $endDate, bool $setTriggered): \XF\Entity\UserBan
     {
         $ban = $targetUser->Ban;
         if (!$ban)
         {
             $reason = strval(\XF::phrase('warning_ban_reason'));
 
+            /** @var \XF\Entity\UserBan $ban */
             $ban = $targetUser->getRelationOrDefault('Ban', false);
             $ban->user_id = $targetUser->user_id;
             $ban->ban_user_id = 0;

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Entity;
 
@@ -15,10 +18,7 @@ use XF\Mvc\Entity\Structure;
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {
-    /**
-     * @return \XF\Phrase
-     */
-    public function getName()
+    public function getName(): \XF\Phrase
     {
         $name = 'n_a';
 
@@ -36,10 +36,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return \XF::phrase($name);
     }
 
-    /**
-     * @return \XF\Phrase
-     */
-    public function getResult()
+    public function getResult(): \XF\Phrase
     {
         $result = 'n_a';
 
@@ -84,15 +81,12 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return \XF::phrase($result);
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsExpired()
+    public function getIsExpired(): bool
     {
         return ($this->expiry_date <= \XF::$time && !$this->is_permanent);
     }
 
-    public function getIsPermanent()
+    public function getIsPermanent(): bool
     {
         return ($this->effective_expiry_date === null);
     }
@@ -156,7 +150,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param string|null $error
      * @return bool
      */
-    public function canViewWarningAction(&$error = null)
+    public function canViewWarningAction(&$error = null): bool
     {
         /** @var User $user */
         $user = $this->User;
@@ -174,11 +168,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return $user->canViewWarningActions($error);
     }
 
-    /**
-     * @param string|null $error
-     * @return bool
-     */
-    public function canViewNonSummaryWarningAction(&$error = null)
+    public function canViewNonSummaryWarningAction(&$error = null): bool
     {
         /** @var User $visitor */
         $visitor = \XF::visitor();
@@ -191,11 +181,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return $visitor->canViewNonSummaryWarningActions($error);
     }
 
-    /**
-     * @param string|null $error
-     * @return bool
-     */
-    public function canViewDiscouragedWarningAction(&$error = null)
+    public function canViewDiscouragedWarningAction(&$error = null): bool
     {
         /** @var User $visitor */
         $visitor = \XF::visitor();
@@ -208,11 +194,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return $visitor->canViewDiscouragedWarningActions($error);
     }
 
-    /**
-     * @param string $error
-     * @return bool
-     */
-    public function canEditWarningAction(&$error = '')
+    public function canEditWarningAction(&$error = ''): bool
     {
         /** @var User $visitor */
         $visitor = \XF::visitor();

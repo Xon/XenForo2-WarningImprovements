@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Service\User;
 
@@ -17,10 +20,7 @@ class Warn extends XFCP_Warn
      */
     protected $conversationCreator;
 
-    /**
-     * @param bool $sendAlert
-     */
-    public function setSendAlert($sendAlert)
+    public function setSendAlert(bool $sendAlert)
     {
         $this->sendAlert = $sendAlert;
     }
@@ -72,7 +72,7 @@ class Warn extends XFCP_Warn
      * @param bool $conversation
      * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|\XF\Mvc\Entity\Entity
      */
-    protected function getWarnedByForUser($conversation)
+    protected function getWarnedByForUser(bool $conversation)
     {
         /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
         $warning = $this->warning;

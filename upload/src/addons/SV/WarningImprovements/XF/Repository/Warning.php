@@ -1,4 +1,8 @@
 <?php
+/**
+ * @noinspection PhpRedundantOptionalArgumentInspection
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Repository;
 
@@ -39,6 +43,9 @@ class Warning extends XFCP_Warning
                 unset($params[$key]);
             }
         }
+
+        $category = $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category : null;
+
         $params = \array_merge($params, [
             'title'            => $warning && $content ? $handler->getStoredTitle($content) : '',
             'content'          => $handler && $content ? $handler->getContentForConversation($content) : '',
@@ -55,7 +62,7 @@ class Warning extends XFCP_Warning
             'warning_title'    => $warning ? $warning->title_censored : \XF::phrase('n_a'),
             'warning_title_uncensored' => $warning ? $warning->title : \XF::phrase('n_a'),
             'warning_points'   => $warning ? $warning->points : 0,
-            'warning_category' => $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category->title : \XF::phrase('n_a'),
+            'warning_category' => $category ? $category->title : \XF::phrase('n_a'),
             'threshold'        => (int)$pointThreshold,
             'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : '',
             'content_link'     => $handler ? $handler->getContentUrl($warning->Content, true) : '',
@@ -129,10 +136,10 @@ class Warning extends XFCP_Warning
     /**
      * @param int $warningCount
      * @param int $warningTotals
-     * @return WarningDefault
+     * @return WarningDefault|null
+     * @noinspection PhpUnusedParameterInspection
      */
-    public function getWarningDefaultExtension(/** @noinspection PhpUnusedParameterInspection */
-        $warningCount, $warningTotals)
+    public function getWarningDefaultExtension(int $warningCount, int $warningTotals)
     {
         /** @var WarningDefault $warningDefault */
         $warningDefault = $this->finder('SV\WarningImprovements:WarningDefault')
@@ -144,7 +151,7 @@ class Warning extends XFCP_Warning
         return $warningDefault;
     }
 
-    public function _getWarningTotals($userId)
+    public function _getWarningTotals(int $userId)
     {
         $ageLimit = (int)\XF::options()->svWarningEscalatingDefaultsLimit;
         $timeLimit = $ageLimit > 0 ? \XF::$time - $ageLimit * 2629746 : 0;
@@ -161,7 +168,7 @@ class Warning extends XFCP_Warning
      * @param WarningDefinition|null $definition
      * @return WarningDefinition
      */
-    public function escalateDefaultExpirySettingsForUser($user, WarningDefinition $definition = null)
+    public function escalateDefaultExpirySettingsForUser(UserEntity $user, WarningDefinition $definition = null)
     {
         if ($definition == null)
         {
@@ -207,12 +214,12 @@ class Warning extends XFCP_Warning
      * @param int    $expiryDuration
      * @return int
      */
-    protected function convertToDays($expiryType, $expiryDuration)
+    protected function convertToDays(string $expiryType, int $expiryDuration): int
     {
         switch ($expiryType)
         {
             case 'hours':
-                return $expiryDuration / 24;
+                return (int)($expiryDuration / 24);
             case 'days':
                 return $expiryDuration;
             case 'weeks':
@@ -227,11 +234,7 @@ class Warning extends XFCP_Warning
         return $expiryDuration;
     }
 
-    /**
-     * @param $expiryDuration
-     * @return array
-     */
-    protected function convertDaysToLargestType($expiryDuration)
+    protected function convertDaysToLargestType(int $expiryDuration): array
     {
         if (($expiryDuration % 365) == 0)
         {
@@ -256,7 +259,7 @@ class Warning extends XFCP_Warning
      * @param bool $checkBannedStatus
      * @return int|null
      */
-    public function getEffectiveNextExpiry($userId, $checkBannedStatus)
+    public function getEffectiveNextExpiry(int $userId, bool $checkBannedStatus)
     {
         $db = $this->db();
 
@@ -342,7 +345,7 @@ class Warning extends XFCP_Warning
      * @throws \Exception
      * @throws \XF\PrintableException
      */
-    public function processExpiredWarningsForUser(UserEntity $user, $checkBannedStatus)
+    public function processExpiredWarningsForUser(UserEntity $user, bool $checkBannedStatus): bool
     {
         $userId = $user->user_id;
         if (!$userId)
@@ -410,13 +413,7 @@ class Warning extends XFCP_Warning
 
     protected $userWarningCountCache = [];
 
-    /**
-     * @param UserEntity $user
-     * @param int        $days
-     * @param bool       $includeExpired
-     * @return mixed
-     */
-    protected function getCachedWarningsForUser(UserEntity $user, $days, $includeExpired)
+    protected function getCachedWarningsForUser(UserEntity $user, int $days, bool $includeExpired): array
     {
         if (!isset($this->userWarningCountCache[$user->user_id][$days]))
         {
@@ -439,18 +436,12 @@ class Warning extends XFCP_Warning
         return $this->userWarningCountCache[$user->user_id][$days];
     }
 
-    /**
-     * @param UserEntity $user
-     * @param int        $days
-     * @param bool       $includeExpired
-     * @return int
-     */
-    public function getWarningPointsInLastXDays(UserEntity $user, $days, $includeExpired = false)
+    public function getWarningPointsInLastXDays(UserEntity $user, int $days, bool $includeExpired = false): int
     {
         $value = $this->getCachedWarningsForUser($user, $days, $includeExpired);
         if (!empty($value['total']))
         {
-            return $value['total'];
+            return (int)$value['total'];
         }
 
         return 0;
@@ -462,12 +453,12 @@ class Warning extends XFCP_Warning
      * @param bool       $includeExpired
      * @return int
      */
-    public function getWarningCountsInLastXDays(UserEntity $user, $days, $includeExpired = false)
+    public function getWarningCountsInLastXDays(UserEntity $user, int $days, bool $includeExpired = false): int
     {
         $value = $this->getCachedWarningsForUser($user, $days, $includeExpired);
         if (!empty($value['count']))
         {
-            return $value['count'];
+            return (int)$value['count'];
         }
 
         return 0;

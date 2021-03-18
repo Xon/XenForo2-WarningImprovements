@@ -19,7 +19,7 @@ class WarningTotal
     /** @var int */
     public $oldPoints;
 
-    public function __construct(WarningCategory $category, $newPoints = 0, $newCount = 0, $oldPoints = 0, $oldCount = 0)
+    public function __construct(WarningCategory $category, int $newPoints = 0, int $newCount = 0, int $oldPoints = 0, int $oldCount = 0)
     {
         $this->category = $category;
         $this->newPoints = $newPoints;
@@ -28,10 +28,7 @@ class WarningTotal
         $this->oldCount = $oldCount;
     }
 
-    /**
-     * @param int $oldPoints
-     */
-    public function addOld($oldPoints)
+    public function addOld(int $oldPoints)
     {
         $this->oldPoints += $oldPoints;
         $this->oldCount += 1;
@@ -41,10 +38,7 @@ class WarningTotal
         }
     }
 
-    /**
-     * @param int $newPoints
-     */
-    public function addNew($newPoints)
+    public function addNew(int $newPoints)
     {
         $this->newPoints += $newPoints;
         $this->newCount += 1;

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingReturnTypeInspection
+ */
 
 namespace SV\WarningImprovements\XF\Admin\Controller;
 
@@ -484,12 +487,12 @@ class Warning extends XFCP_Warning
 
     /**
      * @param int               $id
-     * @param string|string[]   $with
+     * @param string[]          $with
      * @param string|\XF\Phrase $phraseKey
      * @return WarningDefault|\XF\Mvc\Entity\Entity
      * @throws \XF\Mvc\Reply\Exception
      */
-    protected function assertDefaultExists($id, $with = null, $phraseKey = null)
+    protected function assertDefaultExists(int $id, array $with = [], $phraseKey = null)
     {
         return $this->assertRecordExists('SV\WarningImprovements:WarningDefault', $id, $with, $phraseKey);
     }
