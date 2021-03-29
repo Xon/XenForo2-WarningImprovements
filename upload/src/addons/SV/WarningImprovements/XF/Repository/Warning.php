@@ -344,8 +344,9 @@ class Warning extends XFCP_Warning
      * @return bool
      * @throws \Exception
      * @throws \XF\PrintableException
+     * @noinspection PhpMissingParamTypeInspection
      */
-    public function processExpiredWarningsForUser(UserEntity $user, bool $checkBannedStatus): bool
+    public function processExpiredWarningsForUser(UserEntity $user, $checkBannedStatus): bool
     {
         $userId = $user->user_id;
         if (!$userId)
