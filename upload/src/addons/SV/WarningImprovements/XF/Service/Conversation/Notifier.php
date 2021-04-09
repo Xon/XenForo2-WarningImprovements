@@ -9,7 +9,7 @@ use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\Warning;
 use XF\App;
 use XF\Entity\ConversationMaster;
-use XF\Entity\User;
+use XF\Entity\User as UserEntity;
 
 class Notifier extends XFCP_Notifier
 {
@@ -34,7 +34,7 @@ class Notifier extends XFCP_Notifier
         $this->warning = $warning;
     }
 
-    protected function _canUserReceiveNotification(User $user, User $sender = null)
+    protected function _canUserReceiveNotification(UserEntity $user, UserEntity $sender = null)
     {
         $canUserReceiveNotification = parent::_canUserReceiveNotification($user, $sender);
         if ($canUserReceiveNotification)
@@ -89,5 +89,37 @@ class Notifier extends XFCP_Notifier
         }
 
         return $canUserReceiveNotification;
+    }
+
+    /**
+     * @since @since 2.5.6
+     *
+     * @param UserEntity $user
+     * @param UserEntity|null $sender
+     *
+     * @return bool
+     */
+    protected function isForcingEmailNotificationForUser(UserEntity $user, UserEntity $sender = null) : bool
+    {
+        if (!$user->user_id)
+        {
+            return false;
+        }
+
+        return $this->sv_force_email_for_user_id === $user->user_id;
+    }
+
+    /**
+     * @since 2.5.6
+     *
+     * @param UserEntity $user
+     * @param UserEntity|null $sender
+     *
+     * @return bool
+     */
+    protected function _canUserReceiveEmailNotification(UserEntity $user, UserEntity $sender = null)
+    {
+        return parent::_canUserReceiveEmailNotification($user, $sender)
+            || $this->isForcingEmailNotificationForUser($user, $sender);
     }
 }
