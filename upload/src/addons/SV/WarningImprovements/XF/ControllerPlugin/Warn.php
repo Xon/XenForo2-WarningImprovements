@@ -60,7 +60,7 @@ class Warn extends XFCP_Warn
                 $response->setMessage(\XF::phrase('sv_issued_warning'));
             }
 
-            if (\XF::options()->svWarningRedirect)
+            if (\XF::options()->svWarningRedirect ?? false)
             {
                 $warningHandler = $warningRepo->getWarningHandler($contentType, true);
                 if ($warningHandler->canViewContent($content) &&
@@ -81,7 +81,7 @@ class Warn extends XFCP_Warn
             $user = $response->getParam('user');
             $previousWarnings = [];
 
-            $warningLimit = (int)\XF::options()->svPreviousWarningLimit;
+            $warningLimit = (int)(\XF::options()->svPreviousWarningLimit ?? -1);
             if ($user && $warningLimit >= 0)
             {
                 $warningList = $warningRepo->findUserWarningsForList($user->user_id);

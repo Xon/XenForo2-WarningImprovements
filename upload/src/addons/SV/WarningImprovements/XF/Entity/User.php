@@ -85,7 +85,7 @@ class User extends XFCP_User
             return true;
         }
 
-        if ($visitor->user_id === $this->user_id && \XF::options()->sv_view_own_warnings)
+        if ($visitor->user_id === $this->user_id && (\XF::options()->sv_view_own_warnings ?? false))
         {
             $error = null;
             return true;
@@ -123,7 +123,7 @@ class User extends XFCP_User
             return false;
         }
 
-        $showDiscouragedWarningActions = \XF::options()->sv_show_discouraged_warning_actions;
+        $showDiscouragedWarningActions = \XF::options()->sv_show_discouraged_warning_actions ?? 3;
 
         switch ($showDiscouragedWarningActions)
         {
