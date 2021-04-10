@@ -1,6 +1,8 @@
 <?php
+
 /**
  * @noinspection PhpMissingReturnTypeInspection
+ * @noinspection PhpUnusedParameterInspection
  */
 
 namespace SV\WarningImprovements\XF\Entity;
@@ -52,7 +54,6 @@ class User extends XFCP_User
     /**
      * @param string|null $error
      * @return bool
-     * @noinspection PhpUnusedParameterInspection
      */
     public function canViewIssuer(&$error = null): bool
     {
@@ -96,7 +97,6 @@ class User extends XFCP_User
     /**
      * @param string|null $error
      * @return bool
-     * @noinspection PhpUnusedParameterInspection
      */
     public function canViewNonSummaryWarningActions(&$error = null): bool
     {
@@ -113,7 +113,6 @@ class User extends XFCP_User
     /**
      * @param string|null $error
      * @return bool
-     * @noinspection PhpUnusedParameterInspection
      */
     public function canViewDiscouragedWarningActions(&$error = null): bool
     {
@@ -143,7 +142,6 @@ class User extends XFCP_User
     /**
      * @param string|null $error
      * @return bool
-     * @noinspection PhpUnusedParameterInspection
      */
     public function canEditWarningActions(&$error = ''): bool
     {
@@ -157,7 +155,6 @@ class User extends XFCP_User
         return $visitor->hasPermission('general', 'sv_editWarningActions');
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     public function canBypassWarningTitleCensor(Phrase &$error = null) : bool
     {
         $visitor = \XF::visitor();

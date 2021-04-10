@@ -1,6 +1,8 @@
 <?php
+
 /**
  * @noinspection PhpMissingReturnTypeInspection
+ *  @noinspection PhpUnusedParameterInspection
  */
 
 namespace SV\WarningImprovements\XF\Service\Conversation;

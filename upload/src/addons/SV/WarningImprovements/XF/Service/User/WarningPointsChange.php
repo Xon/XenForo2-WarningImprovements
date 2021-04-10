@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpUnusedParameterInspection
+ */
 
 namespace SV\WarningImprovements\XF\Service\User;
 
@@ -68,7 +71,6 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         }
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     protected function getActions(string $direction, bool $fromDelete = false): AbstractCollection
     {
         return $this->finder('XF:WarningAction')
@@ -110,8 +112,6 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             }
         }
 
-        $oldWarning = null;
-        $newWarning = null;
         if ($removePoints)
         {
             $oldWarning = $this->warning;
@@ -200,7 +200,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         {
             /** @var User $postAsUser */
             $postAsUser = null;
-            $postAsUserId = $this->lastAction->sv_post_as_user_id ? $this->lastAction->sv_post_as_user_id : 0;
+            $postAsUserId = $this->lastAction->sv_post_as_user_id ?? 0;
             if ($postAsUserId)
             {
                 $postAsUser = $this->em()->find('XF:User', $postAsUserId);
@@ -230,7 +230,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             $threadCreator = $this->service('XF:Thread\Creator', $forum);
                             $threadCreator->setIsAutomated();
 
-                            $defaultPrefix = isset($forum->sv_default_prefix_ids) ? $forum->sv_default_prefix_ids : $forum->default_prefix_id;
+                            $defaultPrefix = $forum->sv_default_prefix_ids ?? $forum->default_prefix_id;
                             if ($defaultPrefix)
                             {
                                 $threadCreator->setPrefix($defaultPrefix);

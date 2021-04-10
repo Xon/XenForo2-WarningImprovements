@@ -1,6 +1,7 @@
 <?php
 /**
  * @noinspection PhpMissingReturnTypeInspection
+ * @noinspection PhpUnusedParameterInspection
  */
 
 namespace SV\WarningImprovements\XF\Admin\Controller;
@@ -258,8 +259,7 @@ class Warning extends XFCP_Warning
         return $this->view('SV\WarningImprovements\XF:Warning\Action\DefaultEdit', 'sv_warningimprovements_warning_default_edit', $viewParams);
     }
 
-    public function actionDefaultEdit(/** @noinspection PhpUnusedParameterInspection */
-        ParameterBag $params)
+    public function actionDefaultEdit(ParameterBag $params)
     {
         $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
@@ -296,8 +296,7 @@ class Warning extends XFCP_Warning
         return $form;
     }
 
-    public function actionDefaultSave(/** @noinspection PhpUnusedParameterInspection */
-        ParameterBag $params)
+    public function actionDefaultSave(ParameterBag $params)
     {
         $this->assertPostOnly();
 
@@ -318,8 +317,7 @@ class Warning extends XFCP_Warning
         );
     }
 
-    public function actionDefaultDelete(/** @noinspection PhpUnusedParameterInspection */
-        ParameterBag $params)
+    public function actionDefaultDelete(ParameterBag $params)
     {
         $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
@@ -365,8 +363,7 @@ class Warning extends XFCP_Warning
         return $this->warningCategoryAddEdit($warningCategory);
     }
 
-    public function actionCategoryEdit(/** @noinspection PhpUnusedParameterInspection */
-        ParameterBag $params)
+    public function actionCategoryEdit(ParameterBag $params)
     {
         $warningCategory = $this->assertCategoryExists($this->filter('warning_category_id', 'uint'));
 
@@ -422,8 +419,7 @@ class Warning extends XFCP_Warning
         return $form;
     }
 
-    public function actionCategorySave(/** @noinspection PhpUnusedParameterInspection */
-        ParameterBag $params)
+    public function actionCategorySave(ParameterBag $params)
     {
         $this->assertPostOnly();
 

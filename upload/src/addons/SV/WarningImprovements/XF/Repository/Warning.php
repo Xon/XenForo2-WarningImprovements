@@ -2,6 +2,7 @@
 /**
  * @noinspection PhpRedundantOptionalArgumentInspection
  * @noinspection PhpMissingReturnTypeInspection
+ * @noinspection PhpUnusedParameterInspection
  */
 
 namespace SV\WarningImprovements\XF\Repository;
@@ -80,7 +81,7 @@ class Warning extends XFCP_Warning
         }
         else
         {
-            foreach ($params as $key => &$value)
+            foreach ($params as &$value)
             {
                 $value = (string)$value;
             }
@@ -126,6 +127,8 @@ class Warning extends XFCP_Warning
             return $warningDefinition;
         }
 
+        /** @var WarningDefinition $warningDefinition */
+        /** @noinspection PhpUnnecessaryLocalVariableInspection */
         $warningDefinition = $this->finder('XF:WarningDefinition')
                                   ->where('warning_definition_id', '=', 0)
                                   ->fetchOne();
@@ -137,11 +140,11 @@ class Warning extends XFCP_Warning
      * @param int $warningCount
      * @param int $warningTotals
      * @return WarningDefault|null
-     * @noinspection PhpUnusedParameterInspection
      */
     public function getWarningDefaultExtension(int $warningCount, int $warningTotals)
     {
         /** @var WarningDefault $warningDefault */
+        /** @noinspection PhpUnnecessaryLocalVariableInspection */
         $warningDefault = $this->finder('SV\WarningImprovements:WarningDefault')
                                ->where('active', '=', 1)
                                ->where('threshold_points', '<', $warningTotals)

@@ -163,7 +163,7 @@ class Warn extends XFCP_Warn
                 $threadCreator = $this->service('XF:Thread\Creator', $forum);
                 $threadCreator->setIsAutomated();
 
-                $defaultPrefix = isset($forum->sv_default_prefix_ids) ? $forum->sv_default_prefix_ids : $forum->default_prefix_id;
+                $defaultPrefix = $forum->sv_default_prefix_ids ?? $forum->default_prefix_id;
                 if ($defaultPrefix)
                 {
                     $threadCreator->setPrefix($defaultPrefix);

@@ -123,7 +123,6 @@ class WarningCategory extends AbstractCategoryTree
 
     /**
      * @return int|null
-     * @noinspection PhpMissingReturnTypeInspection
      */
     protected function getCategoryId()
     {

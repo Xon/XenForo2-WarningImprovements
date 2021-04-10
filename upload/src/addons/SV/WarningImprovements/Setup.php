@@ -240,10 +240,7 @@ class Setup extends AbstractSetup
         $this->cleanupWarningCategories();
     }
 
-    /**
-     * @return array
-     */
-    protected function getTables()
+    protected function getTables(): array
     {
         $tables = [];
 
@@ -280,10 +277,7 @@ class Setup extends AbstractSetup
         return $tables;
     }
 
-    /**
-     * @return array
-     */
-    protected function getAlterTables()
+    protected function getAlterTables(): array
     {
         $tables = [];
 
@@ -318,7 +312,7 @@ class Setup extends AbstractSetup
         return $tables;
     }
 
-    protected function getRemoveAlterTables()
+    protected function getRemoveAlterTables(): array
     {
         $tables = [];
 

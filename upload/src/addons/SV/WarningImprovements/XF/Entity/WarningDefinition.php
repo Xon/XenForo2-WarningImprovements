@@ -1,7 +1,6 @@
 <?php
 /**
  * @noinspection PhpMissingReturnTypeInspection
- * @noinspection PhpMissingParamTypeInspection
  */
 
 namespace SV\WarningImprovements\XF\Entity;
@@ -134,8 +133,6 @@ class WarningDefinition extends XFCP_WarningDefinition
         if ($this->is_custom)
         {
             $this->error(\XF::phrase('sv_warning_improvements_custom_warning_cannot_be_deleted'));
-
-            return;
         }
     }
 

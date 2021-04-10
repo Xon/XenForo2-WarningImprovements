@@ -1,7 +1,6 @@
 <?php
 /**
  * @noinspection PhpRedundantOptionalArgumentInspection
- * @noinspection PhpMissingReturnTypeInspection
  */
 
 namespace SV\WarningImprovements\XF\Repository;
@@ -56,7 +55,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         }
         else
         {
-            foreach ($this->userGroupChangeSet[$userId] as $key => &$val)
+            foreach ($this->userGroupChangeSet[$userId] as &$val)
             {
                 $val = \array_unique(array_filter(array_map('intval', \explode(',', $val))));
             }
