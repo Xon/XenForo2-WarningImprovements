@@ -111,18 +111,20 @@ class Warn extends XFCP_Warn
             // workaround for \XF\Service\Conversation\Pusher::setInitialProperties requiring a user to be set on the Message's User attribute
             $this->conversationCreator->getMessage()->hydrateRelation('User', $warnedBy);
 
-            Globals::$warningObj = $this->warning;
-            try
-            {
-                \XF::asVisitor($warnedBy, function ()
-                {
-                    $this->conversationCreator->sendNotifications();
+            \XF::runLater(function () use ($warnedBy) {
+                \XF::asVisitor($warnedBy, function () {
+                    Globals::$warningObj = $this->warning;
+                    try
+                    {
+
+                        $this->conversationCreator->sendNotifications();
+                    }
+                    finally
+                    {
+                        Globals::$warningObj = null;
+                    }
                 });
-            }
-            finally
-            {
-                Globals::$warningObj = null;
-            }
+            });
         }
 
         return $warning;
