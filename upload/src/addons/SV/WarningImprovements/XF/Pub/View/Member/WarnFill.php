@@ -18,10 +18,11 @@ class WarnFill extends XFCP_WarnFill
         $warningDefinition = $this->params['definition'];
         $options = \XF::app()->options();
 
-        $response['formValues']['input[name=conversation_locked]'] = $options->sv_warningimprovements_conversation_locked ?? false;
-        $response['formValues']['input[name=start_conversation]'] = $options->sv_warningimprovements_conversation_send_default ?? false;
-        $response['formValues']['input[name=open_invite]'] = $options->sv_warningimprovements_conversation_invite ?? false;
-        $response['formValues']['input[name=send_warning_alert]'] = $options->sv_warningimprovements_alert_send_default ?? false;
+        // note; casting to bool is required!
+        $response['formValues']['input[name=conversation_locked]'] = (bool)($options->sv_warningimprovements_conversation_locked ?? false);
+        $response['formValues']['input[name=start_conversation]'] = (bool)($options->sv_warningimprovements_conversation_send_default ?? false);
+        $response['formValues']['input[name=open_invite]'] = (bool)($options->sv_warningimprovements_conversation_invite ?? false);
+        $response['formValues']['input[name=send_warning_alert]'] = (bool)($options->sv_warningimprovements_alert_send_default ?? false);
 
 /*
 XF bug; https://xenforo.com/community/threads/form-filler-doesnt-work-well-with-disabler.143576
