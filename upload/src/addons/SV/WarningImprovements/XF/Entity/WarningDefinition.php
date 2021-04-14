@@ -95,8 +95,9 @@ class WarningDefinition extends XFCP_WarningDefinition
 
         if (!$receiver->canViewIssuer())
         {
-            $sender = $sender ?: \XF::visitor();
-            $sender->username = \XF::phrase('WarningStaff')->render();
+            /** @var \XF\Repository\User $userRepo */
+            $userRepo = $this->repository('XF:User');
+            $sender = $userRepo->getGuestUser(\XF::phrase('WarningStaff')->render());
 
             $warningUserId = (int)($this->app()->options()->sv_warningimprovements_warning_user ?? 0);
             if ($warningUserId)
