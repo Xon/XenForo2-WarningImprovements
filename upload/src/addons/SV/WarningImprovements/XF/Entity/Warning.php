@@ -156,26 +156,19 @@ class Warning extends XFCP_Warning
      */
     public function getAnonymizedIssuer()
     {
-        $anonymizedIssuer = null;
-
         $options = $this->app()->options();
         if (!empty($options->sv_warningimprovements_warning_user))
         {
             $warningStaff = $this->em()->find('XF:User', $options->sv_warningimprovements_warning_user);
             if ($warningStaff)
             {
-                $anonymizedIssuer = $warningStaff;
+                return $warningStaff;
             }
         }
 
-        if (!$anonymizedIssuer)
-        {
-            /** @var \XF\Repository\User $userRepo */
-            $userRepo = $this->repository('XF:User');
-            $anonymizedIssuer = $userRepo->getGuestUser(\XF::phrase('WarningStaff')->render());
-        }
-
-        return $anonymizedIssuer;
+        /** @var \XF\Repository\User $userRepo */
+        $userRepo = $this->repository('XF:User');
+        return $userRepo->getGuestUser(\XF::phrase('WarningStaff')->render());
     }
 
     public function getDefinition()

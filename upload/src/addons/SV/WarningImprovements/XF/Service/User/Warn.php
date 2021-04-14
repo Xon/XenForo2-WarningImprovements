@@ -6,8 +6,10 @@
 namespace SV\WarningImprovements\XF\Service\User;
 
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Entity\ConversationMaster as ExtendedConversationMasterEntity;
 use XF\Entity\Warning;
 use XF\Entity\WarningDefinition;
+use XF\Mvc\Entity\Entity;
 
 /**
  * Extends \XF\Service\User\Warn
@@ -105,27 +107,6 @@ class Warn extends XFCP_Warn
 
         $db->commit();
 
-        if ($this->conversationCreator)
-        {
-            $warnedBy = $this->getWarnedByForUser(true);
-
-            \XF::runLater(function () use ($warnedBy) {
-                // workaround for \XF\Service\Conversation\Pusher::setInitialProperties requiring a user to be set on the Message's User attribute
-                $this->conversationCreator->getMessage()->hydrateRelation('User', $warnedBy);
-                \XF::asVisitor($warnedBy, function () {
-                    Globals::$warningObj = $this->warning;
-                    try
-                    {
-                        $this->conversationCreator->sendNotifications();
-                    }
-                    finally
-                    {
-                        Globals::$warningObj = null;
-                    }
-                });
-            });
-        }
-
         return $warning;
     }
 
@@ -220,56 +201,113 @@ class Warn extends XFCP_Warn
         return $errors;
     }
 
-    protected function setupConversation(Warning $warning)
+    /**
+     * @since 2.5.7
+     *
+     * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|Entity
+     */
+    protected function getConversationStarterForSvWarnImprov()
     {
-        $warnedBy = $this->getWarnedByForUser(true);
-        $realWarningBy = $this->warningBy;
-        $this->warningBy = $warnedBy;
-        try
+        /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
+        $warning = $this->warning;
+
+        if (!(\XF::options()->svWarningImprovAnonymizeConversations ?? false))
         {
-            /** @var \XF\Service\Conversation\Creator $creator */
-            $creator = \XF::asVisitor($warnedBy, function () use ($warning) {
-                return parent::setupConversation($warning);
-            });
-        }
-        finally
-        {
-            $this->warningBy = $realWarningBy;
+            return $warning->WarnedBy;
         }
 
-        $conversationTitle = $this->conversationTitle;
-        $conversationMessage = $this->conversationMessage;
+        if ($warning->User->canViewIssuer()) // the user getting warned
+        {
+            return $warning->WarnedBy;
+        }
 
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \XF::repository('XF:Warning');
-        $replace = $warningRepo->getSvWarningReplaceables(
-            $warning->User,
-            $warning,
-            null,
-            false,
-            $this->contentAction, $this->contentActionOptions
-        );
-
-        $conversationTitle = strtr(strval($conversationTitle), $replace);
-        $conversationMessage = strtr(strval($conversationMessage), $replace);
-
-        $creator->setContent($conversationTitle, $conversationMessage);
-        $this->conversationCreator = $creator;
-        $creator->setAutoSendNotifications(false);
-
-        return $creator;
+        return $warning->getAnonymizedIssuer();
     }
 
-    protected function sendConversation(Warning $warning)
+    /**
+     * @since 2.5.7
+     *
+     * @param Warning $warning
+     * @param callable $callback
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    protected function doAsWarningIssuerForSv(Warning $warning, callable $callback)
     {
-        Globals::$warningObj = $this->warning;
+        $user = $this->getConversationStarterForSvWarnImprov();
+
+        Globals::$warningObj = $warning;
         try
         {
-            return parent::sendConversation($warning);
+            return \XF::asVisitor($user, $callback);
         }
         finally
         {
             Globals::$warningObj = null;
         }
+    }
+
+    /**
+     * @since 2.5.7
+     *
+     * @param Warning $warning
+     *
+     * @return \XF\Service\Conversation\Creator
+     *
+     * @throws \Exception
+     */
+    protected function setupConversation(Warning $warning)
+    {
+        return $this->doAsWarningIssuerForSv($warning, function () use($warning)
+        {
+            $user = \XF::visitor();
+
+            $originalWarningBy = $this->warningBy;
+            $this->warningBy = $user;
+            try
+            {
+                $conversationCreatorSvc = parent::setupConversation($warning);
+            }
+            finally
+            {
+                $this->warningBy = $originalWarningBy;
+            }
+
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = \XF::repository('XF:Warning');
+            $replace = $warningRepo->getSvWarningReplaceables(
+                $user,
+                $warning,
+                null,
+                false,
+                $this->contentAction, $this->contentActionOptions
+            );
+
+            $conversationCreatorSvc->setContent(
+                \strtr(\strval($this->conversationTitle), $replace),
+                \strtr(\strval($this->conversationMessage), $replace)
+            );
+
+            return $conversationCreatorSvc;
+        });
+    }
+
+    /**
+     * @since 2.5.7
+     *
+     * @param Warning $warning
+     *
+     * @return Entity|ExtendedConversationMasterEntity|null
+     *
+     * @throws \Exception
+     */
+    protected function sendConversation(Warning $warning)
+    {
+        return $this->doAsWarningIssuerForSv($warning, function () use($warning)
+        {
+            return parent::sendConversation($warning);
+        });
     }
 }
