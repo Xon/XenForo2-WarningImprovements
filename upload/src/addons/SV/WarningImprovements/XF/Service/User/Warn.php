@@ -79,7 +79,7 @@ class Warn extends XFCP_Warn
         /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
         $warning = $this->warning;
 
-        if ($conversation && (\XF::options()->svWarningImprovAnonymizeConversations ?? false))
+        if ($conversation && !(\XF::options()->svWarningImprovAnonymizeConversations ?? false))
         {
             return $warning->WarnedBy;
         }
