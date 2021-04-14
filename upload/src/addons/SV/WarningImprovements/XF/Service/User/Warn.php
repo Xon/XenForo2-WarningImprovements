@@ -255,6 +255,8 @@ class Warn extends XFCP_Warn
             {
                 $this->warningBy = $originalWarningBy;
             }
+            // workaround for \XF\Service\Conversation\Pusher::setInitialProperties requiring a user to be set on the Message's User attribute
+            $conversationCreatorSvc->getMessage()->hydrateRelation('User', $user);
 
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = \XF::repository('XF:Warning');
