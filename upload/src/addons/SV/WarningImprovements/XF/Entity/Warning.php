@@ -156,10 +156,10 @@ class Warning extends XFCP_Warning
      */
     public function getAnonymizedIssuer()
     {
-        $options = $this->app()->options();
-        if (!empty($options->sv_warningimprovements_warning_user))
+        $warningUserId = (int)($this->app()->options()->sv_warningimprovements_warning_user ?? 0);
+        if ($warningUserId)
         {
-            $warningStaff = $this->em()->find('XF:User', $options->sv_warningimprovements_warning_user);
+            $warningStaff = $this->em()->find('XF:User', $warningUserId);
             if ($warningStaff)
             {
                 return $warningStaff;

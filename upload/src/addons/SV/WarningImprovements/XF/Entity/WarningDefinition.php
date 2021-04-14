@@ -95,17 +95,14 @@ class WarningDefinition extends XFCP_WarningDefinition
 
         if (!$receiver->canViewIssuer())
         {
-            if (empty($sender))
-            {
-                $sender = \XF::visitor();
-            }
-
+            $sender = $sender ?: \XF::visitor();
             $sender->username = \XF::phrase('WarningStaff')->render();
 
-            $options = $this->app()->options();
-            if (!empty($options->sv_warningimprovements_warning_user))
+            $warningUserId = (int)($this->app()->options()->sv_warningimprovements_warning_user ?? 0);
+            if ($warningUserId)
             {
-                if ($warningStaff = $this->em()->find('XF:User', $options->sv_warningimprovements_warning_user))
+                $warningStaff = $this->em()->find('XF:User', $warningUserId);
+                if ($warningStaff)
                 {
                     $sender = $warningStaff;
                 }
