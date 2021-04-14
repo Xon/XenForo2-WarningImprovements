@@ -84,8 +84,12 @@ class Warn extends XFCP_Warn
             return $warning->WarnedBy;
         }
 
+        if ($warning->User->canViewIssuer()) // the user getting warned
+        {
+            return $warning->WarnedBy;
+        }
 
-        return $warning->User->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer();
+        return $warning->getAnonymizedIssuer();
     }
 
     protected function _save()
@@ -204,29 +208,6 @@ class Warn extends XFCP_Warn
     /**
      * @since 2.5.7
      *
-     * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|Entity
-     */
-    protected function getConversationStarterForSvWarnImprov()
-    {
-        /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
-        $warning = $this->warning;
-
-        if (!(\XF::options()->svWarningImprovAnonymizeConversations ?? false))
-        {
-            return $warning->WarnedBy;
-        }
-
-        if ($warning->User->canViewIssuer()) // the user getting warned
-        {
-            return $warning->WarnedBy;
-        }
-
-        return $warning->getAnonymizedIssuer();
-    }
-
-    /**
-     * @since 2.5.7
-     *
      * @param Warning $warning
      * @param callable $callback
      *
@@ -236,7 +217,7 @@ class Warn extends XFCP_Warn
      */
     protected function doAsWarningIssuerForSv(Warning $warning, callable $callback)
     {
-        $user = $this->getConversationStarterForSvWarnImprov();
+        $user = $this->getWarnedByForUser(true);
 
         Globals::$warningObj = $warning;
         try
