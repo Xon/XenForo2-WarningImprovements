@@ -197,11 +197,6 @@ class Warn extends XFCP_Warn
     {
         $errors = parent::_validate();
 
-        if (!$this->warning->canView($error))
-        {
-            $errors[] = $error;
-        }
-
         return $errors;
     }
 
