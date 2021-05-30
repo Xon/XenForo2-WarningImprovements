@@ -43,7 +43,7 @@ class User extends XFCP_User
             return false;
         }
 
-        if ($visitor->user_id === Globals::$profileUserId && \XF::app()->options()->sv_view_own_warnings)
+        if ($visitor->user_id === Globals::$profileUserId && (\XF::app()->options()->sv_view_own_warnings ?? false))
         {
             return true;
         }

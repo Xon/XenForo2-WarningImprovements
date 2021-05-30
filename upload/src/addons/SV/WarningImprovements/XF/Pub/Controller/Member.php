@@ -130,7 +130,7 @@ class Member extends XFCP_Member
 
     protected function assertViewableUser($userId, array $extraWith = [], $basicProfileOnly = false)
     {
-        if ($this->options()->sv_view_own_warnings)
+        if ($this->options()->sv_view_own_warnings ?? false)
         {
             Globals::$profileUserId = \intval($userId);
         }

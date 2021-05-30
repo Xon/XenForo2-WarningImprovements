@@ -63,7 +63,7 @@ class Warning extends XFCP_Warning
         }
 
         $censorList = ArrUtil::stringToArray(
-            $this->app()->options()->svWarningImprov_censorWarningTitle,
+            $this->app()->options()->svWarningImprov_censorWarningTitle ?? '',
             '/\r?\n/'
         );
         if (!\count($censorList))
@@ -131,7 +131,7 @@ class Warning extends XFCP_Warning
             return false;
         }
 
-        if ($userId === $this->user_id && $this->app()->options()->sv_view_own_warnings)
+        if ($userId === $this->user_id && ($this->app()->options()->sv_view_own_warnings ?? false))
         {
             return true;
         }

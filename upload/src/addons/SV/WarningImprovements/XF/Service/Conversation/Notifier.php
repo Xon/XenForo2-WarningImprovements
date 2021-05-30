@@ -53,12 +53,12 @@ class Notifier extends XFCP_Notifier
                     $this->sv_force_email_for_user_id = 0;
                     $options = $this->app->options();
 
-                    if ($options->sv_force_conversation_email_on_warning)
+                    if ($options->sv_force_conversation_email_on_warning ?? true)
                     {
-                        $this->sv_respect_receive_admin_email = $options->sv_respect_receive_admin_email_on_warning;
+                        $this->sv_respect_receive_admin_email = $options->sv_respect_receive_admin_email_on_warning ?? false;
                         $this->sv_force_email_for_user_id = $this->warning->user_id;
                     }
-                    if ($options->sv_only_force_warning_email_on_banned && !$user->is_banned)
+                    if (($options->sv_only_force_warning_email_on_banned ?? true) && !$user->is_banned)
                     {
                         $this->sv_force_email_for_user_id = 0;
                     }
@@ -83,9 +83,9 @@ class Notifier extends XFCP_Notifier
 
                 $canUserReceiveNotification = (
                     $email_on_conversation
-                    && $user->user_state == 'valid'
+                    && $user->user_state === 'valid'
                     && !$is_banned
-                    && (!$sender || $sender->user_id != $user->user_id)
+                    && (!$sender || $sender->user_id !== $user->user_id)
                 );
             }
         }

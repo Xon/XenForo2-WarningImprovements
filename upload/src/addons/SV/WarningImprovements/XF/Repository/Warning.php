@@ -32,7 +32,7 @@ class Warning extends XFCP_Warning
     {
         $app = $this->app();
         $router = $app->router('public');
-        $dateString = date($app->options()->sv_warning_date_format, \XF::$time);
+        $dateString = \date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
         $staffUser = $warning
             ? $warnedUser->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer()
             : \XF::visitor();
