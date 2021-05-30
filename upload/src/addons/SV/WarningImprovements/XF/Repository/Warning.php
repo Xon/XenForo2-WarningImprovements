@@ -11,6 +11,7 @@ use SV\WarningImprovements\Entity\WarningDefault;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Entity\User as UserEntity;
 use SV\WarningImprovements\XF\Entity\Warning as WarningEntity;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use XF\Phrase;
 
 /**
@@ -19,7 +20,7 @@ use XF\Phrase;
 class Warning extends XFCP_Warning
 {
     /**
-     * @param UserEntity                            $user
+     * @param UserEntity|ExtendedUserEntity         $warnedUser
      * @param \XF\Entity\Warning|WarningEntity|null $warning
      * @param int|null                              $pointThreshold
      * @param bool                                  $forPhrase
@@ -27,12 +28,14 @@ class Warning extends XFCP_Warning
      * @param null|array                            $contentActionOptions
      * @return array
      */
-    public function getSvWarningReplaceables(UserEntity $user, WarningEntity $warning = null, $pointThreshold = null, $forPhrase = false, $contentAction = null, array $contentActionOptions = null)
+    public function getSvWarningReplaceables(UserEntity $warnedUser, WarningEntity $warning = null, $pointThreshold = null, $forPhrase = false, $contentAction = null, array $contentActionOptions = null)
     {
         $app = $this->app();
         $router = $app->router('public');
         $dateString = date($app->options()->sv_warning_date_format, \XF::$time);
-        $staffUser = $warning ? $warning->WarnedBy : \XF::visitor();
+        $staffUser = $warning
+            ? $warnedUser->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer()
+            : \XF::visitor();
 
         $handler = $warning ? $warning->getHandler() : null;
         $content = $warning ? $warning->Content : null;
@@ -51,12 +54,12 @@ class Warning extends XFCP_Warning
             'title'            => $warning && $content ? $handler->getStoredTitle($content) : '',
             'content'          => $handler && $content ? $handler->getContentForConversation($content) : '',
             'url'              => $handler && $content ? $handler->getContentUrl($content, true) : '',
-            'user_id'          => $user->user_id,
-            'name'             => $user->username,
-            'username'         => $user->username,
+            'user_id'          => $warnedUser->user_id,
+            'name'             => $warnedUser->username,
+            'username'         => $warnedUser->username,
             'staff'            => $staffUser->username,
             'staff_user_id'    => $staffUser->username,
-            'points'           => $user->warning_points,
+            'points'           => $warnedUser->warning_points,
             'notes'            => $warning ? $warning->notes : \XF::phrase('n_a'),
             'report'           => $warning && $warning->isValidRelation('Report') && $warning->Report ? $router->buildLink('full:reports', $warning->Report) : \XF::phrase('n_a'),
             'date'             => $dateString,
