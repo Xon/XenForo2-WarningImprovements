@@ -14,7 +14,7 @@ class Listener
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
 
-                $days = empty($data['days']) ? 0 : intval($data['days']);
+                $days = empty($data['days']) ? 0 : \intval($data['days']);
 
                 $expired = !empty($data['expired']);
 
@@ -29,7 +29,7 @@ class Listener
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
 
-                $days = empty($data['days']) ? 0 : intval($data['days']);
+                $days = empty($data['days']) ? 0 : \intval($data['days']);
 
                 $expired = !empty($data['expired']);
 
@@ -44,7 +44,7 @@ class Listener
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
 
-                $days = empty($data['days']) ? 0 : intval($data['days']);
+                $days = empty($data['days']) ? 0 : \intval($data['days']);
 
                 $expired = !empty($data['expired']);
 
@@ -58,7 +58,7 @@ class Listener
             case 'sv_warning_maximum':
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
-                $days = empty($data['days']) ? 0 : intval($data['days']);
+                $days = empty($data['days']) ? 0 : \intval($data['days']);
 
                 $expired = !empty($data['expired']);
 

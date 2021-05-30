@@ -73,21 +73,21 @@ class Warning extends XFCP_Warning
 
         foreach ($censorList AS $phrase)
         {
-            $phrase = trim($phrase);
-            if (!strlen($phrase))
+            $phrase = \trim($phrase);
+            if (!\strlen($phrase))
             {
                 continue;
             }
 
             if ($phrase[0] != '/')
             {
-                $phrase = preg_quote($phrase, '#');
-                $phrase = str_replace('\\*', '[\w"\'/ \t]*', $phrase);
+                $phrase = \preg_quote($phrase, '#');
+                $phrase = \str_replace('\\*', '[\w"\'/ \t]*', $phrase);
                 $phrase = '#(?<=\W|^)(' . $phrase . ')(?=\W|$)#iu';
             }
             else
             {
-                if (preg_match('/\W[\s\w]*e[\s\w]*$/', $phrase))
+                if (\preg_match('/\W[\s\w]*e[\s\w]*$/', $phrase))
                 {
                     // can't run a /e regex
                     continue;

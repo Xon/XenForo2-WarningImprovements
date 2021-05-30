@@ -267,7 +267,7 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'depth', 'smallint', 5)->setDefault(0);
             $this->addOrChangeColumn($table, 'breadcrumb_data', 'blob');
             $this->addOrChangeColumn($table, 'warning_count', 'int')->setDefault(0);
-            $this->addOrChangeColumn($table, 'allowed_user_group_ids', 'varbinary', 255)->setDefault(strval(User::GROUP_REG));
+            $this->addOrChangeColumn($table, 'allowed_user_group_ids', 'varbinary', 255)->setDefault(\strval(User::GROUP_REG));
 
             $table->addPrimaryKey('warning_category_id');
             $table->addKey(['parent_category_id', 'lft']);

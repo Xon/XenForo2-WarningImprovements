@@ -43,7 +43,7 @@ class ContentChange extends XFCP_ContentChange
             /** @var \XF\Entity\UserChangeTemp|\SV\WarningImprovements\XF\Entity\UserChangeTemp $_warningAction */
             foreach ($warningActionsAppliedToSource AS $_warningAction)
             {
-                $warningActionDetails = explode('_', $_warningAction->change_key);
+                $warningActionDetails = \explode('_', $_warningAction->change_key);
                 if (!isset($warningActionDetails[2]))
                 {
                     \XF::logException(new \LogicException('Warning ID not available.'));
@@ -51,9 +51,9 @@ class ContentChange extends XFCP_ContentChange
                 }
                 $warningActionIds[] = $warningActionDetails[2];
             }
-            $warningActionIds = array_map('\intval', $warningActionIds);
+            $warningActionIds =\ array_map('\intval', $warningActionIds);
 
-            if (count($warningActionIds) === 0)
+            if (\count($warningActionIds) === 0)
             {
                 \XF::logException(new \LogicException('No warning actions applied to target user.'));
                 return;
@@ -140,7 +140,7 @@ class ContentChange extends XFCP_ContentChange
         $ban = $targetUser->Ban;
         if (!$ban)
         {
-            $reason = strval(\XF::phrase('warning_ban_reason'));
+            $reason = \strval(\XF::phrase('warning_ban_reason'));
 
             /** @var \XF\Entity\UserBan $ban */
             $ban = $targetUser->getRelationOrDefault('Ban', false);

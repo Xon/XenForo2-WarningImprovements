@@ -132,7 +132,7 @@ class Member extends XFCP_Member
     {
         if ($this->options()->sv_view_own_warnings)
         {
-            Globals::$profileUserId = intval($userId);
+            Globals::$profileUserId = \intval($userId);
         }
 
         return parent::assertViewableUser($userId, $extraWith, $basicProfileOnly);
