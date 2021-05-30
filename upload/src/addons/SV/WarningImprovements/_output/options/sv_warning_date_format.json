@@ -5,6 +5,7 @@
     "sub_options": [],
     "validation_class": "",
     "validation_method": "",
+    "advanced": false,
     "default_value": "F d, Y",
     "relations": {
         "SV_WarningImprovements": 430
