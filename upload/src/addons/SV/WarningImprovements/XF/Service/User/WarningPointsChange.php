@@ -141,12 +141,12 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $warningTotal = $warningPoints[$categoryId];
 
             if ($newWarning === null ||
-                $warning->warning_id != $newWarning->warning_id)
+                $warning->warning_id !== $newWarning->warning_id)
             {
                 $warningTotal->addOld($warning->points);
             }
             if ($oldWarning === null ||
-                $warning->warning_id != $oldWarning->warning_id)
+                $warning->warning_id !== $oldWarning->warning_id)
             {
                 $warningTotal->addNew($warning->points);
             }
@@ -342,7 +342,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 // Points-based will be handled by the triggers so skip. Then only consider where we cross
                 // the points threshold from the old (higher) to the new (lower) point values
                 if (
-                    $action->action_length_type == 'points'
+                    $action->action_length_type === 'points'
                     || $action->points > $points->oldPoints // threshold above where we were
                     || $action->points <= $points->newPoints // we're still at/above the threshold
                 )

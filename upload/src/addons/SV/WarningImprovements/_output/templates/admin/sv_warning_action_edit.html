@@ -13,7 +13,7 @@
 	<xf:option value="0">{{ phrase('(none)') }}</xf:option>
 
 	<xf:foreach loop="$nodeTree.getFlattened(0)" value="$treeEntry">
-		<xf:option value="{$treeEntry.record.node_id}"  selected="{$action.sv_post_node_id} === {$treeEntry.record.node_id}" disabled="{{ $treeEntry.record.node_type_id != 'Forum' ? 'disabled' : '' }}">
+		<xf:option value="{$treeEntry.record.node_id}"  selected="{$action.sv_post_node_id} === {$treeEntry.record.node_id}" disabled="{{ $treeEntry.record.node_type_id !== 'Forum' ? 'disabled' : '' }}">
 			{{ repeat_raw('&nbsp; ', $treeEntry.depth) }} {$treeEntry.record.title}
 		</xf:option>
 	</xf:foreach>

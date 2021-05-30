@@ -156,7 +156,7 @@ class Setup extends AbstractSetup
         {
             $groups = $group->allowed_user_group_ids;
 
-            if ($groups == $allGroups)
+            if ($groups === $allGroups)
             {
                 $groups = [-1];
             }

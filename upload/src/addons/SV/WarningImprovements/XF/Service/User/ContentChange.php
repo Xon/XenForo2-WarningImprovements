@@ -71,8 +71,8 @@ class ContentChange extends XFCP_ContentChange
 
     protected function applyWarningActionForSVWI(\XF\Entity\User &$targetUser, \XF\Entity\WarningAction $warningAction)
     {
-        $permanent = ($warningAction->action_length_type == 'permanent');
-        $endByPoints = ($warningAction->action_length_type == 'points');
+        $permanent = ($warningAction->action_length_type === 'permanent');
+        $endByPoints = ($warningAction->action_length_type === 'points');
 
         if ($permanent || $endByPoints)
         {

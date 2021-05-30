@@ -83,7 +83,7 @@ class Warning extends XFCP_Warning
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $warningDefinitionId = $params->warning_definition_id;
-        if ($warningDefinitionId == 0)
+        if ($warningDefinitionId === 0)
         {
             $warning = $this->getCustomWarningDefinition();
         }
@@ -188,7 +188,7 @@ class Warning extends XFCP_Warning
     public function actionDelete(ParameterBag $params)
     {
         /** @noinspection PhpUndefinedFieldInspection */
-        if ($params->warning_definition_id == 0)
+        if ($params->warning_definition_id === 0)
         {
             return $this->error(\XF::phrase('sv_warning_improvements_custom_warning_cannot_be_deleted'));
         }
@@ -232,7 +232,7 @@ class Warning extends XFCP_Warning
         foreach ($inputFieldNames AS $inputFieldName => $inputFieldFilterName)
         {
             $action->$inputFieldName = $this->filter($inputFieldName, $inputFieldFilterName);
-            if ($inputFieldFilterName == 'uint' && empty($action->$inputFieldName))
+            if ($inputFieldFilterName === 'uint' && empty($action->$inputFieldName))
             {
                 $action->$inputFieldName = null;
             }
@@ -286,7 +286,7 @@ class Warning extends XFCP_Warning
                 'active'           => 'bool'
             ]);
 
-        if ($this->filter('expiry_type_base', 'str') == 'never')
+        if ($this->filter('expiry_type_base', 'str') === 'never')
         {
             $input['expiry_type'] = 'never';
         }

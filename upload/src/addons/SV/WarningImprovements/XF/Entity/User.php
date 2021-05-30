@@ -128,7 +128,7 @@ class User extends XFCP_User
         switch ($showDiscouragedWarningActions)
         {
             case 0: // Admin/Mod/User
-                return $visitor->is_admin || $visitor->is_moderator || ($this->user_id == $visitor->user_id);
+                return $visitor->is_admin || $visitor->is_moderator || ($this->user_id === $visitor->user_id);
             case 1: // Admin/Mod
                 return $visitor->is_admin || $visitor->is_moderator;
             case 2: // Admin

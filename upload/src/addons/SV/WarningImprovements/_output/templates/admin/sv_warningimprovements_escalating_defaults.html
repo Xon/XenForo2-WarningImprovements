@@ -6,13 +6,13 @@
 				<xf:datalist>
 					<xf:foreach loop="$escalatingDefaults" value="$escalatingDefault">
 						<xf:set var="$expiry_extension_phrase">{{ phrase('x_days', {'days': $escalatingDefault.expiry_extension}) }}</xf:set>
-						<xf:if is="{$escalatingDefault.expiry_type} == 'weeks'">
+						<xf:if is="{$escalatingDefault.expiry_type} === 'weeks'">
 							<xf:set var="$expiry_extension_phrase">{{ phrase('sv_x_weeks', {'weeks': $escalatingDefault.expiry_extension}) }}</xf:set>
 						</xf:if>
-						<xf:if is="{$escalatingDefault.expiry_type} == 'months'">
+						<xf:if is="{$escalatingDefault.expiry_type} === 'months'">
 							<xf:set var="$expiry_extension_phrase">{{ phrase('x_months', {'months': $escalatingDefault.expiry_extension}) }}</xf:set>
 						</xf:if>
-						<xf:if is="{$escalatingDefault.expiry_type} == 'years'">
+						<xf:if is="{$escalatingDefault.expiry_type} === 'years'">
 							<xf:set var="$expiry_extension_phrase">{{ phrase('x_years', {'years': $escalatingDefault.expiry_extension}) }}</xf:set>
 						</xf:if>
 						

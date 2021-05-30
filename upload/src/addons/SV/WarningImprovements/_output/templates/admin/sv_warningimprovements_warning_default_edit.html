@@ -16,8 +16,8 @@
 			<xf:numberboxrow name="threshold_points" value="{$default.threshold_points}" min="1" label="{{ phrase('points_threshold') }}" explain="{{ phrase('sv_warning_default_applied_crossing_threshold') }}" />
 
 			<xf:radiorow name="expiry_type_base" label="{{ phrase('sv_warning_expiry_extension') }}" explain="{{ phrase('sv_warning_expiry_extension_explain') }}">
-				<xf:option value="never" selected="$default.expiry_type == 'never'">{{ phrase('never') }}</xf:option>
-				<xf:option value="other" selected="$default.expiry_type != 'never'" label="{{ phrase('after_time:') }}">
+				<xf:option value="never" selected="$default.expiry_type === 'never'">{{ phrase('never') }}</xf:option>
+				<xf:option value="other" selected="$default.expiry_type !== 'never'" label="{{ phrase('after_time:') }}">
 					<xf:dependent>
 						<div class="inputGroup">
 							<xf:numberbox name="expiry_extension" value="{{ $default.expiry_extension }}" min="0" />

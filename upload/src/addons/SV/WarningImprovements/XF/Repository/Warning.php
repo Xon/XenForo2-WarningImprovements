@@ -183,7 +183,7 @@ class Warning extends XFCP_Warning
      */
     public function escalateDefaultExpirySettingsForUser(UserEntity $user, WarningDefinition $definition = null)
     {
-        if ($definition == null)
+        if ($definition === null)
         {
             // todo - copy how getGuestUser works
             throw new \LogicException('Require a warning definition to be specified');
@@ -249,15 +249,15 @@ class Warning extends XFCP_Warning
 
     protected function convertDaysToLargestType(int $expiryDuration): array
     {
-        if (($expiryDuration % 365) == 0)
+        if (($expiryDuration % 365) === 0)
         {
             return ['years', $expiryDuration / 365];
         }
-        else if (($expiryDuration % 30) == 0)
+        else if (($expiryDuration % 30) === 0)
         {
             return ['months', $expiryDuration / 30];
         }
-        else if (($expiryDuration % 7) == 0)
+        else if (($expiryDuration % 7) === 0)
         {
             return ['weeks', $expiryDuration / 7];
         }

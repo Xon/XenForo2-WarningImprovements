@@ -99,7 +99,7 @@ class WarningCategory extends AbstractCategoryTree
             {
                 foreach ($this->_structure->relations AS $name => $relation)
                 {
-                    if ($relation['entity'] == 'XF:Phrase')
+                    if ($relation['entity'] === 'XF:Phrase')
                     {
                         /** @var \XF\Entity\Phrase $maserPhrase */
                         $maserPhrase = $this->getExistingRelation($name);
@@ -166,7 +166,7 @@ class WarningCategory extends AbstractCategoryTree
     {
         foreach ($this->_structure->relations AS $name => $relation)
         {
-            if ($relation['entity'] == 'XF:Phrase')
+            if ($relation['entity'] === 'XF:Phrase')
             {
                 if ($this->$name) // $name is the name of Relation
                 {

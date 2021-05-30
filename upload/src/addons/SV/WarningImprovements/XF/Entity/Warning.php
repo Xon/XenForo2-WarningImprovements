@@ -79,7 +79,7 @@ class Warning extends XFCP_Warning
                 continue;
             }
 
-            if ($phrase[0] != '/')
+            if ($phrase[0] !== '/')
             {
                 $phrase = \preg_quote($phrase, '#');
                 $phrase = \str_replace('\\*', '[\w"\'/ \t]*', $phrase);

@@ -20,7 +20,7 @@
 
 				<xf:option value="0">{{ phrase('(none)') }}</xf:option>
 				<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
-					<xf:option value="{$treeEntry.record.warning_category_id}" disabled="{{ $treeEntry.record.warning_category_id == $category.warning_category_id }}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
+					<xf:option value="{$treeEntry.record.warning_category_id}" disabled="{{ $treeEntry.record.warning_category_id === $category.warning_category_id }}">{{ repeat('--', $treeEntry.depth) }} {$treeEntry.record.title}</xf:option>
 				</xf:foreach>
 			</xf:selectrow>
 

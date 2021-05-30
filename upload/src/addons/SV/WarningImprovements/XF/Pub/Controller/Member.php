@@ -94,7 +94,7 @@ class Member extends XFCP_Member
             throw $this->exception($this->noPermission($error));
         }
 
-        if ($this->filter('expire', 'str') == 'now')
+        if ($this->filter('expire', 'str') === 'now')
         {
             $expiryDate = \XF::$time;
         }

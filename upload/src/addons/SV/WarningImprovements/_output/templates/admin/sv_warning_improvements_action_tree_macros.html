@@ -26,19 +26,19 @@
 											
 											<div class="dataList-hint" dir="auto">
 												<ul class="listInline listInline--bullet listInline--selfInline">
-													<xf:if is="$action.action == 'ban'">
+													<xf:if is="$action.action === 'ban'">
 														<li>{{ phrase('ban') }}</li>
-														<xf:elseif is="$action.action == 'discourage'" />
+														<xf:elseif is="$action.action === 'discourage'" />
 														<li>{{ phrase('discourage') }}</li>
-														<xf:elseif is="$action.action == 'groups'" />
+														<xf:elseif is="$action.action === 'groups'" />
 														<li>{{ phrase('add_to_selected_groups') }}</li>
 														<xf:else />
 														<li>{{ phrase('unknown_action') }}</li>
 													</xf:if>
 
-													<xf:if is="$action.action_length_type == 'permanent'">
+													<xf:if is="$action.action_length_type === 'permanent'">
 														<li>{{ phrase('permanent') }}</li>
-														<xf:elseif is="$action.action_length_type == 'points'" />
+														<xf:elseif is="$action.action_length_type === 'points'" />
 														<li>{{ phrase('while_at_or_above_points_threshold') }}</li>
 														<xf:else />
 														<li>{{ phrase('temporary') }}</li>
@@ -71,19 +71,19 @@
 												<spam class="u-depth{{ $treeEntry.depth + 1 }}"><i class="warningImprovementsListingIcons warningImprovementsListingIcons--Action"></i> {{ phrase('svWarningPoints:') }} {$action.points}</spam>
 												<div class="dataList-hint" dir="auto">
 													<ul class="listInline listInline--bullet listInline--selfInline">
-														<xf:if is="$action.action == 'ban'">
+														<xf:if is="$action.action === 'ban'">
 															<li>{{ phrase('ban') }}</li>
-															<xf:elseif is="$action.action == 'discourage'" />
+															<xf:elseif is="$action.action === 'discourage'" />
 															<li>{{ phrase('discourage') }}</li>
-															<xf:elseif is="$action.action == 'groups'" />
+															<xf:elseif is="$action.action === 'groups'" />
 															<li>{{ phrase('add_to_selected_groups') }}</li>
 															<xf:else />
 															<li>{{ phrase('unknown_action') }}</li>
 														</xf:if>
 
-														<xf:if is="$action.action_length_type == 'permanent'">
+														<xf:if is="$action.action_length_type === 'permanent'">
 															<li>{{ phrase('permanent') }}</li>
-															<xf:elseif is="$action.action_length_type == 'points'" />
+															<xf:elseif is="$action.action_length_type === 'points'" />
 															<li>{{ phrase('while_at_or_above_points_threshold') }}</li>
 															<xf:else />
 															<li>{{ phrase('temporary') }}</li>
