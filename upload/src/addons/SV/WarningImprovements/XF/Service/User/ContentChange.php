@@ -51,7 +51,7 @@ class ContentChange extends XFCP_ContentChange
                 }
                 $warningActionIds[] = $warningActionDetails[2];
             }
-            $warningActionIds =\ array_map('\intval', $warningActionIds);
+            $warningActionIds = \array_map('\intval', $warningActionIds);
 
             if (\count($warningActionIds) === 0)
             {

@@ -72,7 +72,7 @@ class Warn extends XFCP_Warn
 
     /**
      * @param bool $conversation
-     * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|\XF\Mvc\Entity\Entity
+     * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|Entity
      */
     protected function getWarnedByForUser(bool $conversation)
     {
