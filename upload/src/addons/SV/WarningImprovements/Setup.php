@@ -150,7 +150,7 @@ class Setup extends AbstractSetup
     {
         /** @var \XF\repository\UserGroup $userGroupRepo */
         $userGroupRepo = \XF::repository('XF:UserGroup');
-        $allGroups = array_keys($userGroupRepo->getUserGroupTitlePairs());
+        $allGroups = \array_keys($userGroupRepo->getUserGroupTitlePairs());
         /** @var \SV\WarningImprovements\Entity\WarningCategory $group */
         foreach(\XF::finder('SV\WarningImprovements:WarningCategory')->fetch() as $group)
         {

@@ -35,7 +35,7 @@ class WarningCategory extends AbstractCategoryTree
 {
     public function getAllowedUserGroupIds(): array
     {
-        return array_map('\intval', $this->allowed_user_group_ids_);
+        return \array_map('\intval', $this->allowed_user_group_ids_);
     }
 
     public function getIsUsable(): bool

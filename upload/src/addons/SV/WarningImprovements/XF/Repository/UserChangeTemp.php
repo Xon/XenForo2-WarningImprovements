@@ -57,7 +57,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         {
             foreach ($this->userGroupChangeSet[$userId] as &$val)
             {
-                $val = \array_unique(array_filter(array_map('intval', \explode(',', $val))));
+                $val = \array_unique(\array_filter(\array_map('\intval', \explode(',', $val))));
             }
         }
 

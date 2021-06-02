@@ -46,7 +46,7 @@ class WarningCategory extends AbstractCategoryTree
      */
     public function mergeCategoryListExtras(array $extras, array $childExtras)
     {
-        $output = array_merge(
+        $output = \array_merge(
             [
                 'warning_count' => 0,
                 'childCount'    => 0
