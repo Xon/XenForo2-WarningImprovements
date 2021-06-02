@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @noinspection PhpRedundantOptionalArgumentInspection
  */
@@ -18,8 +19,7 @@ use XF\Phrase;
  */
 class Warning extends XFCP_Warning
 {
-    /** @noinspection DuplicatedCode */
-    protected function getAsUserLang(UserEntity $user, \Closure $callable)
+    public function getAsUserLang(UserEntity $user, \Closure $callable)
     {
         $oldLang = \XF::language();
         // Compatibility for XF2.1 & XF2.2

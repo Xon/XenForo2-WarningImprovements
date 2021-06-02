@@ -52,7 +52,7 @@ class User extends XFCP_User
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canViewIssuer(&$error = null): bool
@@ -66,7 +66,7 @@ class User extends XFCP_User
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canViewWarningActions(&$error = null): bool
@@ -95,7 +95,7 @@ class User extends XFCP_User
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canViewNonSummaryWarningActions(&$error = null): bool
@@ -111,7 +111,7 @@ class User extends XFCP_User
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canViewDiscouragedWarningActions(&$error = null): bool
@@ -140,7 +140,7 @@ class User extends XFCP_User
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canEditWarningActions(&$error = ''): bool
@@ -195,7 +195,7 @@ class User extends XFCP_User
         $userChangeTempRepo = $this->repository('XF:UserChangeTemp');
 
         return $userChangeTempRepo->getWarningActions(
-            $this,
+            $this->user_id,
             $this->canViewNonSummaryWarningActions(),
             $this->canViewDiscouragedWarningActions()
         )->fetch();
@@ -222,9 +222,9 @@ class User extends XFCP_User
     {
         $structure = parent::getStructure($structure);
 
-        $structure->getters['warning_definitions'] = true;
-        $structure->getters['warning_actions'] = true;
-        $structure->getters['warning_actions_count'] = true;
+        $structure->getters['warning_definitions'] = ['getter' => 'getWarningDefinitions', 'cache' => true];
+        $structure->getters['warning_actions'] = ['getter' => 'getWarningActions', 'cache' => true];
+        $structure->getters['warning_actions_count'] = ['getter' => 'getWarningActionsCount', 'cache' => true];
 
         return $structure;
     }

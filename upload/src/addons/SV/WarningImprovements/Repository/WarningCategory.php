@@ -22,7 +22,7 @@ class WarningCategory extends AbstractCategoryTree
      * @param bool $excludeEmpty
      * @return Tree
      */
-    public function createCategoryTree($categories = null, $rootId = 0, $excludeEmpty = false)
+    public function createCategoryTree($categories = null, $rootId = 0, bool $excludeEmpty = false)
     {
         if ($excludeEmpty)
         {

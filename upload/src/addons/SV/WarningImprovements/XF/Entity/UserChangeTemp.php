@@ -6,6 +6,7 @@
 namespace SV\WarningImprovements\XF\Entity;
 
 use XF\Mvc\Entity\Structure;
+use XF\Phrase;
 
 /**
  * Extends \XF\Entity\UserChangeTemp
@@ -18,7 +19,7 @@ use XF\Mvc\Entity\Structure;
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {
-    public function getName(): \XF\Phrase
+    public function getName(): Phrase
     {
         $name = 'n_a';
 
@@ -36,7 +37,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return \XF::phrase($name);
     }
 
-    public function getResult(): \XF\Phrase
+    public function getResult(): Phrase
     {
         $result = 'n_a';
 
@@ -147,7 +148,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canViewWarningAction(&$error = null): bool

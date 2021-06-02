@@ -8,6 +8,7 @@ namespace SV\WarningImprovements\XF\Entity;
 use XF\Entity\User as UserEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
+use XF\Phrase;
 
 /**
  * COLUMNS
@@ -23,7 +24,7 @@ use XF\Mvc\Entity\Structure;
 class WarningDefinition extends XFCP_WarningDefinition
 {
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canView(&$error = null)
@@ -39,7 +40,7 @@ class WarningDefinition extends XFCP_WarningDefinition
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function isUsable(&$error = null)
@@ -63,7 +64,7 @@ class WarningDefinition extends XFCP_WarningDefinition
     }
 
     /**
-     * @return string|\XF\Phrase
+     * @return string|Phrase
      */
     public function getCustomTitlePlaceholder()
     {

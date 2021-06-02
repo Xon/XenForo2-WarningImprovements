@@ -65,20 +65,14 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     }
 
     /**
-     * @param UserEntity|int $user
-     * @param bool           $showAll
-     * @param bool           $showDiscouraged
-     * @param bool           $onlyExpired
-     *
+     * @param int   $userId
+     * @param bool  $showAll
+     * @param bool  $showDiscouraged
+     * @param bool  $onlyExpired
      * @return \XF\Mvc\Entity\Finder|\XF\Finder\UserChangeTemp
      */
-    public function getWarningActions($user, $showAll = false, $showDiscouraged = false, $onlyExpired = false)
+    public function getWarningActions(int $userId, bool $showAll = false, bool $showDiscouraged = false, bool $onlyExpired = false)
     {
-        $userId = $user;
-        if ($user instanceof UserEntity)
-        {
-            $userId = $user->user_id;
-        }
         $warningActions = $this->finder('XF:UserChangeTemp');
 
         $warningActions->where('change_key', 'LIKE', 'warning_action_%');
@@ -131,8 +125,8 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param bool       $showDiscouraged
      * @return int|null
      */
-    public function countWarningActions(UserEntity $user, $showAll = false, $showDiscouraged = false)
+    public function countWarningActions(UserEntity $user, bool $showAll = false, bool $showDiscouraged = false)
     {
-        return $this->db()->fetchOne($this->getWarningActions($user, $showAll, $showDiscouraged)->getQuery(['countOnly' => true]));
+        return $this->db()->fetchOne($this->getWarningActions($user->user_id, $showAll, $showDiscouraged)->getQuery(['countOnly' => true]));
     }
 }

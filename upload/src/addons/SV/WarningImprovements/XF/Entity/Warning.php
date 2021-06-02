@@ -10,6 +10,7 @@ use SV\WarningImprovements\XF\Entity\User as UserExtendedEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as WarningDefinitionExtended;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
+use XF\Phrase;
 use XF\Util\Arr as ArrUtil;
 
 /**
@@ -140,7 +141,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canViewIssuer(&$error = null)
