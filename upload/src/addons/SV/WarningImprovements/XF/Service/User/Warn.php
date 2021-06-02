@@ -219,6 +219,8 @@ class Warn extends XFCP_Warn
     {
         $user = $this->getWarnedByForUser(true);
 
+        $originalWarningBy = $this->warningBy;
+        $this->warningBy = $user;
         Globals::$warningObj = $warning;
         try
         {
@@ -226,6 +228,7 @@ class Warn extends XFCP_Warn
         }
         finally
         {
+            $this->warningBy = $originalWarningBy;
             Globals::$warningObj = null;
         }
     }
@@ -245,16 +248,7 @@ class Warn extends XFCP_Warn
         {
             $warnedUser = $warning->User;
 
-            $originalWarningBy = $this->warningBy;
-            $this->warningBy = \XF::visitor();
-            try
-            {
-                $conversationCreatorSvc = parent::setupConversation($warning);
-            }
-            finally
-            {
-                $this->warningBy = $originalWarningBy;
-            }
+            $conversationCreatorSvc = parent::setupConversation($warning);
             // workaround for \XF\Service\Conversation\Pusher::setInitialProperties requiring a user to be set on the Message's User attribute
             $conversationCreatorSvc->getMessage()->hydrateRelation('User', $warnedUser);
 
@@ -288,8 +282,7 @@ class Warn extends XFCP_Warn
      */
     protected function sendConversation(Warning $warning)
     {
-        return $this->doAsWarningIssuerForSv($warning, function () use($warning)
-        {
+        return $this->doAsWarningIssuerForSv($warning, function () use ($warning) {
             return parent::sendConversation($warning);
         });
     }
