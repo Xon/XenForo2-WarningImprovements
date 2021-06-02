@@ -1,8 +1,6 @@
 <?php
 /**
  * @noinspection PhpRedundantOptionalArgumentInspection
- * @noinspection PhpMissingReturnTypeInspection
- * @noinspection PhpUnusedParameterInspection
  */
 
 namespace SV\WarningImprovements\XF\Repository;
@@ -10,8 +8,9 @@ namespace SV\WarningImprovements\XF\Repository;
 use SV\WarningImprovements\Entity\WarningDefault;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Entity\User as UserEntity;
-use SV\WarningImprovements\XF\Entity\Warning as WarningEntity;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
+use XF\Entity\Warning as WarningEntity;
 use XF\Phrase;
 
 /**
@@ -19,78 +18,100 @@ use XF\Phrase;
  */
 class Warning extends XFCP_Warning
 {
-    /**
-     * @param UserEntity|ExtendedUserEntity         $warnedUser
-     * @param \XF\Entity\Warning|WarningEntity|null $warning
-     * @param int|null                              $pointThreshold
-     * @param bool                                  $forPhrase
-     * @param null|string                           $contentAction
-     * @param null|array                            $contentActionOptions
-     * @return array
-     */
-    public function getSvWarningReplaceables(UserEntity $warnedUser, WarningEntity $warning = null, $pointThreshold = null, $forPhrase = false, $contentAction = null, array $contentActionOptions = null)
+    /** @noinspection DuplicatedCode */
+    protected function getAsUserLang(UserEntity $user, \Closure $callable)
     {
-        $app = $this->app();
-        $router = $app->router('public');
-        $dateString = \date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
-        $staffUser = $warning
-            ? $warnedUser->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer()
-            : \XF::visitor();
-
-        $handler = $warning ? $warning->getHandler() : null;
-        $content = $warning ? $warning->Content : null;
-        $params = $warning ? $warning->toArray() : [];
-        foreach ($params as $key => $value)
+        $oldLang = \XF::language();
+        // Compatibility for XF2.1 & XF2.2
+        $app = \XF::app();
+        $newLang = $app->language($user->language_id);
+        if (!$newLang->isUsable($user))
         {
-            if (is_array($value) || is_object($value))
-            {
-                unset($params[$key]);
-            }
+            $newLang = $app->language();
         }
+        $newLangeOrigTz = $newLang->getTimeZone();
+        $newLang->setTimeZone($user->timezone);
+        \XF::setLanguage($newLang);
 
-        $category = $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category : null;
-
-        $params = \array_merge($params, [
-            'title'            => $warning && $content ? $handler->getStoredTitle($content) : '',
-            'content'          => $handler && $content ? $handler->getContentForConversation($content) : '',
-            'url'              => $handler && $content ? $handler->getContentUrl($content, true) : '',
-            'user_id'          => $warnedUser->user_id,
-            'name'             => $warnedUser->username,
-            'username'         => $warnedUser->username,
-            'staff'            => $staffUser->username,
-            'staff_user_id'    => $staffUser->username,
-            'points'           => $warnedUser->warning_points,
-            'notes'            => $warning ? $warning->notes : \XF::phrase('n_a'),
-            'report'           => $warning && $warning->isValidRelation('Report') && $warning->Report ? $router->buildLink('full:reports', $warning->Report) : \XF::phrase('n_a'),
-            'date'             => $dateString,
-            'warning_title'    => $warning ? $warning->title_censored : \XF::phrase('n_a'),
-            'warning_title_uncensored' => $warning ? $warning->title : \XF::phrase('n_a'),
-            'warning_points'   => $warning ? $warning->points : 0,
-            'warning_category' => $category ? $category->title : \XF::phrase('n_a'),
-            'threshold'        => (int)$pointThreshold,
-            'warning_link'     => $warning ? $router->buildLink('full:warnings', $warning) : '',
-            'content_link'     => $handler ? $handler->getContentUrl($warning->Content, true) : '',
-            'content_action'   => $contentAction ? $this->getReadableContentAction($contentAction, $contentActionOptions ?: []) : \XF::phrase('n_a'),
-        ]);
-
-        if (!$forPhrase)
+        try
         {
-            $replacables = [];
+            return $callable();
+        }
+        finally
+        {
+            $newLang->setTimeZone($newLangeOrigTz);
+            \XF::setLanguage($oldLang);
+        }
+    }
+
+    public function getSvWarningReplaceables(UserEntity $warnedUser, WarningEntity $warning = null, int $pointThreshold = null, bool $forPhrase = false, string $contentAction = null, array $contentActionOptions = null): array
+    {
+        /** @var UserEntity|ExtendedUserEntity $warnedUser */
+        /** @var WarningEntity|ExtendedWarningEntity|null $warning */
+        return $this->getAsUserLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions) {
+            $app = $this->app();
+            $router = $app->router('public');
+            $dateString = \date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
+            $staffUser = $warning
+                ? $warnedUser->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer()
+                : \XF::visitor();
+
+            $handler = $warning ? $warning->getHandler() : null;
+            $content = $warning ? $warning->Content : null;
+            $params = $warning ? $warning->toArray() : [];
             foreach ($params as $key => $value)
             {
-                $replacables['{' . $key . '}'] = (string)$value;
+                if (\is_array($value) || \is_object($value))
+                {
+                    unset($params[$key]);
+                }
             }
-            $params = $replacables;
-        }
-        else
-        {
-            foreach ($params as &$value)
-            {
-                $value = (string)$value;
-            }
-        }
 
-        return $params;
+            $category = $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category : null;
+
+            $params = \array_merge($params, [
+                'title'                    => $warning && $content ? $handler->getStoredTitle($content) : '',
+                'content'                  => $handler && $content ? $handler->getContentForConversation($content) : '',
+                'url'                      => $handler && $content ? $handler->getContentUrl($content, true) : '',
+                'user_id'                  => $warnedUser->user_id,
+                'name'                     => $warnedUser->username,
+                'username'                 => $warnedUser->username,
+                'staff'                    => $staffUser->username,
+                'staff_user_id'            => $staffUser->username,
+                'points'                   => $warnedUser->warning_points,
+                'notes'                    => $warning ? $warning->notes : \XF::phrase('n_a'),
+                'report'                   => $warning && $warning->isValidRelation('Report') && $warning->Report ? $router->buildLink('full:reports', $warning->Report) : \XF::phrase('n_a'),
+                'date'                     => $dateString,
+                'warning_title'            => $warning ? $warning->title_censored : \XF::phrase('n_a'),
+                'warning_title_uncensored' => $warning ? $warning->title : \XF::phrase('n_a'),
+                'warning_points'           => $warning ? $warning->points : 0,
+                'warning_category'         => $category ? $category->title : \XF::phrase('n_a'),
+                'threshold'                => (int)$pointThreshold,
+                'warning_link'             => $warning ? $router->buildLink('full:warnings', $warning) : '',
+                'content_link'             => $handler ? $handler->getContentUrl($warning->Content, true) : '',
+                'content_action'           => $contentAction ? $this->getReadableContentAction($contentAction, $contentActionOptions ?: []) : \XF::phrase('n_a'),
+            ]);
+
+
+            if (!$forPhrase)
+            {
+                $replacables = [];
+                foreach ($params as $key => $value)
+                {
+                    $replacables['{' . $key . '}'] = (string)$value;
+                }
+                $params = $replacables;
+            }
+            else
+            {
+                foreach ($params as &$value)
+                {
+                    $value = (string)$value;
+                }
+            }
+
+            return $params;
+        });
     }
 
     /**
@@ -107,10 +128,7 @@ class Warning extends XFCP_Warning
         )->render('html', ['nameOnInvalid' => false]) ?: \XF::phrase('n_a');
     }
 
-    /**
-     * @return WarningDefinition[]
-     */
-    public function findWarningDefinitionsForListGroupedByCategory()
+    public function findWarningDefinitionsForListGroupedByCategory(): array
     {
         return parent::findWarningDefinitionsForList()
                      ->order('sv_display_order', 'asc')
@@ -118,10 +136,7 @@ class Warning extends XFCP_Warning
                      ->groupBy('sv_warning_category_id');
     }
 
-    /**
-     * @return WarningDefinition
-     */
-    public function getCustomWarningDefinition()
+    public function getCustomWarningDefinition(): WarningDefinition
     {
         /** @var WarningDefinition $warningDefinition */
         $warningDefinition = $this->em->findCached('XF:WarningDefinition', 0);
@@ -143,6 +158,7 @@ class Warning extends XFCP_Warning
      * @param int $warningCount
      * @param int $warningTotals
      * @return WarningDefault|null
+     * @noinspection PhpUnusedParameterInspection
      */
     public function getWarningDefaultExtension(int $warningCount, int $warningTotals)
     {
@@ -176,12 +192,7 @@ class Warning extends XFCP_Warning
         return $totals;
     }
 
-    /**
-     * @param UserEntity             $user
-     * @param WarningDefinition|null $definition
-     * @return WarningDefinition
-     */
-    public function escalateDefaultExpirySettingsForUser(UserEntity $user, WarningDefinition $definition = null)
+    public function escalateDefaultExpirySettingsForUser(UserEntity $user, WarningDefinition $definition = null): WarningDefinition
     {
         if ($definition === null)
         {
@@ -222,11 +233,6 @@ class Warning extends XFCP_Warning
         return $definition;
     }
 
-    /**
-     * @param string $expiryType
-     * @param int    $expiryDuration
-     * @return int
-     */
     protected function convertToDays(string $expiryType, int $expiryDuration): int
     {
         switch ($expiryType)
@@ -359,7 +365,7 @@ class Warning extends XFCP_Warning
      * @throws \XF\PrintableException
      * @noinspection PhpMissingParamTypeInspection
      */
-    public function processExpiredWarningsForUser(UserEntity $user, $checkBannedStatus)
+    public function processExpiredWarningsForUser(UserEntity $user, $checkBannedStatus): bool
     {
         $userId = $user->user_id;
         if (!$userId)
@@ -375,7 +381,7 @@ class Warning extends XFCP_Warning
                          ->fetch();
         $expired = $warnings->count() > 0;
 
-        /** @var \XF\Entity\Warning $warning */
+        /** @var WarningEntity $warning */
         foreach ($warnings AS $warning)
         {
             $warning->is_expired = true;
@@ -481,7 +487,7 @@ class Warning extends XFCP_Warning
     /**
      * @return \XF\Mvc\Entity\Repository|UserChangeTemp
      */
-    protected function _getWarningActionRepo()
+    protected function _getWarningActionRepo(): UserChangeTemp
     {
         return $this->repository('XF:UserChangeTemp');
     }
