@@ -193,18 +193,6 @@ class Warn extends XFCP_Warn
         }
     }
 
-    protected function _validate()
-    {
-        $errors = parent::_validate();
-
-        if (!$this->warning->canView($error))
-        {
-            $errors[] = $error;
-        }
-
-        return $errors;
-    }
-
     /**
      * @since 2.5.7
      *
