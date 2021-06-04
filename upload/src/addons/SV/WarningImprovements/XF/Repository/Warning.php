@@ -19,8 +19,23 @@ use XF\Phrase;
  */
 class Warning extends XFCP_Warning
 {
-    public function getAsUserLang(UserEntity $user, \Closure $callable)
+    /**
+     * XF2.1 & XF2.2.0/XF2.2.1 compatibility shim
+     *
+     * @param UserEntity $user
+     * @param \Closure   $callable
+     * @return mixed
+     */
+    public function asVisitorWithLang(UserEntity $user, \Closure $callable)
     {
+        if (\XF::$versionId >= 2020270)
+        {
+            return \XF::asVisitor($user, $callable, true);
+        }
+
+        $oldVisitor = \XF::visitor();
+        \XF::setVisitor($user);
+
         $oldLang = \XF::language();
         // Compatibility for XF2.1 & XF2.2
         $app = \XF::app();
@@ -39,6 +54,8 @@ class Warning extends XFCP_Warning
         }
         finally
         {
+            \XF::setVisitor($oldVisitor);
+
             $newLang->setTimeZone($newLangeOrigTz);
             \XF::setLanguage($oldLang);
         }
@@ -48,7 +65,7 @@ class Warning extends XFCP_Warning
     {
         /** @var UserEntity|ExtendedUserEntity $warnedUser */
         /** @var WarningEntity|ExtendedWarningEntity|null $warning */
-        return $this->getAsUserLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions) {
+        return $this->asVisitorWithLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions) {
             $app = $this->app();
             $router = $app->router('public');
             $dateString = \date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
