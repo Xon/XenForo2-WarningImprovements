@@ -2,7 +2,7 @@
     "legacy_addon_id": "SV_WarningImprovements",
     "title": "Warning Improvements",
     "description": "A (large) collection of improvements to XF's warning system.",
-    "version_id": 2060000,
+    "version_id": 2060001,
     "version_string": "2.6.0",
     "dev": "Xon",
     "dev_url": "https://atelieraphelion.com",
@@ -15,7 +15,7 @@
         "SV/StandardLib": [1000000,"Standard Library by Xon v1.0.0+"]
     },
     "require-soft": {
-        "SV/ReportImprovements": ["2080000", "Report Improvements v2.8.0+", false]
+        "SV/ReportImprovements": ["2080000", "Report Improvements v2.8.0+", true]
     },
     "icon": "fa-exclamation-triangle"
 }
