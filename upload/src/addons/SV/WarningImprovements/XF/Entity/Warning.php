@@ -8,6 +8,7 @@ namespace SV\WarningImprovements\XF\Entity;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User as UserExtendedEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as WarningDefinitionExtended;
+use XF\Entity\User as UserEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 use XF\Phrase;
@@ -15,18 +16,16 @@ use XF\Util\Arr as ArrUtil;
 
 /**
  * @property string                                                 notes_
- *
  * GETTERS
- * @property UserExtendedEntity|\XF\Entity\User|null                      anonymized_issuer
+ * @property UserExtendedEntity|UserEntity|null                     anonymized_issuer
  * @property int                                                    expiry_date_rounded
  * @property \XF\Entity\WarningDefinition                           definition
  * @property string                                                 title_censored
- *
  * RELATIONS
  * @property WarningDefinitionExtended|\XF\Entity\WarningDefinition Definition
  * @property \XF\Entity\WarningDefinition                           Definition_
  * @property \XF\Entity\Report                                      Report
- * @property UserExtendedEntity                                           User
+ * @property UserExtendedEntity                                     User
  */
 class Warning extends XFCP_Warning
 {
@@ -153,13 +152,14 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return UserExtendedEntity|\XF\Entity\User|Entity
+     * @return UserExtendedEntity|UserEntity
      */
-    public function getAnonymizedIssuer()
+    public function getAnonymizedIssuer(): UserEntity
     {
         $warningUserId = (int)($this->app()->options()->sv_warningimprovements_warning_user ?? 0);
         if ($warningUserId)
         {
+            /** @var UserExtendedEntity $warningStaff */
             $warningStaff = $this->em()->find('XF:User', $warningUserId);
             if ($warningStaff)
             {
@@ -206,7 +206,7 @@ class Warning extends XFCP_Warning
         return true;
     }
 
-    protected function updateUserWarningPoints(\XF\Entity\User $user, $adjustment, $isDelete = false)
+    protected function updateUserWarningPoints(UserEntity $user, $adjustment, $isDelete = false)
     {
         Globals::$warningObj = $this;
 
