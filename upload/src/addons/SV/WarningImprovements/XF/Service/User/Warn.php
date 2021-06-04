@@ -7,6 +7,8 @@ namespace SV\WarningImprovements\XF\Service\User;
 
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\ConversationMaster as ExtendedConversationMasterEntity;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
+use XF\Entity\User as UserEntity;
 use XF\Entity\Warning;
 use XF\Entity\WarningDefinition;
 use XF\Mvc\Entity\Entity;
@@ -21,6 +23,18 @@ class Warn extends XFCP_Warn
      * @var \XF\Service\Conversation\Creator
      */
     protected $conversationCreator;
+
+    /**
+     * @var \SV\WarningImprovements\XF\Repository\Warning
+     */
+    protected $warningRepo;
+
+    public function __construct(\XF\App $app, UserEntity $user, $contentType, Entity $content, UserEntity $warningBy)
+    {
+        parent::__construct($app, $user, $contentType, $content, $warningBy);
+
+        $this->warningRepo = $this->repository('XF:Warning');
+    }
 
     public function setSendAlert(bool $sendAlert)
     {
@@ -64,15 +78,12 @@ class Warn extends XFCP_Warn
      */
     protected function getCustomWarningDefinition()
     {
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = $this->repository('XF:Warning');
-
-        return $warningRepo->getCustomWarningDefinition();
+        return $this->warningRepo->getCustomWarningDefinition();
     }
 
     /**
      * @param bool $conversation
-     * @return \SV\WarningImprovements\XF\Entity\User|\XF\Entity\User|Entity
+     * @return ExtendedUserEntity|UserEntity
      */
     protected function getWarnedByForUser(bool $conversation)
     {
@@ -125,9 +136,7 @@ class Warn extends XFCP_Warn
             return;
         }
 
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \XF::repository('XF:Warning');
-        $params = $warningRepo->getSvWarningReplaceables(
+        $params = $this->warningRepo->getSvWarningReplaceables(
             $this->user,
             $this->warning,
             null,
@@ -142,7 +151,7 @@ class Warn extends XFCP_Warn
         {
             /** @var \XF\Entity\Forum|\SV\MultiPrefix\XF\Entity\Forum $forum */
             /** @var \XF\Service\Thread\Creator $threadCreator */
-            $threadCreator = \XF::asVisitor($warningUser, function () use ($forum, $params) {
+            $threadCreator = $this->warningRepo->asVisitorWithLang($warningUser, function () use ($forum, $params) {
                 /** @var \XF\Service\Thread\Creator $threadCreator */
                 $threadCreator = $this->service('XF:Thread\Creator', $forum);
                 $threadCreator->setIsAutomated();
@@ -163,7 +172,7 @@ class Warn extends XFCP_Warn
             });
 
             \XF::runLater(function () use ($threadCreator, $warningUser){
-                \XF::asVisitor($warningUser, function () use ($threadCreator) {
+                $this->warningRepo->asVisitorWithLang($warningUser, function () use ($threadCreator) {
                     $threadCreator->sendNotifications();
                 });
             });
@@ -172,7 +181,7 @@ class Warn extends XFCP_Warn
                  ($thread = $this->em()->find('XF:Thread', $postSummaryThreadId)))
         {
             /** @var \XF\Entity\Thread $thread */
-            $threadReplier = \XF::asVisitor($warningUser, function () use ($thread, $params) {
+            $threadReplier = $this->warningRepo->asVisitorWithLang($warningUser, function () use ($thread, $params) {
                 /** @var \XF\Service\Thread\Replier $threadReplier */
                 $threadReplier = $this->service('XF:Thread\Replier', $thread);
                 $threadReplier->setIsAutomated();
@@ -186,7 +195,7 @@ class Warn extends XFCP_Warn
             });
 
             \XF::runLater(function () use ($threadReplier, $warningUser){
-                \XF::asVisitor($warningUser, function () use ($threadReplier) {
+                $this->warningRepo->asVisitorWithLang($warningUser, function () use ($threadReplier) {
                     $threadReplier->sendNotifications();
                 });
             });
@@ -212,7 +221,7 @@ class Warn extends XFCP_Warn
         Globals::$warningObj = $warning;
         try
         {
-            return \XF::asVisitor($user, $callback);
+            return $this->warningRepo->asVisitorWithLang($user, $callback);
         }
         finally
         {
@@ -240,9 +249,7 @@ class Warn extends XFCP_Warn
             // workaround for \XF\Service\Conversation\Pusher::setInitialProperties requiring a user to be set on the Message's User attribute
             $conversationCreatorSvc->getMessage()->hydrateRelation('User', $warnedUser);
 
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = \XF::repository('XF:Warning');
-            $replace = $warningRepo->getSvWarningReplaceables(
+            $replace = $this->warningRepo->getSvWarningReplaceables(
                 $warnedUser,
                 $warning,
                 null,
