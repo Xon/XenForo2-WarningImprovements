@@ -40,9 +40,19 @@ class Warning extends XFCP_Warning
         // Compatibility for XF2.1 & XF2.2
         $app = \XF::app();
         $newLang = $app->language($user->language_id);
-        if (!$newLang->isUsable($user))
+        if (\XF::$versionId >= 2020000 || \is_callable([$newLang, 'isUsable']))
         {
-            $newLang = $app->language();
+            if (!$newLang->isUsable($user))
+            {
+                $newLang = $app->language();
+            }
+        }
+        else
+        {
+            if (!($newLang->user_selectable ?? false) && !$user->is_admin)
+            {
+                $newLang = $app->language();
+            }
         }
         $newLangeOrigTz = $newLang->getTimeZone();
         $newLang->setTimeZone($user->timezone);
