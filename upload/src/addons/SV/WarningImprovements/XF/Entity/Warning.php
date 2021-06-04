@@ -112,7 +112,7 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @param string|null $error
+     * @param Phrase|string|null $error
      * @return bool
      */
     public function canView(&$error = null)
@@ -149,6 +149,42 @@ class Warning extends XFCP_Warning
         $visitor = \XF::visitor();
 
         return $visitor->canViewIssuer($error);
+    }
+
+    /**
+     * @param Phrase|string|null $error
+     * @return bool
+     */
+    public function canDelete(&$error = null)
+    {
+        $visitor = \XF::visitor();
+        $warnedUserId = $this->warning_user_id;
+        if ($warnedUserId && $warnedUserId === $visitor->user_id &&
+            !$visitor->hasPermission('general', 'manageWarning') &&
+            !$visitor->hasPermission('general', 'svManageIssuedWarnings'))
+        {
+            return false;
+        }
+
+        return parent::canDelete($error);
+    }
+
+    /**
+     * @param Phrase|string|null $error
+     * @return bool
+     */
+    public function canEditExpiry(&$error = null)
+    {
+        $visitor = \XF::visitor();
+        $warnedUserId = $this->warning_user_id;
+        if ($warnedUserId && $warnedUserId === $visitor->user_id &&
+            !$visitor->hasPermission('general', 'manageWarning') &&
+            !$visitor->hasPermission('general', 'svManageIssuedWarnings'))
+        {
+            return false;
+        }
+
+        return parent::canEditExpiry($error);
     }
 
     /**
