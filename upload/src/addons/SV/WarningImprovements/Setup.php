@@ -192,7 +192,7 @@ class Setup extends AbstractSetup
         );
     }
 
-    public function upgrade2060200Ste1()
+    public function upgrade2060200Step1()
     {
         if (!$this->tableExists('xf_sv_warning_log') || empty($addOns['SV/ReportImprovements']))
         {
