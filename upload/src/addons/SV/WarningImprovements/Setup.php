@@ -192,6 +192,51 @@ class Setup extends AbstractSetup
         );
     }
 
+    public function upgrade2060200Ste1()
+    {
+        if (!$this->tableExists('xf_sv_warning_log') || empty($addOns['SV/ReportImprovements']))
+        {
+            return;
+        }
+
+        $this->db()->query('
+            update xf_sv_warning_log as warnLog 
+            join xf_report_comment as reportComment on reportComment.warning_log_id = warnLog.warning_log_id
+            set warnLog.user_id = reportComment.user_id  
+            where warnLog.user_id <> reportComment.user_id
+        ');
+    }
+
+    public function upgrade2060200Step2()
+    {
+        if (!$this->tableExists('xf_sv_warning_log') || empty($addOns['SV/ReportImprovements']))
+        {
+            return;
+        }
+
+        $this->db()->query('
+            update xf_warning as warn
+            join xf_sv_warning_log as warnLog on (warn.warning_id = warnLog.warning_id and warnLog.operation_type = \'new\')
+            set warn.user_id = warnLog.user_id
+            where warn.warning_user_id = warn.user_id and warn.user_id <> warnLog.user_id
+        ');
+    }
+
+    public function upgrade2060200Step3()
+    {
+        $this->db()->query('
+            update xf_warning as warn
+            join xf_moderator_log on (
+                    warn.content_type = xf_moderator_log.content_type 
+                    and warn.content_id = xf_moderator_log.content_id 
+                    and warn.warning_date = xf_moderator_log.log_date
+                    and xf_moderator_log.action = \'warning_given\'
+                )
+            set warn.user_id = xf_moderator_log.user_id            
+            where warn.warning_user_id = warn.user_id and warn.user_id <> xf_moderator_log.user_id
+        ');
+    }
+
     public function uninstallStep1()
     {
         $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");
