@@ -202,8 +202,8 @@ class Setup extends AbstractSetup
         $this->db()->query('
             update xf_sv_warning_log as warnLog 
             join xf_report_comment as reportComment on reportComment.warning_log_id = warnLog.warning_log_id
-            set warnLog.user_id = reportComment.user_id  
-            where warnLog.user_id <> reportComment.user_id
+            set warnLog.warning_user_id = reportComment.user_id  
+            where warnLog.warning_user_id <> reportComment.user_id
         ');
     }
 
@@ -217,8 +217,8 @@ class Setup extends AbstractSetup
         $this->db()->query('
             update xf_warning as warn
             join xf_sv_warning_log as warnLog on (warn.warning_id = warnLog.warning_id and warnLog.operation_type = \'new\')
-            set warn.user_id = warnLog.user_id
-            where warn.warning_user_id = warn.user_id and warn.user_id <> warnLog.user_id
+            set warn.warning_user_id = warnLog.warning_user_id
+            where warn.warning_user_id = warn.user_id and warn.warning_user_id <> warnLog.warning_user_id
         ');
     }
 
