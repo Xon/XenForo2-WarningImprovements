@@ -183,14 +183,10 @@ class Warn extends XFCP_Warn
      */
     protected function setupWarnService(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
     {
-        /** @var Warning $warningRepo */
-        $warningRepo = $this->repository('XF:Warning');
         Globals::$warningInput = $input;
         try
         {
-            return $warningRepo->asVisitorWithLang($user, function() use ($warningHandler, $user, $contentType, $content, $input) {
-                return parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
-            });
+            return parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
         }
         finally
         {

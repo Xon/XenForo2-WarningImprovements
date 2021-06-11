@@ -45,8 +45,14 @@ class Warn extends XFCP_Warn
     {
         $this->setSendAlert(!empty(Globals::$warningInput['send_warning_alert']));
         $custom_title = !empty(Globals::$warningInput['custom_title']) ? Globals::$warningInput['custom_title'] : null;
+
+
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $definition */
-        $return = parent::setFromDefinition($definition, $points, $expiry);
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = $this->repository('XF:Warning');
+        $return = $warningRepo->asVisitorWithLang($this->user, function() use ($definition, $points, $expiry) {
+            return parent::setFromDefinition($definition, $points, $expiry);
+        });
 
         if ($definition->warning_definition_id === 0)
         {
