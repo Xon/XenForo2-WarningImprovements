@@ -82,7 +82,7 @@ class Warning extends XFCP_Warning
     public function actionEdit(ParameterBag $params)
     {
         /** @noinspection PhpUndefinedFieldInspection */
-        $warningDefinitionId = $params->warning_definition_id;
+        $warningDefinitionId = (int)$params->warning_definition_id;
         if ($warningDefinitionId === 0)
         {
             $warning = $this->getCustomWarningDefinition();
