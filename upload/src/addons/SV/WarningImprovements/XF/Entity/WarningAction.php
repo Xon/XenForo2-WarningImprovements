@@ -31,6 +31,8 @@ use XF\Mvc\Entity\Structure;
 class WarningAction extends XFCP_WarningAction
 {
     /**
+     * XF2.1=>XF2.1.5 compatibility
+     *
      * @return string|\XF\Phrase
      */
     public function getTitle()
@@ -86,7 +88,7 @@ class WarningAction extends XFCP_WarningAction
             'primary'    => true
         ];
 
-        if (!isset($structure->getters['title']))
+        if (\XF::$versionId < 2010500)
         {
             $structure->getters['title'] = true;
         }
