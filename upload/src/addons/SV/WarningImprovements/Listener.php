@@ -6,17 +6,23 @@ use XF\Entity\User;
 
 class Listener
 {
+    public static function getWarningRepo(): \SV\WarningImprovements\XF\Repository\Warning
+    {
+        /** @noinspection PhpUnnecessaryLocalVariableInspection */
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = \XF::repository('XF:Warning');
+
+        return $warningRepo;
+    }
+
     public static function criteriaUser($rule, array $data, User $user, &$returnValue)
     {
         switch ($rule)
         {
             case 'warning_points_l':
-                /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-                $warningRepo = \XF::app()->repository('XF:Warning');
-
                 $days = (int)($data['days'] ?? 0);
                 $expired = (bool)($data['expired'] ?? false);
-                $points = $days ? $warningRepo->getWarningPointsInLastXDays($user, $days, $expired) : $user->warning_points;
+                $points = $days ? static::getWarningRepo()->getWarningPointsInLastXDays($user, $days, $expired) : $user->warning_points;
 
                 if ($points >= $data['points'])
                 {
@@ -24,12 +30,9 @@ class Listener
                 }
                 break;
             case 'warning_points_m':
-                /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-                $warningRepo = \XF::app()->repository('XF:Warning');
-
                 $days = (int)($data['days'] ?? 0);
                 $expired = (bool)($data['expired'] ?? false);
-                $points = $days ? $warningRepo->getWarningPointsInLastXDays($user, $days, $expired) : $user->warning_points;
+                $points = $days ? static::getWarningRepo()->getWarningPointsInLastXDays($user, $days, $expired) : $user->warning_points;
 
                 if ($points <= $data['points'])
                 {
@@ -37,13 +40,10 @@ class Listener
                 }
                 break;
             case 'sv_warning_minimum':
-                /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-                $warningRepo = \XF::app()->repository('XF:Warning');
-
-                $minimumWarnings = (int)($data['count'] ?? $data['points'] ?? 0);
+                $minimumWarnings = (int)($data['count'] ?? ($data['points'] ?? 0));
                 $days = (int)($data['days'] ?? 0);
                 $expired = (bool)($data['expired'] ?? false);
-                $count = $warningRepo->getWarningCountsInLastXDays($user, $days, $expired);
+                $count = static::getWarningRepo()->getWarningCountsInLastXDays($user, $days, $expired);
 
                 if ($count >= $minimumWarnings)
                 {
@@ -51,13 +51,10 @@ class Listener
                 }
                 break;
             case 'sv_warning_maximum':
-                /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-                $warningRepo = \XF::app()->repository('XF:Warning');
-
-                $maximumWarnings = (int)($data['count'] ?? $data['points'] ?? 0);
+                $maximumWarnings = (int)($data['count'] ?? ($data['points'] ?? 0));
                 $days = (int)($data['days'] ?? 0);
                 $expired = (bool)($data['expired'] ?? false);
-                $count = $warningRepo->getWarningCountsInLastXDays($user, $days, $expired);
+                $count = static::getWarningRepo()->getWarningCountsInLastXDays($user, $days, $expired);
 
                 if ($count <= $maximumWarnings)
                 {
