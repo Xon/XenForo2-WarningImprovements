@@ -99,7 +99,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
             if (!$showDiscouraged)
             {
-                $showDiscouragedWhere = 'AND ' . implode(' AND ', [
+                $showDiscouragedWhere = 'AND ' . \implode(' AND ', [
                         $warningActions->buildCondition('action_type', '<>', 'field'),
                         $warningActions->buildCondition('action_modifier', '<>', 'is_discouraged')
                     ]);

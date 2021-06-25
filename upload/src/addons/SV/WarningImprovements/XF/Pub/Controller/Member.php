@@ -103,8 +103,8 @@ class Member extends XFCP_Member
             $expiryLength = $this->filter('expiry_value', 'uint');
             $expiryUnit = $this->filter('expiry_unit', 'str');
 
-            $expiryDate = strtotime("+$expiryLength $expiryUnit");
-            if ($expiryDate >= pow(2, 32) - 1)
+            $expiryDate = \strtotime("+$expiryLength $expiryUnit");
+            if ($expiryDate >= \pow(2, 32) - 1)
             {
                 $expiryDate = 0;
             }

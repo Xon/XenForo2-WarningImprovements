@@ -87,7 +87,7 @@ class Listener
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = \XF::repository('XF:Warning');
-            if (is_callable([$warningRepo, 'processExpiredWarningsForUser']))
+            if (\is_callable([$warningRepo, 'processExpiredWarningsForUser']))
             {
                 $warningRepo->processExpiredWarningsForUser($visitor, $visitor->is_banned);
             }

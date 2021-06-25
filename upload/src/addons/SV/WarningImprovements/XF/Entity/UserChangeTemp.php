@@ -46,7 +46,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             case 'groups':
                 $result = 'n_a';
 
-                if (substr($this->action_modifier, 0, 15) === 'warning_action_')
+                if (\substr($this->action_modifier, 0, 15) === 'warning_action_')
                 {
                     $userGroupNames = [];
 
@@ -69,7 +69,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
                     if (!empty($userGroupNames))
                     {
-                        $result = implode(',', $userGroupNames);
+                        $result = \implode(',', $userGroupNames);
                     }
                 }
 
@@ -102,7 +102,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
         $effectiveExpiryDate = $this->expiry_date;
         // need to check how this expires
-        if ($effectiveExpiryDate === null && preg_match('#^warning_action_(\d+)$#', $this->action_modifier, $matches))
+        if ($effectiveExpiryDate === null && \preg_match('#^warning_action_(\d+)$#', $this->action_modifier, $matches))
         {
             $warningActionId = $matches[1];
             /** @var WarningAction $warningAction */

@@ -81,7 +81,7 @@ class ContentChange extends XFCP_ContentChange
         }
         else
         {
-            $actionEndDate = min(pow(2,32) - 1, strtotime("+{$warningAction->action_length} {$warningAction->action_length_type}"));
+            $actionEndDate = \min(\pow(2,32) - 1, \strtotime("+{$warningAction->action_length} {$warningAction->action_length_type}"));
         }
 
         $tempChangeKey = $warningAction->getTempUserChangeKey();
@@ -147,7 +147,7 @@ class ContentChange extends XFCP_ContentChange
             $ban = $targetUser->getRelationOrDefault('Ban', false);
             $ban->user_id = $targetUser->user_id;
             $ban->ban_user_id = 0;
-            $ban->user_reason = utf8_substr($reason, 0, 255);
+            $ban->user_reason = \utf8_substr($reason, 0, 255);
         }
 
         $ban->end_date = $endDate;

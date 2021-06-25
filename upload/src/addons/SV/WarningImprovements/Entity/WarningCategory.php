@@ -106,7 +106,7 @@ class WarningCategory extends AbstractCategoryTree
 
                         if ($maserPhrase)
                         {
-                            $type = substr(strtolower($name), 6); // strip Master
+                            $type = \substr(\strtolower($name), 6); // strip Master
                             $maserPhrase->title = $this->getPhraseName($type);
                             $maserPhrase->save();
                         }
@@ -251,7 +251,7 @@ class WarningCategory extends AbstractCategoryTree
 			WHERE sv_warning_category_id = ?
 		", $this->warning_category_id);
 
-        $this->warning_count = max(0, $warningCount);
+        $this->warning_count = \max(0, $warningCount);
     }
 
     public function getCategoryListExtras(): array
