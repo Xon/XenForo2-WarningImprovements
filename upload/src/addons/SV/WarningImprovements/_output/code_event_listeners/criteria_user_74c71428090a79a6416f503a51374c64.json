@@ -1,0 +1,9 @@
+{
+    "event_id": "criteria_user",
+    "execute_order": 10,
+    "callback_class": "SV\\WarningImprovements\\Listener",
+    "callback_method": "criteriaUser",
+    "active": true,
+    "hint": "",
+    "description": "Add warning related user criteria."
+}

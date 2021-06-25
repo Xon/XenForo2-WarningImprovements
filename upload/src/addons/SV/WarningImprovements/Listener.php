@@ -40,11 +40,12 @@ class Listener
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
 
+                $minimumWarnings = (int)($data['count'] ?? 0);
                 $days = (int)($data['days'] ?? 0);
                 $expired = (bool)($data['expired'] ?? false);
                 $count = $warningRepo->getWarningCountsInLastXDays($user, $days, $expired);
 
-                if ($count >= $data['count'])
+                if ($count >= $minimumWarnings)
                 {
                     $returnValue = true;
                 }
@@ -53,11 +54,12 @@ class Listener
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
 
+	            $maximumWarnings = (int)($data['count'] ?? 0);
                 $days = (int)($data['days'] ?? 0);
                 $expired = (bool)($data['expired'] ?? false);
                 $count = $warningRepo->getWarningCountsInLastXDays($user, $days, $expired);
 
-                if ($count <= $data['count'])
+                if ($count <= $maximumWarnings)
                 {
                     $returnValue = true;
                 }

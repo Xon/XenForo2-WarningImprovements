@@ -43,7 +43,7 @@
 		label="{{ phrase('sv_warning_improvements_user_has_received_at_least_x_warnings_count:') }}">
 		<xf:dependent>
 			<div class="inputGroup">
-				<xf:numberbox name="user_criteria[sv_warning_minimum][data][points]" value="{$criteria.sv_warning_minimum.points}" size="5" min="0" step="1" />
+				<xf:numberbox name="user_criteria[sv_warning_minimum][data][count]" value="{$criteria.sv_warning_minimum.count}" size="5" min="0" step="1" />
 				<span class="inputGroup-text">
 					{{ phrase('days:') }}
 				</span>
@@ -63,7 +63,7 @@
 		label="{{ phrase('user_has_received_at_most_x_warnings_count:') }}">
 		<xf:dependent>
 			<div class="inputGroup">
-				<xf:numberbox name="user_criteria[sv_warning_maximum][data][points]" value="{$criteria.sv_warning_maximum.points}" size="5" min="0" step="1" />
+				<xf:numberbox name="user_criteria[sv_warning_maximum][data][count]" value="{$criteria.sv_warning_maximum.count}" size="5" min="0" step="1" />
 				<span class="inputGroup-text">
 					{{ phrase('days:') }}
 				</span>

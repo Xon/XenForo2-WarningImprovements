@@ -477,7 +477,7 @@ class Warning extends XFCP_Warning
                 FROM xf_warning
                 WHERE user_id = ? AND warning_date > ? {$additionalWhere}
                 GROUP BY user_id
-            ", $params);
+            ", $params) ?: [];
         }
 
         return $rec;
