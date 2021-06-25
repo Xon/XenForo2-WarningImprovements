@@ -42,9 +42,9 @@ class Listener
 
                 $days = (int)($data['days'] ?? 0);
                 $expired = (bool)($data['expired'] ?? false);
-                $points = $days ? $warningRepo->getWarningCountsInLastXDays($user, $days, $expired) : $user->warning_points;
+                $count = $warningRepo->getWarningCountsInLastXDays($user, $days, $expired);
 
-                if ($points >= $data['count'])
+                if ($count >= $data['count'])
                 {
                     $returnValue = true;
                 }
@@ -55,9 +55,9 @@ class Listener
 
                 $days = (int)($data['days'] ?? 0);
                 $expired = (bool)($data['expired'] ?? false);
-                $points = $days ? $warningRepo->getWarningCountsInLastXDays($user, $days, $expired) : $user->warning_points;
+                $count = $warningRepo->getWarningCountsInLastXDays($user, $days, $expired);
 
-                if ($points <= $data['count'])
+                if ($count <= $data['count'])
                 {
                     $returnValue = true;
                 }
