@@ -461,7 +461,8 @@ class Warning extends XFCP_Warning
 
     protected function getCachedWarningsForUser(UserEntity $user, int $days, bool $includeExpired): array
     {
-        if (!isset($this->userWarningCountCache[$user->user_id][$days]))
+        $rec = $this->userWarningCountCache[$user->user_id][$days] ?? null;
+        if (!$rec)
         {
             $params = [$user->user_id, \XF::$time - 86400 * $days];
             $additionalWhere = '';
@@ -471,7 +472,7 @@ class Warning extends XFCP_Warning
                 $additionalWhere .= ' AND is_expired = 0 ';
             }
 
-            $this->userWarningCountCache[$user->user_id][$days] = $this->db()->fetchRow("
+            $this->userWarningCountCache[$user->user_id][$days] = $rec = $this->db()->fetchRow("
                 SELECT SUM(points) AS total, COUNT(points) AS `count`
                 FROM xf_warning
                 WHERE user_id = ? AND warning_date > ? {$additionalWhere}
@@ -479,7 +480,7 @@ class Warning extends XFCP_Warning
             ", $params);
         }
 
-        return $this->userWarningCountCache[$user->user_id][$days];
+        return $rec;
     }
 
     public function getWarningPointsInLastXDays(UserEntity $user, int $days, bool $includeExpired = false): int

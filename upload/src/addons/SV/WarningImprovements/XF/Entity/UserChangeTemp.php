@@ -55,7 +55,8 @@ class UserChangeTemp extends XFCP_UserChangeTemp
                     $userGroups = $userGroupRepo->getCachedUserGroupsList();
                     $userGroupChangeSet = $userGroupRepo->getCachedUserGroupChangeList($this->user_id);
 
-                    if (isset($userGroupChangeSet[$this->action_modifier]))
+                    $userGroupChanges = $userGroupChangeSet[$this->action_modifier] ?? null;
+                    if (\is_array($userGroupChanges))
                     {
                         foreach ($userGroupChangeSet[$this->action_modifier] as $userGroupId)
                         {

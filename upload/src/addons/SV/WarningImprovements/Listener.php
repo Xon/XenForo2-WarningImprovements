@@ -14,10 +14,8 @@ class Listener
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
 
-                $days = empty($data['days']) ? 0 : \intval($data['days']);
-
-                $expired = !empty($data['expired']);
-
+                $days = (int)($data['days'] ?? 0);
+                $expired = (bool)($data['expired'] ?? false);
                 $points = $days ? $warningRepo->getWarningPointsInLastXDays($user, $days, $expired) : $user->warning_points;
 
                 if ($points >= $data['points'])
@@ -29,10 +27,8 @@ class Listener
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
 
-                $days = empty($data['days']) ? 0 : \intval($data['days']);
-
-                $expired = !empty($data['expired']);
-
+                $days = (int)($data['days'] ?? 0);
+                $expired = (bool)($data['expired'] ?? false);
                 $points = $days ? $warningRepo->getWarningPointsInLastXDays($user, $days, $expired) : $user->warning_points;
 
                 if ($points <= $data['points'])
@@ -44,10 +40,8 @@ class Listener
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
 
-                $days = empty($data['days']) ? 0 : \intval($data['days']);
-
-                $expired = !empty($data['expired']);
-
+                $days = (int)($data['days'] ?? 0);
+                $expired = (bool)($data['expired'] ?? false);
                 $points = $days ? $warningRepo->getWarningCountsInLastXDays($user, $days, $expired) : $user->warning_points;
 
                 if ($points >= $data['count'])
@@ -58,10 +52,9 @@ class Listener
             case 'sv_warning_maximum':
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::app()->repository('XF:Warning');
-                $days = empty($data['days']) ? 0 : \intval($data['days']);
 
-                $expired = !empty($data['expired']);
-
+                $days = (int)($data['days'] ?? 0);
+                $expired = (bool)($data['expired'] ?? false);
                 $points = $days ? $warningRepo->getWarningCountsInLastXDays($user, $days, $expired) : $user->warning_points;
 
                 if ($points <= $data['count'])

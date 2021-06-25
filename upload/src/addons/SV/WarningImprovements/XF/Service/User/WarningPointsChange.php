@@ -106,9 +106,10 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         foreach ($this->warningCategories as $categoryId => $category)
         {
             $parentId = $category->parent_category_id ?: 0;
-            if (isset($warningPoints[$parentId]))
+            $parent = $warningPoints[$parentId] ?? null;
+            if ($parent)
             {
-                $warningPoints[$categoryId]->parent = $warningPoints[$parentId];
+                $warningPoints[$categoryId]->parent = $parent;
             }
         }
 

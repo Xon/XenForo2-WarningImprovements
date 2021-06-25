@@ -44,12 +44,13 @@ class ContentChange extends XFCP_ContentChange
             foreach ($warningActionsAppliedToSource AS $_warningAction)
             {
                 $warningActionDetails = \explode('_', $_warningAction->change_key);
-                if (!isset($warningActionDetails[2]))
+                $warningActionId = $warningActionDetails[2] ?? null;
+                if (!$warningActionId)
                 {
                     \XF::logException(new \LogicException('Warning ID not available.'));
                     continue;
                 }
-                $warningActionIds[] = $warningActionDetails[2];
+                $warningActionIds[] = $warningActionId;
             }
             $warningActionIds = \array_map('\intval', $warningActionIds);
 

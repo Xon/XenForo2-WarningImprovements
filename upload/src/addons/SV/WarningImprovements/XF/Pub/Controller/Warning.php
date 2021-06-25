@@ -70,7 +70,7 @@ class Warning extends XFCP_Warning
 
             $visitor = \XF::visitor();
             $warningId = $activity->pluckParam('warning_id');
-            $warning = $warningId && isset($warnings[$warningId]) ? $warnings[$warningId] : null;
+            $warning = $warningId ? ($warnings[$warningId] ?? null) : null;
             if ($warning && $warning->User)
             {
                 $warnedUserId = $warning->user_id;
