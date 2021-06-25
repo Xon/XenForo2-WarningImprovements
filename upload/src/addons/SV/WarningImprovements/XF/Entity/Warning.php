@@ -9,7 +9,6 @@ use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User as UserExtendedEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as WarningDefinitionExtended;
 use XF\Entity\User as UserEntity;
-use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 use XF\Phrase;
 use XF\Util\Arr as ArrUtil;
