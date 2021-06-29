@@ -94,8 +94,12 @@ class Warn extends XFCP_Warn
                                                 ->toArray();
             }
 
+            $warningStructure = $this->app->em()->getEntityStructure('XF:Warning');
+            $nodeColDefinition = $warningStructure->columns['notes'] ?? null;
+            $userNoteRequired = \is_array($nodeColDefinition) && (!isset($nodeColDefinition['default']) || !empty($nodeColDefinition['required']));
             $response->setParams(
                 [
+                    'userNoteRequired' => $userNoteRequired,
                     'warnings'         => $warnings,
                     'previousWarnings' => $previousWarnings,
 

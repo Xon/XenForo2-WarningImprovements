@@ -1,0 +1,9 @@
+{
+    "template": "member_warn",
+    "description": "Inject 'required' for user notes field",
+    "execution_order": 6240,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "name=\"notes\"",
+    "replace": "$0 hint=\"{{ $userNoteRequired ? phrase('required') : '' }}\""
+}
