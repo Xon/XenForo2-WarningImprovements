@@ -255,6 +255,16 @@ class Warning extends XFCP_Warning
         }
     }
 
+    protected function _postSave()
+    {
+        parent::_postSave();
+
+        if ($this->isInsert() || $this->isValidKey(['expiry_date', 'is_expired']))
+        {
+            $this->svUpdatePendingExpiry();
+        }
+    }
+
     protected function _postDelete()
     {
         parent::_postDelete();
@@ -262,6 +272,17 @@ class Warning extends XFCP_Warning
         /** @var \XF\Repository\UserAlert $alertRepo */
         $alertRepo = $this->repository('XF:UserAlert');
         $alertRepo->fastDeleteAlertsForContent('warning', $this->warning_id);
+
+        $this->svUpdatePendingExpiry();
+    }
+
+    protected function svUpdatePendingExpiry()
+    {
+        \XF::runOnce('svPendingExpiry.'.$this->user_id, function () {
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = $this->repository('XF:Warning');
+            $warningRepo->updatePendingExpiryFor($this->User, true);
+        });
     }
 
     /**

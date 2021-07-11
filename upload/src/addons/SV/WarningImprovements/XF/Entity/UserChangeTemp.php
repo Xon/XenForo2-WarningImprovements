@@ -215,14 +215,23 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         // big hammer reset the getter cache
         $this->_getterCache = [];
 
-        $this->_getWarningRepo()->updatePendingExpiryFor($this->User, true);
+        $this->svUpdatePendingExpiry();
     }
 
     protected function _postDelete()
     {
         parent::_postDelete();
 
-        $this->_getWarningRepo()->updatePendingExpiryFor($this->User, true);
+        $this->svUpdatePendingExpiry();
+    }
+
+    protected function svUpdatePendingExpiry()
+    {
+        \XF::runOnce('svPendingExpiry.'.$this->user_id, function () {
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = $this->repository('XF:Warning');
+            $warningRepo->updatePendingExpiryFor($this->User, true);
+        });
     }
 
     public static function getStructure(Structure $structure)
@@ -236,13 +245,5 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         $structure->getters['is_permanent'] = true;
 
         return $structure;
-    }
-
-    /**
-     * @return \XF\Mvc\Entity\Repository|\XF\Repository\Warning|\SV\WarningImprovements\XF\Repository\Warning
-     */
-    protected function _getWarningRepo()
-    {
-        return $this->repository('XF:Warning');
     }
 }

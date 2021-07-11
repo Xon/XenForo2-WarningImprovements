@@ -434,6 +434,8 @@ class Warning extends XFCP_Warning
             }
         }
 
+        // updatePendingExpiryFor is triggered is a warning/ban/user action is changed/deleted
+        // but if processExpiredWarningsForUser is called, it means the sv_pending_warning_expiry is set, so recompute it
         if (!$expired)
         {
             $this->updatePendingExpiryFor($user, $checkBannedStatus);
