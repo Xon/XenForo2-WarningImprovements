@@ -313,17 +313,16 @@ class Warning extends XFCP_Warning
         $expiries = $db->fetchAllColumn('
             SELECT MIN(expiry_date)
             FROM xf_warning
-            WHERE user_id = ? AND expiry_date > 0 AND is_expired = 0
-            UNION ALL
+            WHERE user_id = ? AND (expiry_date = 0 or expiry_date > ?) AND is_expired = 0
+            UNION
             SELECT MIN(expiry_date)
             FROM xf_user_change_temp
-            WHERE user_id = ? AND expiry_date > 0 AND change_key LIKE \'warning_action_%\'
-            UNION ALL 
+            WHERE user_id = ? AND (expiry_date = 0 or expiry_date > ?) AND change_key LIKE \'warning_action_%\'
+            UNION
             SELECT MIN(end_date)
             FROM xf_user_ban
-            WHERE user_id = ? AND end_date > 0
-        ', [$userId,$userId,$userId]);
-
+            WHERE user_id = ? AND (end_date = 0 or end_date > ?)
+        ', [$userId, \XF::$time, $userId, \XF::$time, $userId, \XF::$time]);
 
         $effectiveNextExpiry = null;
         foreach($expiries as $expire)
@@ -348,7 +347,7 @@ class Warning extends XFCP_Warning
             }
         }
 
-        return $effectiveNextExpiry;
+        return $effectiveNextExpiry ?: null;
     }
 
     /**
