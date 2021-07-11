@@ -259,7 +259,7 @@ class Warning extends XFCP_Warning
     {
         parent::_postSave();
 
-        if ($this->isInsert() || $this->isValidKey(['expiry_date', 'is_expired']))
+        if ($this->isInsert() || $this->isChanged(['expiry_date', 'is_expired']))
         {
             $this->svUpdatePendingExpiry();
         }
