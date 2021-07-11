@@ -213,6 +213,15 @@ class User extends XFCP_User
         );
     }
 
+    public function rebuildWarningPoints()
+    {
+        parent::rebuildWarningPoints();
+
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = $this->repository('XF:Warning');
+        $warningRepo->updatePendingExpiryFor($this, true);
+    }
+
     /**
      * @param Structure $structure
      * @return Structure
