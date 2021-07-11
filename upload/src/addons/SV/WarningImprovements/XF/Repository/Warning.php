@@ -310,39 +310,45 @@ class Warning extends XFCP_Warning
     {
         $db = $this->db();
 
-        $nextWarningExpiry = (int)$db->fetchOne('
-            SELECT min(expiry_date)
+        $expiries = $db->fetchAllColumn('
+            SELECT MIN(expiry_date)
             FROM xf_warning
             WHERE user_id = ? AND expiry_date > 0 AND is_expired = 0
-        ', $userId);
-
-        $warningActionExpiry = (int)$db->fetchOne('
-            SELECT min(expiry_date)
+            UNION ALL
+            SELECT MIN(expiry_date)
             FROM xf_user_change_temp
-            WHERE user_id = ? AND expiry_date > 0 AND change_key LIKE \'warning_action_%\';
-        ', $userId);
-
-        $banExpiry = (int)$db->fetchOne('
-            SELECT min(end_date)
+            WHERE user_id = ? AND expiry_date > 0 AND change_key LIKE \'warning_action_%\'
+            UNION ALL 
+            SELECT MIN(end_date)
             FROM xf_user_ban
             WHERE user_id = ? AND end_date > 0
-        ', $userId);
+        ', [$userId,$userId,$userId]);
 
-        $effectiveNextExpiry = 0;
-        if ($nextWarningExpiry)
+
+        $effectiveNextExpiry = null;
+        foreach($expiries as $expire)
         {
-            $effectiveNextExpiry = $nextWarningExpiry;
-        }
-        if ($warningActionExpiry > $effectiveNextExpiry)
-        {
-            $effectiveNextExpiry = $warningActionExpiry;
-        }
-        if ($banExpiry > $effectiveNextExpiry)
-        {
-            $effectiveNextExpiry = $banExpiry;
+            if ($expire === null)
+            {
+                // no entry
+                continue;
+            }
+
+            $expire = (int)$expire;
+            if ($expire == 0)
+            {
+                // expiry of 0 means never expire
+                $effectiveNextExpiry = null;
+                break;
+            }
+
+            if ($expire > $effectiveNextExpiry)
+            {
+                $effectiveNextExpiry = $expire;
+            }
         }
 
-        return $effectiveNextExpiry > 0 ? $effectiveNextExpiry : null;
+        return $effectiveNextExpiry;
     }
 
     /**
