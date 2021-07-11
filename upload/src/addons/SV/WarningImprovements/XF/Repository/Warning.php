@@ -304,60 +304,45 @@ class Warning extends XFCP_Warning
      * @param int  $userId
      * @param bool $checkBannedStatus
      * @return int|null
+     * @noinspection PhpUnusedParameterInspection
      */
     public function getEffectiveNextExpiry(int $userId, bool $checkBannedStatus)
     {
         $db = $this->db();
 
-        $nextWarningExpiry = $db->fetchOne('
+        $nextWarningExpiry = (int)$db->fetchOne('
             SELECT min(expiry_date)
             FROM xf_warning
             WHERE user_id = ? AND expiry_date > 0 AND is_expired = 0
         ', $userId);
-        if (empty($nextWarningExpiry))
-        {
-            $nextWarningExpiry = null;
-        }
 
-        $warningActionExpiry = $db->fetchOne('
+        $warningActionExpiry = (int)$db->fetchOne('
             SELECT min(expiry_date)
             FROM xf_user_change_temp
             WHERE user_id = ? AND expiry_date > 0 AND change_key LIKE \'warning_action_%\';
         ', $userId);
-        if (empty($warningActionExpiry))
-        {
-            $warningActionExpiry = null;
-        }
 
-        $banExpiry = null;
-        if ($checkBannedStatus)
-        {
-            $banExpiry = $db->fetchOne('
-                SELECT min(end_date)
-                FROM xf_user_ban
-                WHERE user_id = ? AND end_date > 0
-            ', $userId);
-            if (empty($banExpiry))
-            {
-                $banExpiry = null;
-            }
-        }
+        $banExpiry = (int)$db->fetchOne('
+            SELECT min(end_date)
+            FROM xf_user_ban
+            WHERE user_id = ? AND end_date > 0
+        ', $userId);
 
-        $effectiveNextExpiry = null;
+        $effectiveNextExpiry = 0;
         if ($nextWarningExpiry)
         {
             $effectiveNextExpiry = $nextWarningExpiry;
         }
-        if ($warningActionExpiry && $warningActionExpiry > $effectiveNextExpiry)
+        if ($warningActionExpiry > $effectiveNextExpiry)
         {
             $effectiveNextExpiry = $warningActionExpiry;
         }
-        if ($banExpiry && $banExpiry > $effectiveNextExpiry)
+        if ($banExpiry > $effectiveNextExpiry)
         {
             $effectiveNextExpiry = $banExpiry;
         }
 
-        return $effectiveNextExpiry;
+        return $effectiveNextExpiry > 0 ? $effectiveNextExpiry : null;
     }
 
     /**
