@@ -12,6 +12,8 @@ class Editor extends AbstractService
 
     /** @var ExtendedWarningEntity */
     protected $warning;
+    protected $hasChanges = false;
+
     /** @var string */
     protected $contentAction = '';
     /**  @var array */
@@ -60,20 +62,62 @@ class Editor extends AbstractService
         $this->warning->points = $points;
     }
 
-    public function setContentActions($contentAction, $contentActionOptions)
+    protected function detectContactActionChanges(string $contentAction, array $contentActionOptions): bool
+    {
+        $content = $this->warning->Content;
+
+        switch($contentAction)
+        {
+            case 'public':
+                if ($content->isValidColumn('warning_message') || $content->isValidGetter('warning_message'))
+                {
+                    $publicWarning = $content->get('warning_message');
+                    if ($publicWarning === ($contentActionOptions['message'] ?? ''))
+                    {
+                        return false;
+                    }
+                }
+                break;
+            case 'delete':
+                if (!$content->hasRelation('DeletionLog'))
+                {
+                    return false;
+                }
+
+                /** @var \XF\Entity\DeletionLog $deletionLog */
+                $deletionLog = $content->getRelation('DeletionLog');
+                if ($deletionLog !== null)
+                {
+                    if ($deletionLog->delete_reason === ($contentActionOptions['reason'] ?? ''))
+                    {
+                        return false;
+                    }
+                }
+                break;
+        }
+
+        return true;
+
+
+
+    }
+
+    public function setContentActions(string $contentAction, array $contentActionOptions)
     {
         $content = $this->warning->Content;
         if ($content === null)
         {
             return;
         }
+        $contentActionOptions = $contentActionOptions[$contentAction] ?? [];
 
         $handler = $this->warning->getHandler();
         $validActions = $handler->getAvailableContentActions($content);
-        if ($validActions[$contentAction] ?? false)
+        if (($validActions[$contentAction] ?? false) && $this->detectContactActionChanges($contentAction, $contentActionOptions))
         {
             $this->contentAction = $contentAction;
             $this->contentActionOptions = $contentActionOptions;
+            $this->hasChanges = true;
         }
     }
 
@@ -92,9 +136,15 @@ class Editor extends AbstractService
 
     public function resolveReportFor(bool $resolveReport, bool $alert, string $alertComment)
     {
+        if (!$resolveReport)
+        {
+            return;
+        }
+
         /** @var \SV\ReportImprovements\XF\Entity\Warning $warning */
         $warning = $this->warning;
         $warning->resolveReportFor($resolveReport, $alert, $alertComment);
+        $this->hasChanges = true;
     }
 
     protected function _validate(): array
@@ -109,8 +159,19 @@ class Editor extends AbstractService
     {
     }
 
+    protected function hasChanges(): bool
+    {
+        return $this->hasChanges || $this->warning->hasChanges();
+    }
+
     protected function _save(): ExtendedWarningEntity
     {
+        // avoid generating unneeded chatter in logs
+        if (!$this->hasChanges())
+        {
+            return $this->warning;
+        }
+
         $db = $this->db();
         $db->beginTransaction();
 
@@ -132,7 +193,7 @@ class Editor extends AbstractService
             $content = $this->warning->Content;
             if ($content !== null)
             {
-                $handler->takeContentAction($content, $this->contentAction, $this->contentActionOptions[$this->contentAction] ?? []);
+                $handler->takeContentAction($content, $this->contentAction, $this->contentActionOptions);
             }
         }
     }
