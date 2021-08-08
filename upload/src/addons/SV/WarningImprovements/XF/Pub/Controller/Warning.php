@@ -82,9 +82,9 @@ class Warning extends XFCP_Warning
         {
             throw $this->exception($this->error($errors));
         }
-        $warningEditor->save();
+        $warning = $warningEditor->save();
 
-        return $this->redirect($this->getDynamicRedirect());
+        return $this->redirect($this->buildLink('warnings', $warning));
     }
 
     protected function getWarningEditInput(ExtendedWarningEntity $warning, array $args = []): array
