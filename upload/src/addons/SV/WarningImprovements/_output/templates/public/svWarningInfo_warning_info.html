@@ -32,7 +32,7 @@
 	
 	<xf:if is="$canEditPoints">
 		<xf:checkboxrow label="{{ phrase('warning_points') }}">
-			<xf:option name="points_enable" value="1" selected="{{ $warning.points > 0 }}"
+			<xf:option name="points_enable" value="1"
 					   label="{{ phrase('svWarningImprov_set_warning_points:') }}">
 
 				<xf:numberbox name="points" value="{$warning.points}" min="0" />

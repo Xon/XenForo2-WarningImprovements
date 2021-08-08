@@ -144,7 +144,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             if ($newWarning === null ||
                 $warning->warning_id !== $newWarning->warning_id)
             {
-                $warningTotal->addOld($warning->points);
+                $warningTotal->addOld((int)$warning->getPreviousValue('points'));
             }
             if ($oldWarning === null ||
                 $warning->warning_id !== $oldWarning->warning_id)

@@ -17,6 +17,8 @@ class Editor extends AbstractService
 
     /** @var string|null */
     protected $publicBanner = null;
+    /** @var int|null */
+    protected $points = null;
 
     /** @var string */
     protected $contentAction = '';
@@ -77,8 +79,9 @@ class Editor extends AbstractService
 
     public function setPoints(int $points)
     {
+        $this->points = $points;
         // Warning::_preSave() blocks changing points :(
-        $this->warning->points = $points;
+        //$this->warning->points = $points;
     }
 
     protected function detectContactActionChanges(string $contentAction, array $contentActionOptions): bool
@@ -187,16 +190,18 @@ class Editor extends AbstractService
 
     protected function _save(): ExtendedWarningEntity
     {
-        // avoid generating unneeded chatter in logs
-        if (!$this->hasChanges())
-        {
-            return $this->warning;
-        }
-
         $db = $this->db();
         $db->beginTransaction();
 
         $this->preUpdate();
+
+        // avoid generating unneeded chatter in logs
+        if (!$this->hasChanges())
+        {
+            $db->rollback();
+
+            return $this->warning;
+        }
 
         $this->warning->save(true, false);
 
@@ -214,6 +219,13 @@ class Editor extends AbstractService
         if ($this->warning->hasOption('svPublicBanner'))
         {
             $this->warning->setOption('svPublicBanner', $this->publicBanner);
+        }
+
+        if ($this->points !== null)
+        {
+            $this->warning->set('points', $this->points, [
+                'forceSet' => true,
+            ]);
         }
 
         if (\strlen($this->contentAction) !== 0)

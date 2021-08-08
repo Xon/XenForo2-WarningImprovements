@@ -270,6 +270,21 @@ class Warning extends XFCP_Warning
         }
     }
 
+    protected $svWarningLogged = false;
+
+    protected function onApplication()
+    {
+        $this->svWarningLogged = true;
+        parent::onApplication();
+    }
+
+    protected function onExpiration($isDelete)
+    {
+        $this->svWarningLogged = true;
+        parent::onExpiration($isDelete);
+    }
+
+
     protected function _postSave()
     {
         parent::_postSave();
@@ -279,7 +294,7 @@ class Warning extends XFCP_Warning
             $this->svUpdatePendingExpiry();
         }
 
-        if ($this->isUpdate() && $this->hasChanges())
+        if ($this->isUpdate() && $this->hasChanges() && !$this->svWarningLogged)
         {
             $content = $this->Content;
             // todo log warning edit even if the content has been hard deleted
@@ -291,14 +306,13 @@ class Warning extends XFCP_Warning
                 }
             }
 
-            if ($this->isChanged('points') && $this->User)
+            if (!$this->is_expired && $this->isChanged('points') && $this->User)
             {
                 $oldPoints = (int)$this->getPreviousValue('points');
                 $diff = $this->points - $oldPoints;
 
                 if ($diff !== 0)
                 {
-                    // todo: test me
                     // flag as delete, as this reverse more things
                     $this->updateUserWarningPoints($this->User, $diff, true);
                 }
