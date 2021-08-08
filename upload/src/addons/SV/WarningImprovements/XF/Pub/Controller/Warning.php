@@ -77,12 +77,15 @@ class Warning extends XFCP_Warning
             return $this->noPermission($error);
         }
 
-        $warningEditor = $this->setupWarningEdit($warning);
-        if (!$warningEditor->validate($errors))
+        if ($this->isPost())
         {
-            throw $this->exception($this->error($errors));
+            $warningEditor = $this->setupWarningEdit($warning);
+            if (!$warningEditor->validate($errors))
+            {
+                throw $this->exception($this->error($errors));
+            }
+            $warning = $warningEditor->save();
         }
-        $warning = $warningEditor->save();
 
         return $this->redirect($this->buildLink('warnings', $warning));
     }
