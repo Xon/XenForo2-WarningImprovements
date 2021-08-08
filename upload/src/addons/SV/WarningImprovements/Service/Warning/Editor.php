@@ -143,8 +143,12 @@ class Editor extends AbstractService
 
         /** @var \SV\ReportImprovements\XF\Entity\Warning $warning */
         $warning = $this->warning;
-        $warning->resolveReportFor($resolveReport, $alert, $alertComment);
-        $this->hasChanges = true;
+        $report = $warning->Report;
+        if ($report === null || !$report->isClosed())
+        {
+            $warning->resolveReportFor($resolveReport, $alert, $alertComment);
+            $this->hasChanges = true;
+        }
     }
 
     protected function _validate(): array
