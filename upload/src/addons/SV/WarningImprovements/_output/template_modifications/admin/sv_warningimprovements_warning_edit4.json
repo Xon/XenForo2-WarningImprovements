@@ -3,7 +3,7 @@
     "description": "Special case editing the Custom Warning - 4",
     "execution_order": 10,
     "enabled": true,
-    "action": "str_replace",
-    "find": "<xf:textboxrow name=\"title\" value=\"{$warning.MasterTitle.phrase_text}\" maxlength=\"{{ max_length($warning, 'title') }}\"\n\t\t\t\tlabel=\"{{ phrase('title') }}\" />",
-    "replace": "<xf:if is=\"$warning.is_custom\">\n\t<xf:formrow label=\"{{ phrase('title') }}\">\n\t\t<xf:hiddenval name=\"title\">{$warning.MasterTitle.phrase_text}</xf:hiddenval>\n\t\t{$warning.MasterTitle.phrase_text}\n\t</xf:formrow>\n<xf:else />\n\t$0\n\t<xf:checkboxrow>\n\t\t<xf:option name=\"sv_custom_title\" selected=\"$warning.sv_custom_title\">{{ phrase('sv_custom_warning_title') }}</xf:option>\n\t</xf:checkboxrow>\n</xf:if>\n\n<xf:if is=\"$warning.is_custom\">\n\t<xf:hiddenval name=\"is_custom\">1</xf:hiddenval>\n<xf:else />\n\t<xf:hiddenval name=\"is_custom\">0</xf:hiddenval>\n</xf:if>"
+    "action": "preg_replace",
+    "find": "#[\\t ]*<xf:textboxrow name=\"title\".*?/>#si",
+    "replace": "<xf:if is=\"$warning.is_custom\">\n\t<xf:formrow label=\"{{ phrase('title') }}\">\n\t\t<xf:hiddenval name=\"title\">{$warning.MasterTitle.phrase_text}</xf:hiddenval>\n\t\t{$warning.MasterTitle.phrase_text}\n\t</xf:formrow>\n<xf:else />\n$0\n\t<xf:checkboxrow>\n\t\t<xf:option name=\"sv_custom_title\" selected=\"$warning.sv_custom_title\">{{ phrase('sv_custom_warning_title') }}</xf:option>\n\t</xf:checkboxrow>\n</xf:if>\n\n<xf:if is=\"$warning.is_custom\">\n\t<xf:hiddenval name=\"is_custom\">1</xf:hiddenval>\n<xf:else />\n\t<xf:hiddenval name=\"is_custom\">0</xf:hiddenval>\n</xf:if>"
 }
