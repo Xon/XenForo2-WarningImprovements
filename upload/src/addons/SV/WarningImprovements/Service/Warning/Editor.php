@@ -12,17 +12,35 @@ class Editor extends AbstractService
 
     /** @var ExtendedWarningEntity */
     protected $warning;
+    /** @var bool */
     protected $hasChanges = false;
+
+    /** @var string|null */
+    protected $publicBanner = null;
 
     /** @var string */
     protected $contentAction = '';
     /**  @var array */
-    private $contentActionOptions = [];
+    protected $contentActionOptions = [];
 
     public function __construct(\XF\App $app, ExtendedWarningEntity $warning)
     {
-        parent::__construct($app);
         $this->warning = $warning;
+        parent::__construct($app);
+    }
+
+    public function setup()
+    {
+        $content = $this->warning->Content;
+        if ($content === null)
+        {
+            return;
+        }
+
+        if ($content->isValidColumn('warning_message') || $content->isValidGetter('warning_message'))
+        {
+            $this->publicBanner = (string)$content->get('warning_message');
+        }
     }
 
     public function setTitle(string $title)
@@ -69,13 +87,9 @@ class Editor extends AbstractService
         switch($contentAction)
         {
             case 'public':
-                if ($content->isValidColumn('warning_message') || $content->isValidGetter('warning_message'))
+                if (($contentActionOptions['message'] ?? '') === $this->publicBanner)
                 {
-                    $publicWarning = $content->get('warning_message') ?? '';
-                    if ($publicWarning === ($contentActionOptions['message'] ?? ''))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
                 break;
             case 'delete':
@@ -129,6 +143,11 @@ class Editor extends AbstractService
         }
 
         $warning->sv_user_note = $warningInput['sv_user_note'] ?? '';
+    }
+
+    public function setCanReopenReport(bool $canReopenReport)
+    {
+        $this->warning->setOption('svCanReopenReport', $canReopenReport);
     }
 
     public function resolveReportFor(bool $resolveReport, bool $alert, string $alertComment)
@@ -190,6 +209,11 @@ class Editor extends AbstractService
     protected function preUpdate()
     {
         $this->warning->clearCache('sv_warning_actions');
+
+        if ($this->warning->hasOption('svPublicBanner'))
+        {
+            $this->warning->setOption('svPublicBanner', $this->publicBanner);
+        }
 
         if (\strlen($this->contentAction) !== 0)
         {
