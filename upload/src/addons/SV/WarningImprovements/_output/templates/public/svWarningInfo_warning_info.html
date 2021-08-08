@@ -2,7 +2,7 @@
 	<xf:button href="{{ link('warnings/delete', $scope) }}" icon="delete" overlay="true" />
 </xf:pageaction>
 
-<xf:form action="{{ link('warnings/update', $warning) }}">
+<xf:form action="{{ link('warnings/update', $warning) }}" ajax="true">
 	<h2 class="block-formSectionHeader">
 		<span class="block-formSectionHeader-aligner">{{ phrase('svWarningImprove_edit_warning') }}</span>
 	</h2>
@@ -33,7 +33,7 @@
 	<xf:if is="$canEditPoints">
 		<xf:checkboxrow label="{{ phrase('warning_points') }}">
 			<xf:option name="points_enable" value="1" selected="{{ $warning.points > 0 }}"
-					   label="{{ phrase('apply_warning_points:') }}">
+					   label="{{ phrase('svWarningImprov_set_warning_points:') }}">
 
 				<xf:numberbox name="points" value="{$warning.points}" min="0" />
 			</xf:option>
@@ -116,7 +116,7 @@
 						   label="{{ phrase('delete_the_content') }}"
 						   hint="{{ phrase('item_will_remain_viewable_by_moderators_and_may_be_restored_at_later') }}">
 
-					<xf:textbox name="action_options[delete_reason]"
+					<xf:textbox name="action_options[delete][reason]"
 								placeholder="{{ phrase('reason_for_deletion...') }}"
 								value="{$contentDeleteReason}"
 								maxlength="{{ max_length('XF:DeletionLog', 'delete_reason') }}" />
@@ -127,7 +127,7 @@
 						   label="{{ phrase('post_public_warning') }}"
 						   hint="{{ phrase('this_will_be_visible_to_anyone_who_can_see_content_for_warning') }}">
 
-					<xf:textbox name="action_options[public_message]" maxlength="255"
+					<xf:textbox name="action_options[public][message]" maxlength="255"
 								value="{$contentPublicBanner}"
 								placeholder="{{ phrase('public_warning_text...') }}" />
 				</xf:option>

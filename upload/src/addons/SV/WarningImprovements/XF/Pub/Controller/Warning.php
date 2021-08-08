@@ -159,9 +159,9 @@ class Warning extends XFCP_Warning
             $warningEditor->setNotes($input['notes'] ?? '');
         }
 
-        if (isset($input['points']))
+        if (($input['points_enable'] ?? false) && isset($input['points']))
         {
-            $points = (int)(($input['points_enable'] ?? false) ? ($input['points'] ?? 0) : 0);
+            $points = (int)$input['points'];
             $warningEditor->setPoints($points);
         }
 

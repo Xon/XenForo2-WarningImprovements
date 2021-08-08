@@ -58,7 +58,6 @@ class Editor extends AbstractService
     {
         // Warning::_preSave() blocks changing points :(
         $this->warning->points = $points;
-        throw new \LogicException("Not implemented");
     }
 
     public function setContentActions($contentAction, $contentActionOptions)
@@ -108,7 +107,6 @@ class Editor extends AbstractService
 
     protected function finalSetup()
     {
-        throw new \LogicException("Not implemented");
     }
 
     protected function _save(): ExtendedWarningEntity
@@ -121,8 +119,7 @@ class Editor extends AbstractService
 
         $this->postSave();
 
-        //$db->commit();
-        @$db->rollbackAll();
+        $db->commit();
 
         return $this->warning;
     }
@@ -135,10 +132,8 @@ class Editor extends AbstractService
             $content = $this->warning->Content;
             if ($content !== null)
             {
-                $handler->takeContentAction($content, $this->contentAction, $this->contentActionOptions);
+                $handler->takeContentAction($content, $this->contentAction, $this->contentActionOptions[$this->contentAction] ?? []);
             }
         }
-
-        throw new \LogicException("Not implemented");
     }
 }
