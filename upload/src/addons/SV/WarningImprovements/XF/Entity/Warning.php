@@ -278,6 +278,32 @@ class Warning extends XFCP_Warning
         {
             $this->svUpdatePendingExpiry();
         }
+
+        if ($this->isUpdate() && $this->hasChanges())
+        {
+            $content = $this->Content;
+            // todo log warning edit even if the content has been hard deleted
+            if ($content)
+            {
+                if ($this->getOption('log_moderator'))
+                {
+                    $this->app()->logger()->logModeratorAction($this->content_type, $content, 'warning_edited', [], false);
+                }
+            }
+
+            if ($this->isChanged('points') && $this->User)
+            {
+                $oldPoints = (int)$this->getPreviousValue('points');
+                $diff = $this->points - $oldPoints;
+
+                if ($diff !== 0)
+                {
+                    // todo: test me
+                    // flag as delete, as this reverse more things
+                    $this->updateUserWarningPoints($this->User, $diff, true);
+                }
+            }
+        }
     }
 
     protected function _postDelete()
