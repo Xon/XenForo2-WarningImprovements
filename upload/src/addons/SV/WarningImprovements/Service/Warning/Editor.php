@@ -71,7 +71,7 @@ class Editor extends AbstractService
             case 'public':
                 if ($content->isValidColumn('warning_message') || $content->isValidGetter('warning_message'))
                 {
-                    $publicWarning = $content->get('warning_message');
+                    $publicWarning = $content->get('warning_message') ?? '';
                     if ($publicWarning === ($contentActionOptions['message'] ?? ''))
                     {
                         return false;
@@ -191,11 +191,25 @@ class Editor extends AbstractService
 
     protected function postSave()
     {
-        if (\strlen($this->contentAction))
+        if (\strlen($this->contentAction) !== 0)
         {
-            $handler = $this->warning->getHandler();
-            $content = $this->warning->Content;
-            if ($content !== null)
+            $this->applyContentAction();
+        }
+    }
+
+    public function applyContentAction()
+    {
+        $handler = $this->warning->getHandler();
+        $content = $this->warning->Content;
+        if ($content !== null)
+        {
+            // dumb way to reliably remove the public banner...
+            if ($this->contentAction === 'public' && \strlen($this->contentActionOptions['message'] ?? '') === 0)
+            {
+                $handler->onWarningRemoval($content, $this->warning);
+                $handler->onWarning($content, $this->warning);
+            }
+            else
             {
                 $handler->takeContentAction($content, $this->contentAction, $this->contentActionOptions);
             }
