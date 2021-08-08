@@ -62,6 +62,7 @@ class Editor extends AbstractService
                     $expiryDate = 0;
                 }
                 $this->warning->expiry_date = $expiryDate;
+                $this->warning->is_expired = false;
                 break;
             case 'no_change':
             default:
