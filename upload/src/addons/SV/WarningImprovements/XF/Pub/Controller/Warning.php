@@ -192,6 +192,7 @@ class Warning extends XFCP_Warning
 
         if ($addOns['SV/ReportImprovements'] ?? false)
         {
+            $warningEditor->setCanReopenReport(false);
             $warningEditor->resolveReportFor($input['resolve_report'] ?? false, $input['resolve_alert'] ?? false, $input['resolve_alert_comment'] ?? '');
         }
 
