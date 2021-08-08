@@ -1,0 +1,9 @@
+{
+    "template": "warning_info",
+    "description": "Inject full-warning editing",
+    "execution_order": 7000,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:if is=\"$warning.canDelete() AND $warning.canEditExpiry()\">",
+    "replace": "<xf:if is=\"$warning.hasOption('svFullEdit') && $warning.canEdit()\">\n<xf:include template=\"svWarningInfo_warning_info\" />\n<xf:elseif is=\"$warning.canDelete() AND $warning.canEditExpiry()\"/>"
+}

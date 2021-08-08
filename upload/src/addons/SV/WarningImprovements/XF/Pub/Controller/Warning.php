@@ -6,11 +6,64 @@
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
 use SV\WarningImprovements\Globals;
+use XF\Mvc\ParameterBag;
+use XF\Mvc\Reply\AbstractReply;
+use XF\Mvc\Reply\View as ViewReply;
+use \SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
+
 /**
  * Extends \XF\Pub\Controller\Warning
  */
 class Warning extends XFCP_Warning
 {
+    public function actionIndex(ParameterBag $params)
+    {
+        $reply = parent::actionIndex($params);
+
+        if ($reply instanceof ViewReply && ($warning = $reply->getParam('warning')))
+        {
+            /** @var ExtendedWarningEntity $warning */
+            if ($warning->canEdit())
+            {
+                $handler = $warning->getHandler();
+                $content = $warning->Content;
+
+                $colDef = $warning->structure()->columns['notes'] ?? [];
+                $userNoteRequired = !($colDef['default'] ?? false) || !empty($colDef['required']);
+                $reply->setParam('userNoteRequired', $userNoteRequired);
+
+                if ($content !== null)
+                {
+                    $contentActions = $handler->getAvailableContentActions($content);
+                    $reply->setParam('contentActions', $contentActions);
+
+                    if ($content->hasRelation('DeletionLog'))
+                    {
+                        /** @var \XF\Entity\DeletionLog $deletionLog */
+                        $deletionLog = $content->getRelation('DeletionLog');
+                        if ($deletionLog !== null)
+                        {
+                            $reply->setParam('contentDeleted', true);
+                            $reply->setParam('contentDeleteReason', $deletionLog->delete_reason);
+                        }
+                    }
+
+                    if ($content->isValidColumn('warning_message') || $content->isValidGetter('warning_message'))
+                    {
+                        $reply->setParam('contentPublicBanner', $content->get('warning_message'));
+                    }
+                }
+            }
+        }
+
+        return $reply;
+    }
+
+    public function actionUpdate(): AbstractReply
+    {
+        throw new \LogicException('Not implemented');
+    }
+
     public static function getActivityDetails(array $activities)
     {
         /** @var \XF\Entity\SessionActivity[] $activities */

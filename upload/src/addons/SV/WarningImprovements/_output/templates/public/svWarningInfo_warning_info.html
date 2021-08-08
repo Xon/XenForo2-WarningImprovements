@@ -1,0 +1,155 @@
+<xf:pageaction if="$warning.canDelete()">
+	<xf:button href="{{ link('warnings/delete', $scope) }}" icon="delete" overlay="true" />
+</xf:pageaction>
+
+<xf:form action="{{ link('warnings/update', $warning) }}">
+	<h2 class="block-formSectionHeader">
+		<span class="block-formSectionHeader-aligner">{{ phrase('svWarningImprove_edit_warning') }}</span>
+	</h2>
+
+	<xf:set var="$isCustom" value="{{ !$warning.warning_definition_id || !$warning.Definition }}" />
+	<xf:set var="$canEditTitle" value="{{ $isCustom || $warning.Definition.sv_custom_title }}" />
+	<xf:set var="$canEditPoints" value="{{ $isCustom || $warning.Definition.is_editable }}" />
+	<xf:if is="is_addon_active('SV/WarningAcknowledgement')">
+		<xf:set var="$canEditWarningAck" value="{{ !$warning.Definition || $warning.Definition.sv_allow_acknowledgement }}" />
+	</xf:if>
+
+	<xf:if is="$canEditTitle">
+		<xf:js addon="SV/WarningImprovements" src="sv/warningimprovements/warnings.js" min="1" />
+		<xf:js>
+			jQuery.extend(XF.config, {
+				sv_warningimprovements_copy_title: {{ $xf.options.sv_warningimprovements_copy_title }}
+			});
+		</xf:js>
+
+		<xf:textboxrow label="{{ phrase('svWarningImprove_warning_title') }}"
+					   name="title"
+					   value="{$warning.title}"
+					   maxlength="{{ max_length($warning, 'title') }}" 
+					   data-xf-init="warning-title-watcher"
+					   />
+	</xf:if>
+	
+	<xf:if is="$canEditPoints">
+		<xf:checkboxrow label="{{ phrase('warning_points') }}">
+			<xf:option name="points_enable" value="1" selected="{{ $warning.points > 0 }}"
+					   label="{{ phrase('apply_warning_points:') }}">
+
+				<xf:numberbox name="points" value="{$warning.points}" min="0" />
+			</xf:option>
+		</xf:checkboxrow>
+	</xf:if>
+	
+	<xf:radiorow name="expire" value="no_change" label="{{ phrase('svWarningImprov_warning_expiry') }}">
+		<xf:option value="no_change">{{ phrase('svWarningImprov_do_not_change_expiry') }}</xf:option>
+		<xf:option value="now">{{ phrase('expire_now') }}</xf:option>		
+		<xf:option value="future" label="{{ phrase('expire_in_time:') }}">
+			<xf:dependent>
+				<div class="inputGroup">
+					<xf:numberbox name="expiry_value" value="1" min="0" />
+					<span class="inputGroup-splitter"></span>
+					<xf:select name="expiry_unit" value="days" class="input--inline">
+						<xf:option value="hours">{{ phrase('units_hours') }}</xf:option>
+						<xf:option value="days">{{ phrase('days') }}</xf:option>
+						<xf:option value="weeks">{{ phrase('weeks') }}</xf:option>
+						<xf:option value="months">{{ phrase('months') }}</xf:option>
+						<xf:option value="years">{{ phrase('years') }}</xf:option>
+					</xf:select>
+				</div>
+			</xf:dependent>
+		</xf:option>
+	</xf:radiorow>
+
+	<xf:textarearow name="notes" hint="{{ $userNoteRequired ? phrase('required') : '' }}" autosize="true"
+					value="{$warning.notes}"
+					label="{{ phrase('notes') }}"
+					explain="{{ phrase('this_will_not_be_shown_to_member_receiving_warning') }}" />
+	
+	<xf:if is="$canEditWarningAck">
+		<h2 class="block-formSectionHeader">
+			<span class="block-formSectionHeader-aligner">{{ phrase('svWarningImprov_edit_warning_acknowledgement') }}</span>
+		</h2>
+
+		<xf:if is="$warning.sv_acknowledgement !== 'completed'">
+			<xf:checkboxrow>
+				<xf:option name="sv_acknowledgement" value="1" checked="{{ $warning.sv_acknowledgement === 'pending' ? 'checked' : '' }}"
+						   data-xf-init="disabler"
+						   data-container="#WarningAcknowledgement"
+						   data-hide="true"
+						   label="{{ phrase('sv_warningAcknowledge_acknowledgement_required') }}" />
+			</xf:checkboxrow>
+		</xf:if>
+
+		<xf:editorrow name="sv_user_note" value="{$warning.sv_user_note}" data-min-height="200"
+					  label="{{ phrase('sv_warningAcknowledge_user_note') }}"
+					  explain="{{ phrase('sv_warningAcknowledge_this_will_be_shown_on_warning_notice') }} {{ phrase('sv_you_may_use_placeholders_to_dynamically_insert_warning') }}"
+					  data-preview-url="{{ $xf.versionId >= 2020010 ? $notePreviewUrl : null }}" />
+
+		<xf:if is="$xf.versionId < 2020010">
+			<div class="js-previewContainer"></div>
+
+			<xf:formrow>
+				<xf:button class="button--link u-jsOnly" data-xf-click="preview-click" icon="preview" href="{$notePreviewUrl}" />
+			</xf:formrow>
+		</xf:if>
+
+		<xf:if is="$warning.sv_acknowledgement !== 'completed'">
+			<xf:checkboxrow>
+				<xf:option name="sv_suppress_notices" value="1" checked="{{ $warning.sv_suppress_notices ? 'checked' : '' }}">
+					{{ phrase('sv_warningAcknowledge_suppress_regular_notices_until_acknowledged') }}
+				</xf:option>
+			</xf:checkboxrow>
+		</xf:if>
+		<hr class="formRowSep" />
+	</xf:if>
+
+	<xf:if is="$contentActions.delete OR $contentActions.public">
+		<h2 class="block-formSectionHeader"><span class="block-formSectionHeader-aligner">{{ phrase('content_action') }}</span></h2>
+		<div class="block-body">
+			<xf:radiorow name="content_action" 
+						 value=""
+						 label="{{ phrase('content_action') }}">
+
+			<xf:option value="">{{ phrase('svWarningImprove_no_content_action') }}</xf:option>
+			<xf:if is="$contentActions.delete">
+				<xf:option value="delete"
+						   label="{{ phrase('delete_the_content') }}"
+						   hint="{{ phrase('item_will_remain_viewable_by_moderators_and_may_be_restored_at_later') }}">
+
+					<xf:textbox name="action_options[delete_reason]"
+								placeholder="{{ phrase('reason_for_deletion...') }}"
+								value="{$contentDeleteReason}"
+								maxlength="{{ max_length('XF:DeletionLog', 'delete_reason') }}" />
+				</xf:option>
+			</xf:if>
+			<xf:if is="$contentActions.public">
+				<xf:option value="public"
+						   label="{{ phrase('post_public_warning') }}"
+						   hint="{{ phrase('this_will_be_visible_to_anyone_who_can_see_content_for_warning') }}">
+
+					<xf:textbox name="action_options[public_message]" maxlength="255"
+								value="{$contentPublicBanner}"
+								placeholder="{{ phrase('public_warning_text...') }}" />
+				</xf:option>
+			</xf:if>
+			</xf:radiorow>
+		</div>
+	</xf:if>
+		
+	<xf:if is="is_addon_active('SV/ReportImprovements')">
+		<xf:if contentcheck="true">
+			<h2 class="block-formSectionHeader">
+				<span class="block-formSectionHeader-aligner">{{ phrase('report') }}</span>
+			</h2>
+			<xf:contentcheck>
+				<xf:macro template="svReportImprov_report_macros"
+						  name="resolve_report" 
+						  arg-report="{$warning.Report}"
+						  />
+			</xf:contentcheck>
+		</xf:if>
+	</xf:if>
+
+	<xf:submitrow icon="save" />
+	<xf:redirect url="{$redirect}" />
+</xf:form>

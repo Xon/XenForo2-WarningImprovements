@@ -172,6 +172,21 @@ class Warning extends XFCP_Warning
      * @param Phrase|string|null $error
      * @return bool
      */
+    public function canEdit(&$error = null)
+    {
+        if (\is_callable('parent::canEdit'))
+        {
+            /** @noinspection PhpUndefinedMethodInspection */
+            return parent::canEdit($error);
+        }
+
+        return $this->canEditExpiry($error);
+    }
+
+    /**
+     * @param Phrase|string|null $error
+     * @return bool
+     */
     public function canEditExpiry(&$error = null)
     {
         $visitor = \XF::visitor();
@@ -317,6 +332,7 @@ class Warning extends XFCP_Warning
 
         // translator note: not really, this is just to avoid is_processing throwing template error
         $structure->options['hasCensoredTitle'] = true;
+        $structure->options['svFullEdit'] = false;
 
         return $structure;
     }

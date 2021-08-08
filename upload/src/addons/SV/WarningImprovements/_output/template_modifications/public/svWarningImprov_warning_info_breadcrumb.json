@@ -1,0 +1,9 @@
+{
+    "template": "warning_info",
+    "description": "Add breadcrumb bits",
+    "execution_order": 6240,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "</xf:title>",
+    "replace": "$0\n<xf:breadcrumb href=\"{{ link('members', $user) }}\">{$user.username}</xf:breadcrumb>"
+}

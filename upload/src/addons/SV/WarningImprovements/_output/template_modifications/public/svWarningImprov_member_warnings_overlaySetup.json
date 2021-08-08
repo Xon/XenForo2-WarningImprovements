@@ -1,0 +1,9 @@
+{
+    "template": "member_warnings",
+    "description": "Inject if the warning can be edited",
+    "execution_order": 6240,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:foreach loop=\"$warnings\" value=\"$warning\">",
+    "replace": "$0\n<xf:set var=\"$canEditWarning\" value=\"{{ $warning.hasOption('svFullEdit') && $warning.canEdit() }}\" />"
+}
