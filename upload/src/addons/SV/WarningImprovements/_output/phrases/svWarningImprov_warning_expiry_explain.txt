@@ -1,0 +1,2 @@
+Expiring a warning does not remove any warning actions.<br/>
+Delete the warning, or change the points to remove warning actions triggered by this warning.

@@ -40,7 +40,9 @@
 		</xf:checkboxrow>
 	</xf:if>
 	
-	<xf:radiorow name="expire" value="no_change" label="{{ phrase('svWarningImprov_warning_expiry') }}">
+	<xf:radiorow name="expire" value="no_change" 
+				 label="{{ phrase('svWarningImprov_warning_expiry') }}" 
+				 explain="{{ phrase('svWarningImprov_warning_expiry_explain') }}">
 		<xf:option value="no_change">{{ phrase('svWarningImprov_do_not_change_expiry') }}</xf:option>
 		<xf:option value="now">{{ phrase('expire_now') }}</xf:option>		
 		<xf:option value="future" label="{{ phrase('expire_in_time:') }}">
