@@ -34,7 +34,7 @@ class Warning extends XFCP_Warning
                 $userNoteRequired = !($colDef['default'] ?? false) || !empty($colDef['required']);
                 $reply->setParam('userNoteRequired', $userNoteRequired);
 
-                if ($content !== null)
+                if ($content !== null && $handler != null)
                 {
                     $contentActions = $handler->getAvailableContentActions($content);
                     $reply->setParam('contentActions', $contentActions);

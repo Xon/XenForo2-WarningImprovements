@@ -15,7 +15,7 @@
         "SV/StandardLib": [1000000,"Standard Library by Xon v1.0.0+"]
     },
     "require-soft": {
-        "SV/ReportImprovements": ["2080000", "Report Improvements v2.8.0+", true]
+        "SV/ReportImprovements": ["2100100", "Report Improvements v2.10.1+", true]
     },
     "icon": "fa-exclamation-triangle"
 }

@@ -97,9 +97,6 @@ class Editor extends AbstractService
         }
 
         return true;
-
-
-
     }
 
     public function setContentActions(string $contentAction, array $contentActionOptions)
@@ -112,7 +109,7 @@ class Editor extends AbstractService
         $contentActionOptions = $contentActionOptions[$contentAction] ?? [];
 
         $handler = $this->warning->getHandler();
-        $validActions = $handler->getAvailableContentActions($content);
+        $validActions = $handler ? $handler->getAvailableContentActions($content) : [];
         if (($validActions[$contentAction] ?? false) && $this->detectContactActionChanges($contentAction, $contentActionOptions))
         {
             $this->contentAction = $contentAction;
@@ -179,40 +176,57 @@ class Editor extends AbstractService
         $db = $this->db();
         $db->beginTransaction();
 
-        $this->warning->clearCache('sv_warning_actions');
+        $this->preUpdate();
+
         $this->warning->save(true, false);
 
-        $this->postSave();
+        $this->postUpdate();
 
         $db->commit();
 
         return $this->warning;
     }
 
-    protected function postSave()
+    protected function preUpdate()
     {
+        $this->warning->clearCache('sv_warning_actions');
+
         if (\strlen($this->contentAction) !== 0)
         {
             $this->applyContentAction();
         }
     }
 
+    protected function postUpdate()
+    {
+    }
+
     public function applyContentAction()
     {
-        $handler = $this->warning->getHandler();
-        $content = $this->warning->Content;
-        if ($content !== null)
+        $warning = $this->warning;
+        $handler = $warning->getHandler();
+        $content = $warning->Content;
+        if ($content === null || $handler == null)
         {
-            // dumb way to reliably remove the public banner...
-            if ($this->contentAction === 'public' && \strlen($this->contentActionOptions['message'] ?? '') === 0)
+            return;
+        }
+
+        // dumb way to reliably remove the public banner...
+        if ($this->contentAction === 'public')
+        {
+            $message = $this->contentActionOptions['message'] ?? '';
+            if (\strlen($message) === 0)
             {
                 $handler->onWarningRemoval($content, $this->warning);
                 $handler->onWarning($content, $this->warning);
             }
-            else
+
+            if ($this->warning->hasOption('svPublicBanner'))
             {
-                $handler->takeContentAction($content, $this->contentAction, $this->contentActionOptions);
+                $this->warning->setOption('svPublicBanner', $message);
             }
         }
+
+        $handler->takeContentAction($content, $this->contentAction, $this->contentActionOptions);
     }
 }
