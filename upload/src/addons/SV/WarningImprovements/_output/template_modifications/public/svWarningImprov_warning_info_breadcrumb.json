@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "</xf:title>",
-    "replace": "$0\n<xf:breadcrumb href=\"{{ link('members', $user) }}\">{$user.username}</xf:breadcrumb>"
+    "replace": "$0\n<xf:breadcrumb href=\"{{ link('members', $user) }}#warnings\">{$user.username}</xf:breadcrumb>"
 }

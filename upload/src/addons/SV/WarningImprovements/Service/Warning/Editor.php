@@ -188,7 +188,11 @@ class Editor extends AbstractService
         return $this->hasChanges || $this->warning->hasChanges();
     }
 
-    protected function _save(): ExtendedWarningEntity
+    /**
+     * @return ExtendedWarningEntity|null
+     * @throws \XF\PrintableException
+     */
+    protected function _save()
     {
         $db = $this->db();
         $db->beginTransaction();
@@ -200,7 +204,7 @@ class Editor extends AbstractService
         {
             $db->rollback();
 
-            return $this->warning;
+            return null;
         }
 
         $this->warning->save(true, false);

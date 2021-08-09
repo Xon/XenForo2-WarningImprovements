@@ -1,8 +1,8 @@
 <xf:pageaction if="$warning.canDelete()">
-	<xf:button href="{{ link('warnings/delete', $scope) }}" icon="delete" overlay="true" />
+	<xf:button href="{{ link('warnings/delete', $warning) }}" icon="delete" overlay="true" />
 </xf:pageaction>
 
-<xf:form action="{{ link('warnings/update', $warning) }}" ajax="true">
+<xf:form action="{{ link('warnings/edit', $warning) }}" ajax="true">
 	<h2 class="block-formSectionHeader">
 		<span class="block-formSectionHeader-aligner">{{ phrase('svWarningImprove_edit_warning') }}</span>
 	</h2>
@@ -152,6 +152,10 @@
 		</xf:if>
 	</xf:if>
 
-	<xf:submitrow icon="save" />
+	<xf:submitrow icon="save">
+		<xf:html>
+			<xf:button href="{{ link('warnings', $warning) }}" icon="edit">{{ phrase('button.cancel') }}</xf:button>
+		</xf:html>
+	</xf:submitrow>
 	<xf:redirect url="{$redirect}" />
 </xf:form>

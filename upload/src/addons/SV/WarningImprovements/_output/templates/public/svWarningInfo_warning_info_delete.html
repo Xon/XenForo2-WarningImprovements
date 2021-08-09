@@ -1,0 +1,20 @@
+<xf:title>{{ phrase('confirm_action') }}</xf:title>
+
+<xf:breadcrumb href="{{ link('members', $content.User) }}#warnings">{$content.User.username}</xf:breadcrumb>
+<xf:breadcrumb href="{{ link('warnings', $content) }}">{{ phrase('warning_for_x', {'name': $content.User.username}) }}</xf:breadcrumb>
+
+<xf:form action="{$confirmUrl}" ajax="true" class="block">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:inforow rowtype="confirm">
+				{{ phrase('please_confirm_that_you_want_to_delete_following:') }}
+				<xf:if is="$contentUrl">
+					<strong><a href="{$contentUrl}">{$contentTitle}</a></strong>
+				<xf:else />
+					<strong>{$contentTitle}</strong>
+				</xf:if>
+			</xf:inforow>
+		</div>
+		<xf:submitrow rowtype="simple" icon="delete" />
+	</div>
+</xf:form>

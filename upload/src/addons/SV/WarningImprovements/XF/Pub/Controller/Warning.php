@@ -9,7 +9,6 @@ use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
-use XF\Mvc\Reply\View as ViewReply;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\Service\Warning\Editor as EditorService;
 
@@ -18,50 +17,29 @@ use SV\WarningImprovements\Service\Warning\Editor as EditorService;
  */
 class Warning extends XFCP_Warning
 {
-    public function actionIndex(ParameterBag $params)
+    public function actionDelete(ParameterBag $params)
     {
-        $reply = parent::actionIndex($params);
-
-        if ($reply instanceof ViewReply && ($warning = $reply->getParam('warning')))
+        /** @noinspection PhpUndefinedFieldInspection */
+        $warning = $this->assertViewableWarning($params->warning_id);
+        if (!$warning->canDelete($error))
         {
-            /** @var ExtendedWarningEntity $warning */
-            if ($warning->canEdit())
-            {
-                $handler = $warning->getHandler();
-                $content = $warning->Content;
-
-                $colDef = $warning->structure()->columns['notes'] ?? [];
-                $userNoteRequired = !($colDef['default'] ?? false) || !empty($colDef['required']);
-                $reply->setParam('userNoteRequired', $userNoteRequired);
-
-                if ($content !== null && $handler != null)
-                {
-                    $contentActions = $handler->getAvailableContentActions($content);
-                    $reply->setParam('contentActions', $contentActions);
-
-                    if ($content->hasRelation('DeletionLog'))
-                    {
-                        /** @var \XF\Entity\DeletionLog $deletionLog */
-                        $deletionLog = $content->getRelation('DeletionLog');
-                        if ($deletionLog !== null)
-                        {
-                            $reply->setParam('contentDeleted', true);
-                            $reply->setParam('contentDeleteReason', $deletionLog->delete_reason);
-                        }
-                    }
-
-                    if ($content->isValidColumn('warning_message') || $content->isValidGetter('warning_message'))
-                    {
-                        $reply->setParam('contentPublicBanner', $content->get('warning_message'));
-                    }
-                }
-            }
+            return $this->noPermission($error);
         }
 
-        return $reply;
+        /** @var \XF\ControllerPlugin\Delete $plugin */
+        $plugin = $this->plugin('XF:Delete');
+
+        return $plugin->actionDelete(
+            $warning,
+            $this->buildLink('warnings/delete', $warning),
+            $this->buildLink('warnings', $warning),
+            $this->buildLink('members', $warning->User) . '#warnings',
+            \XF::phrase('svWarningImprov_warning_for_x', ['title' => $warning->title, 'name' => $warning->User->username]),
+            'svWarningInfo_warning_info_delete'
+        );
     }
 
-    public function actionUpdate(ParameterBag $params): AbstractReply
+    public function actionEdit(ParameterBag $params): AbstractReply
     {
         /** @var ExtendedWarningEntity $warning */
         /** @noinspection PhpUndefinedFieldInspection */
@@ -85,9 +63,48 @@ class Warning extends XFCP_Warning
                 throw $this->exception($this->error($errors));
             }
             $warning = $warningEditor->save();
+            if ($warning === null)
+            {
+                return $this->error(\XF::phrase('svWarningImprov_no_changes_to_warning'), 400);
+            }
+
+            return $this->redirect($this->buildLink('warnings', $warning));
         }
 
-        return $this->redirect($this->buildLink('warnings', $warning));
+        $reply = $this->actionIndex($params);
+
+        $reply->setParam('editingTemplate', 'svWarningInfo_warning_info');
+
+        $handler = $warning->getHandler();
+        $content = $warning->Content;
+
+        $colDef = $warning->structure()->columns['notes'] ?? [];
+        $userNoteRequired = !($colDef['default'] ?? false) || !empty($colDef['required']);
+        $reply->setParam('userNoteRequired', $userNoteRequired);
+
+        if ($content !== null && $handler != null)
+        {
+            $contentActions = $handler->getAvailableContentActions($content);
+            $reply->setParam('contentActions', $contentActions);
+
+            if ($content->hasRelation('DeletionLog'))
+            {
+                /** @var \XF\Entity\DeletionLog $deletionLog */
+                $deletionLog = $content->getRelation('DeletionLog');
+                if ($deletionLog !== null)
+                {
+                    $reply->setParam('contentDeleted', true);
+                    $reply->setParam('contentDeleteReason', $deletionLog->delete_reason);
+                }
+            }
+
+            if ($content->isValidColumn('warning_message') || $content->isValidGetter('warning_message'))
+            {
+                $reply->setParam('contentPublicBanner', $content->get('warning_message'));
+            }
+        }
+
+        return $reply;
     }
 
     protected function getWarningEditInput(ExtendedWarningEntity $warning, array $args = []): array

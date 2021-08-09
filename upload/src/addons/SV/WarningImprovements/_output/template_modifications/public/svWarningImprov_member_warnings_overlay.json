@@ -1,9 +1,0 @@
-{
-    "template": "member_warnings",
-    "description": "Disable overlay if the user can edit/update warnings",
-    "execution_order": 9999999,
-    "enabled": true,
-    "action": "str_replace",
-    "find": "href=\"{{ link('warnings', $warning) }}\" overlay=\"true\"",
-    "replace": "href=\"{{ link('warnings', $warning) }}\" overlay=\"{{ $canEditWarning ? '': 'true' }}\""
-}

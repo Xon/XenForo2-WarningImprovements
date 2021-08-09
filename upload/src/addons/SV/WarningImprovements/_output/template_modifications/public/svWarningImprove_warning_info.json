@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:if is=\"$warning.canDelete() AND $warning.canEditExpiry()\">",
-    "replace": "<xf:if is=\"$warning.hasOption('svFullEdit') && $warning.canEdit()\">\n<xf:include template=\"svWarningInfo_warning_info\" />\n<xf:elseif is=\"$warning.canDelete() AND $warning.canEditExpiry()\"/>"
+    "replace": "<xf:if is=\"$warning.hasOption('svFullEdit') && $warning.canEdit()\">\n<xf:include template=\"{{ $editingTemplate ?: 'svWarningInfo_warning_info_stub' }}\" />\n<xf:elseif is=\"$warning.canDelete() AND $warning.canEditExpiry()\"/>"
 }
