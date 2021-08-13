@@ -528,18 +528,24 @@ class Warning extends XFCP_Warning
      */
     public function sendWarningAlert(WarningEntity $warning, string $action, string $reason, array $extra = [])
     {
-        $extra = \array_merge([
+        $exists = $warning->exists();
+        $defaults = [
             'reason' => $reason,
             'points' => $warning->points,
             'expiry' => $warning->expiry_date_rounded,
-            'title' => $warning->title_censored,
+            'title'  => $warning->title_censored,
             'depends_on_addon_id' => 'SV/WarningImprovements',
-        ], $extra);
+        ];
+        if (!$exists)
+        {
+            $defaults['warning_id']  = $warning->warning_id;
+        }
+        $extra = \array_merge($defaults, $extra);
 
         $warnedBy = $this->getWarnedByForUser($warning, false);
         /** @var \XF\Repository\UserAlert $alertRepo */
         $alertRepo = $this->repository('XF:UserAlert');
-        $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $warning->exists() ? $warning->warning_id : 0, $action, $extra);
+        $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $exists ? $warning->warning_id : 0, $action, $extra);
     }
 
     /**
