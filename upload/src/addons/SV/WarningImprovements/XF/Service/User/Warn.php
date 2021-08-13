@@ -18,7 +18,10 @@ use XF\Mvc\Entity\Entity;
  */
 class Warn extends XFCP_Warn
 {
+    /** @var bool */
     protected $sendAlert = false;
+    /** @var string */
+    protected $sendAlertReason = '';
     /**
      * @var \XF\Service\Conversation\Creator
      */
@@ -36,14 +39,16 @@ class Warn extends XFCP_Warn
         $this->warningRepo = $this->repository('XF:Warning');
     }
 
-    public function setSendAlert(bool $sendAlert)
+    public function setSendAlert(bool $sendAlert, string $sendAlertReason = '')
     {
         $this->sendAlert = $sendAlert;
+        $this->sendAlertReason = $sendAlertReason;
     }
 
     public function setFromDefinition(WarningDefinition $definition, $points = null, $expiry = null)
     {
-        $this->setSendAlert(!empty(Globals::$warningInput['send_warning_alert']));
+        $this->setSendAlert(Globals::$warningInput['send_warning_alert'] ?? false);
+        //$this->setSendAlert(Globals::$warningInput['send_warning_alert_reason'] ?? '');
         $custom_title = !empty(Globals::$warningInput['custom_title']) ? Globals::$warningInput['custom_title'] : null;
 
 
@@ -87,28 +92,6 @@ class Warn extends XFCP_Warn
         return $this->warningRepo->getCustomWarningDefinition();
     }
 
-    /**
-     * @param bool $conversation
-     * @return ExtendedUserEntity|UserEntity
-     */
-    protected function getWarnedByForUser(bool $conversation)
-    {
-        /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
-        $warning = $this->warning;
-
-        if ($conversation && !(\XF::options()->svWarningImprovAnonymizeConversations ?? false))
-        {
-            return $warning->WarnedBy;
-        }
-
-        if ($warning->User->canViewIssuer()) // the user getting warned
-        {
-            return $warning->WarnedBy;
-        }
-
-        return $warning->getAnonymizedIssuer();
-    }
-
     protected function _save()
     {
         $db = \XF::db();
@@ -118,10 +101,9 @@ class Warn extends XFCP_Warn
 
         if ($this->sendAlert)
         {
-            $warnedBy = $this->getWarnedByForUser(false);
-            /** @var \XF\Repository\UserAlert $alertRepo */
-            $alertRepo = $this->repository('XF:UserAlert');
-            $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $warning->warning_id, 'warning');
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = \XF::repository('XF:Warning');
+            $warningRepo->sendWarningAlert($warning, 'warning', $this->sendAlertReason);
         }
 
         $this->warningActionNotifications();
@@ -220,7 +202,7 @@ class Warn extends XFCP_Warn
      */
     protected function doAsWarningIssuerForSv(Warning $warning, callable $callback)
     {
-        $user = $this->getWarnedByForUser(true);
+        $user = $this->warningRepo->getWarnedByForUser($warning, true);
 
         $originalWarningBy = $this->warningBy;
         $this->warningBy = $user;

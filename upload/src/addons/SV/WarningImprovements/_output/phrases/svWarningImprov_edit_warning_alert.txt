@@ -1,0 +1,1 @@
+The warning for <a {warning_attributes}>{warning_title}</a> for {points} points, expiring {expiry}, has been edited.

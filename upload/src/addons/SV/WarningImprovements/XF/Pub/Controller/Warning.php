@@ -26,6 +26,12 @@ class Warning extends XFCP_Warning
             return $this->noPermission($error);
         }
 
+        if ($this->filter('send_warning_alert', 'bool'))
+        {
+            $warning->setOption('svAlertOnDelete', true);
+            $warning->setOption('svAlertOnDeleteReason', $this->filter('send_warning_alert_reason', 'str'));
+        }
+
         /** @var \XF\ControllerPlugin\Delete $plugin */
         $plugin = $this->plugin('XF:Delete');
 
@@ -124,6 +130,8 @@ class Warning extends XFCP_Warning
             'notes' => 'str',
             'content_action' => 'str',
             'action_options' => 'array',
+            'send_warning_alert' => 'bool',
+            'send_warning_alert_reason' => 'str',
         ];
 
         if ($canEditTitle)
@@ -188,6 +196,11 @@ class Warning extends XFCP_Warning
         if (isset($input['content_action']))
         {
             $warningEditor->setContentActions($input['content_action'], $input['action_options'] ?? []);
+        }
+
+        if ($input['send_warning_alert'] ?? false)
+        {
+            $warningEditor->setSendAlert(true, $input['send_warning_alert_reason'] ?? '');
         }
 
         $addOns = \XF::app()->container('addon.cache');

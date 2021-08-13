@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:submitrow submit=\"{{ phrase('warn') }}\" sticky=\"true\" />",
-    "replace": "<xf:checkboxrow>\n\t<xf:option name=\"send_warning_alert\" value=\"1\" checked=\"{{ $xf.options.sv_warningimprovements_alert_send_default ? true : false  }}\" label=\"{{ phrase('send_alert_on_warning') }}\" />\n</xf:checkboxrow>\n\n$0"
+    "replace": "<xf:macro template=\"svWarningImprov_macros\"\n\t\t  name=\"sendAlert\"\n\t\t  arg-withReason=\"{{ false }}\"\n\t\t  />\n$0"
 }

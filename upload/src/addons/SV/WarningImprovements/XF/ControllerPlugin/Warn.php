@@ -172,6 +172,7 @@ class Warn extends XFCP_Warn
         $return = parent::getWarnSubmitInput();
 
         $return['send_warning_alert'] = $this->filter('send_warning_alert', 'bool');
+        //$return['send_warning_alert_reason'] = $this->filter('send_warning_alert_reason', 'str');
 
         return $return;
     }

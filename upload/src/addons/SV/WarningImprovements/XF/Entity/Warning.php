@@ -329,6 +329,16 @@ class Warning extends XFCP_Warning
         $alertRepo->fastDeleteAlertsForContent('warning', $this->warning_id);
 
         $this->svUpdatePendingExpiry();
+
+
+        if ($this->getOption('svAlertOnDelete'))
+        {
+            $reason = (string)$this->getOption('svAlertOnDeleteReason');
+
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = \XF::repository('XF:Warning');
+            $warningRepo->sendWarningAlert($this, 'delete', $reason);
+        }
     }
 
     protected function svUpdatePendingExpiry()
@@ -373,6 +383,8 @@ class Warning extends XFCP_Warning
         // translator note: not really, this is just to avoid is_processing throwing template error
         $structure->options['hasCensoredTitle'] = true;
         $structure->options['svFullEdit'] = false;
+        $structure->options['svAlertOnDelete'] = false;
+        $structure->options['svAlertOnDeleteReason'] = '';
 
         return $structure;
     }

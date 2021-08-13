@@ -504,6 +504,45 @@ class Warning extends XFCP_Warning
     }
 
     /**
+     * @param WarningEntity|ExtendedWarningEntity $warning
+     * @param bool                                $conversation
+     * @return ExtendedUserEntity|UserEntity
+     */
+    public function getWarnedByForUser(WarningEntity $warning, bool $conversation)
+    {
+        if ($conversation && !(\XF::options()->svWarningImprovAnonymizeConversations ?? false))
+        {
+            return $warning->WarnedBy;
+        }
+
+        if ($warning->User->canViewIssuer()) // the user getting warned
+        {
+            return $warning->WarnedBy;
+        }
+
+        return $warning->getAnonymizedIssuer();
+    }
+
+    /**
+     * @param WarningEntity|ExtendedWarningEntity $warning
+     */
+    public function sendWarningAlert(WarningEntity $warning, string $action, string $reason, array $extra = [])
+    {
+        $extra = \array_merge([
+            'reason' => $reason,
+            'points' => $warning->points,
+            'expiry' => $warning->expiry_date_rounded,
+            'title' => $warning->title_censored,
+            'depends_on_addon_id' => 'SV/WarningImprovements',
+        ], $extra);
+
+        $warnedBy = $this->getWarnedByForUser($warning, false);
+        /** @var \XF\Repository\UserAlert $alertRepo */
+        $alertRepo = $this->repository('XF:UserAlert');
+        $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $warning->exists() ? $warning->warning_id : 0, $action, $extra);
+    }
+
+    /**
      * @return \XF\Mvc\Entity\Repository|UserChangeTemp
      */
     protected function _getWarningActionRepo(): UserChangeTemp

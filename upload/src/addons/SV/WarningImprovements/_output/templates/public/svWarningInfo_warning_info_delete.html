@@ -15,6 +15,13 @@
 				</xf:if>
 			</xf:inforow>
 		</div>
+
+		<xf:macro template="svWarningImprov_macros"
+				  name="sendAlert"
+				  arg-label="{{ phrase('svWarningImprov_send_alert_on_deleting_warning') }}"
+				  arg-withReason="{{ true }}"
+				  />
+
 		<xf:submitrow rowtype="simple" icon="delete" />
 	</div>
 </xf:form>

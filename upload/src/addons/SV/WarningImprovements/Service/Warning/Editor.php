@@ -24,6 +24,10 @@ class Editor extends AbstractService
     protected $contentAction = '';
     /**  @var array */
     protected $contentActionOptions = [];
+    /** @var bool */
+    protected $sendAlert = false;
+    /** @var string */
+    protected $sendAlertReason = '';
 
     public function __construct(\XF\App $app, ExtendedWarningEntity $warning)
     {
@@ -43,6 +47,12 @@ class Editor extends AbstractService
         {
             $this->publicBanner = (string)$content->get('warning_message');
         }
+    }
+
+    public function setSendAlert(bool $sendAlert, string $reason = '')
+    {
+        $this->sendAlert = $sendAlert;
+        $this->sendAlertReason = $reason;
     }
 
     public function setTitle(string $title)
@@ -240,6 +250,12 @@ class Editor extends AbstractService
 
     protected function postUpdate()
     {
+        if ($this->sendAlert)
+        {
+            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            $warningRepo = \XF::repository('XF:Warning');
+            $warningRepo->sendWarningAlert($this->warning, 'edit', $this->sendAlertReason);
+        }
     }
 
     public function applyContentAction()

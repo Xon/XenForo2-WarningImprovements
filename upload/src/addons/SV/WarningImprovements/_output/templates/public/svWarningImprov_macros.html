@@ -1,0 +1,17 @@
+<xf:macro name="sendAlert"
+		  arg-defaultChecked="{{$xf.options.sv_warningimprovements_alert_send_default ? true : false }}"
+		  arg-label="{{ phrase('svWarningImprov_send_alert_on_warning') }}"
+		  arg-withReason="{{ false }}">
+	<xf:checkboxrow>
+		<xf:option name="send_warning_alert"
+				   value="1"
+				   checked="{$defaultChecked}"
+				   label="{$label}" >
+			<xf:dependent>
+				<xf:if is="$withReason">
+					<xf:textbox name="send_warning_alert_reason" maxlength="300" />
+				</xf:if>
+			</xf:dependent>
+		</xf:option>
+	</xf:checkboxrow>
+</xf:macro>

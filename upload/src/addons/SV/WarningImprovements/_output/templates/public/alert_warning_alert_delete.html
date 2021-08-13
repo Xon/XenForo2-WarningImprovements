@@ -1,0 +1,7 @@
+{{ phrase('svWarningImprov_delete_warning_alert', {
+		'points': $extra.points,
+		'warning_title': $extra.title,
+		'expiry': $extra.expiry ? date_time($extra.expiry) : phrase('never')
+	})
+}}
+<xf:if is="$extra.reason">{{ phrase('reason:') }} {$extra.reason}</xf:if>

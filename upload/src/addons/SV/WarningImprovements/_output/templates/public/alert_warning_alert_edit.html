@@ -1,13 +1,6 @@
-<xf:set var="$issuer" value="{$alert.User}" />
-
-<xf:if is="!$content.canViewIssuer()">
-	<xf:set var="$issuer" value="{$content.getAnonymizedIssuer()}" />
-</xf:if>
-
-{{ phrase('svWarningImprov_warning_alert', {
-		'name': username_link($issuer, false, {'defaultname': $issuer.username}),
+{{ phrase('svWarningImprov_edit_warning_alert', {
 		'warning_attributes': $content.canView() ? 'href="' . link('warnings', $content) . '" class="fauxBlockLink-blockLink"' : '',
-		'points': {$content.points},
+		'points': $content.points,
 		'warning_title': $content.hasOption('hasCensoredTitle') ? $content.title_censored : phrase('n_a'),
 		'expiry': $content.expiry_date_rounded ? date_time($content.expiry_date_rounded) : phrase('never')
 	})
