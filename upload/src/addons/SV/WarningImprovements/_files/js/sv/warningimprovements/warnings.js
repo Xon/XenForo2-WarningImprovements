@@ -180,9 +180,16 @@ var SV = SV || {};
 
     SV.WarningTitleWatcher  = XF.Element.newHandler({
         eventNameSpace: 'WarningTitleWatcher',
-        options: {},
+        options: {
+            publicWarningSelector: 'input[name=\'action_options[public_message]\']',
+        },
+        $publicWarning: null,
 
         init: function () {
+            this.$publicWarning = $(this.options.publicWarningSelector);
+            if (this.$publicWarning.length === 0) {
+                console.log("Could not find public warning selector");
+            }
             this.$target.on('change', $.proxy(this, 'change'));
             this.$target.on('input', $.proxy(this, 'input'));
 
@@ -251,9 +258,11 @@ var SV = SV || {};
         },
 
         setPublicMessage: function (message) {
-            if (XF.config.sv_warningimprovements_copy_title)
+            if (XF.config.sv_warningimprovements_copy_title &&
+                this.$publicWarning &&
+                this.$publicWarning.length !== 0)
             {
-                $("input[name='action_options[public_message]']").prop('value', message);
+                this.$publicWarning.prop('value', message);
             }
         }
     });
