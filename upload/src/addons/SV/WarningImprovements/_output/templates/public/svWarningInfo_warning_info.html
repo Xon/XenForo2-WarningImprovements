@@ -75,9 +75,6 @@
 		<xf:if is="$warning.sv_acknowledgement !== 'completed'">
 			<xf:checkboxrow>
 				<xf:option name="sv_acknowledgement" value="1" checked="{{ $warning.sv_acknowledgement === 'pending' ? 'checked' : '' }}"
-						   data-xf-init="disabler"
-						   data-container="#WarningAcknowledgement"
-						   data-hide="true"
 						   label="{{ phrase('sv_warningAcknowledge_acknowledgement_required') }}" />
 			</xf:checkboxrow>
 		</xf:if>
