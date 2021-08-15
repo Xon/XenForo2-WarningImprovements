@@ -99,13 +99,14 @@ class Warning extends XFCP_Warning
                 $deletionLog = $content->getRelation('DeletionLog');
                 if ($deletionLog !== null)
                 {
-                    $reply->setParam('contentDeleted', true);
+                    $reply->setParam('defaultContentAction', 'delete');
                     $reply->setParam('contentDeleteReason', $deletionLog->delete_reason);
                 }
             }
 
             if ($content->isValidColumn('warning_message') || $content->isValidGetter('warning_message'))
             {
+                $reply->setParam('defaultContentAction', 'public');
                 $reply->setParam('contentPublicBanner', $content->get('warning_message'));
             }
         }
