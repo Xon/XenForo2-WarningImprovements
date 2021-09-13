@@ -49,7 +49,7 @@ class Warning extends XFCP_Warning
     {
         /** @var ExtendedWarningEntity $warning */
         /** @noinspection PhpUndefinedFieldInspection */
-        $warning = $this->assertViewableWarning((int)$params->warning_id, ['User']);
+        $warning = $this->assertViewableWarning((int)$params->warning_id);
 
         if (!$warning->User)
         {
@@ -328,5 +328,14 @@ class Warning extends XFCP_Warning
         }
 
         return $output;
+    }
+
+    protected function assertViewableWarning($id, array $extraWith = [])
+    {
+        $extraWith[] = 'User';
+        $extraWith[] = 'WarnedBy';
+        $extraWith[] = 'Report';
+
+        return parent::assertViewableWarning($id, $extraWith);
     }
 }
