@@ -47,8 +47,7 @@ class Warn extends XFCP_Warn
 
     public function setFromDefinition(WarningDefinition $definition, $points = null, $expiry = null)
     {
-        $this->setSendAlert(Globals::$warningInput['send_warning_alert'] ?? false);
-        //$this->setSendAlert(Globals::$warningInput['send_warning_alert_reason'] ?? '');
+        $this->setSendAlert(Globals::$warningInput['send_warning_alert'] ?? false, Globals::$warningInput['send_warning_alert_reason'] ?? '');
         $custom_title = !empty(Globals::$warningInput['custom_title']) ? Globals::$warningInput['custom_title'] : null;
 
 
