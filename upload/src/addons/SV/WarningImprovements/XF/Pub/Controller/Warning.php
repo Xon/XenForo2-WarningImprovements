@@ -218,7 +218,7 @@ class Warning extends XFCP_Warning
             }
 
             /** @noinspection HttpUrlsUsage */
-            $bbCode = str_replace(['http://https://{url}', 'https://http://{url}', 'https://{url}', 'http://{url}'], '{url}', $bbCode);
+            $bbCode = str_replace(['http://https://', 'https://http://'], ['https://', 'http://'], $bbCode);
             $input['sv_user_note'] = $bbCode;
 
             $warningEditor->setWarningAck($input);
