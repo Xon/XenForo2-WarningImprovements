@@ -284,7 +284,6 @@ class Warning extends XFCP_Warning
         parent::onExpiration($isDelete);
     }
 
-
     protected function _postSave()
     {
         parent::_postSave();
