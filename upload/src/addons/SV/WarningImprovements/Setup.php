@@ -237,6 +237,81 @@ class Setup extends AbstractSetup
         ');
     }
 
+    public function upgrade2070400Step1()
+    {
+        if (!$this->columnExists('xf_warning', 'sv_user_note'))
+        {
+            return;
+        }
+
+        $this->db()->query("
+            UPDATE xf_warning 
+            SET sv_user_note = REPLACE(sv_user_note,'http://https://','https://') 
+            WHERE sv_user_note LIKE '%http://https://%'
+        ");
+    }
+
+    public function upgrade2070400Step2()
+    {
+        if (!$this->columnExists('xf_warning', 'sv_user_note'))
+        {
+            return;
+        }
+
+        $this->db()->query("
+            UPDATE xf_warning 
+            SET sv_user_note = REPLACE(sv_user_note,'https://http://','http://') 
+            WHERE sv_user_note LIKE '%https://http://%'
+        ");
+    }
+
+    public function upgrade2070400Step3()
+    {
+        if (!$this->columnExists('xf_sv_warning_log', 'sv_user_note'))
+        {
+            return;
+        }
+
+        $this->db()->query("
+            UPDATE xf_sv_warning_log 
+            SET sv_user_note = REPLACE(sv_user_note,'http://https://','https://') 
+            WHERE sv_user_note LIKE '%http://https://%'
+        ");
+    }
+
+    public function upgrade2070400Step4()
+    {
+        if (!$this->columnExists('xf_sv_warning_log', 'sv_user_note'))
+        {
+            return;
+        }
+
+        $this->db()->query("
+            UPDATE xf_sv_warning_log 
+            SET sv_user_note = REPLACE(sv_user_note,'https://http://','http://') 
+            WHERE sv_user_note LIKE '%https://http://%'
+        ");
+    }
+
+    public function upgrade2070400Step5()
+    {
+        if (!$this->columnExists('xf_sv_warning_log', 'sv_user_note'))
+        {
+            return;
+        }
+
+        /** @var \XF\Entity\Phrase[] $phrases */
+        $phrases = \XF::finder('XF:Phrase')
+                      ->where('title', 'like', 'warning_sv_user_note.%')
+                      ->whereOr(['phrase_text', 'like', '%http://{url}%'], ['phrase_text', 'like', '%http://{url}%'])
+                      ->fetch();
+        foreach ($phrases as $phrase)
+        {
+            $phrase->phrase_text = \str_replace(['http://{url}', 'https://{url}'], '{url}', $phrase->phrase_text);
+            $phrase->saveIfChanged();
+        }
+    }
+
     public function uninstallStep1()
     {
         $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");

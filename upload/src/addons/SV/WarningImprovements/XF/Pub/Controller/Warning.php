@@ -215,11 +215,11 @@ class Warning extends XFCP_Warning
                 /** @var \XF\ControllerPlugin\Editor $editor */
                 $editor = $this->plugin('XF:Editor');
                 $bbCode = $editor->convertToBbCode($html);
-                /** @noinspection HttpUrlsUsage */
-                $bbCode = str_replace(['https://{url}', 'http://{url}'], '{url}', $bbCode);
-
-                $input['sv_user_note'] = $bbCode;
             }
+
+            /** @noinspection HttpUrlsUsage */
+            $bbCode = str_replace(['https://{url}', 'http://{url}'], '{url}', $bbCode);
+            $input['sv_user_note'] = $bbCode;
 
             $warningEditor->setWarningAck($input);
         }
