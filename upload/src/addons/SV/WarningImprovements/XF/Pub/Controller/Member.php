@@ -103,7 +103,15 @@ class Member extends XFCP_Member
             $expiryLength = $this->filter('expiry_value', 'uint');
             $expiryUnit = $this->filter('expiry_unit', 'str');
 
-            $expiryDate = \strtotime("+$expiryLength $expiryUnit");
+            $expiryDate = @\strtotime("+$expiryLength $expiryUnit");
+            if ($expiryDate === false)
+            {
+                $userChangeTemp->error(\XF::phrase('svWarningImprovements_invalid_offset_date', [
+                    'expiryLength' => $expiryLength,
+                    'expiryUnit'   => $expiryUnit,
+                ]), 'expiry_date');
+            }
+            $expiryDate = (int)$expiryDate;
             if ($expiryDate >= \pow(2, 32) - 1)
             {
                 $expiryDate = 0;

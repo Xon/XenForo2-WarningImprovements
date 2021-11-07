@@ -69,7 +69,15 @@ class Editor extends AbstractService
                 $this->warning->is_expired = true;
                 break;
             case 'future':
-                $expiryDate = strtotime("+$expiryLength $expiryUnit");
+                $expiryDate = @\strtotime("+$expiryLength $expiryUnit");
+                if ($expiryDate === false)
+                {
+                    $this->warning->error(\XF::phrase('svWarningImprovements_invalid_offset_date', [
+                        'expiryLength' => $expiryLength,
+                        'expiryUnit'   => $expiryUnit,
+                    ]), 'expiry_date');
+                }
+                $expiryDate = (int)$expiryDate;
                 if ($expiryDate >= pow(2, 32) - 1)
                 {
                     $expiryDate = 0;

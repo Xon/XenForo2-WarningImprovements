@@ -81,7 +81,7 @@ class ContentChange extends XFCP_ContentChange
         }
         else
         {
-            $actionEndDate = \min(\pow(2,32) - 1, \strtotime("+{$warningAction->action_length} {$warningAction->action_length_type}"));
+            $actionEndDate = \min(\pow(2,32) - 1, (int)\strtotime("+{$warningAction->action_length} {$warningAction->action_length_type}"));
         }
 
         $tempChangeKey = $warningAction->getTempUserChangeKey();
