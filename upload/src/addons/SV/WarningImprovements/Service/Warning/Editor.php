@@ -66,6 +66,7 @@ class Editor extends AbstractService
         {
             case 'now':
                 $this->warning->expiry_date = \XF::$time;
+                $this->warning->is_expired = true;
                 break;
             case 'future':
                 $expiryDate = strtotime("+$expiryLength $expiryUnit");
@@ -74,7 +75,7 @@ class Editor extends AbstractService
                     $expiryDate = 0;
                 }
                 $this->warning->expiry_date = $expiryDate;
-                $this->warning->is_expired = false;
+                $this->warning->is_expired = ($expiryDate <= \XF::$time);
                 break;
             case 'no_change':
             default:

@@ -281,6 +281,23 @@ class Warning extends XFCP_Warning
     protected function onExpiration($isDelete)
     {
         $this->svWarningLogged = true;
+
+        if ($this->isUpdate() && $this->isChanged('points'))
+        {
+            // onExpiration assumes that points never change, as such expiring and editing a warning at the same time.
+            $resetPoints = $this->points;
+            $this->set('points', 0, ['forceSet' => true]);
+            try
+            {
+                parent::onExpiration($isDelete);
+                return;
+            }
+            finally
+            {
+                $this->set('points', $resetPoints, ['forceSet' => true]);
+            }
+        }
+
         parent::onExpiration($isDelete);
     }
 
@@ -293,19 +310,23 @@ class Warning extends XFCP_Warning
             $this->svUpdatePendingExpiry();
         }
 
-        if ($this->isUpdate() && $this->hasChanges() && !$this->svWarningLogged)
+        if ($this->isUpdate() && $this->hasChanges())
         {
-            $content = $this->Content;
-            // todo log warning edit even if the content has been hard deleted
-            if ($content)
+            if (!$this->svWarningLogged)
             {
-                if ($this->getOption('log_moderator'))
+                $content = $this->Content;
+                // todo log warning edit even if the content has been hard deleted
+                if ($content)
                 {
-                    $this->app()->logger()->logModeratorAction($this->content_type, $content, 'warning_edited', [], false);
+                    if ($this->getOption('log_moderator'))
+                    {
+                        $this->app()->logger()->logModeratorAction($this->content_type, $content, 'warning_edited', [], false);
+                    }
                 }
             }
 
-            if (!$this->is_expired && $this->isChanged('points') && $this->User)
+            // Editing a warning, or it was expired + edited
+            if ((!$this->is_expired || $this->isChanged('is_expired')) && $this->isChanged('points') && $this->User !== null)
             {
                 $oldPoints = (int)$this->getPreviousValue('points');
                 $diff = $this->points - $oldPoints;
@@ -327,8 +348,12 @@ class Warning extends XFCP_Warning
         $alertRepo = $this->repository('XF:UserAlert');
         $alertRepo->fastDeleteAlertsForContent('warning', $this->warning_id);
 
-        $this->svUpdatePendingExpiry();
+        if ($this->User === null)
+        {
+            return;
+        }
 
+        $this->svUpdatePendingExpiry();
 
         if ($this->getOption('svAlertOnDelete'))
         {
@@ -342,6 +367,11 @@ class Warning extends XFCP_Warning
 
     protected function svUpdatePendingExpiry()
     {
+        if ($this->User === null)
+        {
+            return;
+        }
+
         \XF::runOnce('svPendingExpiry.'.$this->user_id, function () {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = $this->repository('XF:Warning');
