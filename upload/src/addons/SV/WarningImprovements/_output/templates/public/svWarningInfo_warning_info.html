@@ -78,6 +78,10 @@
 				<xf:option name="sv_acknowledgement" value="1" checked="{{ $warning.sv_acknowledgement === 'pending' ? 'checked' : '' }}"
 						   label="{{ phrase('sv_warningAcknowledge_acknowledgement_required') }}" />
 			</xf:checkboxrow>
+        <xf:else />
+            <xf:formrow label="{{ phrase('sv_warningAcknowledge_acknowledge_state') }}">
+                <xf:macro template="svWarningAcknowledgement_macros" name="acknowledge_state" arg-warning="{{ $warning }}" />
+            </xf:formrow>
 		</xf:if>
 
 		<xf:editorrow name="sv_user_note" value="{$warning.sv_user_note}" data-min-height="200"
