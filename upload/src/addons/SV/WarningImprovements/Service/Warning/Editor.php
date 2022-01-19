@@ -161,7 +161,7 @@ class Editor extends AbstractService
         $warning = $this->warning;
         if ($warning->sv_acknowledgement !== 'completed')
         {
-            $warning->sv_acknowledgement = ($warningInput['sv_acknowledgement'] ?? false) ? 'pending' : 'not_required';
+            $warning->sv_acknowledgement = $warningInput['sv_acknowledgement'] ?? 'not_required';
             $warning->sv_suppress_notices = $warningInput['sv_suppress_notices'] ?? false;
         }
 

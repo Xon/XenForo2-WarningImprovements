@@ -152,7 +152,7 @@ class Warning extends XFCP_Warning
             $canEditWarningAck = $warningDefinition === null || $warningDefinition->sv_allow_acknowledgement;
             if ($canEditWarningAck)
             {
-                $defaults['sv_acknowledgement'] = 'bool';
+                $defaults['sv_acknowledgement'] = 'str';
                 $defaults['sv_suppress_notices'] = 'bool';
                 $defaults['sv_user_note'] = 'str';
                 $defaults['sv_user_note_html'] = 'str,noclean';

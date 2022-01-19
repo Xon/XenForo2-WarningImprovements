@@ -73,16 +73,16 @@
 			<span class="block-formSectionHeader-aligner">{{ phrase('svWarningImprov_edit_warning_acknowledgement') }}</span>
 		</h2>
 
-		<xf:if is="$warning.sv_acknowledgement !== 'completed'">
-			<xf:checkboxrow>
-				<xf:option name="sv_acknowledgement" value="1" checked="{{ $warning.sv_acknowledgement === 'pending' ? 'checked' : '' }}"
-						   label="{{ phrase('sv_warningAcknowledge_acknowledgement_required') }}" />
-			</xf:checkboxrow>
-        <xf:else />
-            <xf:formrow label="{{ phrase('sv_warningAcknowledge_acknowledge_state') }}">
+        <xf:formrow label="{{ phrase('sv_warningAcknowledge_acknowledge_state') }}">
+            <xf:if is="$warning.sv_acknowledgement !== 'completed'">
+                <xf:radio name="sv_acknowledgement" value="{$warning.sv_acknowledgement}">
+                    <xf:option value="pending" label="{{ phrase('sv_warningAcknowledge_pending') }}" />
+                    <xf:option value="not_required" label="{{ phrase('sv_warningAcknowledge_not_required') }}" />
+                </xf:radio>
+            <xf:else />
                 <xf:macro template="svWarningAcknowledgement_macros" name="acknowledge_state" arg-warning="{{ $warning }}" />
-            </xf:formrow>
-		</xf:if>
+            </xf:if>
+        </xf:formrow>
 
 		<xf:editorrow name="sv_user_note" value="{$warning.sv_user_note}" data-min-height="200"
 					  label="{{ phrase('sv_warningAcknowledge_user_note') }}"
