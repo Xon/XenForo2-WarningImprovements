@@ -173,6 +173,8 @@ class Warning extends XFCP_Warning
 
     protected function applyInput(EditorService $warningEditor, array $input): array
     {
+        /** @var ExtendedWarningEntity|\SV\ReportImprovements\XF\Entity\Warning $warning */
+        $warning = $warningEditor->getWarning();
         if (isset($input['title']))
         {
             $warningEditor->setTitle($input['title']);
@@ -224,7 +226,7 @@ class Warning extends XFCP_Warning
             $warningEditor->setWarningAck($input);
         }
 
-        if ($addOns['SV/ReportImprovements'] ?? false)
+        if (($addOns['SV/ReportImprovements'] ?? false) && $warning->canResolveLinkedReport())
         {
             $warningEditor->setCanReopenReport(false);
             $warningEditor->resolveReportFor($input['resolve_report'] ?? false, $input['resolve_alert'] ?? false, $input['resolve_alert_comment'] ?? '');

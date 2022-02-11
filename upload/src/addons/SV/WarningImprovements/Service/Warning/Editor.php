@@ -49,6 +49,11 @@ class Editor extends AbstractService
         }
     }
 
+    public function getWarning(): ExtendedWarningEntity
+    {
+        return $this->warning;
+    }
+
     public function setSendAlert(bool $sendAlert, string $reason = '')
     {
         $this->sendAlert = $sendAlert;
