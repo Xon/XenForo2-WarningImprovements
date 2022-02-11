@@ -1,5 +1,5 @@
 <xf:css src="sv_warningimprovements_member_warn7.less" />
-
+<xf:if is="$canViewPreviousWarnings">
 <h2 class="block-formSectionHeader">
 	<span class="collapseTrigger collapseTrigger--block" data-xf-click="toggle" data-target="< :up :next">
 		<span class="block-formSectionHeader-aligner">{{ phrase('sv_warning_improvements_previous_warnings', {'count': $user.warning_count}) }}</span>
@@ -37,3 +37,4 @@
 		</xf:datalist>
 	</xf:formrow>
 </div>
+</xf:if>

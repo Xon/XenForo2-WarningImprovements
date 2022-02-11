@@ -81,8 +81,21 @@ class Warn extends XFCP_Warn
             $user = $response->getParam('user');
             $previousWarnings = [];
 
+            if (\XF::options()->sv_view_own_warnings ?? false)
+            {
+                Globals::$profileUserId = $user->user_id ?: null;
+            }
+            try
+            {
+                $canViewPreviousWarnings = $visitor->canViewWarnings();
+            }
+            finally
+            {
+                Globals::$profileUserId = null;
+            }
+
             $warningLimit = (int)(\XF::options()->svPreviousWarningLimit ?? -1);
-            if ($user && $warningLimit >= 0)
+            if ($canViewPreviousWarnings && $user !== null && $warningLimit >= 0)
             {
                 $warningList = $warningRepo->findUserWarningsForList($user->user_id);
                 if ($warningLimit > 0)
@@ -93,6 +106,10 @@ class Warn extends XFCP_Warn
                                                 ->filterViewable()
                                                 ->toArray();
             }
+            if ($warningLimit < 0)
+            {
+                $canViewPreviousWarnings = false;
+            }
 
             $warningStructure = $this->app->em()->getEntityStructure('XF:Warning');
             $nodeColDefinition = $warningStructure->columns['notes'] ?? null;
@@ -102,6 +119,7 @@ class Warn extends XFCP_Warn
                     'userNoteRequired' => $userNoteRequired,
                     'warnings'         => $warnings,
                     'previousWarnings' => $previousWarnings,
+                    'canViewPreviousWarnings' => $canViewPreviousWarnings,
 
                     'categoryTree' => $categoryTree
                 ]);
