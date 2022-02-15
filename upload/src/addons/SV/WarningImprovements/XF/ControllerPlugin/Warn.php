@@ -11,7 +11,7 @@ use SV\WarningImprovements\XF\Repository\Warning;
 use XF\Entity\User;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Reply\Redirect;
-use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 use XF\Warning\AbstractHandler;
 
 /**
@@ -20,11 +20,11 @@ use XF\Warning\AbstractHandler;
 class Warn extends XFCP_Warn
 {
     /**
-     * @param        $contentType
+     * @param string $contentType
      * @param Entity $content
-     * @param        $warnUrl
+     * @param string $warnUrl
      * @param array  $breadcrumbs
-     * @return \XF\Mvc\Reply\AbstractReply|\XF\Mvc\Reply\Error|Redirect|View
+     * @return \XF\Mvc\Reply\AbstractReply
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
@@ -72,7 +72,7 @@ class Warn extends XFCP_Warn
 
             return $response;
         }
-        else if ($response instanceof View)
+        else if ($response instanceof ViewReply)
         {
             $categoryRepo = $this->getWarningCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
@@ -81,6 +81,7 @@ class Warn extends XFCP_Warn
             $user = $response->getParam('user');
             $previousWarnings = [];
 
+            //if ($user !== null && (\XF::options()->sv_view_own_warnings ?? false))
             if (\XF::options()->sv_view_own_warnings ?? false)
             {
                 Globals::$profileUserId = $user->user_id ?: null;
@@ -134,32 +135,29 @@ class Warn extends XFCP_Warn
      * @param string                                      $contentType
      * @param Entity                                      $content
      * @param array                                       $input
-     * @return View
+     * @return ViewReply
      */
-    protected function getWarningFillerReply(
-        AbstractHandler $warningHandler,
-        User $user,
-        $contentType,
-        Entity $content,
-        array $input
-    )
+    protected function getWarningFillerReply(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
     {
         $response = parent::getWarningFillerReply($warningHandler, $user, $contentType, $content, $input);
 
-        if ($response instanceof View)
+        if ($response instanceof ViewReply)
         {
+            $response->setParam('user', $user);
+            $response->setParam('content', $content);
+
             /** @var Warning $warningRepo */
             $warningRepo = $this->repository('XF:Warning');
-            /** @var WarningDefinition $definition */
+            /** @var WarningDefinition|null $definition */
             $definition = $response->getParam('definition');
 
-            if (!$definition || $input['warning_definition_id'] === 0)
+            if ($definition === null || $input['warning_definition_id'] === 0)
             {
                 $definition = $warningRepo->getCustomWarningDefinition();
                 $response->setParam('definition', $definition);
             }
 
-            if ($definition && $definition->is_custom)
+            if ($definition->is_custom ?? false)
             {
                 list($conversationTitle, $conversationMessage) = $definition->getSpecificConversationContent(
                     $user, $contentType, $content
