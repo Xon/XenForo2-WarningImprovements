@@ -174,7 +174,7 @@ class Warning extends XFCP_Warning
      */
     public function canEdit(&$error = null)
     {
-        if (\is_callable('parent::canEdit'))
+        if (\is_callable(parent::class.'::canEdit'))
         {
             /** @noinspection PhpUndefinedMethodInspection */
             return parent::canEdit($error);
