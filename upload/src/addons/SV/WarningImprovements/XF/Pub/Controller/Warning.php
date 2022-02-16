@@ -159,7 +159,7 @@ class Warning extends XFCP_Warning
             }
         }
 
-        if (($addOns['SV/ReportImprovements'] ?? false) && $warning->canResolveLinkedReport())
+        if ((($addOns['SV/ReportImprovements'] ?? 0) > 2100002) && $warning->canResolveLinkedReport())
         {
             $defaults['resolve_report'] = 'bool';
             $defaults['resolve_alert'] = 'bool';
@@ -226,7 +226,7 @@ class Warning extends XFCP_Warning
             $warningEditor->setWarningAck($input);
         }
 
-        if (($addOns['SV/ReportImprovements'] ?? false) && $warning->canResolveLinkedReport())
+        if ((($addOns['SV/ReportImprovements'] ?? 0) > 2100002) && $warning->canResolveLinkedReport())
         {
             $warningEditor->setCanReopenReport(false);
             $warningEditor->resolveReportFor($input['resolve_report'] ?? false, $input['resolve_alert'] ?? false, $input['resolve_alert_comment'] ?? '');

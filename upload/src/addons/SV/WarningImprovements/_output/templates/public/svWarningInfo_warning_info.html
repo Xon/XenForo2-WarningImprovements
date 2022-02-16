@@ -140,7 +140,7 @@
 		</div>
 	</xf:if>
 		
-	<xf:if is="is_addon_active('SV/ReportImprovements') && $warning.canResolveLinkedReport()">
+	<xf:if is="is_addon_active('SV/ReportImprovements', 2100002) && $warning.canResolveLinkedReport()">
 		<xf:if contentcheck="true">
 			<h2 class="block-formSectionHeader">
 				<span class="block-formSectionHeader-aligner">{{ phrase('report') }}</span>
