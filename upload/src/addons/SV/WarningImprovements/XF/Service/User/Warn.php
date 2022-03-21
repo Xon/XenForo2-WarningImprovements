@@ -205,6 +205,7 @@ class Warn extends XFCP_Warn
 
         $originalWarningBy = $this->warningBy;
         $this->warningBy = $user;
+        $oldWarning = Globals::$warningObj ?? null;
         Globals::$warningObj = $warning;
         try
         {
@@ -213,7 +214,7 @@ class Warn extends XFCP_Warn
         finally
         {
             $this->warningBy = $originalWarningBy;
-            Globals::$warningObj = null;
+            Globals::$warningObj = $oldWarning;
         }
     }
 

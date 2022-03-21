@@ -40,7 +40,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     {
         parent::__construct($app, $user);
 
-        $this->setWarning(Globals::$warningObj);
+        $this->setWarning(Globals::$warningObj ?? null);
 
         $this->nullCategory = \XF::em()->create('SV\WarningImprovements:WarningCategory');
         $this->nullCategory->setTrusted('warning_category_id', null);

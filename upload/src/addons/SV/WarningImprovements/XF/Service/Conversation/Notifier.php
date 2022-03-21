@@ -25,7 +25,7 @@ class Notifier extends XFCP_Notifier
     {
         parent::__construct($app, $conversation);
 
-        $this->setWarning(Globals::$warningObj);
+        $this->setWarning(Globals::$warningObj ?? null);
     }
 
     /**

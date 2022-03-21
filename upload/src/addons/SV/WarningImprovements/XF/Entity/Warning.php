@@ -258,6 +258,7 @@ class Warning extends XFCP_Warning
 
     protected function updateUserWarningPoints(UserEntity $user, $adjustment, $isDelete = false)
     {
+        $oldWarning = Globals::$warningObj ?? null;
         Globals::$warningObj = $this;
 
         try
@@ -266,7 +267,7 @@ class Warning extends XFCP_Warning
         }
         finally
         {
-            Globals::$warningObj = null;
+            Globals::$warningObj = $oldWarning;
         }
     }
 
