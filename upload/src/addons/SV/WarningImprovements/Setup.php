@@ -372,11 +372,6 @@ class Setup extends AbstractSetup
             $table->changeColumn('expiry_type')->removeValues(['hours']);
         };
 
-        $tables['xf_warning_definition'] = function (Alter $table)
-        {
-            $table->dropColumns('sv_warning_category_id');
-        };
-
         $tables['xf_warning_action'] = function (Alter $table)
         {
             $table->dropColumns(['sv_warning_category_id', 'sv_post_node_id', 'sv_post_thread_id', 'sv_post_as_user_id']);
