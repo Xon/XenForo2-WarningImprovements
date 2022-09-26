@@ -1,6 +1,6 @@
 {
     "from_class": "XF\\Entity\\Post",
     "to_class": "SV\\WarningImprovements\\XF\\Entity\\Post",
-    "execute_order": 6240,
+    "execute_order": 62400,
     "active": true
 }
