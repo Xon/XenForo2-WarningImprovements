@@ -10,6 +10,7 @@ namespace SV\WarningImprovements\XF\Admin\Controller
 
 namespace SV\WarningImprovements\XF\ControllerPlugin
 {
+	class XFCP_Reaction extends \XF\ControllerPlugin\Reaction {}
 	class XFCP_Warn extends \XF\ControllerPlugin\Warn {}
 }
 

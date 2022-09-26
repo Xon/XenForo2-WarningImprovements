@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\ControllerPlugin\\Reaction",
+    "to_class": "SV\\WarningImprovements\\XF\\ControllerPlugin\\Reaction",
+    "execute_order": 10,
+    "active": true
+}
