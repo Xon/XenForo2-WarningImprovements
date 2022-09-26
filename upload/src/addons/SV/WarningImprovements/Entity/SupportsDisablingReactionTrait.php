@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMultipleClassDeclarationsInspection
+ */
 
 namespace SV\WarningImprovements\Entity;
 
@@ -14,5 +17,26 @@ trait SupportsDisablingReactionTrait
         }
 
         return isset($entity->get('embed_metadata')['sv_disable_reactions']);
+    }
+
+    public function canReact(&$error = null)
+    {
+        if ($this->hasDisabledReactionsForSvWarnImprov($this, $error))
+        {
+            return false;
+        }
+
+        return parent::canReact($error);
+    }
+
+    /** @noinspection PhpMissingReturnTypeInspection */
+    public function getReactions()
+    {
+        if ($this->hasDisabledReactionsForSvWarnImprov($this))
+        {
+            return [];
+        }
+
+        return parent::getReactions();
     }
 }
