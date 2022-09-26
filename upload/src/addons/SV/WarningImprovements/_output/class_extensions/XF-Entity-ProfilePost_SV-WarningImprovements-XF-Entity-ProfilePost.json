@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Entity\\ProfilePost",
+    "to_class": "SV\\WarningImprovements\\XF\\Entity\\ProfilePost",
+    "execute_order": 6240,
+    "active": true
+}

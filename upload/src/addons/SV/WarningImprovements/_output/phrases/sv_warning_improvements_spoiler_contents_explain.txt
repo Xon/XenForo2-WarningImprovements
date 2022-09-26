@@ -1,0 +1,1 @@
+If checked, the message of the content will be wrapped in a spoiler tag that the user has been warned for.

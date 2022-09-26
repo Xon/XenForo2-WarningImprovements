@@ -17,12 +17,30 @@ use XF\Phrase;
  * @property bool sv_custom_title
  * @property bool is_custom
  * @property string custom_title_placeholder
+ * @property bool $sv_spoiler_contents
+ * @property bool $sv_disable_reactions
+ *
+ * GETTERS
+ * @property \XF\Phrase $sv_content_spoiler_title
  *
  * RELATIONS
  * @property \SV\WarningImprovements\Entity\WarningCategory Category
+ * @property \XF\Entity\Phrase $SvMasterContentSpoilerTitle
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {
+    const SV_CONTENT_SPOILER_TITLE = 'sv_warning_improvements_warning_spoiler_title';
+
+    public function getSvContentSpoilerTitlePhraseName() : string
+    {
+        return static::SV_CONTENT_SPOILER_TITLE . '.' . $this->warning_definition_id;
+    }
+
+    public function getSvContentSpoilerTitle() : \XF\Phrase
+    {
+        return \XF::phrase($this->getSvContentSpoilerTitlePhraseName());
+    }
+
     /**
      * @param Phrase|string|null $error
      * @return bool
@@ -158,15 +176,33 @@ class WarningDefinition extends XFCP_WarningDefinition
         $structure->columns['sv_warning_category_id'] = ['type' => self::UINT, 'required' => 'sv_warning_improvements_please_select_valid_category', 'nullable' => true];
         $structure->columns['sv_display_order'] = ['type' => self::UINT];
         $structure->columns['sv_custom_title'] = ['type' => self::BOOL, 'default' => false];
+        $structure->columns['sv_spoiler_contents'] = [
+            'type' => self::BOOL,
+            'default' => false
+        ];
+        $structure->columns['sv_disable_reactions'] = [
+            'type' => self::BOOL,
+            'default' => false
+        ];
 
         $structure->getters['is_custom'] = true;
         $structure->getters['custom_title_placeholder'] = true;
+        $structure->getters['sv_content_spoiler_title'] = true;
 
         $structure->relations['Category'] = [
             'entity'     => 'SV\WarningImprovements:WarningCategory',
             'type'       => self::TO_ONE,
             'conditions' => [['warning_category_id', '=', '$sv_warning_category_id']],
             'primary'    => true
+        ];
+        $structure->relations['SvMasterContentSpoilerTitle'] = [
+            'entity' => 'XF:Phrase',
+            'type' => self::TO_ONE,
+            'conditions' => [
+                ['language_id', '=', 0],
+                ['title', '=', static::SV_CONTENT_SPOILER_TITLE . '.', '$warning_definition_id']
+            ],
+            'cascadeDelete' => true
         ];
 
         return $structure;

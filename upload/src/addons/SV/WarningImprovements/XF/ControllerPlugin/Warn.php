@@ -13,6 +13,7 @@ use XF\Mvc\Entity\Entity;
 use XF\Mvc\Reply\Redirect;
 use XF\Mvc\Reply\View;
 use XF\Warning\AbstractHandler;
+use SV\WarningImprovements\XF\Service\User\Warn as ExtendedUserWarnSvc;
 
 /**
  * Extends \XF\ControllerPlugin\Warn
@@ -191,7 +192,20 @@ class Warn extends XFCP_Warn
         Globals::$warningInput = $input;
         try
         {
-            return parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
+            /** @var ExtendedUserWarnSvc $warnService */
+            $warnService = parent::setupWarnService($warningHandler, $user, $contentType, $content, $input);
+
+            if ($this->filter('sv_spoiler_contents', 'bool'))
+            {
+                $warnService->setContentSpoilerTitleForSvWarnImprove($this->filter('sv_content_spoiler_title', 'str'));
+            }
+
+            if ($this->filter('sv_disable_reactions', 'bool'))
+            {
+                $warnService->disableReactionsForSvWarnImprov();
+            }
+
+            return $warnService;
         }
         finally
         {

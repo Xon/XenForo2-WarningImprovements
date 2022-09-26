@@ -16,6 +16,9 @@ namespace SV\WarningImprovements\XF\ControllerPlugin
 namespace SV\WarningImprovements\XF\Entity
 {
 	class XFCP_ConversationMaster extends \XF\Entity\ConversationMaster {}
+	class XFCP_Post extends \XF\Entity\Post {}
+	class XFCP_ProfilePost extends \XF\Entity\ProfilePost {}
+	class XFCP_ProfilePostComment extends \XF\Entity\ProfilePostComment {}
 	class XFCP_User extends \XF\Entity\User {}
 	class XFCP_UserBan extends \XF\Entity\UserBan {}
 	class XFCP_UserChangeTemp extends \XF\Entity\UserChangeTemp {}
@@ -34,6 +37,13 @@ namespace SV\WarningImprovements\XF\Pub\Controller
 namespace SV\WarningImprovements\XF\Pub\View\Member
 {
 	class XFCP_WarnFill extends \XF\Pub\View\Member\WarnFill {}
+}
+
+namespace SV\WarningImprovements\XF\Reaction
+{
+	class XFCP_Post extends \XF\Reaction\Post {}
+	class XFCP_ProfilePost extends \XF\Reaction\ProfilePost {}
+	class XFCP_ProfilePostComment extends \XF\Reaction\ProfilePostComment {}
 }
 
 namespace SV\WarningImprovements\XF\Repository

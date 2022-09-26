@@ -46,6 +46,10 @@ Use a template mopdification which calls $user.getWarningDefaultContentAction() 
             $response['formValues']['#customTitle'] = true;
         }
 
+        $response['formValues']['input[name=sv_spoiler_contents]'] = $warningDefinition->sv_spoiler_contents;
+        $response['formValues']['input[name=sv_content_spoiler_title]'] = $warningDefinition->sv_content_spoiler_title;
+        $response['formValues']['input[sv_disable_reactions]'] = $warningDefinition->sv_disable_reactions;
+
         return $response;
     }
 }

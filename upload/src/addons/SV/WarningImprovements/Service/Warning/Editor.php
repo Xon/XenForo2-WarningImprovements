@@ -2,7 +2,10 @@
 
 namespace SV\WarningImprovements\Service\Warning;
 
+use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
+use XF\Mvc\Entity\Entity;
+use XF\Repository\Reaction as ReactionRepo;
 use XF\Service\AbstractService;
 use XF\Service\ValidateAndSavableTrait;
 
@@ -29,6 +32,11 @@ class Editor extends AbstractService
     /** @var string */
     protected $sendAlertReason = '';
 
+    /**
+     * @var null|Entity
+     */
+    protected $content = null;
+
     public function __construct(\XF\App $app, ExtendedWarningEntity $warning)
     {
         $this->warning = $warning;
@@ -47,6 +55,8 @@ class Editor extends AbstractService
         {
             $this->publicBanner = (string)$content->get('warning_message');
         }
+
+        $this->content = $this->warning->getContent();
     }
 
     public function setSendAlert(bool $sendAlert, string $reason = '')
@@ -190,6 +200,31 @@ class Editor extends AbstractService
         }
     }
 
+    public function setSpoilerContents(
+        bool $spoilerContents,
+        string $spoilerTitle,
+        bool $forceSpoilerTitleUpdate = false) : self
+    {
+        $warning = $this->warning;
+        $warning->sv_spoiler_contents = $spoilerContents;
+
+        // If the spoiler contents checkbox is not checked, the spoiler title field will get unset
+        if ($spoilerContents || $forceSpoilerTitleUpdate)
+        {
+            $warning->sv_content_spoiler_title = $spoilerTitle;
+        }
+
+        return $this;
+    }
+
+    public function setDisableReactions(bool $disableReactions) : self
+    {
+        $warning = $this->warning;
+        $warning->sv_disable_reactions = $disableReactions;
+
+        return $this;
+    }
+
     protected function _validate(): array
     {
         $this->finalSetup();
@@ -264,6 +299,43 @@ class Editor extends AbstractService
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = \XF::repository('XF:Warning');
             $warningRepo->sendWarningAlert($this->warning, 'edit', $this->sendAlertReason);
+        }
+
+        $content = $this->content;
+        if ($content && isset($content->structure()->columns['embed_metadata']))
+        {
+            $warning = $this->warning;
+
+            /** @var array $embedMetadata */
+            $embedMetadata = $content->get('embed_metadata');
+
+            if ($warning->sv_spoiler_contents)
+            {
+                $embedMetadata['sv_spoiler_contents'] = $warning->sv_spoiler_contents;
+                $embedMetadata['sv_content_spoiler_title'] = $warning->sv_content_spoiler_title;
+            }
+            else
+            {
+                unset($embedMetadata['sv_spoiler_contents']);
+                unset($embedMetadata['sv_content_spoiler_title']);
+            }
+
+            /** @var ReactionRepo $reactionRepo */
+            $reactionRepo = $this->repository('XF:Reaction');
+            $reactionHandler = $reactionRepo->getReactionHandler($warning->content_type);
+            if ($reactionHandler instanceof SupportsDisablingReactionInterface)
+            {
+                if ($warning->sv_disable_reactions)
+                {
+                    $embedMetadata['sv_disable_reactions'] = $warning->sv_disable_reactions;
+                }
+                else
+                {
+                    unset($embedMetadata['sv_disable_reactions']);
+                }
+            }
+
+            $content->fastUpdate('embed_metadata', $embedMetadata);
         }
     }
 

@@ -119,16 +119,40 @@ class Warning extends XFCP_Warning
             $warning = $this->getCustomWarningDefinition();
         }
 
-        $categoryId = $this->filter('sv_warning_category_id', 'uint');
-        $allowCustomTitle = $this->filter('sv_custom_title', 'bool');
-        $displayOrder = $this->filter('sv_display_order', 'uint');
+        $formAction = parent::warningSaveProcess($warning);
 
-        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warning */
-        $warning->sv_warning_category_id = $categoryId;
-        $warning->sv_custom_title = $allowCustomTitle;
-        $warning->sv_display_order = $displayOrder;
+        $formAction->setupEntityInput($warning, $this->filter([
+            'sv_warning_category_id' => 'uint',
+            'sv_custom_title' => 'bool',
+            'sv_display_order' => 'uint',
 
-        return parent::warningSaveProcess($warning);
+            'sv_spoiler_contents' => 'bool',
+            'sv_disable_reactions' => 'bool'
+        ]));
+
+        $phraseInput = $this->filter([
+            'sv_content_spoiler_title' => 'str'
+        ]);
+        $formAction->validate(function (FormAction $formAction) use($phraseInput)
+        {
+            if (!strlen($phraseInput['sv_content_spoiler_title']))
+            {
+                $formAction->logError(
+                    \XF::phrase('sv_warning_improvements_please_enter_valid_content_spoiler_title'),
+                    'sv_content_spoiler_title'
+                );
+            }
+        });
+        $formAction->apply(function () use($phraseInput, $warning)
+        {
+            /** @var \XF\Entity\Phrase $masterContentSpoilerTitle */
+            $masterContentSpoilerTitle = $warning->getRelationOrDefault('SvMasterContentSpoilerTitle', false);
+            $masterContentSpoilerTitle->addon_id = '';
+            $masterContentSpoilerTitle->phrase_text = $phraseInput['sv_content_spoiler_title'];
+            $masterContentSpoilerTitle->save();
+        });
+
+        return $formAction;
     }
 
     public function actionSort()

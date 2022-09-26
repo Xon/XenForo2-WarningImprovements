@@ -6,15 +6,19 @@
 namespace SV\WarningImprovements\XF\Service\User;
 
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\XF\Entity\ConversationMaster as ExtendedConversationMasterEntity;
-use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use XF\Entity\User as UserEntity;
 use XF\Entity\Warning;
 use XF\Entity\WarningDefinition;
 use XF\Mvc\Entity\Entity;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
+use XF\Repository\Reaction as ReactionRepo;
 
 /**
  * Extends \XF\Service\User\Warn
+ *
+ * @property ExtendedWarningEntity $warning
  */
 class Warn extends XFCP_Warn
 {
@@ -268,5 +272,47 @@ class Warn extends XFCP_Warn
         return $this->doAsWarningIssuerForSv($warning, function () use ($warning) {
             return parent::sendConversation($warning);
         });
+    }
+
+    public function setContentSpoilerTitleForSvWarnImprove(string $spoilerTitle) : self
+    {
+        $warning = $this->warning;
+        $warning->sv_spoiler_contents = true;
+        $warning->sv_content_spoiler_title = $spoilerTitle;
+
+        $content = $this->content;
+        if (isset($content->structure()->columns['embed_metadata']))
+        {
+            /** @var array $embedMetadata */
+            $embedMetadata = $content->get('embed_metadata');
+            $embedMetadata['sv_spoiler_contents'] = $warning->sv_spoiler_contents;
+            $embedMetadata['sv_content_spoiler_title'] = $spoilerTitle;
+
+            $content->set('embed_metadata', $embedMetadata);
+        }
+
+        return $this;
+    }
+
+    public function disableReactionsForSvWarnImprov() : self
+    {
+        $warning = $this->warning;
+        $warning->sv_disable_reactions = true;
+
+        /** @var ReactionRepo $reactionRepo */
+        $reactionRepo = $this->repository('XF:Reaction');
+        $reactionHandler = $reactionRepo->getReactionHandler($warning->content_type);
+        if ($reactionHandler instanceof SupportsDisablingReactionInterface)
+        {
+            $content = $this->content;
+
+            /** @var array $embedMetadata */
+            $embedMetadata = $content->get('embed_metadata');
+            $embedMetadata['sv_disable_reactions'] = $warning->sv_disable_reactions;
+
+            $content->set('embed_metadata', $embedMetadata);
+        }
+
+        return $this;
     }
 }
