@@ -83,7 +83,7 @@ class Setup extends AbstractSetup
     public function installStep6(array $stepParams)
     {
         $stepParams = array_replace([
-            'position' => 0
+            'position' => -1
         ], $stepParams);
 
         $db = $this->db();
