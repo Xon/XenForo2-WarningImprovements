@@ -31,7 +31,7 @@ class Reaction extends XFCP_Reaction
     )
     {
         if ($content instanceof SupportsDisablingReactionInterface
-            && $content->hasDisabledReactionsForSvWarnImprov($content))
+            && $content->hasDisabledReactionsListForSvWarnImprov($content))
         {
             throw $this->exception($this->noPermission());
         }

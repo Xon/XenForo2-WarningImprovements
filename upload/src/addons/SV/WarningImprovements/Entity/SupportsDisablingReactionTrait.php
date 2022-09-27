@@ -32,7 +32,7 @@ trait SupportsDisablingReactionTrait
     /** @noinspection PhpMissingReturnTypeInspection */
     public function getReactions()
     {
-        if ($this->hasDisabledReactionsForSvWarnImprov($this))
+        if ($this->hasDisabledReactionsListForSvWarnImprov($this))
         {
             return [];
         }

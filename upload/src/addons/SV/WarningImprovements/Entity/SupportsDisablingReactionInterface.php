@@ -14,4 +14,6 @@ interface SupportsDisablingReactionInterface
      * @return bool
      */
     public function hasDisabledReactionsForSvWarnImprov(Entity $entity, &$error = null) : bool;
+
+    public function hasDisabledReactionsListForSvWarnImprov(Entity $entity) : bool;
 }
