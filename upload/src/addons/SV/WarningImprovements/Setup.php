@@ -94,10 +94,8 @@ class Setup extends AbstractSetup
 
         if ($previousVersion !== 0 && $previousVersion < 2080000)
         {
-            $this->applyGlobalPermissionByGroup('forum', 'sv_viewWarningActions', [User::GROUP_REG, User::GROUP_MOD, User::GROUP_ADMIN]);
-
+            $this->applyGlobalPermissionByGroup('forum', 'sv_viewWarningActions', [User::GROUP_MOD, User::GROUP_ADMIN]);
             $this->applyGlobalPermissionByGroup('forum', 'viewWarning_issuer', [User::GROUP_MOD, User::GROUP_ADMIN]);
-            // mosly mod/admin only
             $this->applyGlobalPermissionByGroup('forum', 'sv_editWarningActions', [User::GROUP_MOD, User::GROUP_ADMIN]);
             $this->applyGlobalPermissionByGroup('forum', 'sv_showAllWarningActions', [User::GROUP_MOD, User::GROUP_ADMIN]);
             $this->applyGlobalPermissionByGroup('forum', 'svManageIssuedWarnings', [User::GROUP_MOD, User::GROUP_ADMIN]);
