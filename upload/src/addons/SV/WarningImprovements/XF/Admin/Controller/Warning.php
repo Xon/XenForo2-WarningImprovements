@@ -133,23 +133,24 @@ class Warning extends XFCP_Warning
         $phraseInput = $this->filter([
             'sv_content_spoiler_title' => 'str'
         ]);
-        $formAction->validate(function (FormAction $formAction) use($phraseInput)
-        {
-            if (!strlen($phraseInput['sv_content_spoiler_title']))
-            {
-                $formAction->logError(
-                    \XF::phrase('sv_warning_improvements_please_enter_valid_content_spoiler_title'),
-                    'sv_content_spoiler_title'
-                );
-            }
-        });
         $formAction->apply(function () use($phraseInput, $warning)
         {
-            /** @var \XF\Entity\Phrase $masterContentSpoilerTitle */
-            $masterContentSpoilerTitle = $warning->getRelationOrDefault('SvMasterContentSpoilerTitle', false);
-            $masterContentSpoilerTitle->addon_id = '';
-            $masterContentSpoilerTitle->phrase_text = $phraseInput['sv_content_spoiler_title'];
-            $masterContentSpoilerTitle->save();
+            if (strlen($phraseInput['sv_content_spoiler_title']) === 0)
+            {
+                $masterContentSpoilerTitle = $warning->getRelation('SvMasterContentSpoilerTitle');
+                if ($masterContentSpoilerTitle !== null)
+                {
+                    $masterContentSpoilerTitle->delete();
+                }
+            }
+            else
+            {
+                /** @var \XF\Entity\Phrase $masterContentSpoilerTitle */
+                $masterContentSpoilerTitle = $warning->getRelationOrDefault('SvMasterContentSpoilerTitle', false);
+                $masterContentSpoilerTitle->addon_id = '';
+                $masterContentSpoilerTitle->phrase_text = $phraseInput['sv_content_spoiler_title'];
+                $masterContentSpoilerTitle->save();
+            }
         });
 
         return $formAction;
