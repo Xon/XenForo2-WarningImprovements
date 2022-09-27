@@ -1,0 +1,1 @@
+{$contentType} author warning edited

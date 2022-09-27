@@ -327,6 +327,43 @@ class Warning extends XFCP_Warning
                 {
                     if ($this->getOption('log_moderator'))
                     {
+                        $app = $this->app();
+                        /** @noinspection PhpRedundantOptionalArgumentInspection */
+                        $language = $app->language(0);
+                        $phraseTitle = 'mod_log.'.$this->content_type.'_warning_edited';
+                        $text = $language->getPhraseText($phraseTitle);
+                        if ($text === false)
+                        {
+                            // phrase doesn't exist, create one using `mod_log.warning_edited` as a template
+                            /** @var \XF\Entity\Phrase $phrase */
+                            $phrase = \XF::app()->finder('XF:Phrase')
+                                         ->where('title', '=', $phraseTitle)
+                                         ->where('language_id', '=', 0)
+                                         ->fetchOne();
+                            if (!$phrase)
+                            {
+                                $phraseText = (string)\XF::phrase('mod_log.warning_edited', [
+                                    'contentType' => $app->getContentTypePhrase($this->content_type)
+                                ]);
+
+                                /** @var \XF\Entity\Phrase $phrase */
+                                $phrase = \XF::em()->create('XF:Phrase');
+                                $phrase->language_id = 0;
+                                $phrase->title = $phraseTitle;
+                                $phrase->phrase_text = $phraseText;
+                                $phrase->global_cache = false;
+                                $phrase->addon_id = 'SV/WarningImprovements';
+                                // try to run outside this transaction
+                                \XF::runLater(function() use ($phrase) {
+                                    try
+                                    {
+                                        $phrase->save(false);
+                                    }
+                                    catch(\Exception $e) {}
+                                });
+                            }
+                        }
+
                         $this->app()->logger()->logModeratorAction($this->content_type, $content, 'warning_edited', [], false);
                     }
                 }
