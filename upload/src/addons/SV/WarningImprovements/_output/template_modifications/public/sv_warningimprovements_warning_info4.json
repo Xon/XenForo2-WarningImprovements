@@ -1,0 +1,9 @@
+{
+    "template": "warning_info",
+    "description": "Show \"Spoiler contents\", \"Content Spoiler Title\", and \"Disable reactions after \"Warning points\"",
+    "execution_order": 6240,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "{^\\s*<xf:formrow label=\"{{ phrase\\('warning_points'\\) }}.*?<\\/xf:formrow>$}sm",
+    "replace": "$0\n\n<xf:if is=\"$warning.sv_spoiler_contents\">\n\t<xf:formrow label=\"{{ phrase('sv_warning_improvements_spoiler_contents') }}\">{{ phrase('yes') }}</xf:formrow>\n\t\n\t<xf:formrow label=\"{{ phrase('sv_warning_improvements_content_spoiler_title') }}\">{$warning.sv_content_spoiler_title}</xf:formrow>\n</xf:if>\n\n<xf:if is=\"$warning.sv_disable_reactions\">\n\t<xf:formrow label=\"{{ phrase('sv_warning_improvements_disable_reactions') }}\">{{ phrase('yes') }}</xf:formrow>\n</xf:if>"
+}
