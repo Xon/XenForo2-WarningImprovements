@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\Service\Warning;
 
+use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use XF\Mvc\Entity\Entity;
@@ -307,12 +308,10 @@ class Editor extends AbstractService
         }
 
         $content = $this->content;
-        if ($content && isset($content->structure()->columns['embed_metadata']))
+        if ($content instanceof SupportsEmbedMetadataInterface)
         {
             $warning = $this->warning;
-
-            /** @var array $embedMetadata */
-            $embedMetadata = $content->get('embed_metadata');
+            $embedMetadata = $content->embed_metadata;
 
             if ($warning->sv_spoiler_contents)
             {

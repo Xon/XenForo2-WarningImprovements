@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
+use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\XF\Entity\ConversationMaster as ExtendedConversationMasterEntity;
@@ -282,14 +283,12 @@ class Warn extends XFCP_Warn
         $warning->sv_content_spoiler_title = $spoilerTitle;
 
         $content = $this->content;
-        if (isset($content->structure()->columns['embed_metadata']))
+        if ($content instanceof SupportsEmbedMetadataInterface)
         {
-            /** @var array $embedMetadata */
-            $embedMetadata = $content->get('embed_metadata');
+            $embedMetadata = $content->embed_metadata;
             $embedMetadata['sv_spoiler_contents'] = $warning->sv_spoiler_contents;
             $embedMetadata['sv_content_spoiler_title'] = $spoilerTitle;
-
-            $content->set('embed_metadata', $embedMetadata);
+            $content->embed_metadata = $embedMetadata;
         }
 
         return $this;
@@ -306,12 +305,13 @@ class Warn extends XFCP_Warn
         if ($reactionHandler instanceof SupportsDisablingReactionInterface)
         {
             $content = $this->content;
+            if ($content instanceof SupportsEmbedMetadataInterface)
+            {
+                $embedMetadata = $content->embed_metadata;
+                $embedMetadata['sv_disable_reactions'] = $warning->sv_disable_reactions;
 
-            /** @var array $embedMetadata */
-            $embedMetadata = $content->get('embed_metadata');
-            $embedMetadata['sv_disable_reactions'] = $warning->sv_disable_reactions;
-
-            $content->set('embed_metadata', $embedMetadata);
+                $content->embed_metadata = $embedMetadata;
+            }
         }
 
         return $this;
