@@ -65,3 +65,8 @@ namespace SV\WarningImprovements\XF\Service\User
 	class XFCP_Warn extends \XF\Service\User\Warn {}
 	class XFCP_WarningPointsChange extends \XF\Service\User\WarningPointsChange {}
 }
+
+namespace SV\WarningImprovements\XF\Template
+{
+	class XFCP_Templater extends \XF\Template\Templater {}
+}

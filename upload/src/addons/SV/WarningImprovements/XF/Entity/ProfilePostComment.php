@@ -4,12 +4,15 @@ namespace SV\WarningImprovements\XF\Entity;
 
 use SV\WarningImprovements\Entity\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\Entity\SupportsDisablingReactionTrait;
+use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Entity\SupportsEmbedMetadataTrait;
+use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
+use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerTrait;
 use XF\Mvc\Entity\Entity;
 
-class ProfilePostComment extends XFCP_ProfilePostComment implements SupportsDisablingReactionInterface
+class ProfilePostComment extends XFCP_ProfilePostComment implements SupportsDisablingReactionInterface, SupportsEmbedMetadataInterface, SupportsWrappingContentWithSpoilerInterface
 {
-    use SupportsDisablingReactionTrait, SupportsEmbedMetadataTrait;
+    use SupportsDisablingReactionTrait, SupportsEmbedMetadataTrait, SupportsWrappingContentWithSpoilerTrait;
 
     public function hasDisabledReactionsListForSvWarnImprov(Entity $entity): bool
     {

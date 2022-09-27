@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Template\\Templater",
+    "to_class": "SV\\WarningImprovements\\XF\\Template\\Templater",
+    "execute_order": 6240,
+    "active": true
+}
