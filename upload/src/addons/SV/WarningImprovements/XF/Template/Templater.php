@@ -21,7 +21,9 @@ class Templater extends XFCP_Templater
         if ($content instanceof SupportsWrappingContentWithSpoilerInterface
             && $content->isContentWrappedInSpoilerForSvWarnImprov())
         {
-            $bbCode = "[SPOILER={$content->getContentSpoilerTitleForSvWarnImprov()}]{$bbCode}[/SPOILER]";
+            $title = $content->getContentSpoilerTitleForSvWarnImprov() ?? '';
+
+            $bbCode = "[SPOILER=\"{$title}\"]{$bbCode}[/SPOILER]";
         }
 
         return parent::fnBbCode(
