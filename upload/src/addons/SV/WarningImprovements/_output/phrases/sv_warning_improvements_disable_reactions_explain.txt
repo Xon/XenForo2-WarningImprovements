@@ -1,0 +1,1 @@
+If checked, users will not be able to react to the content that the user has been warned for.

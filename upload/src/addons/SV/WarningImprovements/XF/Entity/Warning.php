@@ -14,12 +14,18 @@ use XF\Phrase;
 use XF\Util\Arr as ArrUtil;
 
 /**
+ * COLUMNS
  * @property string                                                 notes_
+ * @property bool $sv_spoiler_contents
+ * @property string $sv_content_spoiler_title
+ * @property bool $sv_disable_reactions
+ *
  * GETTERS
  * @property UserExtendedEntity|UserEntity|null                     anonymized_issuer
  * @property int                                                    expiry_date_rounded
  * @property \XF\Entity\WarningDefinition                           definition
  * @property string                                                 title_censored
+ *
  * RELATIONS
  * @property WarningDefinitionExtended|\XF\Entity\WarningDefinition Definition
  * @property \XF\Entity\WarningDefinition                           Definition_
@@ -398,6 +404,19 @@ class Warning extends XFCP_Warning
                 $structure->columns['notes']['required'] = 'sv_please_enter_note_for_warning';
             }
         }
+
+        $structure->columns['sv_spoiler_contents'] = [
+            'type' => self::BOOL,
+            'default' => false
+        ];
+        $structure->columns['sv_content_spoiler_title'] = [
+            'type' => self::STR,
+            'default' => ''
+        ];
+        $structure->columns['sv_disable_reactions'] = [
+            'type' => self::BOOL,
+            'default' => false
+        ];
 
         $structure->getters['anonymized_issuer'] = true;
         $structure->getters['expiry_date_rounded'] = true;

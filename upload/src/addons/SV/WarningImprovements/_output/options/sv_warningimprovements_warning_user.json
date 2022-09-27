@@ -6,7 +6,7 @@
     "validation_class": "",
     "validation_method": "",
     "advanced": false,
-    "default_value": "",
+    "default_value": "0",
     "relations": {
         "SV_WarningImprovements": 400
     }

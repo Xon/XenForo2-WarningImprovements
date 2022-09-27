@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Reaction\\ProfilePostComment",
+    "to_class": "SV\\WarningImprovements\\XF\\Reaction\\ProfilePostComment",
+    "execute_order": 6240,
+    "active": true
+}

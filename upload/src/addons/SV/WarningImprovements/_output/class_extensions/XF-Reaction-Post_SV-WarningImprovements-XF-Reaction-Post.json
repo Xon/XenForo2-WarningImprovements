@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Reaction\\Post",
+    "to_class": "SV\\WarningImprovements\\XF\\Reaction\\Post",
+    "execute_order": 6240,
+    "active": true
+}

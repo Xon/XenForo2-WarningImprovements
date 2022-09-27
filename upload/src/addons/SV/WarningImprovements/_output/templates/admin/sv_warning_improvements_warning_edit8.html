@@ -1,0 +1,19 @@
+<h3 class="block-formSectionHeader"><span class="block-formSectionHeader-aligner">{{ phrase('sv_warning_improvements_content_spoiler_settings') }}</span></h3>
+<div class="block-body">
+	<xf:checkboxrow>
+		<xf:option name="sv_spoiler_contents" checked="{$warning.sv_spoiler_contents}" label="{{ phrase('sv_warning_improvements_spoiler_contents') }}">
+			<xf:dependent>
+				<xf:textbox name="sv_content_spoiler_title"
+							value="{$warning.sv_content_spoiler_title}"
+							placeholder="{{ phrase('sv_warning_improvements_content_spoiler_title') }}"
+							value="{$warning.SvMasterContentSpoilerTitle.phrase_text}" maxlength="{{ max_length('XF:Warning', 'sv_content_spoiler_title') }}" />
+			</xf:dependent>
+			<xf:afterhint>{{ phrase('sv_warning_improvements_spoiler_contents_explain') }}</xf:afterhint>
+		</xf:option>
+		
+		<xf:option name="sv_disable_reactions"
+				   checked="{$warning.sv_disable_reactions}"
+				   label="{{ phrase('sv_warning_improvements_disable_reactions') }}"
+				   hint="{{ phrase('sv_warning_improvements_disable_reactions_explain') }}" />
+	</xf:checkboxrow>
+</div>

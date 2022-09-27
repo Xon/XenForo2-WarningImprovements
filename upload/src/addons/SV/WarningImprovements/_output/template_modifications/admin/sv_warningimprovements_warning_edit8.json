@@ -1,0 +1,9 @@
+{
+    "template": "warning_edit",
+    "description": "Add \"Content spoiler settings\" before \"Conversation settings\"",
+    "execution_order": 6240,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "{^\\s{3}.*{{ phrase\\('conversation_settings'\\) }}.*?<\\/h3>$}m",
+    "replace": "<xf:include template=\"sv_warning_improvements_warning_edit8\" />\n\n$0"
+}

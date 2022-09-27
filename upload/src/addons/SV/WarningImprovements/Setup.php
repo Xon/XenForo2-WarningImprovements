@@ -3,6 +3,7 @@
 namespace SV\WarningImprovements;
 
 use SV\StandardLib\InstallerHelper;
+use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
@@ -72,12 +73,64 @@ class Setup extends AbstractSetup
         $this->addDefaultPhrases();
     }
 
+    /**
+     * @param array $stepParams
+     *
+     * @return array|bool
+     *
+     * @throws \XF\PrintableException
+     */
+    public function installStep6(array $stepParams)
+    {
+        $stepParams = array_replace([
+            'position' => 0
+        ], $stepParams);
+
+        $db = $this->db();
+
+        $warningDefIds = $db->fetchAllColumn($db->limit('
+			SELECT warning_definition_id
+			FROM xf_warning_definition
+			WHERE warning_definition_id > ?
+			ORDER BY warning_definition_id
+		', 10), $stepParams['position']);
+        if (!$warningDefIds)
+        {
+            return true;
+        }
+
+        $db->beginTransaction();
+
+        foreach ($warningDefIds AS $warningDefId)
+        {
+            $stepParams['position'] = $warningDefId;
+
+            $title = $db->fetchOne('
+                SELECT phrase_text
+                FROM xf_phrase
+                WHERE language_id = ?
+                  AND title = ?
+            ', [0, 'warning_title.' . $warningDefId]);
+
+            $this->addDefaultPhrase(
+                'sv_warning_improvements_warning_spoiler_title.' . $warningDefId,
+                $title,
+                true
+            );
+        }
+
+        $db->commit();
+
+        return $stepParams;
+    }
+
     public function addDefaultPhrases()
     {
         $this->addDefaultPhrase('warning_title.0', 'Custom Warning', true);
         $this->addDefaultPhrase('warning_conv_title.0', '', true);
         $this->addDefaultPhrase('warning_conv_text.0', '', true);
         $this->addDefaultPhrase('sv_warning_category_title.1', 'Warnings', true);
+        $this->addDefaultPhrase('sv_warning_improvements_warning_spoiler_title.0', 'Warned Content', true);
     }
 
     public function cleanupWarningCategories()
@@ -237,6 +290,18 @@ class Setup extends AbstractSetup
         ');
     }
 
+    /**
+     * @param array $stepParams
+     *
+     * @return array|bool
+     *
+     * @throws \XF\PrintableException
+     */
+    public function upgrade2070500Step1(array $stepParams)
+    {
+        return $this->installStep6($stepParams);
+    }
+
     public function uninstallStep1()
     {
         $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");
@@ -276,6 +341,7 @@ class Setup extends AbstractSetup
             'warning_title.0',
             'warning_conv_title.0',
             'warning_conv_text.0',
+            'sv_warning_improvements_warning_spoiler_title.%'
         ]);
     }
 
@@ -331,11 +397,20 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'sv_pending_warning_expiry', 'int')->nullable(true)->setDefault(null);
         };
 
+        $tables['xf_warning'] = function (Alter $table)
+        {
+            $this->addOrChangeColumn($table, 'sv_spoiler_contents', 'tinyint', 3)->setDefault(0);
+            $this->addOrChangeColumn($table, 'sv_content_spoiler_title', 'mediumtext')->setDefault('');
+            $this->addOrChangeColumn($table, 'sv_disable_reactions', 'tinyint', 3)->setDefault(0);
+        };
+
         $tables['xf_warning_definition'] = function (Alter $table)
         {
             $this->addOrChangeColumn($table, 'sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_display_order', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'sv_custom_title', 'tinyint', 1)->setDefault(0);
+            $this->addOrChangeColumn($table, 'sv_spoiler_contents', 'tinyint', 3)->setDefault(0);
+            $this->addOrChangeColumn($table, 'sv_disable_reactions', 'tinyint', 3)->setDefault(0);
             $table->changeColumn('expiry_type')->addValues(['hours']);
         };
 
@@ -366,15 +441,15 @@ class Setup extends AbstractSetup
             $table->dropColumns('sv_pending_warning_expiry');
         };
 
-        $tables['xf_warning_definition'] = function (Alter $table)
+        $tables['xf_warning'] = function (Alter $table)
         {
-            $table->dropColumns(['sv_warning_category_id', 'sv_display_order', 'sv_custom_title']);
-            $table->changeColumn('expiry_type')->removeValues(['hours']);
+            $table->dropColumns(['sv_spoiler_contents', 'sv_disable_reactions']);
         };
 
         $tables['xf_warning_definition'] = function (Alter $table)
         {
-            $table->dropColumns('sv_warning_category_id');
+            $table->dropColumns(['sv_warning_category_id', 'sv_display_order', 'sv_custom_title', 'sv_spoiler_contents', 'sv_disable_reactions']);
+            $table->changeColumn('expiry_type')->removeValues(['hours']);
         };
 
         $tables['xf_warning_action'] = function (Alter $table)

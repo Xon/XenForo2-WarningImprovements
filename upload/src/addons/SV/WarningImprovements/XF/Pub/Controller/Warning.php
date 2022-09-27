@@ -133,6 +133,10 @@ class Warning extends XFCP_Warning
             'action_options' => 'array',
             'send_warning_alert' => 'bool',
             'send_warning_alert_reason' => 'str',
+
+            'sv_spoiler_contents' => 'bool',
+            'sv_content_spoiler_title' => 'str',
+            'sv_disable_reactions' => 'str'
         ];
 
         if ($canEditTitle)
@@ -231,6 +235,11 @@ class Warning extends XFCP_Warning
             $warningEditor->setCanReopenReport(false);
             $warningEditor->resolveReportFor($input['resolve_report'] ?? false, $input['resolve_alert'] ?? false, $input['resolve_alert_comment'] ?? '');
         }
+
+        $warningEditor->setSpoilerContents(
+            $input['sv_spoiler_contents'],
+            $input['sv_content_spoiler_title']
+        )->setDisableReactions($input['sv_disable_reactions']);
 
         return $input;
     }
