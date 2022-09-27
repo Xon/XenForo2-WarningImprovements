@@ -5,6 +5,8 @@
 
 namespace SV\WarningImprovements\XF\ControllerPlugin;
 
+use SV\WarningImprovements\Entity\SupportsDisablingReactionInterface;
+use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use SV\WarningImprovements\XF\Repository\Warning;
@@ -75,6 +77,10 @@ class Warn extends XFCP_Warn
         }
         else if ($response instanceof ViewReply)
         {
+            $response->setParam('content', $content);
+            $response->setParam('disablingReactionsAction', $content instanceof SupportsDisablingReactionInterface);
+            $response->setParam('spoilerContentsAction', $content instanceof SupportsWrappingContentWithSpoilerInterface);
+
             $categoryRepo = $this->getWarningCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
 
