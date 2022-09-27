@@ -1,0 +1,9 @@
+<xf:if is="$warning.sv_spoiler_contents">
+	<xf:formrow label="{{ phrase('sv_warning_improvements_spoiler_contents') }}">{{ phrase('yes') }}</xf:formrow>
+
+	<xf:formrow label="{{ phrase('sv_warning_improvements_content_spoiler_title') }}">{{ $warning.sv_content_spoiler_title === '' ? phrase("n_a") : '"'.($warning.sv_content_spoiler_title).'"' }}</xf:formrow>
+</xf:if>
+
+<xf:if is="$warning.sv_disable_reactions">
+	<xf:formrow label="{{ phrase('sv_warning_improvements_disable_reactions') }}">{{ phrase('yes') }}</xf:formrow>
+</xf:if>

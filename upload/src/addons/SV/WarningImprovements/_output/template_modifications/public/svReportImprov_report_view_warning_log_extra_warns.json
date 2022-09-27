@@ -1,0 +1,9 @@
+{
+    "template": "svReportImprov_report_view_warning_log",
+    "description": "Show \"Spoiler contents\", \"Content Spoiler Title\", and \"Disable reactions after \"Warning points\"",
+    "execution_order": 6555,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#$#",
+    "replace": "$0\n<xf:include template=\"svWarningImprov_report_view_warning\" />"
+}
