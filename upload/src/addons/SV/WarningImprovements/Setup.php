@@ -270,6 +270,11 @@ class Setup extends AbstractSetup
         ');
     }
 
+    public function upgrade2080001Step1()
+    {
+        $this->installStep2();
+    }
+
     public function uninstallStep1()
     {
         $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");
