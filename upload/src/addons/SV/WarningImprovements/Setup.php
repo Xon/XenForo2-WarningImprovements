@@ -76,6 +76,37 @@ class Setup extends AbstractSetup
         $this->addDefaultPhrases();
     }
 
+    public function installStep6()
+    {
+        $this->applyDefaultPermissions();
+    }
+
+    protected function applyDefaultPermissions(int $previousVersion = 0): bool
+    {
+        $applied = false;
+
+        if ($previousVersion < 2080000)
+        {
+            $this->applyGlobalPermissionByGroup('forum', 'bypassSvReactionList', [User::GROUP_MOD, User::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('profilePost', 'bypassSvReactionList', [User::GROUP_MOD, User::GROUP_ADMIN]);
+            $applied = true;
+        }
+
+        if ($previousVersion !== 0 && $previousVersion < 2080000)
+        {
+            $this->applyGlobalPermissionByGroup('forum', 'sv_viewWarningActions', [User::GROUP_REG, User::GROUP_MOD, User::GROUP_ADMIN]);
+
+            $this->applyGlobalPermissionByGroup('forum', 'viewWarning_issuer', [User::GROUP_MOD, User::GROUP_ADMIN]);
+            // mosly mod/admin only
+            $this->applyGlobalPermissionByGroup('forum', 'sv_editWarningActions', [User::GROUP_MOD, User::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'sv_showAllWarningActions', [User::GROUP_MOD, User::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'svManageIssuedWarnings', [User::GROUP_MOD, User::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'svBypassWarnTitleCensor', [User::GROUP_MOD, User::GROUP_ADMIN]);
+        }
+
+        return $applied;
+    }
+
     public function addDefaultPhrases()
     {
         $this->addDefaultPhrase('warning_title.0', 'Custom Warning', true);
@@ -288,6 +319,23 @@ class Setup extends AbstractSetup
     {
         $this->addDefaultPhrases();
         $this->cleanupWarningCategories();
+
+        $previousVersion = (int)$previousVersion;
+        $atomicJobs = [];
+        $atomicJobs[] = 'SV\ReportImprovements:WarningLogMigration';
+
+        if ($this->applyDefaultPermissions($previousVersion))
+        {
+            $atomicJobs[] = 'XF:PermissionRebuild';
+        }
+
+        if ($atomicJobs)
+        {
+            \XF::app()->jobManager()->enqueueUnique(
+                'report-improvements-installer',
+                'XF:Atomic', ['execute' => $atomicJobs]
+            );
+        }
     }
 
     protected function getTables(): array
