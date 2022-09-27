@@ -73,64 +73,12 @@ class Setup extends AbstractSetup
         $this->addDefaultPhrases();
     }
 
-    /**
-     * @param array $stepParams
-     *
-     * @return array|bool
-     *
-     * @throws \XF\PrintableException
-     */
-    public function installStep6(array $stepParams)
-    {
-        $stepParams = array_replace([
-            'position' => -1
-        ], $stepParams);
-
-        $db = $this->db();
-
-        $warningDefIds = $db->fetchAllColumn($db->limit('
-			SELECT warning_definition_id
-			FROM xf_warning_definition
-			WHERE warning_definition_id > ?
-			ORDER BY warning_definition_id
-		', 10), $stepParams['position']);
-        if (!$warningDefIds)
-        {
-            return true;
-        }
-
-        $db->beginTransaction();
-
-        foreach ($warningDefIds AS $warningDefId)
-        {
-            $stepParams['position'] = $warningDefId;
-
-            $title = $db->fetchOne('
-                SELECT phrase_text
-                FROM xf_phrase
-                WHERE language_id = ?
-                  AND title = ?
-            ', [0, 'warning_title.' . $warningDefId]);
-
-            $this->addDefaultPhrase(
-                'sv_warning_improvements_warning_spoiler_title.' . $warningDefId,
-                $title,
-                true
-            );
-        }
-
-        $db->commit();
-
-        return $stepParams;
-    }
-
     public function addDefaultPhrases()
     {
         $this->addDefaultPhrase('warning_title.0', 'Custom Warning', true);
         $this->addDefaultPhrase('warning_conv_title.0', '', true);
         $this->addDefaultPhrase('warning_conv_text.0', '', true);
         $this->addDefaultPhrase('sv_warning_category_title.1', 'Warnings', true);
-        $this->addDefaultPhrase('sv_warning_improvements_warning_spoiler_title.0', 'Warned Content', true);
     }
 
     public function cleanupWarningCategories()
