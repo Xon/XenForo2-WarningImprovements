@@ -3,7 +3,6 @@
 namespace SV\WarningImprovements;
 
 use SV\StandardLib\InstallerHelper;
-use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
@@ -240,18 +239,6 @@ class Setup extends AbstractSetup
             set warn.warning_user_id = xf_moderator_log.user_id
             where warn.warning_user_id = warn.user_id and warn.warning_user_id <> xf_moderator_log.user_id
         ');
-    }
-
-    /**
-     * @param array $stepParams
-     *
-     * @return array|bool
-     *
-     * @throws \XF\PrintableException
-     */
-    public function upgrade2070500Step1(array $stepParams)
-    {
-        return $this->installStep6($stepParams);
     }
 
     public function uninstallStep1()
