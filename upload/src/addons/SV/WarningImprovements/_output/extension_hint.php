@@ -3,6 +3,16 @@
 // ################## THIS IS A GENERATED FILE ##################
 // DO NOT EDIT DIRECTLY. EDIT THE CLASS EXTENSIONS IN THE CONTROL PANEL.
 
+namespace SV\WarningImprovements\SV\ReportImprovements\Entity
+{
+	class XFCP_WarningLog extends \SV\ReportImprovements\Entity\WarningLog {}
+}
+
+namespace SV\WarningImprovements\SV\ReportImprovements\Service\WarningLog
+{
+	class XFCP_Creator extends \SV\ReportImprovements\Service\WarningLog\Creator {}
+}
+
 namespace SV\WarningImprovements\XF\Admin\Controller
 {
 	class XFCP_Warning extends \XF\Admin\Controller\Warning {}

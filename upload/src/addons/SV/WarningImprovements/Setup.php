@@ -19,6 +19,10 @@ class Setup extends AbstractSetup
     use StepRunnerUpgradeTrait;
     use StepRunnerUninstallTrait;
 
+    public static $supportedAddOns = [
+        'SV/ReportImprovements' => true,
+    ];
+
     public function installStep1()
     {
         $sm = $this->schemaManager();
@@ -351,6 +355,11 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'sv_content_spoiler_title', 'mediumtext')->setDefault('');
             $this->addOrChangeColumn($table, 'sv_disable_reactions', 'tinyint', 3)->setDefault(0);
         };
+
+        if ($this->schemaManager()->tableExists('xf_sv_warning_log'))
+        {
+            $tables['xf_sv_warning_log'] = $tables['xf_warning'];
+        }
 
         $tables['xf_warning_definition'] = function (Alter $table)
         {

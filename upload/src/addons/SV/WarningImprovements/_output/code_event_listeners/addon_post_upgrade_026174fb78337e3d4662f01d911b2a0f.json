@@ -1,0 +1,9 @@
+{
+    "event_id": "addon_post_upgrade",
+    "execute_order": 6240,
+    "callback_class": "SV\\WarningImprovements\\InstallerListener",
+    "callback_method": "addonPostUpgrade",
+    "active": true,
+    "hint": "",
+    "description": "Called when the post-upgrade code for an add-on has been run."
+}

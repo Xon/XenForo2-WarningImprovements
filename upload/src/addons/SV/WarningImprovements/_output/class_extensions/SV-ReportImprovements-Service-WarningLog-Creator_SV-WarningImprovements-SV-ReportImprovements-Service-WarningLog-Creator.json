@@ -1,0 +1,6 @@
+{
+    "from_class": "SV\\ReportImprovements\\Service\\WarningLog\\Creator",
+    "to_class": "SV\\WarningImprovements\\SV\\ReportImprovements\\Service\\WarningLog\\Creator",
+    "execute_order": 6240,
+    "active": true
+}

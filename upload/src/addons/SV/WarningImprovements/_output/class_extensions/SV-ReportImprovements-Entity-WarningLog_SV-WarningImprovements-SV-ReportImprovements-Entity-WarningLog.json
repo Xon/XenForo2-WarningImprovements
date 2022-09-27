@@ -1,0 +1,6 @@
+{
+    "from_class": "SV\\ReportImprovements\\Entity\\WarningLog",
+    "to_class": "SV\\WarningImprovements\\SV\\ReportImprovements\\Entity\\WarningLog",
+    "execute_order": 6240,
+    "active": true
+}
