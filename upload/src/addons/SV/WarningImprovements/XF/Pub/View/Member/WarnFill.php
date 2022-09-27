@@ -51,7 +51,7 @@ Use a template mopdification which calls $user.getWarningDefaultContentAction() 
             ->render('html', [
                 'nameOnInvalid' => false,
             ]);
-        $response['formValues']['input[sv_disable_reactions]'] = $warningDefinition->sv_disable_reactions;
+        $response['formValues']['input[name=sv_disable_reactions]'] = $warningDefinition->sv_disable_reactions;
 
         return $response;
     }
