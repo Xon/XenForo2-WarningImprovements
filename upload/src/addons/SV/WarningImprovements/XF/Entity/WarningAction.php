@@ -37,7 +37,7 @@ class WarningAction extends XFCP_WarningAction
      */
     public function getTitle()
     {
-        if (\is_callable(parent::class.'::getTitle'))
+        if (\is_callable([parent::class,'getTitle']))
         {
             return parent::getTitle();
         }
