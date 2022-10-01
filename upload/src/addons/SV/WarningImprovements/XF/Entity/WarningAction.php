@@ -31,18 +31,10 @@ use XF\Mvc\Entity\Structure;
 class WarningAction extends XFCP_WarningAction
 {
     /**
-     * XF2.1=>XF2.1.5 compatibility
-     *
      * @return string|\XF\Phrase
      */
     public function getTitle()
     {
-        if (\is_callable([parent::class,'getTitle']))
-        {
-            return parent::getTitle();
-        }
-
-        // getto as fuck
         return \XF::Phrase('svWarningPoints:') . ' '. $this->points;
     }
 

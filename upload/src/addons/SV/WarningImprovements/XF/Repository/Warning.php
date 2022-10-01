@@ -20,7 +20,7 @@ use XF\Phrase;
 class Warning extends XFCP_Warning
 {
     /**
-     * XF2.1 & XF2.2.0/XF2.2.1 compatibility shim
+     * XF2.2.0/XF2.2.1 compatibility shim
      *
      * @param UserEntity $user
      * @param \Closure   $callable
@@ -37,22 +37,11 @@ class Warning extends XFCP_Warning
         \XF::setVisitor($user);
 
         $oldLang = \XF::language();
-        // Compatibility for XF2.1 & XF2.2
         $app = \XF::app();
         $newLang = $app->language($user->language_id);
-        if (\XF::$versionId >= 2020000 || \is_callable([$newLang, 'isUsable']))
+        if (!$newLang->isUsable($user))
         {
-            if (!$newLang->isUsable($user))
-            {
-                $newLang = $app->language();
-            }
-        }
-        else
-        {
-            if (!($newLang->user_selectable ?? false) && !$user->is_admin)
-            {
-                $newLang = $app->language();
-            }
+            $newLang = $app->language();
         }
         $newLangeOrigTz = $newLang->getTimeZone();
         $newLang->setTimeZone($user->timezone);
