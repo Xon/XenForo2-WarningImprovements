@@ -17,7 +17,7 @@ use XF\Util\Arr as ArrUtil;
  * COLUMNS
  * @property string                                                 notes_
  * @property bool $sv_spoiler_contents
- * @property string $sv_content_spoiler_title
+ * @property string|null $sv_content_spoiler_title
  * @property bool $sv_disable_reactions
  *
  * GETTERS
@@ -308,6 +308,16 @@ class Warning extends XFCP_Warning
         parent::onExpiration($isDelete);
     }
 
+    protected function _preSave()
+    {
+        if ($this->sv_content_spoiler_title === '')
+        {
+            $this->sv_content_spoiler_title = null;
+        }
+
+        parent::_preSave();
+    }
+
     protected function _postSave()
     {
         parent::_postSave();
@@ -448,7 +458,8 @@ class Warning extends XFCP_Warning
         ];
         $structure->columns['sv_content_spoiler_title'] = [
             'type' => self::STR,
-            'default' => ''
+            'nullable' => true,
+            'default' => null,
         ];
         $structure->columns['sv_disable_reactions'] = [
             'type' => self::BOOL,

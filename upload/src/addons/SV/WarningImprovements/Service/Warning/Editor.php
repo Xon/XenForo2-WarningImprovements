@@ -316,7 +316,7 @@ class Editor extends AbstractService
             if ($warning->sv_spoiler_contents)
             {
                 $embedMetadata['sv_spoiler_contents'] = $warning->sv_spoiler_contents;
-                $embedMetadata['sv_content_spoiler_title'] = $warning->sv_content_spoiler_title;
+                $embedMetadata['sv_content_spoiler_title'] = $warning->sv_content_spoiler_title ?? '';
             }
             else
             {

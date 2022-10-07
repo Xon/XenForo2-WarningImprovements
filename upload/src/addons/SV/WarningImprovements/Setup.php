@@ -270,7 +270,7 @@ class Setup extends AbstractSetup
         ');
     }
 
-    public function upgrade2080001Step1()
+    public function upgrade2080300Step1()
     {
         $this->installStep2();
     }
@@ -390,7 +390,7 @@ class Setup extends AbstractSetup
         $tables['xf_warning'] = function (Alter $table)
         {
             $this->addOrChangeColumn($table, 'sv_spoiler_contents', 'tinyint', 3)->setDefault(0);
-            $this->addOrChangeColumn($table, 'sv_content_spoiler_title', 'mediumtext')->setDefault('');
+            $this->addOrChangeColumn($table, 'sv_content_spoiler_title', 'mediumtext')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_disable_reactions', 'tinyint', 3)->setDefault(0);
         };
 

@@ -4,6 +4,11 @@ namespace SV\WarningImprovements\SV\ReportImprovements\Entity;
 
 use XF\Mvc\Entity\Structure as EntityStructure;
 
+/**
+ * @property bool $sv_spoiler_contents
+ * @property string|null $sv_content_spoiler_title
+ * @property bool $sv_disable_reactions
+ */
 class WarningLog extends XFCP_WarningLog
 {
     public static function getStructure(EntityStructure $structure) : EntityStructure
@@ -16,7 +21,8 @@ class WarningLog extends XFCP_WarningLog
         ];
         $structure->columns['sv_content_spoiler_title'] = [
             'type' => self::STR,
-            'default' => ''
+            'nullable' => true,
+            'default' => null,
         ];
         $structure->columns['sv_disable_reactions'] = [
             'type' => self::BOOL,
