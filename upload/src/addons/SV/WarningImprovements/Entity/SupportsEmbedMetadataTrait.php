@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\Entity;
 
+use SV\WarningImprovements\XF\Entity\Warning;
 use XF\Mvc\Entity\Structure;
 
 trait SupportsEmbedMetadataTrait
@@ -17,14 +18,34 @@ trait SupportsEmbedMetadataTrait
 
             // XF doesn't preserve the contents of embed_metadata across edits, so grab the flags/title out of previous
             // values and store in the new version of embed_metadata
-
-            $oldMetaData = $this->getPreviousValue('embed_metadata');
+            // or extract fields from the warning, which will be the canonical versions
             $metadata = $this->embed_metadata;
-            foreach ($fields as $key)
+            if ($this->hasRelation('Warning'))
             {
-                if (!isset($metadata[$key]) && isset($oldMetaData[$key]))
+                $warning = $this->getRelation('Warning');
+                if ($warning instanceof Warning)
                 {
-                    $metadata[$key] = $oldMetaData[$key];
+                    foreach ($fields as $key)
+                    {
+                        $value = $warning->get($key);
+                        if ($value === null || $value === false)
+                        {
+                            continue;
+                        }
+
+                        $metadata[$key] = $value;
+                    }
+                }
+            }
+            else
+            {
+                $oldMetaData = $this->getPreviousValue('embed_metadata');
+                foreach ($fields as $key)
+                {
+                    if (!isset($metadata[$key]) && isset($oldMetaData[$key]))
+                    {
+                        $metadata[$key] = $oldMetaData[$key];
+                    }
                 }
             }
             $this->embed_metadata = $metadata;
