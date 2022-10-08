@@ -1,1 +1,1 @@
-The User Id to post as. 0 to user the user triggering the warning.
+The User Id to post as. 0 to use the user triggering the warning.
