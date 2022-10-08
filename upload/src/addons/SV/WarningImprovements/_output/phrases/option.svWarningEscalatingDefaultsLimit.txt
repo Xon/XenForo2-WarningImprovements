@@ -1,1 +1,1 @@
-Warning Escalating Defaults - Old-age limit
+Escalating default warning expiry - Old-age limit

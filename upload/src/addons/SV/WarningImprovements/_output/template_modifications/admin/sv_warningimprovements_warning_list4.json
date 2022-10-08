@@ -1,6 +1,6 @@
 {
     "template": "warning_list",
-    "description": "Warning Escalating Defaults",
+    "description": "Escalating default warning expiry",
     "execution_order": 4156,
     "enabled": true,
     "action": "preg_replace",
