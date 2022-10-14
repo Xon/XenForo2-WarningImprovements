@@ -39,8 +39,6 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
     public function getResult(): Phrase
     {
-        $result = 'n_a';
-
         switch ($this->action_type)
         {
             case 'groups':
@@ -77,6 +75,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
             case 'field':
                 $result = ($this->new_value === '1') ? 'yes' : 'no';
+                break;
+            default:
+                $result = 'n_a';
                 break;
         }
 

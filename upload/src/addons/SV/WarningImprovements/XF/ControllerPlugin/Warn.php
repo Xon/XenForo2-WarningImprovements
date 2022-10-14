@@ -206,7 +206,7 @@ class Warn extends XFCP_Warn
      * @param string          $contentType
      * @param Entity          $content
      * @param array           $input
-     * @return \SV\WarningImprovements\XF\Service\User\Warn|\XF\Service\User\Warn
+     * @return ExtendedUserWarnSvc|\XF\Service\User\Warn
      * @throws \XF\Mvc\Reply\Exception
      */
     protected function setupWarnService(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)

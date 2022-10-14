@@ -65,6 +65,7 @@ class InstallerListener
         static::applyAddOnPostInstallation($addOn, $installedAddOn, $json, $stateChanges);
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     protected static function applyAddOnPostInstallation(
         AddOn $addOn,
         AddOnEntity $addonEntity,

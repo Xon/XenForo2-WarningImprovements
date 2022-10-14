@@ -201,7 +201,7 @@ class Editor extends AbstractService
         $report = $warning->Report;
         if ($report === null || !$report->isClosed())
         {
-            $warning->resolveReportFor($resolveReport, $alert, $alertComment);
+            $warning->resolveReportFor(true, $alert, $alertComment);
             $this->hasChanges = true;
         }
     }

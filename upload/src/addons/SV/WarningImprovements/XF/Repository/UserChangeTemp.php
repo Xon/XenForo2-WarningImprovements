@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpRedundantOptionalArgumentInspection
- */
 
 namespace SV\WarningImprovements\XF\Repository;
 

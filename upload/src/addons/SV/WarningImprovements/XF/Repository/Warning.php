@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @noinspection PhpRedundantOptionalArgumentInspection
- */
-
 namespace SV\WarningImprovements\XF\Repository;
 
 use SV\WarningImprovements\Entity\WarningDefault;
@@ -162,7 +158,6 @@ class Warning extends XFCP_Warning
         }
 
         /** @var WarningDefinition $warningDefinition */
-        /** @noinspection PhpUnnecessaryLocalVariableInspection */
         $warningDefinition = $this->finder('XF:WarningDefinition')
                                   ->where('warning_definition_id', '=', 0)
                                   ->fetchOne();
@@ -179,7 +174,6 @@ class Warning extends XFCP_Warning
     public function getWarningDefaultExtension(int $warningCount, int $warningTotals)
     {
         /** @var WarningDefault $warningDefault */
-        /** @noinspection PhpUnnecessaryLocalVariableInspection */
         $warningDefault = $this->finder('SV\WarningImprovements:WarningDefault')
                                ->where('active', '=', 1)
                                ->where('threshold_points', '<', $warningTotals)

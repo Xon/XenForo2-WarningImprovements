@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMultipleClassDeclarationsInspection
- */
 
 namespace SV\WarningImprovements\Entity;
 
@@ -9,7 +6,8 @@ trait SupportsWrappingContentWithSpoilerTrait
 {
     public function isContentWrappedInSpoilerForSvWarnImprov() : bool
     {
-        if (!$this instanceof SupportsEmbedMetadataInterface)
+        /** @noinspection PhpInstanceofIsAlwaysTrueInspection */
+        if (!($this instanceof SupportsEmbedMetadataInterface))
         {
             return false;
         }

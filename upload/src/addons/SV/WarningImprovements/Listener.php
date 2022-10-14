@@ -8,7 +8,6 @@ class Listener
 {
     public static function getWarningRepo(): \SV\WarningImprovements\XF\Repository\Warning
     {
-        /** @noinspection PhpUnnecessaryLocalVariableInspection */
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = \XF::repository('XF:Warning');
 

@@ -12,20 +12,19 @@ use XF\Phrase;
 
 /**
  * COLUMNS
- * @property int sv_warning_category_id
- * @property int sv_display_order
- * @property bool sv_custom_title
- * @property bool is_custom
- * @property string custom_title_placeholder
- * @property bool $sv_spoiler_contents
- * @property bool $sv_disable_reactions
  *
+ * @property int                                            sv_warning_category_id
+ * @property int                                            sv_display_order
+ * @property bool                                           sv_custom_title
+ * @property bool                                           is_custom
+ * @property string                                         custom_title_placeholder
+ * @property bool                                           $sv_spoiler_contents
+ * @property bool                                           $sv_disable_reactions
  * GETTERS
- * @property \XF\Phrase $sv_content_spoiler_title
- *
+ * @property Phrase                                         $sv_content_spoiler_title
  * RELATIONS
  * @property \SV\WarningImprovements\Entity\WarningCategory Category
- * @property \XF\Entity\Phrase $SvMasterContentSpoilerTitle
+ * @property \XF\Entity\Phrase                              $SvMasterContentSpoilerTitle
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {
@@ -36,7 +35,7 @@ class WarningDefinition extends XFCP_WarningDefinition
         return static::SV_CONTENT_SPOILER_TITLE . '.' . $this->warning_definition_id;
     }
 
-    public function getSvContentSpoilerTitle() : \XF\Phrase
+    public function getSvContentSpoilerTitle() : Phrase
     {
         return \XF::phrase($this->getSvContentSpoilerTitlePhraseName());
     }
