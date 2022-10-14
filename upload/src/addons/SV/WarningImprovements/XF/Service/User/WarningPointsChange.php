@@ -178,7 +178,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         /** @var \SV\WarningImprovements\XF\Entity\WarningAction $action */
         foreach ($actions AS $action)
         {
-            $categoryId = $action->sv_warning_category_id ?: 0;
+            $categoryId = (int)$action->sv_warning_category_id;
             if (empty($categoryPoints[$categoryId]))
             {
                 // category has been deleted, but the warning action hasn't been updated, consider it as a global action
@@ -201,24 +201,26 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         {
             /** @var User $postAsUser */
             $postAsUser = null;
-            $postAsUserId = $this->lastAction->sv_post_as_user_id ?? 0;
-            if ($postAsUserId)
+            $postAsUserId = (int)$this->lastAction->sv_post_as_user_id;
+            if ($postAsUserId !== 0)
             {
                 $postAsUser = $this->em()->find('XF:User', $postAsUserId);
             }
 
-            if (!$postAsUserId)
+            if ($postAsUser === null)
             {
                 $postAsUser = \XF::visitor();
             }
 
-            if ($postAsUser)
+            if ($postAsUser !== null)
             {
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
                 $warningRepo = \XF::repository('XF:Warning');
                 $params = $warningRepo->getSvWarningReplaceables($this->user, $this->warning, $this->lastAction->points, true);
 
-                if ($nodeId = $this->lastAction->sv_post_node_id)
+                $nodeId = (int)$this->lastAction->sv_post_node_id;
+                $threadId = (int)$this->lastAction->sv_post_thread_id;
+                if ($nodeId !== 0)
                 {
                     /** @var \SV\MultiPrefix\XF\Entity\Forum $forum */
                     $forum = $this->em()->find('XF:Forum', $nodeId);
@@ -252,7 +254,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                         });
                     }
                 }
-                else if ($threadId = $this->lastAction->sv_post_thread_id)
+                else if ($threadId !== 0)
                 {
                     if ($thread = $this->em()->find('XF:Thread', $threadId))
                     {
@@ -329,7 +331,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             /** @var \SV\WarningImprovements\XF\Entity\WarningAction $action */
             foreach ($actions AS $action)
             {
-                $categoryId = $action->sv_warning_category_id ?: 0;
+                $categoryId = (int)$action->sv_warning_category_id;
                 if (empty($categoryPoints[$categoryId]))
                 {
                     // the warning action has been deleted after the warning has been issued, as such the category is now AWOL
