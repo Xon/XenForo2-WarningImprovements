@@ -325,7 +325,10 @@ class Setup extends AbstractSetup
 
         $previousVersion = (int)$previousVersion;
         $atomicJobs = [];
-        $atomicJobs[] = 'SV\ReportImprovements:WarningLogMigration';
+        if (\XF::isAddOnActive('SV/ReportImprovements'))
+        {
+            $atomicJobs[] = 'SV\ReportImprovements:WarningLogMigration';
+        }
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
@@ -335,7 +338,7 @@ class Setup extends AbstractSetup
         if ($atomicJobs)
         {
             \XF::app()->jobManager()->enqueueUnique(
-                'report-improvements-installer',
+                'warning-improvements-installer',
                 'XF:Atomic', ['execute' => $atomicJobs]
             );
         }
