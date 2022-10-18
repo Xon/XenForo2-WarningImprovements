@@ -329,6 +329,10 @@ class Setup extends AbstractSetup
         {
             $atomicJobs[] = 'SV\ReportImprovements:WarningLogMigration';
         }
+        else
+        {
+            $this->db()->query('DELETE FROM xf_job WHERE execute_class = ?', 'SV\ReportImprovements:WarningLogMigration');
+        }
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
