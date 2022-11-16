@@ -246,7 +246,7 @@ class Warning extends XFCP_Warning
         $minNoteLength = (int)(\XF::options()->sv_wi_warning_note_chars ?? 0);
         if ($minNoteLength > 0)
         {
-            $noteLength = \utf8_strlen($notes);
+            $noteLength = \mb_strlen($notes);
             if ($noteLength < $minNoteLength)
             {
                 $underAmount = $minNoteLength - $noteLength;
