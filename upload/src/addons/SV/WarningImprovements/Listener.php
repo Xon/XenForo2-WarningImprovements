@@ -70,9 +70,9 @@ class Listener
      */
     public static function visitorSetup(User &$visitor)
     {
-        $userId = $visitor->user_id;
+        $userId = (int)$visitor->user_id;
 
-        if (empty($userId))
+        if ($userId === 0)
         {
             return;
         }
@@ -81,7 +81,7 @@ class Listener
         $option = $visitor->Option;
         $pendingWarningExpiry = $option->sv_pending_warning_expiry ?? 0;
 
-        if ($pendingWarningExpiry && $pendingWarningExpiry <= \XF::$time)
+        if ($pendingWarningExpiry !== 0 && $pendingWarningExpiry <= \XF::$time)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = \XF::repository('XF:Warning');
