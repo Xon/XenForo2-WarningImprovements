@@ -366,8 +366,8 @@ class Warning extends XFCP_Warning
      */
     public function processExpiredWarningsForUser(UserEntity $user, bool $checkBannedStatus): bool
     {
-        $userId = $user->user_id;
-        if (!$userId)
+        $userId = (int)$user->user_id;
+        if ($userId === 0)
         {
             return false;
         }
