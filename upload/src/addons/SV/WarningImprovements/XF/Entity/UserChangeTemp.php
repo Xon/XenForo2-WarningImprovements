@@ -228,11 +228,14 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
     protected function svUpdatePendingExpiry()
     {
-        \XF::runOnce('svPendingExpiry.'.$this->user_id, function () {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = $this->repository('XF:Warning');
-            $warningRepo->updatePendingExpiryFor($this->User, true);
-        });
+        if ($this->User === null)
+        {
+            return;
+        }
+
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = $this->repository('XF:Warning');
+        $warningRepo->updatePendingExpiryForLater($this->User, true);
     }
 
     public static function getStructure(Structure $structure)

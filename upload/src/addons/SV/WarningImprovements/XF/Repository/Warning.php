@@ -293,7 +293,7 @@ class Warning extends XFCP_Warning
     {
         $db = $this->db();
 
-        $expiries = $db->fetchAllColumn('
+        $expires = $db->fetchAllColumn('
             SELECT MIN(expiry_date)
             FROM xf_warning
             WHERE user_id = ? AND (expiry_date = 0 or expiry_date > ?) AND is_expired = 0
@@ -307,8 +307,9 @@ class Warning extends XFCP_Warning
             WHERE user_id = ? AND (end_date = 0 or end_date > ?)
         ', [$userId, \XF::$time, $userId, \XF::$time, $userId, \XF::$time]);
 
+        /** @var ?int $effectiveNextExpiry */
         $effectiveNextExpiry = null;
-        foreach($expiries as $expire)
+        foreach($expires as $expire)
         {
             if ($expire === null)
             {
@@ -317,7 +318,7 @@ class Warning extends XFCP_Warning
             }
 
             $expire = (int)$expire;
-            if ($expire == 0)
+            if ($expire === 0)
             {
                 // expiry of 0 means never expire
                 $effectiveNextExpiry = null;
@@ -331,6 +332,13 @@ class Warning extends XFCP_Warning
         }
 
         return $effectiveNextExpiry ?: null;
+    }
+
+    public function updatePendingExpiryForLater(UserEntity $user, bool $checkBannedStatus)
+    {
+        \XF::runOnce('svPendingExpiry.' . $user->user_id, function () use ($user, $checkBannedStatus) {
+            $this->updatePendingExpiryFor($user, $checkBannedStatus);
+        });
     }
 
     /**
@@ -363,6 +371,7 @@ class Warning extends XFCP_Warning
      * @return bool
      * @throws \Exception
      * @throws \XF\PrintableException
+     * @noinspection PhpUnusedParameterInspection
      */
     public function processExpiredWarningsForUser(UserEntity $user, bool $checkBannedStatus): bool
     {
@@ -406,28 +415,24 @@ class Warning extends XFCP_Warning
             $changeService->expireChange($change);
         }
 
-        if ($checkBannedStatus)
-        {
-            $bans = $this->finder('XF:UserBan')
-                         ->where('end_date', '<=', \XF::$time)
-                         ->where('end_date', '>', 0)
-                         ->where('user_id', $userId)
-                         ->fetch();
-            $expired = $expired || $bans->count() > 0;
+        $bans = $this->finder('XF:UserBan')
+                     ->where('end_date', '<=', \XF::$time)
+                     ->where('end_date', '>', 0)
+                     ->where('user_id', $userId)
+                     ->fetch();
+        $expired = $expired || $bans->count() > 0;
 
-            /** @var \XF\Entity\UserBan $userBan */
-            foreach ($bans AS $userBan)
-            {
-                $userBan->delete();
-            }
+        /** @var \XF\Entity\UserBan $userBan */
+        foreach ($bans AS $userBan)
+        {
+            $userBan->delete();
         }
 
         // updatePendingExpiryFor is triggered is a warning/ban/user action is changed/deleted
-        // but if processExpiredWarningsForUser is called, it means the sv_pending_warning_expiry is set, so recompute it
-        if (!$expired)
-        {
-            $this->updatePendingExpiryFor($user, $checkBannedStatus);
-        }
+        // but if processExpiredWarningsForUser is called, it means the sv_pending_warning_expiry is set
+        // queue via runOnce, and then ensure it is executed
+        $this->updatePendingExpiryForLater($user, true);
+        \XF::triggerRunOnce();
 
         return $expired;
     }

@@ -219,7 +219,7 @@ class User extends XFCP_User
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->repository('XF:Warning');
-        $warningRepo->updatePendingExpiryFor($this, true);
+        $warningRepo->updatePendingExpiryForLater($this, true);
     }
 
     /**

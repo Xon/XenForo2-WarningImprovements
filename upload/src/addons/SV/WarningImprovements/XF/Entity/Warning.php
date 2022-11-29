@@ -426,11 +426,9 @@ class Warning extends XFCP_Warning
             return;
         }
 
-        \XF::runOnce('svPendingExpiry.'.$this->user_id, function () {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = $this->repository('XF:Warning');
-            $warningRepo->updatePendingExpiryFor($this->User, true);
-        });
+        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        $warningRepo = $this->repository('XF:Warning');
+        $warningRepo->updatePendingExpiryForLater($this->User, true);
     }
 
     /**
