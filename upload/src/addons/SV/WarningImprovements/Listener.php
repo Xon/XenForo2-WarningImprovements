@@ -6,6 +6,9 @@ use XF\Entity\User;
 
 class Listener
 {
+    /** @var bool */
+    public static $doPartialVisitorReload = true;
+
     public static function getWarningRepo(): \SV\WarningImprovements\XF\Repository\Warning
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
@@ -66,7 +69,6 @@ class Listener
     /**
      * @param User $visitor
      * @throws \XF\PrintableException
-     * @noinspection PhpParameterByRefIsNotUsedAsReferenceInspection
      */
     public static function visitorSetup(User &$visitor)
     {
@@ -87,7 +89,42 @@ class Listener
             $warningRepo = \XF::repository('XF:Warning');
             if (\is_callable([$warningRepo, 'processExpiredWarningsForUser']))
             {
-                $warningRepo->processExpiredWarningsForUser($visitor, $visitor->is_banned);
+                $expired = $warningRepo->processExpiredWarningsForUser($visitor, $visitor->is_banned);
+                if ($expired)
+                {
+                    // permissions have likely changed.
+                    if (static::$doPartialVisitorReload)
+                    {
+                        // Do a partial reload of the visitor object since only a few fields change
+                        $row = \XF::db()->fetchRow('
+                        SELECT 
+                            is_banned
+                            ,permission_combination_id
+                            ,user_group_id
+                            ,display_style_group_id
+                            ,secondary_group_ids
+                        FROM xf_user 
+                        WHERE user_id = ?
+                        ', $visitor->user_id);
+                        $columns = $visitor->structure()->columns;
+                        $em = \XF::em();
+                        foreach ($row as $field => $sourceValue)
+                        {
+                            $column = $columns[$field] ?? null;
+                            if ($column !== null)
+                            {
+                                $value = $em->decodeValueFromSourceExtended($column['type'], $sourceValue, $column);
+                                $visitor->setAsSaved($field, $value);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $visitor = \XF::finder('XF:User')
+                                      ->whereId($visitor->user_id)
+                                      ->fetchOne();
+                    }
+                }
             }
         }
     }
