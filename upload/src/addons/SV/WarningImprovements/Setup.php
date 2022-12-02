@@ -10,6 +10,7 @@ use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\Db\Schema\Alter;
 use XF\Db\Schema\Create;
 use XF\Entity\User;
+use function count;
 
 class Setup extends AbstractSetup
 {
@@ -318,6 +319,26 @@ class Setup extends AbstractSetup
         ]);
     }
 
+
+    public function postInstall(array &$stateChanges)
+    {
+        $atomicJobs = [];
+
+        $atomicJobs[] = 'SV\WarningImprovements:NextExpiryRebuild';
+
+        if (count($atomicJobs) !== 0)
+        {
+            \XF::app()->jobManager()->enqueueUnique(
+                'warning-improvements-installer',
+                'XF:Atomic', ['execute' => $atomicJobs]
+            );
+        }
+    }
+
+    /**
+     * @param int   $previousVersion
+     * @param array $stateChanges
+     */
     public function postUpgrade($previousVersion, array &$stateChanges)
     {
         $this->addDefaultPhrases();
@@ -339,7 +360,12 @@ class Setup extends AbstractSetup
             $atomicJobs[] = 'XF:PermissionRebuild';
         }
 
-        if ($atomicJobs)
+        if ($previousVersion < 2080601)
+        {
+            $atomicJobs[] = 'SV\WarningImprovements:NextExpiryRebuild';
+        }
+
+        if (count($atomicJobs) !== 0)
         {
             \XF::app()->jobManager()->enqueueUnique(
                 'warning-improvements-installer',

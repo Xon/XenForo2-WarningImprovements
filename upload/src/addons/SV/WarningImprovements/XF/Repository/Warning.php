@@ -3,6 +3,7 @@
 namespace SV\WarningImprovements\XF\Repository;
 
 use SV\WarningImprovements\Entity\WarningDefault;
+use SV\WarningImprovements\XF\Entity\UserOption;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Entity\User as UserEntity;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
@@ -333,11 +334,17 @@ class Warning extends XFCP_Warning
         }
         $db = $this->db();
 
+        /** @var UserOption $option */
+        $option = $user->Option;
+
         $db->beginTransaction();
 
         $effectiveNextExpiry = $this->getEffectiveNextExpiry($user->user_id, $checkBannedStatus);
 
-        $user->Option->fastUpdate('sv_pending_warning_expiry', $effectiveNextExpiry);
+        if ($option->sv_pending_warning_expiry !== $effectiveNextExpiry)
+        {
+            $option->fastUpdate('sv_pending_warning_expiry', $effectiveNextExpiry);
+        }
 
         $db->commit();
 
