@@ -72,6 +72,11 @@ class Listener
      */
     public static function visitorSetup(User &$visitor)
     {
+        if (!(\XF::app() instanceof \XF\Pub\App))
+        {
+            return;
+        }
+
         $userId = (int)$visitor->user_id;
 
         if ($userId === 0)
