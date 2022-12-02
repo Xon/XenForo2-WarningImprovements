@@ -9,6 +9,9 @@ use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use XF\Entity\Warning as WarningEntity;
 use XF\Phrase;
+use function array_map;
+use function count;
+use function min;
 
 /**
  * Extends \XF\Repository\Warning
@@ -291,47 +294,23 @@ class Warning extends XFCP_Warning
      */
     public function getEffectiveNextExpiry(int $userId, bool $checkBannedStatus)
     {
-        $db = $this->db();
-
-        $expires = $db->fetchAllColumn('
-            SELECT MIN(expiry_date)
-            FROM xf_warning
-            WHERE user_id = ? AND (expiry_date = 0 or expiry_date > ?) AND is_expired = 0
-            UNION
-            SELECT MIN(expiry_date)
-            FROM xf_user_change_temp
-            WHERE user_id = ? AND (expiry_date = 0 or expiry_date > ?) AND change_key LIKE \'warning_action_%\'
-            UNION
-            SELECT MIN(end_date)
-            FROM xf_user_ban
-            WHERE user_id = ? AND (end_date = 0 or end_date > ?)
+        return $this->db()->fetchOne('
+            SELECT MIN(CAST(expiryDate as SIGNED))
+            FROM (
+                        SELECT MIN(expiry_date) AS expiryDate
+                        FROM xf_warning
+                        WHERE user_id = ? AND (expiry_date = 0 OR expiry_date > ?) AND is_expired = 0
+                        UNION
+                        SELECT MIN(COALESCE(expiry_date, 0)) AS expiryDate
+                        FROM xf_user_change_temp
+                        WHERE user_id = ? AND (expiry_date IS NULL OR expiry_date = 0 OR expiry_date > ?) AND change_key LIKE \'warning_action_%\'
+                        UNION
+                        SELECT MIN(end_date) AS expiryDate
+                        FROM xf_user_ban
+                        WHERE user_id = ? AND (end_date = 0 OR end_date > ?)
+            ) a
+            WHERE a.expiryDate IS NOT NULL
         ', [$userId, \XF::$time, $userId, \XF::$time, $userId, \XF::$time]);
-
-        /** @var ?int $effectiveNextExpiry */
-        $effectiveNextExpiry = null;
-        foreach($expires as $expire)
-        {
-            if ($expire === null)
-            {
-                // no entry
-                continue;
-            }
-
-            $expire = (int)$expire;
-            if ($expire === 0)
-            {
-                // expiry of 0 means never expire
-                $effectiveNextExpiry = null;
-                break;
-            }
-
-            if ($expire < $effectiveNextExpiry)
-            {
-                $effectiveNextExpiry = $expire;
-            }
-        }
-
-        return $effectiveNextExpiry ?: null;
     }
 
     public function updatePendingExpiryForLater(UserEntity $user, bool $checkBannedStatus)
@@ -348,7 +327,7 @@ class Warning extends XFCP_Warning
      */
     public function updatePendingExpiryFor(UserEntity $user = null, bool $checkBannedStatus = true)
     {
-        if (!$user || !$user->Option)
+        if ($user === null || $user->Option === null)
         {
             return null;
         }
