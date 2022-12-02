@@ -300,17 +300,17 @@ class Warning extends XFCP_Warning
             FROM (
                         SELECT MIN(expiry_date) AS expiryDate
                         FROM xf_warning
-                        WHERE user_id = ? AND (expiry_date = 0 OR expiry_date > ?) AND is_expired = 0
+                        WHERE user_id = ? AND expiry_date > ? AND is_expired = 0
                         UNION
-                        SELECT MIN(COALESCE(expiry_date, 0)) AS expiryDate
+                        SELECT MIN(expiry_date) AS expiryDate
                         FROM xf_user_change_temp
-                        WHERE user_id = ? AND (expiry_date IS NULL OR expiry_date = 0 OR expiry_date > ?) AND change_key LIKE \'warning_action_%\'
+                        WHERE user_id = ? AND expiry_date > ? AND change_key LIKE \'warning_action_%\'
                         UNION
                         SELECT MIN(end_date) AS expiryDate
                         FROM xf_user_ban
-                        WHERE user_id = ? AND (end_date = 0 OR end_date > ?)
+                        WHERE user_id = ? AND end_date > ?
             ) a
-            WHERE a.expiryDate IS NOT NULL
+            WHERE a.expiryDate IS NOT NULL and a.expiryDate > 0
         ', [$userId, \XF::$time, $userId, \XF::$time, $userId, \XF::$time]);
     }
 

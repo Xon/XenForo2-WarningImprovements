@@ -360,7 +360,7 @@ class Setup extends AbstractSetup
             $atomicJobs[] = 'XF:PermissionRebuild';
         }
 
-        if ($previousVersion < 2080601)
+        if ($previousVersion < 2080602)
         {
             $atomicJobs[] = 'SV\WarningImprovements:NextExpiryRebuild';
         }
