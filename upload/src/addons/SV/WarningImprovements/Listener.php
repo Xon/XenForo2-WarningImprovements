@@ -100,6 +100,11 @@ class Listener
                     // permissions have likely changed.
                     if (static::$doPartialVisitorReload)
                     {
+                        $caches = [
+                            'Ban',
+                            'PermissionSet',
+                            'warning_count',
+                        ];
                         // Do a partial reload of the visitor object since only a few fields change
                         $row = \XF::db()->fetchRow('
                         SELECT 
@@ -121,6 +126,10 @@ class Listener
                                 $value = $em->decodeValueFromSourceExtended($column['type'], $sourceValue, $column);
                                 $visitor->setAsSaved($field, $value);
                             }
+                        }
+                        foreach ($caches as $cache)
+                        {
+                            $visitor->clearCache($cache);
                         }
                     }
                     else
