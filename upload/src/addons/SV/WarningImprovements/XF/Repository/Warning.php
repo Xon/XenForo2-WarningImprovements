@@ -325,7 +325,7 @@ class Warning extends XFCP_Warning
                 break;
             }
 
-            if ($expire > $effectiveNextExpiry)
+            if ($expire < $effectiveNextExpiry)
             {
                 $effectiveNextExpiry = $expire;
             }
