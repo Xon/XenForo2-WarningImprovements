@@ -310,7 +310,7 @@ class Warning extends XFCP_Warning
 
     protected function _preSave()
     {
-        if ($this->sv_content_spoiler_title === '')
+        if (!$this->sv_spoiler_contents || $this->sv_content_spoiler_title === '')
         {
             $this->sv_content_spoiler_title = null;
         }
