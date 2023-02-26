@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
+use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User as UserExtendedEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as WarningDefinitionExtended;
@@ -398,6 +399,8 @@ class Warning extends XFCP_Warning
     {
         parent::_postDelete();
 
+        $this->svDisableWarningEmbedding();
+
         /** @var \XF\Repository\UserAlert $alertRepo */
         $alertRepo = $this->repository('XF:UserAlert');
         $alertRepo->fastDeleteAlertsForContent('warning', $this->warning_id);
@@ -416,6 +419,24 @@ class Warning extends XFCP_Warning
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
             $warningRepo = \XF::repository('XF:Warning');
             $warningRepo->sendWarningAlert($this, 'delete', $reason);
+        }
+    }
+
+    protected function svDisableWarningEmbedding()
+    {
+        $content = $this->Content;
+        if ($content instanceof SupportsEmbedMetadataInterface)
+        {
+            $embedMetadata = $content->embed_metadata ?? [];
+            unset($embedMetadata['sv_spoiler_contents']);
+            unset($embedMetadata['sv_content_spoiler_title']);
+            unset($embedMetadata['sv_disable_reactions']);
+            $content->embed_metadata = $embedMetadata;
+            if ($content->hasOption('svCopyWarningEmbedData'))
+            {
+                $content->setOption('svCopyWarningEmbedData', false);
+            }
+            $content->saveIfChanged($saved, true, false);
         }
     }
 

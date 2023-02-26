@@ -11,7 +11,8 @@ trait SupportsDisablingReactionTrait
 {
     public function hasDisabledReactionsForSvWarnImprov(Entity $entity, &$error = null) : bool
     {
-        if (!$entity->get('warning_id'))
+        $warningId = $this->warning_id ?? 0;
+        if ($warningId === 0)
         {
             return false;
         }
