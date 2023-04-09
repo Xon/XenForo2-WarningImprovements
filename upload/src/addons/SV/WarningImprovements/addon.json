@@ -2,20 +2,29 @@
     "legacy_addon_id": "SV_WarningImprovements",
     "title": "Warning Improvements",
     "description": "A (large) collection of improvements to XF's warning system.",
-    "version_id": 2080800,
-    "version_string": "2.8.8",
+    "version_id": 2090000,
+    "version_string": "2.9.0",
     "dev": "Xon",
     "dev_url": "https://atelieraphelion.com",
     "faq_url": "",
     "support_url": "https://xenforo.com/community/resources/warning-improvements-by-xon.6240/",
     "extra_urls": [],
     "require": {
-        "XF": [2020070, "XenForo 2.2.0+"],
-        "php": ["7.0.0", "PHP 7.0.0+"],
-        "SV/StandardLib": [1000000,"Standard Library by Xon v1.0.0+"]
+        "SV/StandardLib": [
+            2001180000,
+            "Standard Library by Xon v1.18.0+"
+        ],
+        "XF": [
+            "2.2.0",
+            "XenForo 2.2.0+"
+        ],
+        "php": [
+            "7.2.0",
+            "PHP 7.2.0+"
+        ]
     },
     "require-soft": {
-        "SV/ReportImprovements": ["2100100", "Report Improvements v2.10.1+", true]
+        "SV/ReportImprovements": ["2.10.1", "Report Improvements v2.10.1+", true]
     },
     "icon": "fa-exclamation-triangle"
 }
