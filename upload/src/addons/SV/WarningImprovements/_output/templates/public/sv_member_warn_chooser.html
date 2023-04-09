@@ -26,7 +26,7 @@ jQuery.extend(XF.config, {
 		<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
 				<xf:formrow label="" data-custom-title-container="1" data-warning-view-type="select" data-warning-label="{$warningDefinition.custom_title_placeholder}" data-for-warning="{$warningDefinition.warning_definition_id}">
 					<xf:if is="$warningDefinition.sv_custom_title || !$warningDefinition.warning_definition_id">
-						<xf:textbox name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" disabled="disabled" placeholder="{{ phrase('custom_title') }}" />
+						<xf:textbox name="custom_title" maxlength="{{ max_length('XF:Warning', 'title') }}" value="" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" disabled="disabled" placeholder="{{ phrase('custom_title') }}" />
 					<xf:else />
 						<xf:hiddenval name="custom_title" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}"></xf:hiddenval>
 					</xf:if>
@@ -78,7 +78,7 @@ jQuery.extend(XF.config, {
 								<xf:dependent>
 									<xf:if is="$warningDefinition.sv_custom_title || !$warningDefinition.warning_definition_id">
 										<xf:formrow label="" data-custom-title-container="1" data-warning-view-type="radio">
-											<xf:textbox label="" name="custom_title" maxlength="{{ max_length($warningDefinition, 'title') }}" value="{$warningDefinition.custom_title_placeholder}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" />
+											<xf:textbox label="" name="custom_title" maxlength="{{ max_length('XF:Warning', 'title') }}" value="{$warningDefinition.custom_title_placeholder}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" />
 										</xf:formrow>
 									</xf:if>
 								</xf:dependent>

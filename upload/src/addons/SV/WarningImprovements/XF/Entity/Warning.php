@@ -460,6 +460,9 @@ class Warning extends XFCP_Warning
     {
         $structure = parent::getStructure($structure);
 
+        // disable silent truncation to avoid unexpected data loss
+        $structure->columns['title']['forced'] = false;
+
         $options = \XF::options();
         if ($options->sv_wi_require_warning_notes ?? false)
         {

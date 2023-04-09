@@ -25,7 +25,7 @@
 		<xf:textboxrow label="{{ phrase('svWarningImprove_warning_title') }}"
 					   name="title"
 					   value="{$warning.title}"
-					   maxlength="{{ max_length($warning, 'title') }}" 
+					   maxlength="{{ max_length('XF:Warning', 'title') }}"
 					   data-xf-init="warning-title-watcher"
 					   data-public-warning-selector="input[name='action_options[public][message]']"
 					   />
