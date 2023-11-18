@@ -365,6 +365,13 @@ class Setup extends AbstractSetup
             $atomicJobs[] = 'SV\WarningImprovements:NextExpiryRebuild';
         }
 
+        if ($previousVersion < 1700328323)
+        {
+            /** @var \XF\Repository\Option $optionRepo */
+            $optionRepo = \XF::repository('XF:Option');
+            $optionRepo->updateOption('svWarningsOnProfileAgeLimit', (int)(\XF::options()->svWarningEscalatingDefaultsLimit ?? 0));
+        }
+
         if (count($atomicJobs) !== 0)
         {
             \XF::app()->jobManager()->enqueueUnique(

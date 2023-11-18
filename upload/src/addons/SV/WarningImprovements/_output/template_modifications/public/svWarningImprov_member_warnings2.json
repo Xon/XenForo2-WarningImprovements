@@ -1,0 +1,9 @@
+{
+    "template": "member_warnings",
+    "description": "Support hiding older rows",
+    "execution_order": 6240,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:datarow rowclass=\"",
+    "replace": "$0{{ ($oldWarningCount && ($warning.warning_date < $ageLimit)) ? ' is-old-warning ' : ''  }}"
+}

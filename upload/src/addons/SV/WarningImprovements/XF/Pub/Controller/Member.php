@@ -25,7 +25,26 @@ class Member extends XFCP_Member
             $warnings = $reply->getParam('warnings');
             if ($warnings)
             {
-                $reply->setParam('warnings', $warnings->filterViewable());
+                $warnings = $warnings->filterViewable();
+                $reply->setParam('warnings', $warnings);
+
+                $ageLimit = (int)(\XF::options()->svWarningsOnProfileAgeLimit ?? 0);
+                if ($ageLimit > 0)
+                {
+                    $ageLimit = \XF::$time - $ageLimit * 2629746;
+                    $reply->setParam('ageLimit', $ageLimit);
+
+                    $oldCount = 0;
+                    /** @var \XF\Entity\Warning $warning */
+                    foreach ($warnings as $warning)
+                    {
+                        if ($warning->warning_date < $ageLimit)
+                        {
+                            $oldCount += 1;
+                        }
+                    }
+                    $reply->setParam('oldWarningCount', $oldCount);
+                }
             }
         }
 

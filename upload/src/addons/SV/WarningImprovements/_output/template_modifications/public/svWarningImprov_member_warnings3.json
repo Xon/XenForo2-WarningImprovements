@@ -1,0 +1,9 @@
+{
+    "template": "member_warnings",
+    "description": "Display hidden warning notice",
+    "execution_order": 6241,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#(</xf:foreach>)(\\s*</xf:datalist>)#si",
+    "replace": "$1\n<xf:macro name=\"svWarningImprov_macros::oldWarnings\" arg-warningCount=\"{$oldWarningCount}\" />\n$2"
+}

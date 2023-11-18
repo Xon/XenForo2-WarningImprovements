@@ -1,0 +1,2 @@
+Hide large number of warnings under a 'click to expand' line.<br/>
+0 to disable.
