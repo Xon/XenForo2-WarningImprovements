@@ -31,14 +31,11 @@ class Member extends XFCP_Member
                 $ageLimit = (int)(\XF::options()->svWarningsOnProfileAgeLimit ?? 0);
                 if ($ageLimit > 0)
                 {
-                    $ageLimit = \XF::$time - $ageLimit * 2629746;
-                    $reply->setParam('ageLimit', $ageLimit);
-
                     $oldCount = 0;
-                    /** @var \XF\Entity\Warning $warning */
+                    /** @var \SV\WarningImprovements\XF\Entity\Warning $warning */
                     foreach ($warnings as $warning)
                     {
-                        if ($warning->warning_date < $ageLimit)
+                        if ($warning->is_old_warning)
                         {
                             $oldCount += 1;
                         }

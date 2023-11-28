@@ -26,6 +26,7 @@ use XF\Util\Arr as ArrUtil;
  * @property int                                                    expiry_date_rounded
  * @property \XF\Entity\WarningDefinition                           definition
  * @property string                                                 title_censored
+ * @property-read bool $is_old_warning
  *
  * RELATIONS
  * @property WarningDefinitionExtended|\XF\Entity\WarningDefinition Definition
@@ -240,6 +241,28 @@ class Warning extends XFCP_Warning
         }
 
         return $this->Definition_; // _ = bypass getter
+    }
+
+    protected function getIsOldWarning(): bool
+    {
+        if (!$this->is_expired && $this->points > 0)
+        {
+            return false;
+        }
+
+        $ageLimit = (int)(\XF::options()->svWarningsOnProfileAgeLimit ?? 0);
+        if ($ageLimit === 0)
+        {
+            return false;
+        }
+
+        $ageLimit = \XF::$time - $ageLimit * 2629746;
+        if ($this->warning_date > $ageLimit)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public function verifyNotes($notes)
@@ -492,6 +515,7 @@ class Warning extends XFCP_Warning
         $structure->getters['expiry_date_rounded'] = true;
         $structure->getters['Definition'] = false;
         $structure->getters['title_censored'] = true;
+        $structure->getters['is_old_warning'] = ['getter' => 'getIsOldWarning', 'cache' => true];
 
         $structure->relations['Report'] = [
             'entity'     => 'XF:Report',

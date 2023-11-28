@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:datarow rowclass=\"",
-    "replace": "$0{{ ($oldWarningCount && ($warning.warning_date < $ageLimit)) ? ' is-old-warning ' : ''  }}"
+    "replace": "$0{{ ($oldWarningCount && $warning.is_old_warning) ? ' is-old-warning ' : ''  }}"
 }
