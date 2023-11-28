@@ -110,6 +110,19 @@ class Warn extends XFCP_Warn
                 {
                     $warningList->limit($warningLimit);
                 }
+                $ageLimit = (int)(\XF::options()->svWarningsOnProfileAgeLimit ?? 0);
+                if ($ageLimit)
+                {
+                    $ageLimit = \XF::$time - $ageLimit * 2629746;
+                    $warningList->whereOr([
+                        ['warn_date', '>', $ageLimit],
+                        [
+                            ['points', '>', '0'],
+                            ['is_expired', '!=', '0'],
+                        ]
+                    ]);
+                }
+
                 $previousWarnings = $warningList->fetch()
                                                 ->filterViewable()
                                                 ->toArray();
