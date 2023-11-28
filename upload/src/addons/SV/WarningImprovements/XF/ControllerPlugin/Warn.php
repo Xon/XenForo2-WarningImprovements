@@ -105,23 +105,14 @@ class Warn extends XFCP_Warn
             $warningLimit = (int)(\XF::options()->svPreviousWarningLimit ?? -1);
             if ($canViewPreviousWarnings && $user !== null && $warningLimit >= 0)
             {
+                /** @var \SV\WarningImprovements\XF\Finder\Warning $warningList */
                 $warningList = $warningRepo->findUserWarningsForList($user->user_id);
                 if ($warningLimit > 0)
                 {
                     $warningList->limit($warningLimit);
                 }
                 $ageLimit = (int)(\XF::options()->svWarningsOnProfileAgeLimit ?? 0);
-                if ($ageLimit)
-                {
-                    $ageLimit = \XF::$time - $ageLimit * 2629746;
-                    $warningList->whereOr([
-                        ['warning_date', '>', $ageLimit],
-                        [
-                            ['points', '>', '0'],
-                            ['is_expired', '!=', '0'],
-                        ]
-                    ]);
-                }
+                $warningList->withAgeLimit($ageLimit);
 
                 $previousWarnings = $warningList->fetch()
                                                 ->filterViewable()
@@ -179,7 +170,7 @@ class Warn extends XFCP_Warn
 
             if ($definition->is_custom ?? false)
             {
-                list($conversationTitle, $conversationMessage) = $definition->getSpecificConversationContent(
+                [$conversationTitle, $conversationMessage] = $definition->getSpecificConversationContent(
                     $user, $contentType, $content
                 );
 

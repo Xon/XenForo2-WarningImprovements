@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Finder\\Warning",
+    "to_class": "SV\\WarningImprovements\\XF\\Finder\\Warning",
+    "execute_order": 6240,
+    "active": true
+}
