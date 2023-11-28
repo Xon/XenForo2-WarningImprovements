@@ -115,7 +115,7 @@ class Warn extends XFCP_Warn
                 {
                     $ageLimit = \XF::$time - $ageLimit * 2629746;
                     $warningList->whereOr([
-                        ['warn_date', '>', $ageLimit],
+                        ['warning_date', '>', $ageLimit],
                         [
                             ['points', '>', '0'],
                             ['is_expired', '!=', '0'],
