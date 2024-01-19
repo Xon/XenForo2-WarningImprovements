@@ -17,6 +17,7 @@
 </xf:macro>
 
 <xf:macro name="oldWarnings" arg-warningCount="!">
+	<xf:if is="$warningCount > 0">
 	<xf:datarow rowtype="footer">
 		<xf:cell>
 			<xf:checkbox standalone="true">
@@ -30,4 +31,5 @@
 			</xf:checkbox>			
 		</xf:cell>
 	</xf:datarow>
+	</xf:if>
 </xf:macro>
