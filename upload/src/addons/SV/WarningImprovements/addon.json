@@ -26,6 +26,11 @@
         ]
     },
     "require-soft": {
+        "SV/AlertImprovements": [
+            "2.9.0",
+            "Alert Improvements v2.9.0+",
+            true
+        ],
         "SV/ReportImprovements": [
             "2.10.1",
             "Report Improvements v2.10.1+",

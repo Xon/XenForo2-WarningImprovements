@@ -1,6 +1,6 @@
 {
-    "template": "alert_macros",
-    "description": "Anonymize warning issuer",
+    "template": "svAlertImprov_macros",
+    "description": "Anonymize warning issuer (SV/AlertImprovements)",
     "execution_order": 10,
     "enabled": true,
     "action": "str_replace",
