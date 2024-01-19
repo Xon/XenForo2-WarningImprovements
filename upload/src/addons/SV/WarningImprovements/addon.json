@@ -3,12 +3,13 @@
     "title": "Warning Improvements",
     "description": "A (large) collection of improvements to XF's warning system.",
     "version_id": 1701810710,
-    "version_string": "2.9.3",
+    "version_string": "2.9.4",
     "dev": "Xon",
     "dev_url": "https://atelieraphelion.com",
     "faq_url": "",
     "support_url": "https://xenforo.com/community/resources/warning-improvements-by-xon.6240/",
     "extra_urls": {
+        "License": "https://atelieraphelion.com/products/warning-improvements.135/copyright",
         "Add-on site": "https://atelieraphelion.com/products/warning-improvements.135/"
     },
     "require": {
