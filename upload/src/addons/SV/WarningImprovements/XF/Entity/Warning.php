@@ -487,6 +487,7 @@ class Warning extends XFCP_Warning
         // disable silent truncation to avoid unexpected data loss
         $structure->columns['title']['forced'] = false;
         // prevent null from leaking out of the title field
+        // this can happen when the warning title is too long
         if (!array_key_exists('default', $structure->columns['title']))
         {
             $structure->columns['title']['default'] = '';
