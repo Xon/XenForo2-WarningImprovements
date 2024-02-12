@@ -13,6 +13,7 @@ use XF\Entity\User as UserEntity;
 use XF\Mvc\Entity\Structure;
 use XF\Phrase;
 use XF\Util\Arr as ArrUtil;
+use function array_key_exists;
 
 /**
  * COLUMNS
@@ -485,6 +486,11 @@ class Warning extends XFCP_Warning
 
         // disable silent truncation to avoid unexpected data loss
         $structure->columns['title']['forced'] = false;
+        // prevent null from leaking out of the title field
+        if (!array_key_exists('default', $structure->columns['title']))
+        {
+            $structure->columns['title']['default'] = '';
+        }
 
         $options = \XF::options();
         if ($options->sv_wi_require_warning_notes ?? false)
