@@ -60,7 +60,7 @@ class Warning extends XFCP_Warning
         }
     }
 
-    public function getSvWarningReplaceables(UserEntity $warnedUser, WarningEntity $warning = null, int $pointThreshold = null, bool $forPhrase = false, string $contentAction = null, array $contentActionOptions = null): array
+    public function getSvWarningReplaceables(UserEntity $warnedUser, ?WarningEntity $warning = null, ?int $pointThreshold = null, bool $forPhrase = false, ?string $contentAction = null, ?array $contentActionOptions = null): array
     {
         /** @var UserEntity|ExtendedUserEntity $warnedUser */
         /** @var WarningEntity|ExtendedWarningEntity|null $warning */
@@ -206,7 +206,7 @@ class Warning extends XFCP_Warning
         return $totals;
     }
 
-    public function escalateDefaultExpirySettingsForUser(UserEntity $user, WarningDefinition $definition = null): WarningDefinition
+    public function escalateDefaultExpirySettingsForUser(UserEntity $user, ?WarningDefinition $definition = null): WarningDefinition
     {
         if ($definition === null)
         {
@@ -326,7 +326,7 @@ class Warning extends XFCP_Warning
      * @param bool            $checkBannedStatus
      * @return int|null
      */
-    public function updatePendingExpiryFor(UserEntity $user = null, bool $checkBannedStatus = true)
+    public function updatePendingExpiryFor(?UserEntity $user = null, bool $checkBannedStatus = true)
     {
         if ($user === null || $user->Option === null)
         {

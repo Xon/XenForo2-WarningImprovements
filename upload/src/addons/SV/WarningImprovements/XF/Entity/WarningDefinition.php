@@ -107,7 +107,7 @@ class WarningDefinition extends XFCP_WarningDefinition
      * @param UserEntity|null $sender
      * @return array
      */
-    public function getSpecificConversationContent(UserEntity $receiver, $contentType, Entity $content, UserEntity $sender = null)
+    public function getSpecificConversationContent(UserEntity $receiver, $contentType, Entity $content, ?UserEntity $sender = null)
     {
         /** @var User $receiver */
 

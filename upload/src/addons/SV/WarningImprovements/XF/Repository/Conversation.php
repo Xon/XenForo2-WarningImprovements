@@ -10,7 +10,7 @@ namespace SV\WarningImprovements\XF\Repository;
  */
 class Conversation extends XFCP_Conversation
 {
-    public function insertRecipients(\XF\Entity\ConversationMaster $conversation, array $recipientUsers, \XF\Entity\User $from = null)
+    public function insertRecipients(\XF\Entity\ConversationMaster $conversation, array $recipientUsers, ?\XF\Entity\User $from = null)
     {
         if ($from && !$from->user_id)
         {

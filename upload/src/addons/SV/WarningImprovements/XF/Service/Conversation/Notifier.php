@@ -28,15 +28,12 @@ class Notifier extends XFCP_Notifier
         $this->setWarning(Globals::$warningObj ?? null);
     }
 
-    /**
-     * @param Warning $warning
-     */
-    public function setWarning(Warning $warning = null)
+    public function setWarning(?Warning $warning = null)
     {
         $this->warning = $warning;
     }
 
-    protected function _canUserReceiveNotification(UserEntity $user, UserEntity $sender = null)
+    protected function _canUserReceiveNotification(UserEntity $user, ?UserEntity $sender = null)
     {
         $canUserReceiveNotification = parent::_canUserReceiveNotification($user, $sender);
         if ($canUserReceiveNotification)
@@ -101,7 +98,7 @@ class Notifier extends XFCP_Notifier
      *
      * @return bool
      */
-    protected function isForcingEmailNotificationForUser(UserEntity $user, UserEntity $sender = null) : bool
+    protected function isForcingEmailNotificationForUser(UserEntity $user, ?UserEntity $sender = null) : bool
     {
         if (!$user->user_id)
         {
@@ -119,7 +116,7 @@ class Notifier extends XFCP_Notifier
      *
      * @return bool
      */
-    protected function _canUserReceiveEmailNotification(UserEntity $user, UserEntity $sender = null)
+    protected function _canUserReceiveEmailNotification(UserEntity $user, ?UserEntity $sender = null)
     {
         return parent::_canUserReceiveEmailNotification($user, $sender)
             || $this->isForcingEmailNotificationForUser($user, $sender);

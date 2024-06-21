@@ -51,10 +51,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         $this->warningCategories = $warningCategoryRepo->findCategoryList()->fetch()->toArray();
     }
 
-    /**
-     * @param Warning $warning
-     */
-    public function setWarning(Warning $warning = null)
+    public function setWarning(?Warning $warning = null)
     {
         $this->warning = $warning;
     }
