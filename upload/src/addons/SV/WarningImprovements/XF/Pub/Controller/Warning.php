@@ -11,6 +11,7 @@ use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\Service\Warning\Editor as EditorService;
+use function array_key_exists;
 
 /**
  * @Extends \XF\Pub\Controller\Warning
@@ -93,7 +94,7 @@ class Warning extends XFCP_Warning
             $contentActions = $handler->getAvailableContentActions($content);
             $reply->setParam('contentActions', $contentActions);
 
-            if ($content->hasRelation('DeletionLog'))
+            if (array_key_exists('DeletionLog', $content->structure()->relations))
             {
                 /** @var \XF\Entity\DeletionLog $deletionLog */
                 $deletionLog = $content->getRelation('DeletionLog');

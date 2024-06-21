@@ -9,6 +9,7 @@ use XF\Mvc\Entity\Entity;
 use XF\Repository\Reaction as ReactionRepo;
 use XF\Service\AbstractService;
 use XF\Service\ValidateAndSavableTrait;
+use function array_key_exists;
 
 class Editor extends AbstractService
 {
@@ -132,7 +133,7 @@ class Editor extends AbstractService
                 }
                 break;
             case 'delete':
-                if (!$content->hasRelation('DeletionLog'))
+                if (!array_key_exists('DeletionLog', $content->structure()->relations))
                 {
                     return false;
                 }

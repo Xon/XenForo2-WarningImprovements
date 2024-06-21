@@ -10,9 +10,7 @@ use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use XF\Entity\Warning as WarningEntity;
 use XF\Phrase;
-use function array_map;
-use function count;
-use function min;
+use function is_callable;
 
 /**
  * @Extends \XF\Repository\Warning
@@ -37,11 +35,22 @@ class Warning extends XFCP_Warning
         \XF::setVisitor($user);
 
         $oldLang = \XF::language();
+        // Compatibility for XF2.1 & XF2.2
         $app = \XF::app();
         $newLang = $app->language($user->language_id);
-        if (!$newLang->isUsable($user))
+        if (is_callable([$newLang, 'isUsable']))
         {
-            $newLang = $app->language();
+            if (!$newLang->isUsable($user))
+            {
+                $newLang = $app->language();
+            }
+        }
+        else
+        {
+            if (!($newLang->user_selectable ?? false) && !$user->is_admin)
+            {
+                $newLang = $app->language();
+            }
         }
         $newLangeOrigTz = $newLang->getTimeZone();
         $newLang->setTimeZone($user->timezone);

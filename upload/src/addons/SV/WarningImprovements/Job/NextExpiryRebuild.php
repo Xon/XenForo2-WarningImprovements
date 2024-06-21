@@ -2,7 +2,6 @@
 
 namespace SV\WarningImprovements\Job;
 
-use SV\ReportImprovements\Globals;
 use XF\Job\AbstractRebuildJob;
 
 /**

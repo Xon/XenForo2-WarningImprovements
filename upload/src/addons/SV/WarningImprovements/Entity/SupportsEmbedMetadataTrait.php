@@ -7,6 +7,7 @@ namespace SV\WarningImprovements\Entity;
 
 use SV\WarningImprovements\XF\Entity\Warning;
 use XF\Mvc\Entity\Structure;
+use function array_key_exists;
 
 trait SupportsEmbedMetadataTrait
 {
@@ -20,7 +21,7 @@ trait SupportsEmbedMetadataTrait
             // values and store in the new version of embed_metadata
             // or extract fields from the warning, which will be the canonical versions
             $metadata = $this->embed_metadata;
-            if ($this->hasRelation('Warning'))
+            if (array_key_exists('Warning', $this->structure()->relations))
             {
                 $warning = $this->getRelation('Warning');
                 if ($warning instanceof Warning)
