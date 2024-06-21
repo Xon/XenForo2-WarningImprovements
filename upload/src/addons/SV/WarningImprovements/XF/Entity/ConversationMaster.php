@@ -8,7 +8,7 @@ namespace SV\WarningImprovements\XF\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
- * Extends \XF\Entity\ConversationMaster
+ * @Extends \XF\Entity\ConversationMaster
  */
 class ConversationMaster extends XFCP_ConversationMaster
 {

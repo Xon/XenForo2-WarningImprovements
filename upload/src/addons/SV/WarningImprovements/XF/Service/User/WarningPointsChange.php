@@ -15,7 +15,7 @@ use XF\Entity\Report;
 use XF\Mvc\Entity\AbstractCollection;
 
 /**
- * Extends \XF\Service\User\WarningPointsChange
+ * @Extends \XF\Service\User\WarningPointsChange
  */
 class WarningPointsChange extends XFCP_WarningPointsChange
 {

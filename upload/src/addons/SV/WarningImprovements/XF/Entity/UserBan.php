@@ -3,7 +3,7 @@
 namespace SV\WarningImprovements\XF\Entity;
 
 /**
- * Extends \XF\Entity\UserBan
+ * @Extends \XF\Entity\UserBan
  */
 class UserBan extends XFCP_UserBan
 {

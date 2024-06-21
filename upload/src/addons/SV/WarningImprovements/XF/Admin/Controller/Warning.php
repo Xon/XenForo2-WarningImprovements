@@ -15,7 +15,7 @@ use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
 
 /**
- * Extends \XF\Admin\Controller\Warning
+ * @Extends \XF\Admin\Controller\Warning
  */
 class Warning extends XFCP_Warning
 {

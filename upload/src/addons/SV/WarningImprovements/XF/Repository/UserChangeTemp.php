@@ -5,7 +5,7 @@ namespace SV\WarningImprovements\XF\Repository;
 use XF\Entity\User as UserEntity;
 
 /**
- * Extends \XF\Repository\UserChangeTemp
+ * @Extends \XF\Repository\UserChangeTemp
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {

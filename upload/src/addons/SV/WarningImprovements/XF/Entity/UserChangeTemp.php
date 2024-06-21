@@ -9,7 +9,7 @@ use XF\Mvc\Entity\Structure;
 use XF\Phrase;
 
 /**
- * Extends \XF\Entity\UserChangeTemp
+ * @Extends \XF\Entity\UserChangeTemp
  *
  * @property \XF\Entity\Phrase name
  * @property \XF\Entity\Phrase result

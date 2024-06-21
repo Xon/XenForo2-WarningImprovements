@@ -13,7 +13,7 @@ use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\Service\Warning\Editor as EditorService;
 
 /**
- * Extends \XF\Pub\Controller\Warning
+ * @Extends \XF\Pub\Controller\Warning
  */
 class Warning extends XFCP_Warning
 {

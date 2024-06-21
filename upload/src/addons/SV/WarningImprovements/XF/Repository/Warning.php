@@ -15,7 +15,7 @@ use function count;
 use function min;
 
 /**
- * Extends \XF\Repository\Warning
+ * @Extends \XF\Repository\Warning
  */
 class Warning extends XFCP_Warning
 {

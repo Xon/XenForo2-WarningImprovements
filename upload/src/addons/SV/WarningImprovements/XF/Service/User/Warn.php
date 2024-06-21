@@ -17,7 +17,7 @@ use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use XF\Repository\Reaction as ReactionRepo;
 
 /**
- * Extends \XF\Service\User\Warn
+ * @Extends \XF\Service\User\Warn
  *
  * @property ExtendedWarningEntity $warning
  */

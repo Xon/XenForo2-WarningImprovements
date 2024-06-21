@@ -11,7 +11,7 @@ use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
 
 /**
- * Extends \XF\Pub\Controller\Member
+ * @Extends \XF\Pub\Controller\Member
  */
 class Member extends XFCP_Member
 {
