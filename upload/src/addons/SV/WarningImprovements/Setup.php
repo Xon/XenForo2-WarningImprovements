@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements;
 
+use SV\StandardLib\Helper;
 use SV\StandardLib\InstallerHelper;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
@@ -346,7 +347,7 @@ class Setup extends AbstractSetup
 
         $previousVersion = (int)$previousVersion;
         $atomicJobs = [];
-        if (\XF::isAddOnActive('SV/ReportImprovements'))
+        if (Helper::isAddOnActive('SV/ReportImprovements'))
         {
             $atomicJobs[] = 'SV\ReportImprovements:WarningLogMigration';
         }
