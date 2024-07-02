@@ -33,12 +33,17 @@ class Warning extends XFCP_Warning
             $warning->setOption('svAlertOnDeleteReason', $this->filter('send_warning_alert_reason', 'str'));
         }
 
+        if ($this->isPost() && !$this->filter('confirm', 'bool'))
+        {
+            return $this->redirect($this->buildLink('warnings/delete', $warning));
+        }
+
         /** @var \XF\ControllerPlugin\Delete $plugin */
         $plugin = $this->plugin('XF:Delete');
 
         return $plugin->actionDelete(
             $warning,
-            $this->buildLink('warnings/delete', $warning),
+            $this->buildLink('warnings/delete', $warning, ['confirm' => 1]),
             $this->buildLink('warnings', $warning),
             $this->buildLink('members', $warning->User) . '#warnings',
             \XF::phrase('svWarningImprov_warning_for_x', ['title' => $warning->title, 'name' => $warning->User->username]),
