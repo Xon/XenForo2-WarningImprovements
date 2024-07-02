@@ -331,7 +331,7 @@ class Setup extends AbstractSetup
         {
             \XF::app()->jobManager()->enqueueUnique(
                 'warning-improvements-installer',
-                'XF:Atomic', ['execute' => $atomicJobs]
+                \XF\Job\Atomic::class, ['execute' => $atomicJobs]
             );
         }
     }
@@ -349,7 +349,7 @@ class Setup extends AbstractSetup
         $atomicJobs = [];
         if (Helper::isAddOnActive('SV/ReportImprovements'))
         {
-            $atomicJobs[] = 'SV\ReportImprovements:WarningLogMigration';
+            $atomicJobs[] = \SV\ReportImprovements\Job\WarningLogMigration::class;
         }
         else
         {
@@ -358,12 +358,12 @@ class Setup extends AbstractSetup
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
-            $atomicJobs[] = 'XF:PermissionRebuild';
+            $atomicJobs[] = \XF\Job\PermissionRebuild::class;
         }
 
         if ($previousVersion < 2080602)
         {
-            $atomicJobs[] = 'SV\WarningImprovements:NextExpiryRebuild';
+            $atomicJobs[] = \SV\WarningImprovements\Job\NextExpiryRebuild::class;
         }
 
         if ($previousVersion < 1700328323)
@@ -377,7 +377,7 @@ class Setup extends AbstractSetup
         {
             \XF::app()->jobManager()->enqueueUnique(
                 'warning-improvements-installer',
-                'XF:Atomic', ['execute' => $atomicJobs]
+                \XF\Job\Atomic::class, ['execute' => $atomicJobs]
             );
         }
     }
