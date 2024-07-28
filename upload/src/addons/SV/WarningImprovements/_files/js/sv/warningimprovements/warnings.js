@@ -321,29 +321,36 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         {
             // document.querySelectorAll("input[data-warning-title-input='1'][data-for-warning=']")
 
-            let inputForWarning = document.querySelector("input[data-warning-title-input='1'][data-for-warning='" + target.value + "']"),
-                inputNotForWarning = document.querySelector("input[data-warning-title-input='1']:not([data-for-warning='" + target.value + "'])")
+            let inputForWarning = document.querySelectorAll("input[data-warning-title-input='1'][data-for-warning='" + target.value + "']"),
+                inputNotForWarning = document.querySelectorAll("input[data-warning-title-input='1']:not([data-for-warning='" + target.value + "'])")
 
-            if (typeof this.$target !== 'undefined') // XF 2.2
+            inputForWarning.forEach((input) =>
             {
-                $(inputForWarning).parent().parent().parent().xfFadeDown(XF.config.speed.xxfast)
-                if (inputNotForWarning)
+                if (typeof this.$target !== 'undefined') // XF 2.2
                 {
-                    $(inputNotForWarning).parent().parent().parent().xfFadeUp(XF.config.speed.xxfast)
+                    $(input).parent().parent().parent().xfFadeDown(XF.config.speed.xxfast)
                 }
-            }
-            else
-            {
-                XF.Animate.fadeDown(inputForWarning.parentNode.parentNode.parentNode, {
-                    speed: XF.config.speed.xxfast
-                })
-                if (inputNotForWarning)
+                else
                 {
-                    XF.Animate.fadeUp(inputNotForWarning.parentNode.parentNode.parentNode, {
+                    XF.Animate.fadeDown(input.parentNode.parentNode.parentNode, {
                         speed: XF.config.speed.xxfast
                     })
                 }
-            }
+            })
+
+            inputNotForWarning.forEach((input) =>
+            {
+                if (typeof this.$target !== 'undefined') // XF 2.2
+                {
+                    $(input).parent().parent().parent().xfFadeUp(XF.config.speed.xxfast)
+                }
+                else
+                {
+                    XF.Animate.fadeUp(input.parentNode.parentNode.parentNode, {
+                        speed: XF.config.speed.xxfast
+                    })
+                }
+            })
 
             this.setPublicMessage('')
 
@@ -358,22 +365,21 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
          */
         onChangeForSelect (target)
         {
-            if (typeof this.$target !== 'undefined') // XF 2.2
+            document.querySelectorAll("input[data-warning-title-input='1']:not([data-for-warning='" + target.querySelector('[selected]') + "'])").forEach((input) =>
             {
-                $("input[data-warning-title-input=1][data-for-warning!='" + this.$target.find("option:selected").val() + "']")
-                    .prop('disabled', true)
-                    .parent().parent()
-                    .xfFadeUp(XF.config.speed.xxfast)
-            }
-            else
-            {
-                let input = document.querySelector("input[data-warning-title-input='1']:not([data-for-warning='" + target.querySelector('[selected]') + "'])")
                 input.disabled = true
 
-                XF.Animate.fadeUp(input.parentNode.parentNode, {
-                    speed: XF.config.speed.xxfast,
-                })
-            }
+                if (typeof this.$target !== 'undefined') // XF 2.2
+                {
+                    $(input).parent().parent().xfFadeUp(XF.config.speed.xxfast)
+                }
+                else
+                {
+                    XF.Animate.fadeUp(input.parentNode.parentNode, {
+                        speed: XF.config.speed.xxfast,
+                    })
+                }
+            })
 
             let selectedWarning = target.querySelector('option[selected]')
             if (selectedWarning === null)
