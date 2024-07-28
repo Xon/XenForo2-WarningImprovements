@@ -6,6 +6,7 @@
 
 namespace SV\WarningImprovements\XF\Admin\Controller;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\WarningCategory;
 use SV\WarningImprovements\Entity\WarningDefault;
 use XF\Entity\WarningAction;
@@ -182,7 +183,9 @@ class Warning extends XFCP_Warning
                 {
                     $lastOrder += 5;
                     /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entry */
-                    $entry = $this->em()->findOne('XF:WarningDefinition', ['warning_definition_id', '=', $warningId]);
+                    $entry = Helper::finder(\XF\Entity\WarningDefinition::class)
+                                   ->where('warning_definition_id', '=', $warningId)
+                                   ->fetchOne();
                     $entry->sv_warning_category_id = $data['parent_id'];
                     $entry->sv_display_order = $lastOrder;
                     $entry->saveIfChanged();

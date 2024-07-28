@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\Entity;
 
+use SV\StandardLib\Helper;
 use XF\Entity\AbstractCategoryTree;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Mvc\Entity\Structure;
@@ -70,8 +71,7 @@ class WarningCategory extends AbstractCategoryTree
 
         if (!$phrase)
         {
-            /** @var \XF\Entity\Phrase $phrase */
-            $phrase = $this->_em->create('XF:Phrase');
+            $phrase = Helper::createEntity(\XF\Entity\Phrase::class);
             $phrase->title = $this->_getDeferredValue(function () use ($type) { return $this->getPhraseName($type); });
             $phrase->language_id = 0; // 0 = master
         }
