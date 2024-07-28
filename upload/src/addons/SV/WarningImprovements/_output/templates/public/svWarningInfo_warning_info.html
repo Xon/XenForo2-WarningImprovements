@@ -15,12 +15,8 @@
 	</xf:if>
 
 	<xf:if is="$canEditTitle">
+		<xf:macro name="svStandardLib_macros::choices_setup" />
 		<xf:js addon="SV/WarningImprovements" src="sv/warningimprovements/warnings.js" min="1" />
-		<xf:js>
-			jQuery.extend(XF.config, {
-				sv_warningimprovements_copy_title: {{ $xf.options.sv_warningimprovements_copy_title }}
-			});
-		</xf:js>
 
 		<xf:textboxrow label="{{ phrase('svWarningImprove_warning_title') }}"
 					   name="title"
@@ -28,7 +24,7 @@
 					   maxlength="{{ max_length('XF:Warning', 'title') }}"
 					   data-xf-init="warning-title-watcher"
 					   data-public-warning-selector="input[name='action_options[public][message]']"
-					   />
+					   data-copy-title="{{ $xf.options.sv_warningimprovements_copy_title }}" />
 	</xf:if>
 	
 	<xf:if is="$canEditPoints">
