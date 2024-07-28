@@ -39,7 +39,7 @@ class Warning extends XFCP_Warning
         }
 
         /** @var \XF\ControllerPlugin\Delete $plugin */
-        $plugin = $this->plugin('XF:Delete');
+        $plugin = \SV\StandardLib\Helper::plugin($this,\XF\ControllerPlugin\Delete::class);
 
         return $plugin->actionDelete(
             $warning,
@@ -225,7 +225,7 @@ class Warning extends XFCP_Warning
             if (\strlen($bbCode) === 0 && \strlen($html) !== 0)
             {
                 /** @var \XF\ControllerPlugin\Editor $editor */
-                $editor = $this->plugin('XF:Editor');
+                $editor = \SV\StandardLib\Helper::plugin($this,\XF\ControllerPlugin\Editor::class);
                 $bbCode = $editor->convertToBbCode($html);
             }
 
@@ -253,7 +253,7 @@ class Warning extends XFCP_Warning
     protected function setupWarningEdit(ExtendedWarningEntity $warning): EditorService
     {
         /** @var EditorService $warningEditor */
-        $warningEditor = $this->service('SV\WarningImprovements:Warning\Editor', $warning);
+        $warningEditor = \SV\StandardLib\Helper::service(\SV\WarningImprovements\Service\Warning\Editor::class, $warning);
 
         $inputs = $this->getWarningEditInput($warning);
         $this->applyInput($warningEditor, $inputs);

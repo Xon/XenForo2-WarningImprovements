@@ -171,7 +171,7 @@ class Warning extends XFCP_Warning
         }
 
         /** @var WarningDefinition $warningDefinition */
-        $warningDefinition = $this->finder('XF:WarningDefinition')
+        $warningDefinition = \SV\StandardLib\Helper::finder(\XF\Finder\WarningDefinition::class)
                                   ->where('warning_definition_id', '=', 0)
                                   ->fetchOne();
 
@@ -187,7 +187,7 @@ class Warning extends XFCP_Warning
     public function getWarningDefaultExtension(int $warningCount, int $warningTotals)
     {
         /** @var WarningDefault $warningDefault */
-        $warningDefault = $this->finder('SV\WarningImprovements:WarningDefault')
+        $warningDefault = \SV\StandardLib\Helper::finder(\SV\WarningImprovements\Finder\WarningDefault::class)
                                ->where('active', '=', 1)
                                ->where('threshold_points', '<', $warningTotals)
                                ->order('threshold_points', 'DESC')
@@ -376,7 +376,7 @@ class Warning extends XFCP_Warning
             return false;
         }
 
-        $warnings = $this->finder('XF:Warning')
+        $warnings = \SV\StandardLib\Helper::finder(\XF\Finder\Warning::class)
                          ->where('expiry_date', '<=', \XF::$time)
                          ->where('expiry_date', '>', 0)
                          ->where('is_expired', 0)
@@ -392,7 +392,7 @@ class Warning extends XFCP_Warning
             $warning->save();
         }
 
-        $changes = $this->finder('XF:UserChangeTemp')
+        $changes = \SV\StandardLib\Helper::finder(\XF\Finder\UserChangeTemp::class)
                         ->where('expiry_date', '<=', \XF::$time)
                         ->where('expiry_date', '!=', null)
                         ->order('expiry_date')
@@ -400,7 +400,7 @@ class Warning extends XFCP_Warning
                         ->fetch(1000);
 
         /** @var \XF\Service\User\TempChange $changeService */
-        $changeService = $this->app()->service('XF:User\TempChange');
+        $changeService = \SV\StandardLib\Helper::service(\XF\Service\User\TempChange::class);
 
         $expired = $expired || $changes->count() > 0;
 
@@ -410,7 +410,7 @@ class Warning extends XFCP_Warning
             $changeService->expireChange($change);
         }
 
-        $bans = $this->finder('XF:UserBan')
+        $bans = \SV\StandardLib\Helper::finder(\XF\Finder\UserBan::class)
                      ->where('end_date', '<=', \XF::$time)
                      ->where('end_date', '>', 0)
                      ->where('user_id', $userId)
@@ -527,7 +527,7 @@ class Warning extends XFCP_Warning
 
         $warnedBy = $this->getWarnedByForUser($warning, false);
         /** @var \XF\Repository\UserAlert $alertRepo */
-        $alertRepo = $this->repository('XF:UserAlert');
+        $alertRepo = \SV\StandardLib\Helper::repository(\XF\Repository\UserAlert::class);
         $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $exists ? $warning->warning_id : 0, $action, $extra);
     }
 
@@ -536,6 +536,6 @@ class Warning extends XFCP_Warning
      */
     protected function _getWarningActionRepo(): UserChangeTemp
     {
-        return $this->repository('XF:UserChangeTemp');
+        return \SV\StandardLib\Helper::repository(\XF\Repository\UserChangeTemp::class);
     }
 }

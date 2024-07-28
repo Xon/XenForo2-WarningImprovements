@@ -61,7 +61,7 @@ class Warning extends XFCP_Warning
                 unset($actions['']);
             }
 
-            $escalatingDefaults = $this->finder('SV\WarningImprovements:WarningDefault')->fetch();
+            $escalatingDefaults = \SV\StandardLib\Helper::finder(\SV\WarningImprovements\Finder\WarningDefault::class)->fetch();
 
             $response->setParams(
                 [
@@ -165,7 +165,7 @@ class Warning extends XFCP_Warning
         if ($this->isPost())
         {
             /** @var \XF\ControllerPlugin\Sort $sorter */
-            $sorter = $this->plugin('XF:Sort');
+            $sorter = \SV\StandardLib\Helper::plugin($this,\XF\ControllerPlugin\Sort::class);
 
             $categoryRepo = $this->getCategoryRepo();
             $categories = $categoryRepo->findCategoryList();
@@ -228,7 +228,7 @@ class Warning extends XFCP_Warning
         if ($response instanceof View)
         {
             /** @var \XF\Repository\Node $nodeRepo */
-            $nodeRepo = $this->app()->repository('XF:Node');
+            $nodeRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Node::class);
             $nodes = $nodeRepo->getFullNodeList()->filterViewable();
 
             $categoryRepo = $this->getCategoryRepo();
@@ -269,7 +269,7 @@ class Warning extends XFCP_Warning
     public function defaultActionAddEdit(WarningDefault $defaultAction)
     {
         /** @var \XF\Repository\Node $nodeRepo */
-        $nodeRepo = $this->app()->repository('XF:Node');
+        $nodeRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Node::class);
         $nodes = $nodeRepo->getFullNodeList()->filterViewable();
 
         $categoryRepo = $this->getCategoryRepo();
@@ -294,7 +294,7 @@ class Warning extends XFCP_Warning
     public function actionDefaultAdd()
     {
         /** @var WarningDefault $defaultAction */
-        $defaultAction = $this->em()->create('SV\WarningImprovements:WarningDefault');
+        $defaultAction = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningDefault::class);
 
         return $this->defaultActionAddEdit($defaultAction);
     }
@@ -332,7 +332,7 @@ class Warning extends XFCP_Warning
         else
         {
             /** @var WarningDefault $defaultAction */
-            $defaultAction = $this->em()->create('SV\WarningImprovements:WarningDefault');
+            $defaultAction = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningDefault::class);
         }
 
         $this->defaultSaveProcess($defaultAction)->run();
@@ -378,7 +378,7 @@ class Warning extends XFCP_Warning
     public function actionCategoryAdd()
     {
         /** @var WarningCategory $warningCategory */
-        $warningCategory = $this->em()->create('SV\WarningImprovements:WarningCategory');
+        $warningCategory = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningCategory::class);
 
         if ($parentCategoryId = $this->filter('parent_category_id', 'uint'))
         {
@@ -457,7 +457,7 @@ class Warning extends XFCP_Warning
         else
         {
             /** @var WarningCategory $warningCategory */
-            $warningCategory = $this->em()->create('SV\WarningImprovements:WarningCategory');
+            $warningCategory = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningCategory::class);
         }
 
         $this->categorySaveProcess($warningCategory)->run();
@@ -482,7 +482,7 @@ class Warning extends XFCP_Warning
      */
     protected function getCategoryTreePlugin()
     {
-        return $this->plugin('SV\WarningImprovements\XF:WarningCategoryTree');
+        return \SV\StandardLib\Helper::plugin($this,\SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree::class);
     }
 
     /**
@@ -490,7 +490,7 @@ class Warning extends XFCP_Warning
      */
     protected function getCategoryRepo()
     {
-        return $this->repository('SV\WarningImprovements:WarningCategory');
+        return \SV\StandardLib\Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
     }
 
     /**

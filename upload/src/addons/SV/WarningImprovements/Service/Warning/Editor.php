@@ -304,7 +304,7 @@ class Editor extends AbstractService
         if ($this->sendAlert)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = \XF::repository('XF:Warning');
+            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
             $warningRepo->sendWarningAlert($this->warning, 'edit', $this->sendAlertReason);
         }
 
@@ -326,7 +326,7 @@ class Editor extends AbstractService
             }
 
             /** @var ReactionRepo $reactionRepo */
-            $reactionRepo = $this->repository('XF:Reaction');
+            $reactionRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Reaction::class);
             $reactionHandler = $reactionRepo->getReactionHandler($warning->content_type);
             if ($reactionHandler instanceof SupportsDisablingReactionInterface)
             {

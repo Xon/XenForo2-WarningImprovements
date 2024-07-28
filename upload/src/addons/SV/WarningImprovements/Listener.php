@@ -12,7 +12,7 @@ class Listener
     public static function getWarningRepo(): \SV\WarningImprovements\XF\Repository\Warning
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \XF::repository('XF:Warning');
+        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
 
         return $warningRepo;
     }
@@ -91,7 +91,7 @@ class Listener
         if ($pendingWarningExpiry !== 0 && $pendingWarningExpiry <= \XF::$time)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = \XF::repository('XF:Warning');
+            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
             if (\is_callable([$warningRepo, 'processExpiredWarningsForUser']))
             {
                 $expired = $warningRepo->processExpiredWarningsForUser($visitor, $visitor->is_banned);
@@ -134,7 +134,7 @@ class Listener
                     }
                     else
                     {
-                        $visitor = \XF::finder('XF:User')
+                        $visitor = \SV\StandardLib\Helper::finder(\XF\Finder\User::class)
                                       ->whereId($visitor->user_id)
                                       ->fetchOne();
                     }

@@ -32,12 +32,12 @@ class Warn extends XFCP_Warn
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
         /** @var Warning $warningRepo */
-        $warningRepo = $this->repository('XF:Warning');
+        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
 
         if ($this->isPost() && !$this->filter('fill', 'bool'))
         {
             /** @var \XF\Service\FloodCheck $floodChecker */
-            $floodChecker = $this->service('XF:FloodCheck');
+            $floodChecker = \SV\StandardLib\Helper::service(\XF\Service\FloodCheck::class);
             $timeRemaining = $floodChecker->checkFlooding('warn.'.$contentType, $content->getEntityId(), 5);
             if ($timeRemaining)
             {
@@ -158,7 +158,7 @@ class Warn extends XFCP_Warn
             $response->setParam('content', $content);
 
             /** @var Warning $warningRepo */
-            $warningRepo = $this->repository('XF:Warning');
+            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
             /** @var WarningDefinition|null $definition */
             $definition = $response->getParam('definition');
 
@@ -244,6 +244,6 @@ class Warn extends XFCP_Warn
      */
     protected function getWarningCategoryRepo()
     {
-        return $this->repository('SV\WarningImprovements:WarningCategory');
+        return \SV\StandardLib\Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
     }
 }

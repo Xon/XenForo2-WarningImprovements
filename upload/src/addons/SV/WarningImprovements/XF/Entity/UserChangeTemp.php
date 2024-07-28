@@ -49,7 +49,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
                     $userGroupNames = [];
 
                     /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userGroupRepo */
-                    $userGroupRepo = $this->repository('XF:UserChangeTemp');
+                    $userGroupRepo = \SV\StandardLib\Helper::repository(\XF\Repository\UserChangeTemp::class);
                     $userGroups = $userGroupRepo->getCachedUserGroupsList();
                     $userGroupChangeSet = $userGroupRepo->getCachedUserGroupChangeList($this->user_id);
 
@@ -107,7 +107,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         {
             $warningActionId = $matches[1];
             /** @var WarningAction $warningAction */
-            $warningAction = $this->em()->find('XF:WarningAction', $warningActionId);
+            $warningAction = \SV\StandardLib\Helper::find(\XF\Entity\WarningAction::class, $warningActionId);
             if ($warningAction && $warningAction->action_length_type === 'points')
             {
                 // compute when the minimum level of points expire.
@@ -234,7 +234,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         }
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = $this->repository('XF:Warning');
+        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
         $warningRepo->updatePendingExpiryForLater($this->User, true);
     }
 

@@ -32,7 +32,7 @@ class UserBan extends XFCP_UserBan
         }
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = $this->repository('XF:Warning');
+        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
         $warningRepo->updatePendingExpiryForLater($this->User, true);
     }
 }

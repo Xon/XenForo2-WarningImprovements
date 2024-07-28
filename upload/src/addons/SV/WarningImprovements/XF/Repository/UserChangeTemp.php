@@ -20,7 +20,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         if ($this->userGroups === null)
         {
             /** @var \XF\Repository\UserGroup $userGroupRepo */
-            $userGroupRepo = $this->repository('XF:UserGroup');
+            $userGroupRepo = \SV\StandardLib\Helper::repository(\XF\Repository\UserGroup::class);
             $this->userGroups = $userGroupRepo->findUserGroupsForList()->fetch();
         }
 
@@ -70,7 +70,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      */
     public function getWarningActions(int $userId, bool $showAll = false, bool $showDiscouraged = false, bool $onlyExpired = false)
     {
-        $warningActions = $this->finder('XF:UserChangeTemp');
+        $warningActions = \SV\StandardLib\Helper::finder(\XF\Finder\UserChangeTemp::class);
 
         $warningActions->where('change_key', 'LIKE', 'warning_action_%');
 

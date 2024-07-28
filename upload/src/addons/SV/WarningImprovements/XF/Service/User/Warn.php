@@ -41,7 +41,7 @@ class Warn extends XFCP_Warn
     {
         parent::__construct($app, $user, $contentType, $content, $warningBy);
 
-        $this->warningRepo = $this->repository('XF:Warning');
+        $this->warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
     }
 
     public function setSendAlert(bool $sendAlert, string $sendAlertReason = '')
@@ -58,7 +58,7 @@ class Warn extends XFCP_Warn
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $definition */
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = $this->repository('XF:Warning');
+        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
         $return = $warningRepo->asVisitorWithLang($this->user, function() use ($definition, $points, $expiry) {
             return parent::setFromDefinition($definition, $points, $expiry);
         });
@@ -106,7 +106,7 @@ class Warn extends XFCP_Warn
         if ($this->sendAlert)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = \XF::repository('XF:Warning');
+            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
             $warningRepo->sendWarningAlert($warning, 'warning', $this->sendAlertReason);
         }
 
@@ -139,13 +139,13 @@ class Warn extends XFCP_Warn
         $warningUser = \XF::visitor(); //$this->user;
 
         if ($postSummaryForumId &&
-            ($forum = $this->em()->find('XF:Forum', $postSummaryForumId)))
+            ($forum = \SV\StandardLib\Helper::find(\XF\Entity\Forum::class, $postSummaryForumId)))
         {
             /** @var \XF\Entity\Forum|\SV\MultiPrefix\XF\Entity\Forum $forum */
             /** @var \XF\Service\Thread\Creator $threadCreator */
             $threadCreator = $this->warningRepo->asVisitorWithLang($warningUser, function () use ($forum, $params) {
                 /** @var \XF\Service\Thread\Creator $threadCreator */
-                $threadCreator = $this->service('XF:Thread\Creator', $forum);
+                $threadCreator = \SV\StandardLib\Helper::service(\XF\Service\Thread\Creator::class, $forum);
                 $threadCreator->setIsAutomated();
 
                 $defaultPrefix = $forum->sv_default_prefix_ids ?? $forum->default_prefix_id;
@@ -170,12 +170,12 @@ class Warn extends XFCP_Warn
             });
         }
         else if ($postSummaryThreadId &&
-                 ($thread = $this->em()->find('XF:Thread', $postSummaryThreadId)))
+                 ($thread = \SV\StandardLib\Helper::find(\XF\Entity\Thread::class, $postSummaryThreadId)))
         {
             /** @var \XF\Entity\Thread $thread */
             $threadReplier = $this->warningRepo->asVisitorWithLang($warningUser, function () use ($thread, $params) {
                 /** @var \XF\Service\Thread\Replier $threadReplier */
-                $threadReplier = $this->service('XF:Thread\Replier', $thread);
+                $threadReplier = \SV\StandardLib\Helper::service(\XF\Service\Thread\Replier::class, $thread);
                 $threadReplier->setIsAutomated();
 
                 $messageContent = \XF::phrase('Warning_Summary.Message', $params)->render('raw');
@@ -300,7 +300,7 @@ class Warn extends XFCP_Warn
         $warning->sv_disable_reactions = true;
 
         /** @var ReactionRepo $reactionRepo */
-        $reactionRepo = $this->repository('XF:Reaction');
+        $reactionRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Reaction::class);
         $reactionHandler = $reactionRepo->getReactionHandler($warning->content_type);
         if ($reactionHandler instanceof SupportsDisablingReactionInterface)
         {

@@ -131,7 +131,7 @@ class WarningCategory extends AbstractCategoryTree
 
     protected function _preDelete()
     {
-        $warningCategoryCount = $this->finder('SV\WarningImprovements:WarningCategory')
+        $warningCategoryCount = \SV\StandardLib\Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)
                                      ->where('warning_category_id', '!=', $this->warning_category_id)
                                      ->total();
         if (!$warningCategoryCount)
@@ -233,7 +233,7 @@ class WarningCategory extends AbstractCategoryTree
         \XF::runOnce('rebuildTree-' . $entityType, function()
         {
             /** @var \SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet $service */
-            $service = $this->app()->service('SV\WarningImprovements:Warning\CategoryRebuildNestedSet');
+            $service = \SV\StandardLib\Helper::service(\SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet::class);
             $service->rebuildNestedSetInfo();
         });
     }

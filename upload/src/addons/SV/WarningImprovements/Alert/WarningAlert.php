@@ -21,7 +21,7 @@ class WarningAlert extends AbstractHandler
     protected function getPlaceholderWarning(): WarningEntity
     {
         /** @var WarningEntity $warning */
-        $warning = \XF::app()->em()->create('XF:Warning');
+        $warning = \SV\StandardLib\Helper::createEntity(\XF\Entity\Warning::class);
         $warning->user_id = \XF::visitor()->user_id;
         $warning->setReadOnly(true);
 

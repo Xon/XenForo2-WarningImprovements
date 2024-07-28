@@ -31,7 +31,7 @@ class CategoryRebuildNestedSet extends AbstractService
 
     protected function getEntities(): AbstractCollection
     {
-        return $this->finder('SV\WarningImprovements:WarningCategory')
+        return \SV\StandardLib\Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)
                     ->order('display_order')
                     ->fetch();
     }
