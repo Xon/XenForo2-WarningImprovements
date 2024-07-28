@@ -279,7 +279,7 @@ class Warning extends XFCP_Warning
         if ($warningIds)
         {
             /** @var \XF\Entity\Warning[] $warnings */
-            $warnings = \SV\StandardLib\Helper::findByIds(\XF\Entity\Warning::class, $warningIds, 'User');
+            $warnings = \SV\StandardLib\Helper::findByIds(\XF\Entity\Warning::class, $warningIds, ['User']);
         }
 
         $userIds = [];
