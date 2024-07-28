@@ -75,7 +75,7 @@ class Warning extends XFCP_Warning
         /** @var UserEntity|ExtendedUserEntity $warnedUser */
         /** @var WarningEntity|ExtendedWarningEntity|null $warning */
         return $this->asVisitorWithLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions) {
-            $app = $this->app();
+            $app = \XF::app();
             $router = $app->router('public');
             $dateString = \date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
             $staffUser = $warning

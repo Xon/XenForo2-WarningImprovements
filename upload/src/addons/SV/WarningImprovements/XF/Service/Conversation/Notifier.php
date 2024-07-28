@@ -48,7 +48,7 @@ class Notifier extends XFCP_Notifier
                 if ($this->sv_force_email_for_user_id === null)
                 {
                     $this->sv_force_email_for_user_id = 0;
-                    $options = $this->app->options();
+                    $options = \XF::app()->options();
 
                     if ($options->sv_force_conversation_email_on_warning ?? true)
                     {

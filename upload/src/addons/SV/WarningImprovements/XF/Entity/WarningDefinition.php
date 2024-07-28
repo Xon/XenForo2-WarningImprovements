@@ -117,7 +117,7 @@ class WarningDefinition extends XFCP_WarningDefinition
             $userRepo = \SV\StandardLib\Helper::repository(\XF\Repository\User::class);
             $sender = $userRepo->getGuestUser(\XF::phrase('WarningStaff')->render());
 
-            $warningUserId = (int)($this->app()->options()->sv_warningimprovements_warning_user ?? 0);
+            $warningUserId = (int)(\XF::app()->options()->sv_warningimprovements_warning_user ?? 0);
             if ($warningUserId)
             {
                 $warningStaff = \SV\StandardLib\Helper::find(\XF\Entity\User::class, $warningUserId);

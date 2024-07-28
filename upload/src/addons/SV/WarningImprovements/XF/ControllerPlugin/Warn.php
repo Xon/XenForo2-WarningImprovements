@@ -123,7 +123,7 @@ class Warn extends XFCP_Warn
                 $canViewPreviousWarnings = false;
             }
 
-            $warningStructure = $this->app->em()->getEntityStructure('XF:Warning');
+            $warningStructure = \SV\StandardLib\Helper::getEntityStructure(\XF\Entity\Warning::class);
             $nodeColDefinition = $warningStructure->columns['notes'] ?? null;
             $userNoteRequired = \is_array($nodeColDefinition) && (!isset($nodeColDefinition['default']) || !empty($nodeColDefinition['required']));
             $response->setParams(

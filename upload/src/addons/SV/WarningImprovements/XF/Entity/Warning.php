@@ -71,7 +71,7 @@ class Warning extends XFCP_Warning
         }
 
         $censorList = ArrUtil::stringToArray(
-            $this->app()->options()->svWarningImprov_censorWarningTitle ?? '',
+            \XF::app()->options()->svWarningImprov_censorWarningTitle ?? '',
             '/\r?\n/'
         );
         if (!\count($censorList))
@@ -139,7 +139,7 @@ class Warning extends XFCP_Warning
             return false;
         }
 
-        if ($userId === $this->user_id && ($this->app()->options()->sv_view_own_warnings ?? false))
+        if ($userId === $this->user_id && (\XF::app()->options()->sv_view_own_warnings ?? false))
         {
             return true;
         }
@@ -215,7 +215,7 @@ class Warning extends XFCP_Warning
      */
     public function getAnonymizedIssuer(): UserEntity
     {
-        $warningUserId = (int)($this->app()->options()->sv_warningimprovements_warning_user ?? 0);
+        $warningUserId = (int)(\XF::app()->options()->sv_warningimprovements_warning_user ?? 0);
         if ($warningUserId)
         {
             /** @var UserExtendedEntity $warningStaff */
@@ -362,7 +362,7 @@ class Warning extends XFCP_Warning
                 {
                     if ($this->getOption('log_moderator'))
                     {
-                        $app = $this->app();
+                        $app = \XF::app();
                         /** @noinspection PhpRedundantOptionalArgumentInspection */
                         $language = $app->language(0);
                         $phraseTitle = 'mod_log.'.$this->content_type.'_warning_edited';
@@ -399,7 +399,7 @@ class Warning extends XFCP_Warning
                             }
                         }
 
-                        $this->app()->logger()->logModeratorAction($this->content_type, $content, 'warning_edited', [], false);
+                        \XF::app()->logger()->logModeratorAction($this->content_type, $content, 'warning_edited', [], false);
                     }
                 }
             }

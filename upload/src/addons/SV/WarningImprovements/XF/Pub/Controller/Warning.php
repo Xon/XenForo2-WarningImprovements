@@ -279,14 +279,14 @@ class Warning extends XFCP_Warning
         if ($warningIds)
         {
             /** @var \XF\Entity\Warning[] $warnings */
-            $warnings = \XF::em()->findByIds('XF:Warning', $warningIds, 'User');
+            $warnings = \SV\StandardLib\Helper::findByIds(\XF\Entity\Warning::class, $warningIds, 'User');
         }
 
         $userIds = [];
         foreach ($activities AS $activity)
         {
             $userId = $activity->user_id;
-            if ($userId && !$em->findCached('XF:User', $userId))
+            if ($userId && !\SV\StandardLib\Helper::findCached(\XF\Entity\User::class, $userId))
             {
                 $userIds[$userId] = $userId;
             }
@@ -294,7 +294,7 @@ class Warning extends XFCP_Warning
 
         if ($userIds)
         {
-            \XF::em()->findByIds('XF:User', $userIds);
+            \SV\StandardLib\Helper::findByIds(\XF\Entity\User::class, $userIds);
         }
 
         $router = \XF::app()->router('public');

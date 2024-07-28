@@ -28,7 +28,7 @@ class Warning extends XFCP_Warning
             {
                 $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
 
-                $setup = new \SV\WarningImprovements\Setup($addOn, $this->app());
+                $setup = new \SV\WarningImprovements\Setup($addOn, \XF::app());
                 $setup->addDefaultPhrases();
                 $setup->cleanupWarningCategories();
             }
