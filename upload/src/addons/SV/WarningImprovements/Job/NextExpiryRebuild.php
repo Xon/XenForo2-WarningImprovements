@@ -18,7 +18,7 @@ class NextExpiryRebuild extends AbstractRebuildJob
      */
     protected function getNextIds($start, $batch): array
     {
-        $db = \XF::app()->db();
+        $db = \XF::db();
 
         return $db->fetchAllColumn($db->limit(
             '

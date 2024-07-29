@@ -41,7 +41,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             return $this->userGroupChangeSet[$userId];
         }
 
-        $this->userGroupChangeSet[$userId] = $this->db()->fetchPairs("SELECT change_key, group_ids
+        $this->userGroupChangeSet[$userId] = \XF::db()->fetchPairs("SELECT change_key, group_ids
             FROM xf_user_group_change
             WHERE user_id = ? AND change_key LIKE 'warning_action_%'
         ", $userId);
@@ -124,6 +124,6 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      */
     public function countWarningActions(UserEntity $user, bool $showAll = false, bool $showDiscouraged = false)
     {
-        return $this->db()->fetchOne($this->getWarningActions($user->user_id, $showAll, $showDiscouraged)->getQuery(['countOnly' => true]));
+        return \XF::db()->fetchOne($this->getWarningActions($user->user_id, $showAll, $showDiscouraged)->getQuery(['countOnly' => true]));
     }
 }

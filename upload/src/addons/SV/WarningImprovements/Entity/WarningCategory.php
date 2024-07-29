@@ -245,7 +245,7 @@ class WarningCategory extends AbstractCategoryTree
 
     public function rebuildWarningCount()
     {
-        $warningCount = $this->db()->fetchOne("
+        $warningCount = \XF::db()->fetchOne("
 			SELECT COUNT(*)
 			FROM xf_warning_definition
 			WHERE sv_warning_category_id = ?

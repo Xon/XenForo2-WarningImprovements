@@ -190,7 +190,7 @@ class Warning extends XFCP_Warning
         $ageLimit = (int)(\XF::options()->svWarningEscalatingDefaultsLimit ?? 0);
         $timeLimit = $ageLimit > 0 ? \XF::$time - $ageLimit * 2629746 : 0;
 
-        $totals = $this->db()->fetchRow('
+        $totals = \XF::db()->fetchRow('
             SELECT count(points) AS `count`,
                    CAST(IFNULL(sum(points), 0) AS UNSIGNED) AS `total`
             FROM xf_warning
@@ -293,7 +293,7 @@ class Warning extends XFCP_Warning
      */
     public function getEffectiveNextExpiry(int $userId, bool $checkBannedStatus)
     {
-        return $this->db()->fetchOne('
+        return \XF::db()->fetchOne('
             SELECT MIN(CAST(expiryDate as SIGNED))
             FROM (
                         SELECT MIN(expiry_date) AS expiryDate
@@ -330,7 +330,7 @@ class Warning extends XFCP_Warning
         {
             return null;
         }
-        $db = $this->db();
+        $db = \XF::db();
 
         /** @var UserOption $option */
         $option = $user->Option;
@@ -436,7 +436,7 @@ class Warning extends XFCP_Warning
                 $additionalWhere .= ' AND is_expired = 0 ';
             }
 
-            $this->userWarningCountCache[$user->user_id][$days] = $rec = $this->db()->fetchRow("
+            $this->userWarningCountCache[$user->user_id][$days] = $rec = \XF::db()->fetchRow("
                 SELECT SUM(points) AS total, COUNT(points) AS `count`
                 FROM xf_warning
                 WHERE user_id = ? AND warning_date > ? {$additionalWhere}

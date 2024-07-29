@@ -255,7 +255,7 @@ class Editor extends AbstractService
      */
     protected function _save()
     {
-        $db = $this->db();
+        $db = \XF::db();
         $db->beginTransaction();
 
         $this->preUpdate();

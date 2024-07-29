@@ -291,7 +291,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         $categoryPoints = $this->getCategoryPoints(true);
 
-        $triggers = $this->db()->fetchAllKeyed("
+        $triggers = \XF::db()->fetchAllKeyed("
 			SELECT action_trigger.*, warning_action.sv_warning_category_id
 			FROM xf_warning_action_trigger AS action_trigger
 			LEFT JOIN xf_warning_action warning_action ON warning_action.warning_action_id = action_trigger.warning_action_id

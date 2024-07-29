@@ -111,7 +111,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             if ($warningAction && $warningAction->action_length_type === 'points')
             {
                 // compute when the minimum level of points expire.
-                $effectiveExpiryDate = $this->db()->fetchOne(
+                $effectiveExpiryDate = \XF::db()->fetchOne(
                     'select expiry_date
                             from
                             (

@@ -40,9 +40,9 @@ class CategoryRebuildNestedSet extends AbstractService
     {
         $this->setupTree();
 
-        $this->db()->beginTransaction();
+        \XF::db()->beginTransaction();
         $this->_rebuildNestedSetInfo(0);
-        $this->db()->commit();
+        \XF::db()->commit();
     }
 
     protected function _rebuildNestedSetInfo(int $id, int $depth = -1, int &$counter = 0)
