@@ -3,8 +3,20 @@
 <xf:macro name="svStandardLib_macros::choices_setup" />
 <xf:js addon="SV/WarningImprovements" src="sv/warningimprovements/warnings.js" min="1" />
 
-<div id="warning-view-select" style="display: none; opacity: 0;">
-	<xf:selectrow name="warning_definition_id" class="js-FormFiller" value="0" label="{{ phrase('warning_type') }}" data-no-results-text="{{ phrase('sv_no_results_match') }}" data-place-holder-text="{{ phrase('sv_choose_a_warning') }}" data-xf-init="sv-choices warning-title-watcher" data-warning-select="true" data-copy-title="{{ $xf.options.sv_warningimprovements_copy_title }}">
+<xf:radiorow name="warning_view" label="{{ phrase('svWarningImprovements_warning_view') }}" value="{{ is_toggled('sv_warning_view') ? 'select' : 'radio' }}">
+	<xf:option value="radio" label="{{ phrase('svWarningImprovements_use_warning_radio_view') }}"
+			   data-xf-init="disabler"
+			   data-storage-key="sv_warning_view"
+			   data-hide="{{ true }}"
+			   data-container=".svWarningViewRadio" />
+	<xf:option value="select" label="{{ phrase('svWarningImprovements_use_warning_select_view') }}"
+			   data-xf-init="disabler"
+			   data-hide="{{ true }}"
+			   data-container=".svWarningViewSelect" />
+</xf:radiorow>
+
+<div class="svWarningViewSelect">
+	<xf:selectrow name="warning_definition_id" class="js-FormFiller" value="0" label="{{ phrase('warning_type') }}" data-no-results-text="{{ phrase('sv_no_results_match') }}" data-place-holder-text="{{ phrase('sv_choose_a_warning') }}" data-xf-init="sv-choices" data-copy-title="{{ $xf.options.sv_warningimprovements_copy_title }}">
 		<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 			<xf:set var="$category" value="{$treeEntry.record}" />
 			<xf:optgroup label="{{ repeat('--', $treeEntry.depth) }} {$category.title}">
@@ -18,20 +30,17 @@
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:set var="$category" value="{$treeEntry.record}" />
 		<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warningDefinition">
-				<xf:formrow label="" data-custom-title-container="1" data-warning-view-type="select" data-warning-label="{$warningDefinition.custom_title_placeholder}" data-for-warning="{$warningDefinition.warning_definition_id}">
-					<xf:if is="$warningDefinition.sv_custom_title || !$warningDefinition.warning_definition_id">
-						<xf:textbox name="custom_title" maxlength="{{ max_length('XF:Warning', 'title') }}" value="" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" disabled="disabled" placeholder="{{ phrase('custom_title') }}" />
-					<xf:else />
-						<xf:hiddenval name="custom_title" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}"></xf:hiddenval>
-					</xf:if>
-				</xf:formrow>
+			<xf:if is="$warningDefinition.sv_custom_title || !$warningDefinition.warning_definition_id">
+				<xf:textboxrow name="custom_title" maxlength="{{ max_length('XF:Warning', 'title') }}"
+							   disabled="disabled" placeholder="{{ phrase('custom_title') }}" />
+			</xf:if>
 		</xf:foreach>
 	</xf:foreach>
 </div>
 
 <xf:set var="$defaultSelected" value="{{ false }}"/>
 <xf:set var="$defaultWarningId" value="{{ 0 }}"/>
-<div id="warning-view-radio" style="display: none; opacity: 0;">
+<div class="svWarningViewRadio">
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:set var="$category" value="{$treeEntry.record}" />
 
@@ -68,12 +77,10 @@
 							<xf:set var="$defaultWarningId" value="{$warningDefinition.warning_definition_id}"/>
 						</xf:if>
 						<xf:radio name="warning_definition_id" value="{{$defaultWarningId ?: 0}}">
-							<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-warning-radio="true" data-warning-label="{$warningDefinition.custom_title_placeholder}" data-xf-init="warning-title-watcher">
+							<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-hide="true">
 								<xf:dependent>
 									<xf:if is="$warningDefinition.sv_custom_title || !$warningDefinition.warning_definition_id">
-										<xf:formrow label="" data-custom-title-container="1" data-warning-view-type="radio">
-											<xf:textbox label="" name="custom_title" maxlength="{{ max_length('XF:Warning', 'title') }}" value="{$warningDefinition.custom_title_placeholder}" data-xf-init="warning-title-watcher" data-warning-title-input="1" data-for-warning="{$warningDefinition.warning_definition_id}" />
-										</xf:formrow>
+										<xf:textbox label="" name="custom_title" maxlength="{{ max_length('XF:Warning', 'title') }}" value="{$warningDefinition.custom_title_placeholder}" />
 									</xf:if>
 								</xf:dependent>
 							</xf:option>
@@ -84,11 +91,3 @@
 		</xf:if>
 	</xf:foreach>
 </div>
-
-<xf:formrow>
-	<a class="u-jsOnly" data-xf-init="warning-view-toggle" href="#"
-	data-select-view-selector="#warning-view-select"
-	data-radio-view-selector="#warning-view-radio"
-	data-toggle-select-view-phrase="{{ phrase('sv_toggle_select_view')|for_attr }}"
-	data-toggle-radio-view-phrase="{{ phrase('sv_toggle_radio_view')|for_attr }}"></a>
-</xf:formrow>
