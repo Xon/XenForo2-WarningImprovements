@@ -32,7 +32,7 @@ class WarningAction extends XFCP_WarningAction
 {
     public function getTitle()
     {
-        return \XF::Phrase('svWarningPoints:') . ' '. $this->points;
+        return \XF::phrase('svWarningPoints:') . ' '. $this->points;
     }
 
     /**

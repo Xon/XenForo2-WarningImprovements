@@ -165,7 +165,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         $actions = $this->getActions('ASC');
 
-        if (empty($actions))
+        if ($actions->count() === 0)
         {
             return;
         }

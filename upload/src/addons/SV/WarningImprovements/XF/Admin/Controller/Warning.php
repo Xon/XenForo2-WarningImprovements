@@ -427,7 +427,7 @@ class Warning extends XFCP_Warning
         $form->validate(function (FormAction $form) use ($phraseInput) {
             if ($phraseInput['title'] === '')
             {
-                $form->logError(\Xf::phrase('please_enter_valid_title'), 'title');
+                $form->logError(\XF::phrase('please_enter_valid_title'), 'title');
             }
         });
         $form->apply(function () use ($phraseInput, $warningCategory) {
