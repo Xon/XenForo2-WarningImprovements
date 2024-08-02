@@ -5,9 +5,15 @@
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
+use SV\ReportImprovements\XF\Entity\Warning as ReportImprovWarningEntity;
 use SV\StandardLib\Helper;
+use SV\WarningAcknowledgement\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
 use SV\WarningImprovements\Globals;
-use SV\WarningImprovements\XF\Entity\WarningDefinition;
+use XF\ControllerPlugin\Delete as DeletePlugin;
+use XF\ControllerPlugin\Editor as EditorPlugin;
+use XF\Entity\DeletionLog as DeletionLogEntity;
+use XF\Entity\SessionActivity as SessionActivityEntity;
+use XF\Entity\User as UserEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
@@ -39,7 +45,7 @@ class Warning extends XFCP_Warning
             return $this->redirect($this->buildLink('warnings/delete', $warning));
         }
 
-        $plugin = Helper::plugin($this,\XF\ControllerPlugin\Delete::class);
+        $plugin = Helper::plugin($this, DeletePlugin::class);
 
         return $plugin->actionDelete(
             $warning,
@@ -101,7 +107,7 @@ class Warning extends XFCP_Warning
 
             if (array_key_exists('DeletionLog', $content->structure()->relations))
             {
-                /** @var \XF\Entity\DeletionLog $deletionLog */
+                /** @var DeletionLogEntity $deletionLog */
                 $deletionLog = $content->getRelation('DeletionLog');
                 if ($deletionLog !== null)
                 {
@@ -122,8 +128,7 @@ class Warning extends XFCP_Warning
 
     protected function getWarningEditInput(ExtendedWarningEntity $warning, array $args = []): array
     {
-        /** @var ExtendedWarningEntity|\SV\ReportImprovements\XF\Entity\Warning $warning */
-        /** @var WarningDefinition|\SV\WarningAcknowledgement\XF\Entity\WarningDefinition $warningDefinition */
+        /** @var ExtendedWarningEntity|ReportImprovWarningEntity $warning */
         $warningDefinition = $warning->Definition;
 
         $isCustom = $warningDefinition === null || $warningDefinition->is_custom;
@@ -159,6 +164,7 @@ class Warning extends XFCP_Warning
         $addOns = \XF::app()->container('addon.cache');
         if ($addOns['SV/WarningAcknowledgement'] ?? false)
         {
+            /** @var ExtendedWarningDefinitionEntity $warningDefinition */
             $canEditWarningAck = $warningDefinition === null || $warningDefinition->sv_allow_acknowledgement;
             if ($canEditWarningAck)
             {
@@ -183,7 +189,7 @@ class Warning extends XFCP_Warning
 
     protected function applyInput(EditorService $warningEditor, array $input): array
     {
-        /** @var ExtendedWarningEntity|\SV\ReportImprovements\XF\Entity\Warning $warning */
+        /** @var ExtendedWarningEntity|ReportImprovWarningEntity $warning */
         $warning = $warningEditor->getWarning();
         if (isset($input['title']))
         {
@@ -224,7 +230,7 @@ class Warning extends XFCP_Warning
 
             if (\strlen($bbCode) === 0 && \strlen($html) !== 0)
             {
-                $editor = Helper::plugin($this,\XF\ControllerPlugin\Editor::class);
+                $editor = Helper::plugin($this, EditorPlugin::class);
                 $bbCode = $editor->convertToBbCode($html);
             }
 
@@ -261,7 +267,7 @@ class Warning extends XFCP_Warning
 
     public static function getActivityDetails(array $activities)
     {
-        /** @var \XF\Entity\SessionActivity[] $activities */
+        /** @var SessionActivityEntity[] $activities */
         $warningIds = [];
         $warnings = [];
         foreach ($activities AS $activity)
@@ -283,7 +289,7 @@ class Warning extends XFCP_Warning
         foreach ($activities AS $activity)
         {
             $userId = $activity->user_id;
-            if ($userId && !Helper::findCached(\XF\Entity\User::class, $userId))
+            if ($userId && !Helper::findCached(UserEntity::class, $userId))
             {
                 $userIds[$userId] = $userId;
             }
@@ -291,7 +297,7 @@ class Warning extends XFCP_Warning
 
         if ($userIds)
         {
-            Helper::findByIds(\XF\Entity\User::class, $userIds);
+            Helper::findByIds(UserEntity::class, $userIds);
         }
 
         $router = \XF::app()->router('public');

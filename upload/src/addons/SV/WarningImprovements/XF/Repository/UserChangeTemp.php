@@ -4,23 +4,27 @@ namespace SV\WarningImprovements\XF\Repository;
 
 use SV\StandardLib\Helper;
 use XF\Entity\User as UserEntity;
+use XF\Entity\UserGroup as UserGroupEntity;
+use XF\Finder\UserChangeTemp as UserChangeTempFinder;
+use XF\Mvc\Entity\Finder;
+use XF\Repository\UserGroup as UserGroupRepo;
 
 /**
  * @Extends \XF\Repository\UserChangeTemp
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {
-    /** @var null|\XF\Entity\UserGroup[] */
+    /** @var null|UserGroupEntity[] */
     protected $userGroups = null;
 
     /**
-     * @return \XF\Entity\UserGroup[]
+     * @return UserGroupEntity[]
      */
     public function getCachedUserGroupsList(): array
     {
         if ($this->userGroups === null)
         {
-            $userGroupRepo = Helper::repository(\XF\Repository\UserGroup::class);
+            $userGroupRepo = Helper::repository(UserGroupRepo::class);
             $this->userGroups = $userGroupRepo->findUserGroupsForList()
                                               ->fetch()
                                               ->toArray();
@@ -68,11 +72,11 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param bool  $showAll
      * @param bool  $showDiscouraged
      * @param bool  $onlyExpired
-     * @return \XF\Mvc\Entity\Finder|\XF\Finder\UserChangeTemp
+     * @return Finder|UserChangeTempFinder
      */
     public function getWarningActions(int $userId, bool $showAll = false, bool $showDiscouraged = false, bool $onlyExpired = false)
     {
-        $warningActions = Helper::finder(\XF\Finder\UserChangeTemp::class);
+        $warningActions = Helper::finder(UserChangeTempFinder::class);
 
         $warningActions->where('change_key', 'LIKE', 'warning_action_%');
 

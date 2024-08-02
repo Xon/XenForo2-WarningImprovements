@@ -3,7 +3,10 @@
 namespace SV\WarningImprovements\Job;
 
 use SV\StandardLib\Helper;
+use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
+use XF\Entity\User as UserEntity;
 use XF\Job\AbstractRebuildJob;
+use XF\Repository\Warning as WarningRepo;
 
 /**
  * Class WarningLogMigration
@@ -37,13 +40,13 @@ class NextExpiryRebuild extends AbstractRebuildJob
      */
     protected function rebuildById($id)
     {
-        $user = Helper::find(\XF\Entity\User::class, $id, ['Option']);
+        $user = Helper::find(UserEntity::class, $id, ['Option']);
         if ($user === null)
         {
             return;
         }
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+        /** @var ExtendedWarningRepo $warningRepo */
+        $warningRepo = Helper::repository(WarningRepo::class);
         $warningRepo->updatePendingExpiryFor($user);
     }
 

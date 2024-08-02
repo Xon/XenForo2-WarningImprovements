@@ -3,6 +3,18 @@
 namespace SV\WarningImprovements\XF\Service\User;
 
 use SV\StandardLib\Helper;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
+use SV\WarningImprovements\XF\Entity\UserChangeTemp as ExtendedUserChangeTempEntity;
+use SV\WarningImprovements\XF\Entity\WarningAction as ExtendedWarningActionEntity;
+use SV\WarningImprovements\XF\Repository\UserChangeTemp as ExtendedUserChangeTempRepo;
+use XF\App;
+use XF\Entity\User as UserEntity;
+use XF\Entity\UserBan as UserBanEntity;
+use XF\Entity\UserChangeTemp as UserChangeTempEntity;
+use XF\Entity\WarningAction as WarningActionEntity;
+use XF\Finder\WarningAction as WarningActionFinder;
+use XF\Repository\UserChangeTemp as UserChangeTempRepo;
+use XF\Service\User\TempChange as TempChangeService;
 
 /**
  * Class ContentChange
@@ -14,11 +26,11 @@ class ContentChange extends XFCP_ContentChange
     /**
      * ContentChange constructor.
      *
-     * @param \XF\App $app
-     * @param         $originalUserId
-     * @param null    $originalUserName
+     * @param App $app
+     * @param int     $originalUserId
+     * @param ?string $originalUserName
      */
-    public function __construct(\XF\App $app, $originalUserId, $originalUserName = null)
+    public function __construct(App $app, $originalUserId, $originalUserName = null)
     {
         parent::__construct($app, $originalUserId, $originalUserName);
         if ($this->newUserId !== 0) // deleting user
@@ -29,11 +41,11 @@ class ContentChange extends XFCP_ContentChange
 
     protected function stepReassignWarningActions()
     {
-        /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
-        $userChangeTempRepo = Helper::repository(\XF\Repository\UserChangeTemp::class);
-        /** @var \SV\WarningImprovements\XF\Entity\User $targetUser */
-        $targetUser = Helper::find(\XF\Entity\User::class, $this->newUserId);
-        if (!$targetUser)
+        /** @var ExtendedUserChangeTempRepo $userChangeTempRepo */
+        $userChangeTempRepo = Helper::repository(UserChangeTempRepo::class);
+        /** @var ?ExtendedUserEntity $targetUser */
+        $targetUser = Helper::find(UserEntity::class, $this->newUserId);
+        if ($targetUser === null)
         {
             return;
         }
@@ -42,7 +54,7 @@ class ContentChange extends XFCP_ContentChange
         if ($warningActionsAppliedToSource->count())
         {
             $warningActionIds = [];
-            /** @var \XF\Entity\UserChangeTemp|\SV\WarningImprovements\XF\Entity\UserChangeTemp $_warningAction */
+            /** @var UserChangeTempEntity|ExtendedUserChangeTempEntity $_warningAction */
             foreach ($warningActionsAppliedToSource AS $_warningAction)
             {
                 $warningActionDetails = \explode('_', $_warningAction->change_key);
@@ -62,9 +74,9 @@ class ContentChange extends XFCP_ContentChange
                 return;
             }
 
-            $warningActions = Helper::finder(\XF\Finder\WarningAction::class)->whereIds($warningActionIds)->fetch();
+            $warningActions = Helper::finder(WarningActionFinder::class)->whereIds($warningActionIds)->fetch();
 
-            /** @var \SV\WarningImprovements\XF\Entity\WarningAction $warningAction */
+            /** @var ExtendedWarningActionEntity $warningAction */
             foreach ($warningActions AS $warningAction)
             {
                 $this->applyWarningActionForSVWI($targetUser, $warningAction);
@@ -72,7 +84,7 @@ class ContentChange extends XFCP_ContentChange
         }
     }
 
-    protected function applyWarningActionForSVWI(\XF\Entity\User &$targetUser, \XF\Entity\WarningAction $warningAction)
+    protected function applyWarningActionForSVWI(UserEntity &$targetUser, WarningActionEntity $warningAction)
     {
         $permanent = ($warningAction->action_length_type === 'permanent');
         $endByPoints = ($warningAction->action_length_type === 'points');
@@ -91,7 +103,7 @@ class ContentChange extends XFCP_ContentChange
         switch ($warningAction->action)
         {
             case 'ban':
-                /** @var \XF\Entity\UserBan $ban */
+                /** @var UserBanEntity $ban */
                 $ban = $targetUser->Ban;
                 if ($endByPoints)
                 {
@@ -118,7 +130,7 @@ class ContentChange extends XFCP_ContentChange
                 break;
 
             case 'discourage':
-                $changeService = Helper::service(\XF\Service\User\TempChange::class);
+                $changeService = Helper::service(TempChangeService::class);
                 $changeService->applyFieldChange(
                     $targetUser, $tempChangeKey, 'Option.is_discouraged', true, $actionEndDate
                 );
@@ -127,7 +139,7 @@ class ContentChange extends XFCP_ContentChange
             case 'groups':
                 $userGroupChangeKey = 'warning_action_' . $warningAction->warning_action_id;
 
-                $changeService = Helper::service(\XF\Service\User\TempChange::class);
+                $changeService = Helper::service(TempChangeService::class);
                 $changeService->applyGroupChange(
                     $targetUser, $tempChangeKey, $warningAction->extra_user_group_ids, $userGroupChangeKey, $actionEndDate
                 );
@@ -136,14 +148,14 @@ class ContentChange extends XFCP_ContentChange
     }
 
     /** @noinspection PhpParameterByRefIsNotUsedAsReferenceInspection */
-    protected function applyUserBanForSVWI(\XF\Entity\User &$targetUser, int $endDate, bool $setTriggered): \XF\Entity\UserBan
+    protected function applyUserBanForSVWI(UserEntity &$targetUser, int $endDate, bool $setTriggered): UserBanEntity
     {
         $ban = $targetUser->Ban;
         if (!$ban)
         {
             $reason = \strval(\XF::phrase('warning_ban_reason'));
 
-            /** @var \XF\Entity\UserBan $ban */
+            /** @var UserBanEntity $ban */
             $ban = $targetUser->getRelationOrDefault('Ban', false);
             $ban->user_id = $targetUser->user_id;
             $ban->ban_user_id = 0;

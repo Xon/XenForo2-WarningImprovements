@@ -2,13 +2,13 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
-use SV\WarningImprovements\Entity\WarningCategory;
+use SV\WarningImprovements\Entity\WarningCategory as WarningCategoryEntity;
 
 class WarningTotal
 {
     /** @var WarningTotal */
     public $parent;
-    /** @var WarningCategory */
+    /** @var WarningCategoryEntity */
     public $category;
     /** @var int */
     public $newCount;
@@ -19,7 +19,7 @@ class WarningTotal
     /** @var int */
     public $oldPoints;
 
-    public function __construct(WarningCategory $category, int $newPoints = 0, int $newCount = 0, int $oldPoints = 0, int $oldCount = 0)
+    public function __construct(WarningCategoryEntity $category, int $newPoints = 0, int $newCount = 0, int $oldPoints = 0, int $oldCount = 0)
     {
         $this->category = $category;
         $this->newPoints = $newPoints;

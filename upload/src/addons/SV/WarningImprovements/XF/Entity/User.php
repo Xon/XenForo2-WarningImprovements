@@ -9,9 +9,13 @@ namespace SV\WarningImprovements\XF\Entity;
 
 use SV\StandardLib\Helper;
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Repository\UserChangeTemp as ExtendedUserChangeTempRepo;
+use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Entity\Structure;
 use XF\Phrase;
+use XF\Repository\UserChangeTemp as UserChangeTempRepo;
+use XF\Repository\Warning as WarningRepo;
 
 /**
  * GETTERS
@@ -169,8 +173,8 @@ class User extends XFCP_User
 
     public function getWarningDefinitions(): AbstractCollection
     {
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+        /** @var ExtendedWarningRepo $warningRepo */
+        $warningRepo = Helper::repository(WarningRepo::class);
 
         return $warningRepo->findWarningDefinitionsForList()
                            ->with('Category')
@@ -192,8 +196,8 @@ class User extends XFCP_User
 
     public function getWarningActions(): AbstractCollection
     {
-        /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
-        $userChangeTempRepo = Helper::repository(\XF\Repository\UserChangeTemp::class);
+        /** @var ExtendedUserChangeTempRepo $userChangeTempRepo */
+        $userChangeTempRepo = Helper::repository(UserChangeTempRepo::class);
 
         return $userChangeTempRepo->getWarningActions(
             $this->user_id,
@@ -204,8 +208,8 @@ class User extends XFCP_User
 
     public function getWarningActionsCount(): int
     {
-        /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
-        $userChangeTempRepo = Helper::repository(\XF\Repository\UserChangeTemp::class);
+        /** @var ExtendedUserChangeTempRepo $userChangeTempRepo */
+        $userChangeTempRepo = Helper::repository(UserChangeTempRepo::class);
 
         return $userChangeTempRepo->countWarningActions(
             $this,
@@ -218,8 +222,8 @@ class User extends XFCP_User
     {
         parent::rebuildWarningPoints();
 
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+        /** @var ExtendedWarningRepo $warningRepo */
+        $warningRepo = Helper::repository(WarningRepo::class);
         $warningRepo->updatePendingExpiryForLater($this, true);
     }
 

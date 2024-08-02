@@ -2,12 +2,18 @@
 
 namespace SV\WarningImprovements\Service\Warning;
 
+use SV\ReportImprovements\XF\Entity\Warning as ReportImprovWarningEntity;
 use SV\StandardLib\Helper;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
+use SV\WarningAcknowledgement\XF\Entity\Warning as WarningAckExtendedWarningEntity;
 use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
-use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
+use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
+use XF\App;
+use XF\Entity\DeletionLog as DeletionLogEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Repository\Reaction as ReactionRepo;
+use XF\Repository\Warning as WarningRepo;
 use XF\Service\AbstractService;
 use XF\Service\ValidateAndSavableTrait;
 use function array_key_exists;
@@ -16,7 +22,7 @@ class Editor extends AbstractService
 {
     use ValidateAndSavableTrait;
 
-    /** @var ExtendedWarningEntity */
+    /** @var ExtendedWarningEntity|WarningAckExtendedWarningEntity */
     protected $warning;
     /** @var bool */
     protected $hasChanges = false;
@@ -40,7 +46,7 @@ class Editor extends AbstractService
      */
     protected $content = null;
 
-    public function __construct(\XF\App $app, ExtendedWarningEntity $warning)
+    public function __construct(App $app, ExtendedWarningEntity $warning)
     {
         $this->warning = $warning;
         parent::__construct($app);
@@ -141,7 +147,7 @@ class Editor extends AbstractService
                     return false;
                 }
 
-                /** @var \XF\Entity\DeletionLog $deletionLog */
+                /** @var DeletionLogEntity $deletionLog */
                 $deletionLog = $content->getRelation('DeletionLog');
                 if ($deletionLog !== null)
                 {
@@ -177,7 +183,6 @@ class Editor extends AbstractService
 
     public function setWarningAck(array $warningInput)
     {
-        /** @var \SV\WarningAcknowledgement\XF\Entity\Warning $warning */
         $warning = $this->warning;
         if ($warning->sv_acknowledgement !== 'completed')
         {
@@ -200,7 +205,7 @@ class Editor extends AbstractService
             return;
         }
 
-        /** @var \SV\ReportImprovements\XF\Entity\Warning $warning */
+        /** @var ReportImprovWarningEntity $warning */
         $warning = $this->warning;
         $report = $warning->Report;
         if ($report === null || !$report->isClosed())
@@ -252,10 +257,6 @@ class Editor extends AbstractService
         return $this->hasChanges || $this->warning->hasChanges();
     }
 
-    /**
-     * @return ExtendedWarningEntity|null
-     * @throws \XF\PrintableException
-     */
     protected function _save()
     {
         $db = \XF::db();
@@ -306,8 +307,8 @@ class Editor extends AbstractService
     {
         if ($this->sendAlert)
         {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+            /** @var ExtendedWarningRepo $warningRepo */
+            $warningRepo = Helper::repository(WarningRepo::class);
             $warningRepo->sendWarningAlert($this->warning, 'edit', $this->sendAlertReason);
         }
 

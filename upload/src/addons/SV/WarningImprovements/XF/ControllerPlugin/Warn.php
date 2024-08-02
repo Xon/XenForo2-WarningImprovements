@@ -10,13 +10,17 @@ use SV\WarningImprovements\Entity\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\Repository\WarningCategory as WarningCategoryRepo;
-use SV\WarningImprovements\XF\Entity\WarningDefinition;
-use SV\WarningImprovements\XF\Repository\Warning;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
+use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+use SV\WarningImprovements\XF\Finder\Warning as ExtendedWarningFinder;
+use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\Entity\User;
+use XF\Entity\Warning as WarningEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\Redirect as RedirectReply;
 use XF\Mvc\Reply\View as ViewReply;
+use XF\Repository\Warning as WarningRepo;
 use XF\Service\FloodCheck as FloodCheckService;
 use XF\Warning\AbstractHandler;
 use SV\WarningImprovements\XF\Service\User\Warn as ExtendedUserWarnSvc;
@@ -36,8 +40,8 @@ class Warn extends XFCP_Warn
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
-        /** @var Warning $warningRepo */
-        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+        /** @var ExtendedWarningRepo $warningRepo */
+        $warningRepo = Helper::repository(WarningRepo::class);
 
         if ($this->isPost() && !$this->filter('fill', 'bool'))
         {
@@ -49,7 +53,7 @@ class Warn extends XFCP_Warn
             }
         }
 
-        /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+        /** @var ExtendedUserEntity $visitor */
         $visitor = \XF::visitor();
         $warnings = $visitor->getUsableWarningDefinitions();
 
@@ -88,7 +92,7 @@ class Warn extends XFCP_Warn
             $categoryRepo = $this->getWarningCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
 
-            /** @var \SV\WarningImprovements\XF\Entity\User $user */
+            /** @var ExtendedUserEntity $user */
             $user = $response->getParam('user');
             $previousWarnings = [];
 
@@ -109,7 +113,7 @@ class Warn extends XFCP_Warn
             $warningLimit = (int)(\XF::options()->svPreviousWarningLimit ?? -1);
             if ($canViewPreviousWarnings && $user !== null && $warningLimit >= 0)
             {
-                /** @var \SV\WarningImprovements\XF\Finder\Warning $warningList */
+                /** @var ExtendedWarningFinder $warningList */
                 $warningList = $warningRepo->findUserWarningsForList($user->user_id);
                 if ($warningLimit > 0)
                 {
@@ -127,7 +131,7 @@ class Warn extends XFCP_Warn
                 $canViewPreviousWarnings = false;
             }
 
-            $warningStructure = Helper::getEntityStructure(\XF\Entity\Warning::class);
+            $warningStructure = Helper::getEntityStructure(WarningEntity::class);
             $nodeColDefinition = $warningStructure->columns['notes'] ?? null;
             $userNoteRequired = \is_array($nodeColDefinition) && (!isset($nodeColDefinition['default']) || !empty($nodeColDefinition['required']));
             $response->setParams(
@@ -145,11 +149,11 @@ class Warn extends XFCP_Warn
     }
 
     /**
-     * @param AbstractHandler                             $warningHandler
-     * @param \SV\WarningImprovements\XF\Entity\User|User $user
-     * @param string                                      $contentType
-     * @param Entity                                      $content
-     * @param array                                       $input
+     * @param AbstractHandler         $warningHandler
+     * @param ExtendedUserEntity|User $user
+     * @param string                  $contentType
+     * @param Entity                  $content
+     * @param array                   $input
      * @return ViewReply
      */
     protected function getWarningFillerReply(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
@@ -161,9 +165,9 @@ class Warn extends XFCP_Warn
             $response->setParam('user', $user);
             $response->setParam('content', $content);
 
-            /** @var Warning $warningRepo */
-            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
-            /** @var WarningDefinition|null $definition */
+            /** @var ExtendedWarningRepo $warningRepo */
+            $warningRepo = Helper::repository(WarningRepo::class);
+            /** @var ExtendedWarningDefinitionEntity|null $definition */
             $definition = $response->getParam('definition');
 
             if ($definition === null || $input['warning_definition_id'] === 0)

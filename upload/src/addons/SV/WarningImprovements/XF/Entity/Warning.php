@@ -9,12 +9,17 @@ use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User as UserExtendedEntity;
-use SV\WarningImprovements\XF\Entity\WarningDefinition as WarningDefinitionExtended;
+use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
+use XF\Entity\Phrase as PhraseEntity;
 use XF\Entity\Report as ReportEntity;
 use XF\Entity\User as UserEntity;
 use XF\Entity\WarningDefinition as WarningDefinitionEntity;
+use XF\Finder\Phrase as PhraseFinder;
 use XF\Mvc\Entity\Structure;
 use XF\Phrase;
+use XF\Repository\UserAlert as UserAlertRepo;
+use XF\Repository\Warning as WarningRepo;
 use XF\Util\Arr as ArrUtil;
 use function array_key_exists;
 
@@ -22,20 +27,20 @@ use function array_key_exists;
  * COLUMNS
  *
  * @property string                                            $notes_
- * @property bool                                              $sv_spoiler_contents
- * @property string|null                                       $sv_content_spoiler_title
- * @property bool                                              $sv_disable_reactions
+ * @property bool                                                          $sv_spoiler_contents
+ * @property string|null                                                   $sv_content_spoiler_title
+ * @property bool                                                          $sv_disable_reactions
  * GETTERS
- * @property UserExtendedEntity|UserEntity|null                $anonymized_issuer
- * @property int                                               $expiry_date_rounded
- * @property WarningDefinitionEntity                           $definition
- * @property string                                            $title_censored
- * @property-read bool                                         $is_old_warning
+ * @property UserExtendedEntity|UserEntity|null                            $anonymized_issuer
+ * @property int                                                           $expiry_date_rounded
+ * @property WarningDefinitionEntity                                       $definition
+ * @property string                                                        $title_censored
+ * @property-read bool                                                     $is_old_warning
  * RELATIONS
- * @property-read ?WarningDefinitionExtended|WarningDefinitionEntity $Definition
- * @property-read ?WarningDefinitionEntity                           $Definition_
- * @property-read ?ReportEntity                                      $Report
- * @property-read ?UserExtendedEntity                                $User
+ * @property-read ?ExtendedWarningDefinitionEntity|WarningDefinitionEntity $Definition
+ * @property-read ?WarningDefinitionEntity                                 $Definition_
+ * @property-read ?ReportEntity                                            $Report
+ * @property-read ?UserExtendedEntity                                      $User
  */
 class Warning extends XFCP_Warning
 {
@@ -236,8 +241,8 @@ class Warning extends XFCP_Warning
     {
         if ($this->warning_definition_id === 0)
         {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+            /** @var ExtendedWarningRepo $warningRepo */
+            $warningRepo = Helper::repository(WarningRepo::class);
 
             return $warningRepo->getCustomWarningDefinition();
         }
@@ -371,17 +376,17 @@ class Warning extends XFCP_Warning
                         if ($text === false)
                         {
                             // phrase doesn't exist, create one using `mod_log.warning_edited` as a template
-                            $phrase = Helper::finder(\XF\Finder\Phrase::class)
+                            $phrase = Helper::finder(PhraseFinder::class)
                                          ->where('title', '=', $phraseTitle)
                                          ->where('language_id', '=', 0)
                                          ->fetchOne();
-                            if (!$phrase)
+                            if ($phrase === null)
                             {
                                 $phraseText = (string)\XF::phrase('mod_log.warning_edited', [
                                     'contentType' => $app->getContentTypePhrase($this->content_type)
                                 ]);
 
-                                $phrase = Helper::createEntity(\XF\Entity\Phrase::class);
+                                $phrase = Helper::createEntity(PhraseEntity::class);
                                 $phrase->language_id = 0;
                                 $phrase->title = $phraseTitle;
                                 $phrase->phrase_text = $phraseText;
@@ -424,7 +429,7 @@ class Warning extends XFCP_Warning
 
         $this->svDisableWarningEmbedding();
 
-        $alertRepo = Helper::repository(\XF\Repository\UserAlert::class);
+        $alertRepo = Helper::repository(UserAlertRepo::class);
         $alertRepo->fastDeleteAlertsForContent('warning', $this->warning_id);
 
         if ($this->User === null)
@@ -438,8 +443,8 @@ class Warning extends XFCP_Warning
         {
             $reason = (string)$this->getOption('svAlertOnDeleteReason');
 
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+            /** @var ExtendedWarningRepo $warningRepo */
+            $warningRepo = Helper::repository(WarningRepo::class);
             $warningRepo->sendWarningAlert($this, 'delete', $reason);
         }
     }
@@ -469,8 +474,8 @@ class Warning extends XFCP_Warning
             return;
         }
 
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+        /** @var ExtendedWarningRepo $warningRepo */
+        $warningRepo = Helper::repository(WarningRepo::class);
         $warningRepo->updatePendingExpiryForLater($this->User, true);
     }
 
@@ -537,8 +542,8 @@ class Warning extends XFCP_Warning
         return $structure;
     }
 
-    protected function _getWarningRepo(): \SV\WarningImprovements\XF\Repository\Warning
+    protected function _getWarningRepo(): ExtendedWarningRepo
     {
-        return Helper::repository(\XF\Repository\Warning::class);
+        return Helper::repository(WarningRepo::class);
     }
 }

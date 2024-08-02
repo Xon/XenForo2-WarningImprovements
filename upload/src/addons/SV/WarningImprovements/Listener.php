@@ -3,19 +3,20 @@
 namespace SV\WarningImprovements;
 
 use SV\StandardLib\Helper;
+use SV\WarningImprovements\XF\Entity\UserOption as ExtendedUserOptionEntity;
+use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\Entity\User;
+use XF\Finder\User as UserFinder;
+use XF\Repository\Warning as WarningRepo;
 
 class Listener
 {
     /** @var bool */
     public static $doPartialVisitorReload = true;
 
-    public static function getWarningRepo(): \SV\WarningImprovements\XF\Repository\Warning
+    public static function getWarningRepo(): ExtendedWarningRepo
     {
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
-
-        return $warningRepo;
+        return Helper::repository(WarningRepo::class);
     }
 
     public static function criteriaUser($rule, array $data, User $user, &$returnValue)
@@ -67,10 +68,6 @@ class Listener
         }
     }
 
-    /**
-     * @param User $visitor
-     * @throws \XF\PrintableException
-     */
     public static function visitorSetup(User &$visitor)
     {
         if (!(\XF::app() instanceof \XF\Pub\App))
@@ -85,14 +82,14 @@ class Listener
             return;
         }
 
-        /** @var \SV\WarningImprovements\XF\Entity\UserOption $option */
+        /** @var ExtendedUserOptionEntity $option */
         $option = $visitor->Option;
         $pendingWarningExpiry = $option->sv_pending_warning_expiry ?? 0;
 
         if ($pendingWarningExpiry !== 0 && $pendingWarningExpiry <= \XF::$time)
         {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
+            /** @var ExtendedWarningRepo $warningRepo */
+            $warningRepo = Helper::repository(WarningRepo::class);
             if (\is_callable([$warningRepo, 'processExpiredWarningsForUser']))
             {
                 $expired = $warningRepo->processExpiredWarningsForUser($visitor, $visitor->is_banned);
@@ -135,7 +132,7 @@ class Listener
                     }
                     else
                     {
-                        $visitor = Helper::finder(\XF\Finder\User::class)
+                        $visitor = Helper::finder(UserFinder::class)
                                       ->whereId($visitor->user_id)
                                       ->fetchOne();
                     }

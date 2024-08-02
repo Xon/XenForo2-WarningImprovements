@@ -18,7 +18,7 @@ class Reaction extends XFCP_Reaction
      * @param array $breadcrumbs
      * @param array $linkParams
      *
-     * @return AbstractReply|MessageReply|ViewReply
+     * @return AbstractReply
      *
      * @throws ExceptionReply
      */

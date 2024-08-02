@@ -5,7 +5,8 @@
 
 namespace SV\WarningImprovements\Repository;
 
-use XF\Mvc\Entity\Finder;
+use SV\WarningImprovements\Entity\WarningCategory as WarningCategoryEntity;
+use SV\WarningImprovements\Finder\WarningCategory as WarningCategoryFinder;
 use XF\Repository\AbstractCategoryTree;
 use XF\Tree;
 
@@ -65,13 +66,9 @@ class WarningCategory extends AbstractCategoryTree
         return $output;
     }
 
-    /**
-     * @param \SV\WarningImprovements\Entity\WarningCategory|null $category
-     * @param null                                                $with
-     * @return Finder
-     */
-    public function findCategoryParentList(\SV\WarningImprovements\Entity\WarningCategory $category, $with = null)
+    public function findCategoryParentList(WarningCategoryEntity $category, array $with = []): WarningCategoryFinder
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->findCategoryList(null, $with)
                     ->where('lft', '<', $category->lft)
                     ->where('rgt', '>', $category->rgt)

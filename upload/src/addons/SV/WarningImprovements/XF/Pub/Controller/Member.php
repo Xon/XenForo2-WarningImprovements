@@ -7,9 +7,14 @@ namespace SV\WarningImprovements\XF\Pub\Controller;
 
 use SV\StandardLib\Helper;
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
+use SV\WarningImprovements\XF\Entity\UserChangeTemp as ExtendedUserChangeTempEntity;
+use XF\Entity\UserChangeTemp as UserChangeTempEntity;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\ParameterBag;
+use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
+use XF\Service\User\TempChange as TempChangeService;
 
 /**
  * @Extends \XF\Pub\Controller\Member
@@ -49,7 +54,7 @@ class Member extends XFCP_Member
         return $reply;
     }
 
-    public function actionWarningActions(ParameterBag $params)
+    public function actionWarningActions(ParameterBag $params): AbstractReply
     {
         if ($this->filter('warning_action_id', 'uint'))
         {
@@ -57,7 +62,7 @@ class Member extends XFCP_Member
         }
 
         /** @noinspection PhpUndefinedFieldInspection */
-        /** @var \SV\WarningImprovements\XF\Entity\User $user */
+        /** @var ExtendedUserEntity $user */
         $user = $this->assertViewableUser((int)$params->user_id);
 
         if (!$user->canViewWarningActions())
@@ -77,12 +82,12 @@ class Member extends XFCP_Member
         return $this->view('XF:Member\WarningActions\List', 'sv_member_warning_actions', $viewParams);
     }
 
-    public function actionViewWarningAction(ParameterBag $params)
+    public function actionViewWarningAction(ParameterBag $params): AbstractReply
     {
         $userChangeTempId = $this->filter('warning_action_id', 'uint');
 
         /** @noinspection PhpUndefinedFieldInspection */
-        /** @var \SV\WarningImprovements\XF\Entity\User $user */
+        /** @var ExtendedUserEntity $user */
         $user = $this->assertViewableUser((int)$params->user_id);
 
         $userChangeTemp = $this->assertWarningActionViewable($userChangeTempId);
@@ -96,7 +101,7 @@ class Member extends XFCP_Member
         return $this->view('XF:Member\WarningActions\View', 'sv_warning_actions_info', $viewParams);
     }
 
-    public function actionWarningActionsExpire(ParameterBag $params)
+    public function actionWarningActionsExpire(ParameterBag $params): AbstractReply
     {
         $this->assertPostOnly();
         $userChangeTempId = $this->filter('warning_action_id', 'uint');
@@ -143,7 +148,7 @@ class Member extends XFCP_Member
 
         if ($userChangeTemp->is_expired)
         {
-            $changeService = Helper::service(\XF\Service\User\TempChange::class);
+            $changeService = Helper::service(TempChangeService::class);
             $changeService->expireChange($userChangeTemp);
         }
 
@@ -164,11 +169,11 @@ class Member extends XFCP_Member
 
     public function assertWarningActionViewable($userChangeTempId, array $extraWith = [])
     {
-        /** @var \SV\WarningImprovements\XF\Entity\UserChangeTemp $userChangeTemp */
-        $userChangeTemp = Helper::find(\XF\Entity\UserChangeTemp::class, $userChangeTempId, $extraWith);
+        /** @var ExtendedUserChangeTempEntity $userChangeTemp */
+        $userChangeTemp = Helper::find(UserChangeTempEntity::class, $userChangeTempId, $extraWith);
         if (!$userChangeTemp)
         {
-            /** @var \SV\WarningImprovements\XF\Entity\User $visitor */
+            /** @var ExtendedUserEntity $visitor */
             $visitor = \XF::visitor();
 
             if ($visitor->canViewWarningActions($error))

@@ -4,6 +4,7 @@ namespace SV\WarningImprovements;
 
 use SV\StandardLib\Helper;
 use SV\StandardLib\InstallerHelper;
+use SV\WarningImprovements\Finder\WarningCategory as WarningCategoryFinder;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
@@ -185,7 +186,7 @@ class Setup extends AbstractSetup
     {
         $userGroupRepo = Helper::repository(\XF\Repository\UserGroup::class);
         $allGroups = \array_keys($userGroupRepo->getUserGroupTitlePairs());
-        foreach(Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)->fetch() as $group)
+        foreach(Helper::finder(WarningCategoryFinder::class)->fetch() as $group)
         {
             $groups = $group->allowed_user_group_ids;
 

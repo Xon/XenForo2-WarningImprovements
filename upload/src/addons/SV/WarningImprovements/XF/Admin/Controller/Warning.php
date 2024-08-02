@@ -7,16 +7,25 @@
 namespace SV\WarningImprovements\XF\Admin\Controller;
 
 use SV\StandardLib\Helper;
-use SV\WarningImprovements\Entity\WarningCategory;
-use SV\WarningImprovements\Entity\WarningDefault;
+use SV\WarningImprovements\Entity\WarningCategory as WarningCategoryEntity;
+use SV\WarningImprovements\Entity\WarningDefault as WarningDefaultEntity;
+use SV\WarningImprovements\Finder\WarningDefault as WarningDefaultFinder;
 use SV\WarningImprovements\Repository\WarningCategory as WarningCategoryRepo;
+use SV\WarningImprovements\Setup;
 use SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree as WarningCategoryTreePlugin;
-use XF\Entity\WarningAction;
-use XF\Entity\WarningDefinition;
+use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
+use XF\AddOn\AddOn;
+use XF\ControllerPlugin\Sort as SortPlugin;
+use XF\Entity\Phrase as PhraseEntity;
+use XF\Entity\WarningAction as WarningActionEntity;
+use XF\Entity\WarningDefinition as WarningDefinitionEntity;
 use XF\Mvc\FormAction;
 use XF\Mvc\ParameterBag;
+use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\Exception as ReplyException;
 use XF\Mvc\Reply\View as ViewReply;
+use XF\Repository\Node as NodeRepo;
 
 /**
  * @Extends \XF\Admin\Controller\Warning
@@ -29,9 +38,9 @@ class Warning extends XFCP_Warning
         {
             try
             {
-                $addOn = new \XF\AddOn\AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
+                $addOn = new AddOn('SV\WarningImprovements', \XF::app()->addOnManager());
 
-                $setup = new \SV\WarningImprovements\Setup($addOn, \XF::app());
+                $setup = new Setup($addOn, \XF::app());
                 $setup->addDefaultPhrases();
                 $setup->cleanupWarningCategories();
             }
@@ -49,7 +58,7 @@ class Warning extends XFCP_Warning
             $categories = $categoryRepo->findCategoryList()->fetch();
             $categoryTree = $categoryRepo->createCategoryTree($categories);
 
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+            /** @var ExtendedWarningRepo $warningRepo */
             $warningRepo = $this->getWarningRepo();
             $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
@@ -65,7 +74,7 @@ class Warning extends XFCP_Warning
                 unset($actions['']);
             }
 
-            $escalatingDefaults = Helper::finder(\SV\WarningImprovements\Finder\WarningDefault::class)->fetch();
+            $escalatingDefaults = Helper::finder(WarningDefaultFinder::class)->fetch();
 
             $response->setParams(
                 [
@@ -99,7 +108,7 @@ class Warning extends XFCP_Warning
         return $this->warningAddEdit($warning);
     }
 
-    public function warningAddEdit(WarningDefinition $warning)
+    public function warningAddEdit(WarningDefinitionEntity $warning)
     {
         $response = parent::warningAddEdit($warning);
 
@@ -116,7 +125,7 @@ class Warning extends XFCP_Warning
         return $response;
     }
 
-    protected function warningSaveProcess(WarningDefinition $warning)
+    protected function warningSaveProcess(WarningDefinitionEntity $warning)
     {
         if ($this->filter('is_custom', 'bool'))
         {
@@ -149,7 +158,7 @@ class Warning extends XFCP_Warning
             }
             else
             {
-                /** @var \XF\Entity\Phrase $masterContentSpoilerTitle */
+                /** @var PhraseEntity $masterContentSpoilerTitle */
                 $masterContentSpoilerTitle = $warning->getRelationOrDefault('SvMasterContentSpoilerTitle', false);
                 $masterContentSpoilerTitle->addon_id = '';
                 $masterContentSpoilerTitle->phrase_text = $phraseInput['sv_content_spoiler_title'];
@@ -160,20 +169,20 @@ class Warning extends XFCP_Warning
         return $formAction;
     }
 
-    public function actionSort()
+    public function actionSort(): AbstractReply
     {
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        /** @var ExtendedWarningRepo $warningRepo */
         $warningRepo = $this->getWarningRepo();
         $warnings = $warningRepo->findWarningDefinitionsForListGroupedByCategory();
 
         if ($this->isPost())
         {
-            $sorter = Helper::plugin($this,\XF\ControllerPlugin\Sort::class);
+            $sorter = Helper::plugin($this, SortPlugin::class);
 
             $categoryRepo = $this->getCategoryRepo();
             $categories = $categoryRepo->findCategoryList();
 
-            /** @var WarningCategory $category */
+            /** @var WarningCategoryEntity $category */
             foreach ($categories as $category)
             {
                 $sortTree = $sorter->buildSortTree($this->filter('category-' . $category->warning_category_id, 'json-array'));
@@ -184,8 +193,8 @@ class Warning extends XFCP_Warning
                 foreach ($sortedTreeData as $warningId => $data)
                 {
                     $lastOrder += 5;
-                    /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entry */
-                    $entry = Helper::finder(WarningDefinition::class)
+                    /** @var ExtendedWarningDefinitionEntity $entry */
+                    $entry = Helper::finder(WarningDefinitionEntity::class)
                                    ->where('warning_definition_id', '=', $warningId)
                                    ->fetchOne();
                     $entry->sv_warning_category_id = $data['parent_id'];
@@ -226,13 +235,13 @@ class Warning extends XFCP_Warning
         return parent::actionDelete($params);
     }
 
-    public function _actionAddEdit(WarningAction $action)
+    public function _actionAddEdit(WarningActionEntity $action)
     {
         $response = parent::_actionAddEdit($action);
 
         if ($response instanceof ViewReply)
         {
-            $nodeRepo = Helper::repository(\XF\Repository\Node::class);
+            $nodeRepo = Helper::repository(NodeRepo::class);
             $nodes = $nodeRepo->getFullNodeList()->filterViewable();
 
             $categoryRepo = $this->getCategoryRepo();
@@ -249,7 +258,7 @@ class Warning extends XFCP_Warning
     }
 
     // underscore prefix to not be confused with actual controller actions
-    protected function _actionSaveProcess(WarningAction $action)
+    protected function _actionSaveProcess(WarningActionEntity $action)
     {
         $inputFieldNames = [
             'sv_warning_category_id' => 'uint',
@@ -271,9 +280,9 @@ class Warning extends XFCP_Warning
         return parent::_actionSaveProcess($action);
     }
 
-    public function defaultActionAddEdit(WarningDefault $defaultAction)
+    public function defaultActionAddEdit(WarningDefaultEntity $defaultAction)
     {
-        $nodeRepo = Helper::repository(\XF\Repository\Node::class);
+        $nodeRepo = Helper::repository(NodeRepo::class);
         $nodes = $nodeRepo->getFullNodeList()->filterViewable();
 
         $categoryRepo = $this->getCategoryRepo();
@@ -288,21 +297,21 @@ class Warning extends XFCP_Warning
         return $this->view('SV\WarningImprovements\XF:Warning\Action\DefaultEdit', 'sv_warningimprovements_warning_default_edit', $viewParams);
     }
 
-    public function actionDefaultEdit(ParameterBag $params)
+    public function actionDefaultEdit(ParameterBag $params): AbstractReply
     {
         $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
         return $this->defaultActionAddEdit($defaultAction);
     }
 
-    public function actionDefaultAdd()
+    public function actionDefaultAdd(): AbstractReply
     {
-        $defaultAction = Helper::createEntity(WarningDefault::class);
+        $defaultAction = Helper::createEntity(WarningDefaultEntity::class);
 
         return $this->defaultActionAddEdit($defaultAction);
     }
 
-    protected function defaultSaveProcess(WarningDefault $defaultAction)
+    protected function defaultSaveProcess(WarningDefaultEntity $defaultAction)
     {
         $form = $this->formAction();
 
@@ -324,7 +333,7 @@ class Warning extends XFCP_Warning
         return $form;
     }
 
-    public function actionDefaultSave(ParameterBag $params)
+    public function actionDefaultSave(ParameterBag $params): AbstractReply
     {
         $this->assertPostOnly();
 
@@ -334,7 +343,7 @@ class Warning extends XFCP_Warning
         }
         else
         {
-            $defaultAction = Helper::createEntity(WarningDefault::class);
+            $defaultAction = Helper::createEntity(WarningDefaultEntity::class);
         }
 
         $this->defaultSaveProcess($defaultAction)->run();
@@ -344,7 +353,7 @@ class Warning extends XFCP_Warning
         );
     }
 
-    public function actionDefaultDelete(ParameterBag $params)
+    public function actionDefaultDelete(ParameterBag $params): AbstractReply
     {
         $defaultAction = $this->assertDefaultExists($this->filter('warning_default_id', 'uint'));
 
@@ -364,7 +373,7 @@ class Warning extends XFCP_Warning
         }
     }
 
-    public function warningCategoryAddEdit(WarningCategory $warningCategory)
+    public function warningCategoryAddEdit(WarningCategoryEntity $warningCategory)
     {
         $categoryRepo = $this->getCategoryRepo();
         $categoryTree = $categoryRepo->createCategoryTree();
@@ -377,9 +386,9 @@ class Warning extends XFCP_Warning
         return $this->view('XF:Warning\Category\Edit', 'sv_warning_category_edit', $viewParams);
     }
 
-    public function actionCategoryAdd()
+    public function actionCategoryAdd(): AbstractReply
     {
-        $warningCategory = Helper::createEntity(WarningCategory::class);
+        $warningCategory = Helper::createEntity(WarningCategoryEntity::class);
 
         if ($parentCategoryId = $this->filter('parent_category_id', 'uint'))
         {
@@ -389,14 +398,14 @@ class Warning extends XFCP_Warning
         return $this->warningCategoryAddEdit($warningCategory);
     }
 
-    public function actionCategoryEdit(ParameterBag $params)
+    public function actionCategoryEdit(ParameterBag $params): AbstractReply
     {
         $warningCategory = $this->assertCategoryExists($this->filter('warning_category_id', 'uint'));
 
         return $this->warningCategoryAddEdit($warningCategory);
     }
 
-    protected function categorySaveProcess(WarningCategory $warningCategory)
+    protected function categorySaveProcess(WarningCategoryEntity $warningCategory)
     {
         $form = $this->formAction();
 
@@ -445,7 +454,7 @@ class Warning extends XFCP_Warning
         return $form;
     }
 
-    public function actionCategorySave(ParameterBag $params)
+    public function actionCategorySave(ParameterBag $params): AbstractReply
     {
         $this->assertPostOnly();
 
@@ -457,7 +466,7 @@ class Warning extends XFCP_Warning
         }
         else
         {
-            $warningCategory = Helper::createEntity(WarningCategory::class);
+            $warningCategory = Helper::createEntity(WarningCategoryEntity::class);
         }
 
         $this->categorySaveProcess($warningCategory)->run();
@@ -467,12 +476,12 @@ class Warning extends XFCP_Warning
         );
     }
 
-    public function actionCategoryDelete(ParameterBag $params)
+    public function actionCategoryDelete(ParameterBag $params): AbstractReply
     {
         return $this->getCategoryTreePlugin()->actionDelete($params);
     }
 
-    public function actionCategorySort()
+    public function actionCategorySort(): AbstractReply
     {
         return $this->getCategoryTreePlugin()->actionSort();
     }
@@ -491,10 +500,10 @@ class Warning extends XFCP_Warning
      * @param int|null $id
      * @param array    $with
      * @param null     $phraseKey
-     * @return WarningCategory
+     * @return WarningCategoryEntity
      * @throws ReplyException
      */
-    protected function assertCategoryExists(?int $id, array $with = [], $phraseKey = null): WarningCategory
+    protected function assertCategoryExists(?int $id, array $with = [], $phraseKey = null): WarningCategoryEntity
     {
         return $this->assertRecordExists('SV\WarningImprovements:WarningCategory', $id, $with, $phraseKey);
     }
@@ -503,17 +512,17 @@ class Warning extends XFCP_Warning
      * @param int      $id
      * @param string[] $with
      * @param null     $phraseKey
-     * @return WarningDefault
+     * @return WarningDefaultEntity
      * @throws ReplyException
      */
-    protected function assertDefaultExists(int $id, array $with = [], $phraseKey = null): WarningDefault
+    protected function assertDefaultExists(int $id, array $with = [], $phraseKey = null): WarningDefaultEntity
     {
         return $this->assertRecordExists('SV\WarningImprovements:WarningDefault', $id, $with, $phraseKey);
     }
 
-    private function getCustomWarningDefinition(): \SV\WarningImprovements\XF\Entity\WarningDefinition
+    private function getCustomWarningDefinition(): ExtendedWarningDefinitionEntity
     {
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
+        /** @var ExtendedWarningRepo $warningRepo */
         $warningRepo = $this->getWarningRepo();
 
         return $warningRepo->getCustomWarningDefinition();

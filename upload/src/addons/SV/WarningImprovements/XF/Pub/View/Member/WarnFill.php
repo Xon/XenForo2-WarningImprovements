@@ -5,6 +5,8 @@
 
 namespace SV\WarningImprovements\XF\Pub\View\Member;
 
+use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+
 /**
  * @Extends \XF\Pub\View\Member\WarnFill
  */
@@ -14,7 +16,7 @@ class WarnFill extends XFCP_WarnFill
     {
         $response = parent::renderJson();
 
-        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $warningDefinition */
+        /** @var ExtendedWarningDefinitionEntity $warningDefinition */
         $warningDefinition = $this->params['definition'];
         $options = \XF::app()->options();
 

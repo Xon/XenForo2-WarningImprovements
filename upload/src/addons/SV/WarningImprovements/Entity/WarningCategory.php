@@ -3,34 +3,40 @@
 namespace SV\WarningImprovements\Entity;
 
 use SV\StandardLib\Helper;
+use SV\WarningImprovements\Finder\WarningCategory as WarningCategoryFinder;
+use SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet as CategoryRebuildNestedSetService;
+use SV\WarningImprovements\XF\Entity\WarningAction as ExtendedWarningActionEntity;
 use XF\Entity\AbstractCategoryTree;
-use SV\WarningImprovements\XF\Entity\WarningDefinition;
+use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+use XF\Entity\PermissionCacheContent as PermissionCacheContentEntity;
+use XF\Entity\Phrase as PhraseEntity;
 use XF\Mvc\Entity\Structure;
+use XF\Phrase;
 
 /**
  * COLUMNS
  *
- * @property int|null $warning_category_id
- * @property int $warning_count
- * @property array $allowed_user_group_ids
- * @property array $allowed_user_group_ids_
- * @property int|null $parent_category_id
- * @property int $display_order
- * @property int $lft
- * @property int                                 $rgt
- * @property int                                 $depth
- * @property array                               $breadcrumb_data
+ * @property int|null                            $warning_category_id
+ * @property int                                                    $warning_count
+ * @property array                                                  $allowed_user_group_ids
+ * @property array                                                  $allowed_user_group_ids_
+ * @property int|null                                               $parent_category_id
+ * @property int                                                    $display_order
+ * @property int                                                    $lft
+ * @property int                                                    $rgt
+ * @property int                                    $depth
+ * @property array                                  $breadcrumb_data
  * GETTERS
- * @property int|null                            $category_id
- * @property bool                                $is_usable
- * @property-read \XF\Phrase                          $title
+ * @property int|null                               $category_id
+ * @property bool                                   $is_usable
+ * @property-read Phrase                            $title
  * RELATIONS
- * @property-read \XF\Entity\Phrase                   $MasterTitle
- * @property-read WarningCategory                     $Parent
- * @property-read WarningCategory[]                   $ChildCategories
- * @property-read WarningDefinition[]                 $WarningDefinitions
- * @property-read \SV\WarningImprovements\XF\Entity\WarningAction[]          $WarningActions
- * @property-read \XF\Entity\PermissionCacheContent[] $Permissions
+ * @property-read PhraseEntity                      $MasterTitle
+ * @property-read WarningCategory                   $Parent
+ * @property-read WarningCategory[]                 $ChildCategories
+ * @property-read ExtendedWarningDefinitionEntity[] $WarningDefinitions
+ * @property-read ExtendedWarningActionEntity[]     $WarningActions
+ * @property-read PermissionCacheContentEntity[]    $Permissions
  */
 class WarningCategory extends AbstractCategoryTree
 {
@@ -54,7 +60,7 @@ class WarningCategory extends AbstractCategoryTree
         return \XF::visitor()->isMemberOf($this->allowed_user_group_ids);
     }
 
-    public function getTitle(): \XF\Phrase
+    public function getTitle(): Phrase
     {
         return \XF::phrase($this->getPhraseName('title'));
     }
@@ -64,14 +70,14 @@ class WarningCategory extends AbstractCategoryTree
         return 'sv_warning_category_' . $type . '.' . $this->warning_category_id;
     }
 
-    public function getMasterPhrase(string $type): \XF\Entity\Phrase
+    public function getMasterPhrase(string $type): PhraseEntity
     {
         $relation = 'Master' . ucfirst($type);
         $phrase = $this->getRelation($relation);
 
         if (!$phrase)
         {
-            $phrase = Helper::createEntity(\XF\Entity\Phrase::class);
+            $phrase = Helper::createEntity(PhraseEntity::class);
             $phrase->title = $this->_getDeferredValue(function () use ($type) { return $this->getPhraseName($type); });
             $phrase->language_id = 0; // 0 = master
         }
@@ -80,13 +86,13 @@ class WarningCategory extends AbstractCategoryTree
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function warningAdded(WarningDefinition $warningDefinition)
+    public function warningAdded(ExtendedWarningDefinitionEntity $warningDefinition)
     {
         $this->rebuildCounters();
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function warningRemoved(WarningDefinition $warningDefinition)
+    public function warningRemoved(ExtendedWarningDefinitionEntity $warningDefinition)
     {
         $this->rebuildCounters();
     }
@@ -101,7 +107,7 @@ class WarningCategory extends AbstractCategoryTree
                 {
                     if ($relation['entity'] === 'XF:Phrase')
                     {
-                        /** @var \XF\Entity\Phrase $maserPhrase */
+                        /** @var PhraseEntity $maserPhrase */
                         $maserPhrase = $this->getExistingRelation($name);
 
                         if ($maserPhrase)
@@ -131,7 +137,7 @@ class WarningCategory extends AbstractCategoryTree
 
     protected function _preDelete()
     {
-        $warningCategoryCount = Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)
+        $warningCategoryCount = Helper::finder(WarningCategoryFinder::class)
                                       ->where('warning_category_id', '!=', $this->warning_category_id)
                                       ->total();
         if (!$warningCategoryCount)
@@ -233,7 +239,7 @@ class WarningCategory extends AbstractCategoryTree
         $entityType = $this->structure()->shortName;
         \XF::runOnce('rebuildTree-' . $entityType, function()
         {
-            $service = Helper::service(\SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet::class);
+            $service = Helper::service(CategoryRebuildNestedSetService::class);
             $service->rebuildNestedSetInfo();
         });
     }

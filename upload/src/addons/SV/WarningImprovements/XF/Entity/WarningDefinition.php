@@ -6,6 +6,8 @@
 namespace SV\WarningImprovements\XF\Entity;
 
 use SV\StandardLib\Helper;
+use SV\WarningImprovements\Entity\WarningCategory as WarningCategoryEntity;
+use XF\Entity\Phrase as PhraseEntity;
 use XF\Entity\User as UserEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
@@ -14,18 +16,18 @@ use XF\Phrase;
 /**
  * COLUMNS
  *
- * @property int                                            $sv_warning_category_id
- * @property int                                            $sv_display_order
- * @property bool                                           $sv_custom_title
- * @property bool                                           $is_custom
- * @property string                                         $custom_title_placeholder
- * @property bool                                           $sv_spoiler_contents
- * @property bool                                           $sv_disable_reactions
+ * @property int                        $sv_warning_category_id
+ * @property int                        $sv_display_order
+ * @property bool                       $sv_custom_title
+ * @property bool                       $is_custom
+ * @property string                     $custom_title_placeholder
+ * @property bool                       $sv_spoiler_contents
+ * @property bool                       $sv_disable_reactions
  * GETTERS
- * @property Phrase                                         $sv_content_spoiler_title
+ * @property Phrase                     $sv_content_spoiler_title
  * RELATIONS
- * @property-read \SV\WarningImprovements\Entity\WarningCategory $Category
- * @property-read \XF\Entity\Phrase                              $SvMasterContentSpoilerTitle
+ * @property-read WarningCategoryEntity $Category
+ * @property-read PhraseEntity          $SvMasterContentSpoilerTitle
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {

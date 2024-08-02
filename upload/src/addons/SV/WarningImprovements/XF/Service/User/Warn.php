@@ -5,17 +5,27 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
+use SV\MultiPrefix\XF\Entity\Forum as MultiPrefixForumEntity;
 use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\XF\Entity\ConversationMaster as ExtendedConversationMasterEntity;
+use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
+use XF\App;
+use XF\Entity\Forum as ForumEntity;
+use XF\Entity\Thread as ThreadEntity;
 use XF\Entity\User as UserEntity;
-use XF\Entity\Warning;
-use XF\Entity\WarningDefinition;
+use XF\Entity\Warning as WarningEntity;
+use XF\Entity\WarningDefinition as WarningDefinitionEntity;
 use XF\Mvc\Entity\Entity;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use XF\Repository\Reaction as ReactionRepo;
+use XF\Repository\Warning as WarningRepo;
+use XF\Service\Conversation\Creator as ConversationCreatorService;
+use XF\Service\Thread\Creator as ThreadCreatorService;
+use XF\Service\Thread\Replier as ThreadReplierService;
 use XF\Service\User\Warn as WarningService;
 use XF\Entity\ConversationMaster as ConversationMasterEntity;
 
@@ -31,20 +41,20 @@ class Warn extends XFCP_Warn
     /** @var string */
     protected $sendAlertReason = '';
     /**
-     * @var \XF\Service\Conversation\Creator
+     * @var ConversationCreatorService
      */
     protected $conversationCreator;
 
     /**
-     * @var \SV\WarningImprovements\XF\Repository\Warning
+     * @var ExtendedWarningRepo
      */
     protected $warningRepo;
 
-    public function __construct(\XF\App $app, UserEntity $user, $contentType, Entity $content, UserEntity $warningBy)
+    public function __construct(App $app, UserEntity $user, $contentType, Entity $content, UserEntity $warningBy)
     {
         parent::__construct($app, $user, $contentType, $content, $warningBy);
 
-        $this->warningRepo = Helper::repository(\XF\Repository\Warning::class);
+        $this->warningRepo = Helper::repository(WarningRepo::class);
     }
 
     public function setSendAlert(bool $sendAlert, string $sendAlertReason = '')
@@ -53,13 +63,13 @@ class Warn extends XFCP_Warn
         $this->sendAlertReason = $sendAlertReason;
     }
 
-    public function setFromDefinition(WarningDefinition $definition, $points = null, $expiry = null)
+    public function setFromDefinition(WarningDefinitionEntity $definition, $points = null, $expiry = null)
     {
         $this->setSendAlert(Globals::$warningInput['send_warning_alert'] ?? false, Globals::$warningInput['send_warning_alert_reason'] ?? '');
         $custom_title = !empty(Globals::$warningInput['custom_title']) ? Globals::$warningInput['custom_title'] : null;
 
 
-        /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $definition */
+        /** @var ExtendedWarningDefinitionEntity $definition */
         $return = Globals::asVisitorWithLang($this->user, function() use ($definition, $points, $expiry): WarningService {
             return parent::setFromDefinition($definition, $points, $expiry);
         });
@@ -89,10 +99,7 @@ class Warn extends XFCP_Warn
         return $this->setFromDefinition($this->getCustomWarningDefinition(), $points, $expiry);
     }
 
-    /**
-     * @return \SV\WarningImprovements\XF\Entity\WarningDefinition
-     */
-    protected function getCustomWarningDefinition()
+    protected function getCustomWarningDefinition(): ExtendedWarningDefinitionEntity
     {
         return $this->warningRepo->getCustomWarningDefinition();
     }
@@ -106,9 +113,7 @@ class Warn extends XFCP_Warn
 
         if ($this->sendAlert)
         {
-            /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
-            $warningRepo->sendWarningAlert($warning, 'warning', $this->sendAlertReason);
+            $this->warningRepo->sendWarningAlert($warning, 'warning', $this->sendAlertReason);
         }
 
         $this->warningActionNotifications();
@@ -140,11 +145,11 @@ class Warn extends XFCP_Warn
         $warningUser = \XF::visitor(); //$this->user;
 
         if ($postSummaryForumId &&
-            ($forum = Helper::find(\XF\Entity\Forum::class, $postSummaryForumId)))
+            ($forum = Helper::find(ForumEntity::class, $postSummaryForumId)))
         {
-            /** @var \XF\Entity\Forum|\SV\MultiPrefix\XF\Entity\Forum $forum */
-            $threadCreator = Globals::asVisitorWithLang($warningUser, function () use ($forum, $params) : \XF\Service\Thread\Creator {
-                $threadCreator = Helper::service(\XF\Service\Thread\Creator::class, $forum);
+            /** @var ForumEntity|MultiPrefixForumEntity $forum */
+            $threadCreator = Globals::asVisitorWithLang($warningUser, function () use ($forum, $params) : ThreadCreatorService {
+                $threadCreator = Helper::service(ThreadCreatorService::class, $forum);
                 $threadCreator->setIsAutomated();
 
                 $defaultPrefix = $forum->sv_default_prefix_ids ?? $forum->default_prefix_id;
@@ -169,11 +174,10 @@ class Warn extends XFCP_Warn
             });
         }
         else if ($postSummaryThreadId &&
-                 ($thread = Helper::find(\XF\Entity\Thread::class, $postSummaryThreadId)))
+                 ($thread = Helper::find(ThreadEntity::class, $postSummaryThreadId)))
         {
-            /** @var \XF\Entity\Thread $thread */
-            $threadReplier = Globals::asVisitorWithLang($warningUser, function () use ($thread, $params): \XF\Service\Thread\Replier {
-                $threadReplier = Helper::service(\XF\Service\Thread\Replier::class, $thread);
+            $threadReplier = Globals::asVisitorWithLang($warningUser, function () use ($thread, $params): ThreadReplierService {
+                $threadReplier = Helper::service(ThreadReplierService::class, $thread);
                 $threadReplier->setIsAutomated();
 
                 $messageContent = \XF::phrase('Warning_Summary.Message', $params)->render('raw');
@@ -193,15 +197,14 @@ class Warn extends XFCP_Warn
     }
 
     /**
-     * @since 2.5.7
-     * @template T
-     * @param Warning $warning
+     * @param WarningEntity $warning
      * @param callable(): T $callback
      * @return T
-     *
      * @throws \Exception
+     *@since 2.5.7
+     * @template T
      */
-    protected function doAsWarningIssuerForSv(Warning $warning, callable $callback)
+    protected function doAsWarningIssuerForSv(WarningEntity $warning, callable $callback)
     {
         $user = $this->warningRepo->getWarnedByForUser($warning, true);
 
@@ -221,17 +224,14 @@ class Warn extends XFCP_Warn
     }
 
     /**
-     * @since 2.5.7
-     *
-     * @param Warning $warning
-     *
-     * @return \XF\Service\Conversation\Creator
-     *
+     * @param WarningEntity $warning
+     * @return ConversationCreatorService
      * @throws \Exception
+     *@since 2.5.7
      */
-    protected function setupConversation(Warning $warning)
+    protected function setupConversation(WarningEntity $warning)
     {
-        return $this->doAsWarningIssuerForSv($warning, function () use ($warning): \XF\Service\Conversation\Creator
+        return $this->doAsWarningIssuerForSv($warning, function () use ($warning): ConversationCreatorService
         {
             $warnedByUser = \XF::visitor();
             $warnedUser = $warning->User;
@@ -258,15 +258,12 @@ class Warn extends XFCP_Warn
     }
 
     /**
-     * @since 2.5.7
-     *
-     * @param Warning $warning
-     *
+     * @param WarningEntity $warning
      * @return Entity|ExtendedConversationMasterEntity|null
-     *
      * @throws \Exception
+     *@since 2.5.7
      */
-    protected function sendConversation(Warning $warning)
+    protected function sendConversation(WarningEntity $warning)
     {
         return $this->doAsWarningIssuerForSv($warning, function () use ($warning): ?ConversationMasterEntity {
             return parent::sendConversation($warning);
