@@ -62,7 +62,7 @@ class Warning extends XFCP_Warning
                 unset($actions['']);
             }
 
-            $escalatingDefaults = \SV\StandardLib\Helper::finder(\SV\WarningImprovements\Finder\WarningDefault::class)->fetch();
+            $escalatingDefaults = Helper::finder(\SV\WarningImprovements\Finder\WarningDefault::class)->fetch();
 
             $response->setParams(
                 [
@@ -165,8 +165,7 @@ class Warning extends XFCP_Warning
 
         if ($this->isPost())
         {
-            /** @var \XF\ControllerPlugin\Sort $sorter */
-            $sorter = \SV\StandardLib\Helper::plugin($this,\XF\ControllerPlugin\Sort::class);
+            $sorter = Helper::plugin($this,\XF\ControllerPlugin\Sort::class);
 
             $categoryRepo = $this->getCategoryRepo();
             $categories = $categoryRepo->findCategoryList();
@@ -183,7 +182,7 @@ class Warning extends XFCP_Warning
                 {
                     $lastOrder += 5;
                     /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $entry */
-                    $entry = Helper::finder(\XF\Entity\WarningDefinition::class)
+                    $entry = Helper::finder(WarningDefinition::class)
                                    ->where('warning_definition_id', '=', $warningId)
                                    ->fetchOne();
                     $entry->sv_warning_category_id = $data['parent_id'];
@@ -230,8 +229,7 @@ class Warning extends XFCP_Warning
 
         if ($response instanceof View)
         {
-            /** @var \XF\Repository\Node $nodeRepo */
-            $nodeRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Node::class);
+            $nodeRepo = Helper::repository(\XF\Repository\Node::class);
             $nodes = $nodeRepo->getFullNodeList()->filterViewable();
 
             $categoryRepo = $this->getCategoryRepo();
@@ -259,11 +257,12 @@ class Warning extends XFCP_Warning
 
         foreach ($inputFieldNames AS $inputFieldName => $inputFieldFilterName)
         {
-            $action->$inputFieldName = $this->filter($inputFieldName, $inputFieldFilterName);
-            if ($inputFieldFilterName === 'uint' && empty($action->$inputFieldName))
+            $input = $this->filter($inputFieldName, $inputFieldFilterName);
+            if ($inputFieldFilterName === 'uint' && $input === 0)
             {
-                $action->$inputFieldName = null;
+                $input = null;
             }
+            $action->set($inputFieldName, $input);
         }
 
         return parent::_actionSaveProcess($action);
@@ -271,8 +270,7 @@ class Warning extends XFCP_Warning
 
     public function defaultActionAddEdit(WarningDefault $defaultAction)
     {
-        /** @var \XF\Repository\Node $nodeRepo */
-        $nodeRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Node::class);
+        $nodeRepo = Helper::repository(\XF\Repository\Node::class);
         $nodes = $nodeRepo->getFullNodeList()->filterViewable();
 
         $categoryRepo = $this->getCategoryRepo();
@@ -296,8 +294,7 @@ class Warning extends XFCP_Warning
 
     public function actionDefaultAdd()
     {
-        /** @var WarningDefault $defaultAction */
-        $defaultAction = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningDefault::class);
+        $defaultAction = Helper::createEntity(WarningDefault::class);
 
         return $this->defaultActionAddEdit($defaultAction);
     }
@@ -334,8 +331,7 @@ class Warning extends XFCP_Warning
         }
         else
         {
-            /** @var WarningDefault $defaultAction */
-            $defaultAction = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningDefault::class);
+            $defaultAction = Helper::createEntity(WarningDefault::class);
         }
 
         $this->defaultSaveProcess($defaultAction)->run();
@@ -380,8 +376,7 @@ class Warning extends XFCP_Warning
 
     public function actionCategoryAdd()
     {
-        /** @var WarningCategory $warningCategory */
-        $warningCategory = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningCategory::class);
+        $warningCategory = Helper::createEntity(WarningCategory::class);
 
         if ($parentCategoryId = $this->filter('parent_category_id', 'uint'))
         {
@@ -459,8 +454,7 @@ class Warning extends XFCP_Warning
         }
         else
         {
-            /** @var WarningCategory $warningCategory */
-            $warningCategory = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningCategory::class);
+            $warningCategory = Helper::createEntity(WarningCategory::class);
         }
 
         $this->categorySaveProcess($warningCategory)->run();
@@ -481,11 +475,11 @@ class Warning extends XFCP_Warning
     }
 
     /**
-     * @return \SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree|\XF\ControllerPlugin\AbstractPlugin
+     * @return \SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree
      */
     protected function getCategoryTreePlugin()
     {
-        return \SV\StandardLib\Helper::plugin($this,\SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree::class);
+        return Helper::plugin($this,\SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree::class);
     }
 
     /**
@@ -493,7 +487,7 @@ class Warning extends XFCP_Warning
      */
     protected function getCategoryRepo()
     {
-        return \SV\StandardLib\Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
+        return Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
     }
 
     /**

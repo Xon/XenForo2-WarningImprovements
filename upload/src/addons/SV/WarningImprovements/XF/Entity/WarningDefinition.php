@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
+use SV\StandardLib\Helper;
 use XF\Entity\User as UserEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
@@ -28,7 +29,7 @@ use XF\Phrase;
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {
-    const SV_CONTENT_SPOILER_TITLE = 'sv_warning_improvements_warning_spoiler_title';
+    public const SV_CONTENT_SPOILER_TITLE = 'sv_warning_improvements_warning_spoiler_title';
 
     public function getSvContentSpoilerTitlePhraseName() : string
     {
@@ -113,14 +114,13 @@ class WarningDefinition extends XFCP_WarningDefinition
 
         if (!$receiver->canViewIssuer())
         {
-            /** @var \XF\Repository\User $userRepo */
-            $userRepo = \SV\StandardLib\Helper::repository(\XF\Repository\User::class);
+            $userRepo = Helper::repository(\XF\Repository\User::class);
             $sender = $userRepo->getGuestUser(\XF::phrase('WarningStaff')->render());
 
             $warningUserId = (int)(\XF::app()->options()->sv_warningimprovements_warning_user ?? 0);
             if ($warningUserId)
             {
-                $warningStaff = \SV\StandardLib\Helper::find(\XF\Entity\User::class, $warningUserId);
+                $warningStaff = Helper::find(UserEntity::class, $warningUserId);
                 if ($warningStaff)
                 {
                     $sender = $warningStaff;

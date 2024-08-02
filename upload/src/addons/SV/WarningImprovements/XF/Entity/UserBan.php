@@ -2,6 +2,8 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
+use SV\StandardLib\Helper;
+
 /**
  * @Extends \XF\Entity\UserBan
  */
@@ -32,7 +34,7 @@ class UserBan extends XFCP_UserBan
         }
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
         $warningRepo->updatePendingExpiryForLater($this->User, true);
     }
 }

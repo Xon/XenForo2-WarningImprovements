@@ -24,6 +24,7 @@ class Warning extends XFCP_Warning
      * @param UserEntity $user
      * @param \Closure   $callable
      * @return mixed
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public function asVisitorWithLang(UserEntity $user, \Closure $callable)
     {
@@ -260,7 +261,7 @@ class Warning extends XFCP_Warning
             case 'years':
                 return $expiryDuration * 365;
         }
-        \XF::logError("Unknown expiry type: " . $expiryType, true);
+        \XF::logError('Unknown expiry type: ' . $expiryType, true);
 
         return $expiryDuration;
     }

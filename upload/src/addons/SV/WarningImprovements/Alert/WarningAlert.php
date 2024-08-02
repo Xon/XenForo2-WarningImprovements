@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\Alert;
 
+use SV\StandardLib\Helper;
 use XF\Alert\AbstractHandler;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Entity\ArrayCollection;
@@ -20,8 +21,7 @@ class WarningAlert extends AbstractHandler
 
     protected function getPlaceholderWarning(): WarningEntity
     {
-        /** @var WarningEntity $warning */
-        $warning = \SV\StandardLib\Helper::createEntity(\XF\Entity\Warning::class);
+        $warning = Helper::createEntity(WarningEntity::class);
         $warning->user_id = \XF::visitor()->user_id;
         $warning->setReadOnly(true);
 

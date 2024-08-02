@@ -2,6 +2,8 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
+use SV\StandardLib\Helper;
+
 /**
  * Class ContentChange
  *
@@ -28,9 +30,9 @@ class ContentChange extends XFCP_ContentChange
     protected function stepReassignWarningActions()
     {
         /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
-        $userChangeTempRepo = \SV\StandardLib\Helper::repository(\XF\Repository\UserChangeTemp::class);
+        $userChangeTempRepo = Helper::repository(\XF\Repository\UserChangeTemp::class);
         /** @var \SV\WarningImprovements\XF\Entity\User $targetUser */
-        $targetUser = \SV\StandardLib\Helper::find(\XF\Entity\User::class, $this->newUserId);
+        $targetUser = Helper::find(\XF\Entity\User::class, $this->newUserId);
         if (!$targetUser)
         {
             return;
@@ -60,7 +62,7 @@ class ContentChange extends XFCP_ContentChange
                 return;
             }
 
-            $warningActions = \SV\StandardLib\Helper::finder(\XF\Finder\WarningAction::class)->whereIds($warningActionIds)->fetch();
+            $warningActions = Helper::finder(\XF\Finder\WarningAction::class)->whereIds($warningActionIds)->fetch();
 
             /** @var \SV\WarningImprovements\XF\Entity\WarningAction $warningAction */
             foreach ($warningActions AS $warningAction)
@@ -116,8 +118,7 @@ class ContentChange extends XFCP_ContentChange
                 break;
 
             case 'discourage':
-                /** @var \XF\Service\User\TempChange $changeService */
-                $changeService = \SV\StandardLib\Helper::service(\XF\Service\User\TempChange::class);
+                $changeService = Helper::service(\XF\Service\User\TempChange::class);
                 $changeService->applyFieldChange(
                     $targetUser, $tempChangeKey, 'Option.is_discouraged', true, $actionEndDate
                 );
@@ -126,8 +127,7 @@ class ContentChange extends XFCP_ContentChange
             case 'groups':
                 $userGroupChangeKey = 'warning_action_' . $warningAction->warning_action_id;
 
-                /** @var \XF\Service\User\TempChange $changeService */
-                $changeService = \SV\StandardLib\Helper::service(\XF\Service\User\TempChange::class);
+                $changeService = Helper::service(\XF\Service\User\TempChange::class);
                 $changeService->applyGroupChange(
                     $targetUser, $tempChangeKey, $warningAction->extra_user_group_ids, $userGroupChangeKey, $actionEndDate
                 );

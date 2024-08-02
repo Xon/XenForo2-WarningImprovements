@@ -7,6 +7,7 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Globals;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Entity\Structure;
@@ -169,7 +170,7 @@ class User extends XFCP_User
     public function getWarningDefinitions(): AbstractCollection
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
 
         return $warningRepo->findWarningDefinitionsForList()
                            ->with('Category')
@@ -192,7 +193,7 @@ class User extends XFCP_User
     public function getWarningActions(): AbstractCollection
     {
         /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
-        $userChangeTempRepo = \SV\StandardLib\Helper::repository(\XF\Repository\UserChangeTemp::class);
+        $userChangeTempRepo = Helper::repository(\XF\Repository\UserChangeTemp::class);
 
         return $userChangeTempRepo->getWarningActions(
             $this->user_id,
@@ -204,7 +205,7 @@ class User extends XFCP_User
     public function getWarningActionsCount(): int
     {
         /** @var \SV\WarningImprovements\XF\Repository\UserChangeTemp $userChangeTempRepo */
-        $userChangeTempRepo = \SV\StandardLib\Helper::repository(\XF\Repository\UserChangeTemp::class);
+        $userChangeTempRepo = Helper::repository(\XF\Repository\UserChangeTemp::class);
 
         return $userChangeTempRepo->countWarningActions(
             $this,
@@ -218,7 +219,7 @@ class User extends XFCP_User
         parent::rebuildWarningPoints();
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
         $warningRepo->updatePendingExpiryForLater($this, true);
     }
 

@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Mvc\ParameterBag;
@@ -38,8 +39,7 @@ class Warning extends XFCP_Warning
             return $this->redirect($this->buildLink('warnings/delete', $warning));
         }
 
-        /** @var \XF\ControllerPlugin\Delete $plugin */
-        $plugin = \SV\StandardLib\Helper::plugin($this,\XF\ControllerPlugin\Delete::class);
+        $plugin = Helper::plugin($this,\XF\ControllerPlugin\Delete::class);
 
         return $plugin->actionDelete(
             $warning,
@@ -192,12 +192,12 @@ class Warning extends XFCP_Warning
 
         if (isset($input['expire']))
         {
-            $warningEditor->setExpiry($input['expire'] ?? '', $input['expiry_value'] ?? 0, $input['expiry_unit'] ?? '');
+            $warningEditor->setExpiry($input['expire'], $input['expiry_value'] ?? 0, $input['expiry_unit'] ?? '');
         }
 
         if (isset($input['notes']))
         {
-            $warningEditor->setNotes($input['notes'] ?? '');
+            $warningEditor->setNotes($input['notes']);
         }
 
         if (($input['points_enable'] ?? false) && isset($input['points']))
@@ -224,8 +224,7 @@ class Warning extends XFCP_Warning
 
             if (\strlen($bbCode) === 0 && \strlen($html) !== 0)
             {
-                /** @var \XF\ControllerPlugin\Editor $editor */
-                $editor = \SV\StandardLib\Helper::plugin($this,\XF\ControllerPlugin\Editor::class);
+                $editor = Helper::plugin($this,\XF\ControllerPlugin\Editor::class);
                 $bbCode = $editor->convertToBbCode($html);
             }
 
@@ -252,8 +251,7 @@ class Warning extends XFCP_Warning
 
     protected function setupWarningEdit(ExtendedWarningEntity $warning): EditorService
     {
-        /** @var EditorService $warningEditor */
-        $warningEditor = \SV\StandardLib\Helper::service(\SV\WarningImprovements\Service\Warning\Editor::class, $warning);
+        $warningEditor = Helper::service(EditorService::class, $warning);
 
         $inputs = $this->getWarningEditInput($warning);
         $this->applyInput($warningEditor, $inputs);
@@ -266,7 +264,6 @@ class Warning extends XFCP_Warning
         /** @var \XF\Entity\SessionActivity[] $activities */
         $warningIds = [];
         $warnings = [];
-        $em = \XF::em();
         foreach ($activities AS $activity)
         {
             $warningId = $activity->pluckParam('warning_id');
@@ -279,14 +276,14 @@ class Warning extends XFCP_Warning
         if ($warningIds)
         {
             /** @var \XF\Entity\Warning[] $warnings */
-            $warnings = \SV\StandardLib\Helper::findByIds(\XF\Entity\Warning::class, $warningIds, ['User']);
+            $warnings = Helper::findByIds(\XF\Entity\Warning::class, $warningIds, ['User']);
         }
 
         $userIds = [];
         foreach ($activities AS $activity)
         {
             $userId = $activity->user_id;
-            if ($userId && !\SV\StandardLib\Helper::findCached(\XF\Entity\User::class, $userId))
+            if ($userId && !Helper::findCached(\XF\Entity\User::class, $userId))
             {
                 $userIds[$userId] = $userId;
             }
@@ -294,7 +291,7 @@ class Warning extends XFCP_Warning
 
         if ($userIds)
         {
-            \SV\StandardLib\Helper::findByIds(\XF\Entity\User::class, $userIds);
+            Helper::findByIds(\XF\Entity\User::class, $userIds);
         }
 
         $router = \XF::app()->router('public');

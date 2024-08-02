@@ -30,9 +30,6 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningAction extends XFCP_WarningAction
 {
-    /**
-     * @return string|\XF\Phrase
-     */
     public function getTitle()
     {
         return \XF::Phrase('svWarningPoints:') . ' '. $this->points;

@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\WarningCategory;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User;
@@ -42,12 +43,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         $this->setWarning(Globals::$warningObj ?? null);
 
-        $this->nullCategory = \SV\StandardLib\Helper::createEntity(\SV\WarningImprovements\Entity\WarningCategory::class);
+        $this->nullCategory = Helper::createEntity(WarningCategory::class);
         $this->nullCategory->setTrusted('warning_category_id', null);
         $this->nullCategory->setReadOnly(true);
 
-        /** @var \SV\WarningImprovements\Repository\WarningCategory $warningCategoryRepo */
-        $warningCategoryRepo = \SV\StandardLib\Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
+        $warningCategoryRepo = Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
         $this->warningCategories = $warningCategoryRepo->findCategoryList()->fetch()->toArray();
     }
 
@@ -70,7 +70,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
     protected function getActions(string $direction, bool $fromDelete = false): AbstractCollection
     {
-        return \SV\StandardLib\Helper::finder(\XF\Finder\WarningAction::class)
+        return Helper::finder(\XF\Finder\WarningAction::class)
                     ->order('points', $direction)
                     ->fetch();
     }
@@ -84,7 +84,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     protected function getCategoryPoints(bool $removePoints = false): array
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
         /** @var Warning[] $warnings */
         $warnings = $warningRepo->findUserWarningsForList($this->user->user_id)
                                 ->where('is_expired', '=', 0)
@@ -201,7 +201,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $postAsUserId = (int)$this->lastAction->sv_post_as_user_id;
             if ($postAsUserId !== 0)
             {
-                $postAsUser = \SV\StandardLib\Helper::find(\XF\Entity\User::class, $postAsUserId);
+                $postAsUser = Helper::find(\XF\Entity\User::class, $postAsUserId);
             }
 
             if ($postAsUser === null)
@@ -212,7 +212,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             if ($postAsUser !== null)
             {
                 /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-                $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+                $warningRepo = Helper::repository(\XF\Repository\Warning::class);
                 $params = $warningRepo->getSvWarningReplaceables($this->user, $this->warning, $this->lastAction->points, true);
 
                 $nodeId = (int)$this->lastAction->sv_post_node_id;
@@ -220,14 +220,13 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 if ($nodeId !== 0)
                 {
                     /** @var \SV\MultiPrefix\XF\Entity\Forum $forum */
-                    $forum = \SV\StandardLib\Helper::find(\XF\Entity\Forum::class, $nodeId);
+                    $forum = Helper::find(\XF\Entity\Forum::class, $nodeId);
 
                     if ($forum)
                     {
                         /** @var \XF\Service\Thread\Creator $threadCreator */
                         $threadCreator = \XF::asVisitor($postAsUser, function () use ($forum, $params) {
-                            /** @var \XF\Service\Thread\Creator $threadCreator */
-                            $threadCreator = \SV\StandardLib\Helper::service(\XF\Service\Thread\Creator::class, $forum);
+                            $threadCreator = Helper::service(\XF\Service\Thread\Creator::class, $forum);
                             $threadCreator->setIsAutomated();
 
                             $defaultPrefix = $forum->sv_default_prefix_ids ?? $forum->default_prefix_id;
@@ -253,12 +252,11 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 }
                 else if ($threadId !== 0)
                 {
-                    if ($thread = \SV\StandardLib\Helper::find(\XF\Entity\Thread::class, $threadId))
+                    if ($thread = Helper::find(\XF\Entity\Thread::class, $threadId))
                     {
                         /** @var \XF\Service\Thread\Replier $threadReplier */
                         $threadReplier = \XF::asVisitor($postAsUser, function () use ($thread, $params) {
-                            /** @var \XF\Service\Thread\Replier $threadReplier */
-                            $threadReplier = \SV\StandardLib\Helper::service(\XF\Service\Thread\Replier::class, $thread);
+                            $threadReplier = Helper::service(\XF\Service\Thread\Replier::class, $thread);
                             $threadReplier->setIsAutomated();
 
                             $messageContent = \XF::phrase('Warning_Thread.Message', $params)->render('raw');
@@ -291,13 +289,13 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
         $categoryPoints = $this->getCategoryPoints(true);
 
-        $triggers = \XF::db()->fetchAllKeyed("
+        $triggers = \XF::db()->fetchAllKeyed('
 			SELECT action_trigger.*, warning_action.sv_warning_category_id
 			FROM xf_warning_action_trigger AS action_trigger
 			LEFT JOIN xf_warning_action warning_action ON warning_action.warning_action_id = action_trigger.warning_action_id
 			WHERE user_id = ?
 			ORDER BY trigger_points DESC
-		", 'action_trigger_id', $this->user->user_id);
+		', 'action_trigger_id', $this->user->user_id);
         if ($triggers)
         {
             $remainingTriggers = $triggers;

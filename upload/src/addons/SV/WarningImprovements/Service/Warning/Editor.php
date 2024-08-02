@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\Service\Warning;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
@@ -45,8 +46,10 @@ class Editor extends AbstractService
         parent::__construct($app);
     }
 
-    public function setup()
+    protected function setup()
     {
+        parent::setup();
+
         $content = $this->warning->Content;
         if ($content === null)
         {
@@ -304,7 +307,7 @@ class Editor extends AbstractService
         if ($this->sendAlert)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
             $warningRepo->sendWarningAlert($this->warning, 'edit', $this->sendAlertReason);
         }
 
@@ -325,8 +328,7 @@ class Editor extends AbstractService
                 unset($embedMetadata['sv_content_spoiler_title']);
             }
 
-            /** @var ReactionRepo $reactionRepo */
-            $reactionRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Reaction::class);
+            $reactionRepo = Helper::repository(ReactionRepo::class);
             $reactionHandler = $reactionRepo->getReactionHandler($warning->content_type);
             if ($reactionHandler instanceof SupportsDisablingReactionInterface)
             {

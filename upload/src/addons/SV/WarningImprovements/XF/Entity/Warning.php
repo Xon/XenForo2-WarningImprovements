@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\Entity;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User as UserExtendedEntity;
@@ -219,15 +220,14 @@ class Warning extends XFCP_Warning
         if ($warningUserId)
         {
             /** @var UserExtendedEntity $warningStaff */
-            $warningStaff = \SV\StandardLib\Helper::find(\XF\Entity\User::class, $warningUserId);
+            $warningStaff = Helper::find(UserEntity::class, $warningUserId);
             if ($warningStaff)
             {
                 return $warningStaff;
             }
         }
 
-        /** @var \XF\Repository\User $userRepo */
-        $userRepo = \SV\StandardLib\Helper::repository(\XF\Repository\User::class);
+        $userRepo = Helper::repository(\XF\Repository\User::class);
         return $userRepo->getGuestUser(\XF::phrase('WarningStaff')->render());
     }
 
@@ -236,7 +236,7 @@ class Warning extends XFCP_Warning
         if ($this->warning_definition_id === 0)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
 
             return $warningRepo->getCustomWarningDefinition();
         }
@@ -370,8 +370,7 @@ class Warning extends XFCP_Warning
                         if ($text === false)
                         {
                             // phrase doesn't exist, create one using `mod_log.warning_edited` as a template
-                            /** @var \XF\Entity\Phrase $phrase */
-                            $phrase = \SV\StandardLib\Helper::finder(\XF\Finder\Phrase::class)
+                            $phrase = Helper::finder(\XF\Finder\Phrase::class)
                                          ->where('title', '=', $phraseTitle)
                                          ->where('language_id', '=', 0)
                                          ->fetchOne();
@@ -381,8 +380,7 @@ class Warning extends XFCP_Warning
                                     'contentType' => $app->getContentTypePhrase($this->content_type)
                                 ]);
 
-                                /** @var \XF\Entity\Phrase $phrase */
-                                $phrase = \SV\StandardLib\Helper::createEntity(\XF\Entity\Phrase::class);
+                                $phrase = Helper::createEntity(\XF\Entity\Phrase::class);
                                 $phrase->language_id = 0;
                                 $phrase->title = $phraseTitle;
                                 $phrase->phrase_text = $phraseText;
@@ -425,8 +423,7 @@ class Warning extends XFCP_Warning
 
         $this->svDisableWarningEmbedding();
 
-        /** @var \XF\Repository\UserAlert $alertRepo */
-        $alertRepo = \SV\StandardLib\Helper::repository(\XF\Repository\UserAlert::class);
+        $alertRepo = Helper::repository(\XF\Repository\UserAlert::class);
         $alertRepo->fastDeleteAlertsForContent('warning', $this->warning_id);
 
         if ($this->User === null)
@@ -441,7 +438,7 @@ class Warning extends XFCP_Warning
             $reason = (string)$this->getOption('svAlertOnDeleteReason');
 
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
             $warningRepo->sendWarningAlert($this, 'delete', $reason);
         }
     }
@@ -472,7 +469,7 @@ class Warning extends XFCP_Warning
         }
 
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
         $warningRepo->updatePendingExpiryForLater($this->User, true);
     }
 
@@ -544,6 +541,6 @@ class Warning extends XFCP_Warning
      */
     protected function _getWarningRepo()
     {
-        return \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        return Helper::repository(\XF\Repository\Warning::class);
     }
 }

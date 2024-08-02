@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
@@ -41,7 +42,7 @@ class Warn extends XFCP_Warn
     {
         parent::__construct($app, $user, $contentType, $content, $warningBy);
 
-        $this->warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $this->warningRepo = Helper::repository(\XF\Repository\Warning::class);
     }
 
     public function setSendAlert(bool $sendAlert, string $sendAlertReason = '')
@@ -58,7 +59,7 @@ class Warn extends XFCP_Warn
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $definition */
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
         $return = $warningRepo->asVisitorWithLang($this->user, function() use ($definition, $points, $expiry) {
             return parent::setFromDefinition($definition, $points, $expiry);
         });
@@ -106,7 +107,7 @@ class Warn extends XFCP_Warn
         if ($this->sendAlert)
         {
             /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
             $warningRepo->sendWarningAlert($warning, 'warning', $this->sendAlertReason);
         }
 
@@ -139,13 +140,12 @@ class Warn extends XFCP_Warn
         $warningUser = \XF::visitor(); //$this->user;
 
         if ($postSummaryForumId &&
-            ($forum = \SV\StandardLib\Helper::find(\XF\Entity\Forum::class, $postSummaryForumId)))
+            ($forum = Helper::find(\XF\Entity\Forum::class, $postSummaryForumId)))
         {
             /** @var \XF\Entity\Forum|\SV\MultiPrefix\XF\Entity\Forum $forum */
             /** @var \XF\Service\Thread\Creator $threadCreator */
             $threadCreator = $this->warningRepo->asVisitorWithLang($warningUser, function () use ($forum, $params) {
-                /** @var \XF\Service\Thread\Creator $threadCreator */
-                $threadCreator = \SV\StandardLib\Helper::service(\XF\Service\Thread\Creator::class, $forum);
+                $threadCreator = Helper::service(\XF\Service\Thread\Creator::class, $forum);
                 $threadCreator->setIsAutomated();
 
                 $defaultPrefix = $forum->sv_default_prefix_ids ?? $forum->default_prefix_id;
@@ -170,12 +170,11 @@ class Warn extends XFCP_Warn
             });
         }
         else if ($postSummaryThreadId &&
-                 ($thread = \SV\StandardLib\Helper::find(\XF\Entity\Thread::class, $postSummaryThreadId)))
+                 ($thread = Helper::find(\XF\Entity\Thread::class, $postSummaryThreadId)))
         {
             /** @var \XF\Entity\Thread $thread */
             $threadReplier = $this->warningRepo->asVisitorWithLang($warningUser, function () use ($thread, $params) {
-                /** @var \XF\Service\Thread\Replier $threadReplier */
-                $threadReplier = \SV\StandardLib\Helper::service(\XF\Service\Thread\Replier::class, $thread);
+                $threadReplier = Helper::service(\XF\Service\Thread\Replier::class, $thread);
                 $threadReplier->setIsAutomated();
 
                 $messageContent = \XF::phrase('Warning_Summary.Message', $params)->render('raw');
@@ -300,7 +299,7 @@ class Warn extends XFCP_Warn
         $warning->sv_disable_reactions = true;
 
         /** @var ReactionRepo $reactionRepo */
-        $reactionRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Reaction::class);
+        $reactionRepo = Helper::repository(ReactionRepo::class);
         $reactionHandler = $reactionRepo->getReactionHandler($warning->content_type);
         if ($reactionHandler instanceof SupportsDisablingReactionInterface)
         {

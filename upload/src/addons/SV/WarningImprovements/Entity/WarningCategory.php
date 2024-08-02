@@ -67,7 +67,7 @@ class WarningCategory extends AbstractCategoryTree
     public function getMasterPhrase(string $type): \XF\Entity\Phrase
     {
         $relation = 'Master' . ucfirst($type);
-        $phrase = $this->$relation;
+        $phrase = $this->getRelation($relation);
 
         if (!$phrase)
         {
@@ -131,9 +131,9 @@ class WarningCategory extends AbstractCategoryTree
 
     protected function _preDelete()
     {
-        $warningCategoryCount = \SV\StandardLib\Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)
-                                     ->where('warning_category_id', '!=', $this->warning_category_id)
-                                     ->total();
+        $warningCategoryCount = Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)
+                                      ->where('warning_category_id', '!=', $this->warning_category_id)
+                                      ->total();
         if (!$warningCategoryCount)
         {
             $this->error(\XF::phrase('sv_warning_improvements_last_category_cannot_be_deleted'));
@@ -168,9 +168,10 @@ class WarningCategory extends AbstractCategoryTree
         {
             if ($relation['entity'] === 'XF:Phrase')
             {
-                if ($this->$name) // $name is the name of Relation
+                $relation = $this->getRelation($name);
+                if ($relation !== null)
                 {
-                    $this->$name->delete();
+                    $relation->delete();
                 }
             }
         }
@@ -232,8 +233,7 @@ class WarningCategory extends AbstractCategoryTree
         $entityType = $this->structure()->shortName;
         \XF::runOnce('rebuildTree-' . $entityType, function()
         {
-            /** @var \SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet $service */
-            $service = \SV\StandardLib\Helper::service(\SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet::class);
+            $service = Helper::service(\SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet::class);
             $service->rebuildNestedSetInfo();
         });
     }
@@ -245,11 +245,11 @@ class WarningCategory extends AbstractCategoryTree
 
     public function rebuildWarningCount()
     {
-        $warningCount = \XF::db()->fetchOne("
+        $warningCount = \XF::db()->fetchOne('
 			SELECT COUNT(*)
 			FROM xf_warning_definition
 			WHERE sv_warning_category_id = ?
-		", $this->warning_category_id);
+		', $this->warning_category_id);
 
         $this->warning_count = \max(0, $warningCount);
     }

@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\ControllerPlugin;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
 use SV\WarningImprovements\Globals;
@@ -28,16 +29,16 @@ class Warn extends XFCP_Warn
      * @param string $warnUrl
      * @param array  $breadcrumbs
      * @return \XF\Mvc\Reply\AbstractReply
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
         /** @var Warning $warningRepo */
-        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
 
         if ($this->isPost() && !$this->filter('fill', 'bool'))
         {
-            /** @var \XF\Service\FloodCheck $floodChecker */
-            $floodChecker = \SV\StandardLib\Helper::service(\XF\Service\FloodCheck::class);
+            $floodChecker = Helper::service(\XF\Service\FloodCheck::class);
             $timeRemaining = $floodChecker->checkFlooding('warn.'.$contentType, $content->getEntityId(), 5);
             if ($timeRemaining)
             {
@@ -123,7 +124,7 @@ class Warn extends XFCP_Warn
                 $canViewPreviousWarnings = false;
             }
 
-            $warningStructure = \SV\StandardLib\Helper::getEntityStructure(\XF\Entity\Warning::class);
+            $warningStructure = Helper::getEntityStructure(\XF\Entity\Warning::class);
             $nodeColDefinition = $warningStructure->columns['notes'] ?? null;
             $userNoteRequired = \is_array($nodeColDefinition) && (!isset($nodeColDefinition['default']) || !empty($nodeColDefinition['required']));
             $response->setParams(
@@ -158,7 +159,7 @@ class Warn extends XFCP_Warn
             $response->setParam('content', $content);
 
             /** @var Warning $warningRepo */
-            $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+            $warningRepo = Helper::repository(\XF\Repository\Warning::class);
             /** @var WarningDefinition|null $definition */
             $definition = $response->getParam('definition');
 
@@ -211,7 +212,6 @@ class Warn extends XFCP_Warn
      * @param Entity          $content
      * @param array           $input
      * @return ExtendedUserWarnSvc|\XF\Service\User\Warn
-     * @throws \XF\Mvc\Reply\Exception
      */
     protected function setupWarnService(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
     {
@@ -244,6 +244,6 @@ class Warn extends XFCP_Warn
      */
     protected function getWarningCategoryRepo()
     {
-        return \SV\StandardLib\Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
+        return Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\Job;
 
+use SV\StandardLib\Helper;
 use XF\Job\AbstractRebuildJob;
 
 /**
@@ -36,14 +37,13 @@ class NextExpiryRebuild extends AbstractRebuildJob
      */
     protected function rebuildById($id)
     {
-        /** @var \XF\Entity\User|null $user */
-        $user = \SV\StandardLib\Helper::find(\XF\Entity\User::class, $id, ['Option']);
+        $user = Helper::find(\XF\Entity\User::class, $id, ['Option']);
         if ($user === null)
         {
             return;
         }
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Warning::class);
+        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
         $warningRepo->updatePendingExpiryFor($user);
     }
 

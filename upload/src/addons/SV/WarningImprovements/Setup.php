@@ -183,11 +183,9 @@ class Setup extends AbstractSetup
 
     public function upgrade2010800Step3()
     {
-        /** @var \XF\repository\UserGroup $userGroupRepo */
-        $userGroupRepo = \SV\StandardLib\Helper::repository(\XF\Repository\UserGroup::class);
+        $userGroupRepo = Helper::repository(\XF\Repository\UserGroup::class);
         $allGroups = \array_keys($userGroupRepo->getUserGroupTitlePairs());
-        /** @var \SV\WarningImprovements\Entity\WarningCategory $group */
-        foreach(\SV\StandardLib\Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)->fetch() as $group)
+        foreach(Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)->fetch() as $group)
         {
             $groups = $group->allowed_user_group_ids;
 
@@ -368,8 +366,7 @@ class Setup extends AbstractSetup
 
         if ($previousVersion < 1700328323)
         {
-            /** @var \XF\Repository\Option $optionRepo */
-            $optionRepo = \SV\StandardLib\Helper::repository(\XF\Repository\Option::class);
+            $optionRepo = Helper::repository(\XF\Repository\Option::class);
             $optionRepo->updateOption('svWarningsOnProfileAgeLimit', (int)(\XF::options()->svWarningEscalatingDefaultsLimit ?? 0));
         }
 

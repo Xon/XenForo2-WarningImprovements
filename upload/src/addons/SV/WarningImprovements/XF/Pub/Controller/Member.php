@@ -5,6 +5,7 @@
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
+use SV\StandardLib\Helper;
 use SV\WarningImprovements\Globals;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\ParameterBag;
@@ -142,8 +143,7 @@ class Member extends XFCP_Member
 
         if ($userChangeTemp->is_expired)
         {
-            /** @var \XF\Service\User\TempChange $changeService */
-            $changeService = \SV\StandardLib\Helper::service(\XF\Service\User\TempChange::class);
+            $changeService = Helper::service(\XF\Service\User\TempChange::class);
             $changeService->expireChange($userChangeTemp);
         }
 
@@ -165,7 +165,7 @@ class Member extends XFCP_Member
     public function assertWarningActionViewable($userChangeTempId, array $extraWith = [])
     {
         /** @var \SV\WarningImprovements\XF\Entity\UserChangeTemp $userChangeTemp */
-        $userChangeTemp = \SV\StandardLib\Helper::find(\XF\Entity\UserChangeTemp::class, $userChangeTempId, $extraWith);
+        $userChangeTemp = Helper::find(\XF\Entity\UserChangeTemp::class, $userChangeTempId, $extraWith);
         if (!$userChangeTemp)
         {
             /** @var \SV\WarningImprovements\XF\Entity\User $visitor */

@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\Service\Warning;
 
+use SV\StandardLib\Helper;
 use XF\App;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Entity\Entity;
@@ -31,7 +32,7 @@ class CategoryRebuildNestedSet extends AbstractService
 
     protected function getEntities(): AbstractCollection
     {
-        return \SV\StandardLib\Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)
+        return Helper::finder(\SV\WarningImprovements\Finder\WarningCategory::class)
                     ->order('display_order')
                     ->fetch();
     }
