@@ -4,78 +4,27 @@ namespace SV\WarningImprovements\XF\Repository;
 
 use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\WarningDefault;
+use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\UserOption;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Entity\User as UserEntity;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
+use XF\Entity\UserChangeTemp as UserChangeTempEntity;
 use XF\Entity\Warning as WarningEntity;
 use XF\Phrase;
-use function is_callable;
+use XF\Repository\UserChangeTemp as UserChangeTempRepo;
 
 /**
  * @Extends \XF\Repository\Warning
  */
 class Warning extends XFCP_Warning
 {
-    /**
-     * XF2.2.0/XF2.2.1 compatibility shim
-     * @template T
-     * @param UserEntity $user
-     * @param callable(): T $callable
-     * @return T
-     * @noinspection PhpDocMissingThrowsInspection
-     */
-    public function asVisitorWithLang(UserEntity $user, callable $callable)
-    {
-        if (\XF::$versionId >= 2020270)
-        {
-            return \XF::asVisitor($user, $callable, true);
-        }
-
-        $oldVisitor = \XF::visitor();
-        \XF::setVisitor($user);
-
-        $oldLang = \XF::language();
-        // Compatibility for XF2.1 & XF2.2
-        $app = \XF::app();
-        $newLang = $app->language($user->language_id);
-        if (is_callable([$newLang, 'isUsable']))
-        {
-            if (!$newLang->isUsable($user))
-            {
-                $newLang = $app->language();
-            }
-        }
-        else
-        {
-            if (!($newLang->user_selectable ?? false) && !$user->is_admin)
-            {
-                $newLang = $app->language();
-            }
-        }
-        $newLangeOrigTz = $newLang->getTimeZone();
-        $newLang->setTimeZone($user->timezone);
-        \XF::setLanguage($newLang);
-
-        try
-        {
-            return $callable();
-        }
-        finally
-        {
-            \XF::setVisitor($oldVisitor);
-
-            $newLang->setTimeZone($newLangeOrigTz);
-            \XF::setLanguage($oldLang);
-        }
-    }
-
     public function getSvWarningReplaceables(UserEntity $warnedUser, ?WarningEntity $warning = null, ?int $pointThreshold = null, bool $forPhrase = false, ?string $contentAction = null, ?array $contentActionOptions = null): array
     {
         /** @var UserEntity|ExtendedUserEntity $warnedUser */
         /** @var WarningEntity|ExtendedWarningEntity|null $warning */
-        return $this->asVisitorWithLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions): array {
+        return Globals::asVisitorWithLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions): array {
             $app = \XF::app();
             $router = $app->router('public');
             $dateString = \date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
@@ -394,7 +343,7 @@ class Warning extends XFCP_Warning
 
         $expired = $expired || $changes->count() > 0;
 
-        /** @var \XF\Entity\UserChangeTemp $change */
+        /** @var UserChangeTempEntity $change */
         foreach ($changes AS $change)
         {
             $changeService->expireChange($change);
@@ -523,6 +472,6 @@ class Warning extends XFCP_Warning
 
     protected function _getWarningActionRepo(): UserChangeTemp
     {
-        return Helper::repository(\XF\Repository\UserChangeTemp::class);
+        return Helper::repository(UserChangeTempRepo::class);
     }
 }

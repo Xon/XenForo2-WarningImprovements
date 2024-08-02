@@ -60,9 +60,7 @@ class Warn extends XFCP_Warn
 
 
         /** @var \SV\WarningImprovements\XF\Entity\WarningDefinition $definition */
-        /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
-        $warningRepo = Helper::repository(\XF\Repository\Warning::class);
-        $return = $warningRepo->asVisitorWithLang($this->user, function() use ($definition, $points, $expiry): WarningService {
+        $return = Globals::asVisitorWithLang($this->user, function() use ($definition, $points, $expiry): WarningService {
             return parent::setFromDefinition($definition, $points, $expiry);
         });
 
@@ -145,7 +143,7 @@ class Warn extends XFCP_Warn
             ($forum = Helper::find(\XF\Entity\Forum::class, $postSummaryForumId)))
         {
             /** @var \XF\Entity\Forum|\SV\MultiPrefix\XF\Entity\Forum $forum */
-            $threadCreator = $this->warningRepo->asVisitorWithLang($warningUser, function () use ($forum, $params) : \XF\Service\Thread\Creator {
+            $threadCreator = Globals::asVisitorWithLang($warningUser, function () use ($forum, $params) : \XF\Service\Thread\Creator {
                 $threadCreator = Helper::service(\XF\Service\Thread\Creator::class, $forum);
                 $threadCreator->setIsAutomated();
 
@@ -165,7 +163,7 @@ class Warn extends XFCP_Warn
             });
 
             \XF::runLater(function () use ($threadCreator, $warningUser){
-                $this->warningRepo->asVisitorWithLang($warningUser, function () use ($threadCreator): void {
+                Globals::asVisitorWithLang($warningUser, function () use ($threadCreator): void {
                     $threadCreator->sendNotifications();
                 });
             });
@@ -174,7 +172,7 @@ class Warn extends XFCP_Warn
                  ($thread = Helper::find(\XF\Entity\Thread::class, $postSummaryThreadId)))
         {
             /** @var \XF\Entity\Thread $thread */
-            $threadReplier = $this->warningRepo->asVisitorWithLang($warningUser, function () use ($thread, $params): \XF\Service\Thread\Replier {
+            $threadReplier = Globals::asVisitorWithLang($warningUser, function () use ($thread, $params): \XF\Service\Thread\Replier {
                 $threadReplier = Helper::service(\XF\Service\Thread\Replier::class, $thread);
                 $threadReplier->setIsAutomated();
 
@@ -187,7 +185,7 @@ class Warn extends XFCP_Warn
             });
 
             \XF::runLater(function () use ($threadReplier, $warningUser){
-                $this->warningRepo->asVisitorWithLang($warningUser, function () use ($threadReplier): void {
+                Globals::asVisitorWithLang($warningUser, function () use ($threadReplier): void {
                     $threadReplier->sendNotifications();
                 });
             });
@@ -213,7 +211,7 @@ class Warn extends XFCP_Warn
         Globals::$warningObj = $warning;
         try
         {
-            return $this->warningRepo->asVisitorWithLang($user, $callback);
+            return Globals::asVisitorWithLang($user, $callback);
         }
         finally
         {

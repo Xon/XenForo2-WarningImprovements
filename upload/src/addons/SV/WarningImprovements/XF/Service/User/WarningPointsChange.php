@@ -11,9 +11,12 @@ use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User;
 use SV\WarningImprovements\XF\Entity\Warning;
 use XF\App;
+use XF\Entity\User as UserEntity;
 use XF\Entity\WarningAction;
 use XF\Entity\Report;
 use XF\Mvc\Entity\AbstractCollection;
+use XF\Service\Thread\Creator as ThreadCreatorService;
+use XF\Service\Thread\Replier as ThreadReplierService;
 
 /**
  * @Extends \XF\Service\User\WarningPointsChange
@@ -201,7 +204,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
             $postAsUserId = (int)$this->lastAction->sv_post_as_user_id;
             if ($postAsUserId !== 0)
             {
-                $postAsUser = Helper::find(\XF\Entity\User::class, $postAsUserId);
+                $postAsUser = Helper::find(UserEntity::class, $postAsUserId);
             }
 
             if ($postAsUser === null)
@@ -224,9 +227,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
                     if ($forum)
                     {
-                        /** @var \XF\Service\Thread\Creator $threadCreator */
-                        $threadCreator = \XF::asVisitor($postAsUser, function () use ($forum, $params) {
-                            $threadCreator = Helper::service(\XF\Service\Thread\Creator::class, $forum);
+                        $threadCreator = Globals::asVisitorWithLang($postAsUser, function () use ($forum, $params): ThreadCreatorService {
+                            $threadCreator = Helper::service(ThreadCreatorService::class, $forum);
                             $threadCreator->setIsAutomated();
 
                             $defaultPrefix = $forum->sv_default_prefix_ids ?? $forum->default_prefix_id;
@@ -244,7 +246,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             return $threadCreator;
                         });
                         \XF::runLater(function () use ($threadCreator, $postAsUser){
-                            \XF::asVisitor($postAsUser, function () use ($threadCreator) {
+                            Globals::asVisitorWithLang($postAsUser, function () use ($threadCreator) {
                                 $threadCreator->sendNotifications();
                             });
                         });
@@ -254,9 +256,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                 {
                     if ($thread = Helper::find(\XF\Entity\Thread::class, $threadId))
                     {
-                        /** @var \XF\Service\Thread\Replier $threadReplier */
-                        $threadReplier = \XF::asVisitor($postAsUser, function () use ($thread, $params) {
-                            $threadReplier = Helper::service(\XF\Service\Thread\Replier::class, $thread);
+                        $threadReplier = Globals::asVisitorWithLang($postAsUser, function () use ($thread, $params): ThreadReplierService {
+                            $threadReplier = Helper::service(ThreadReplierService::class, $thread);
                             $threadReplier->setIsAutomated();
 
                             $messageContent = \XF::phrase('Warning_Thread.Message', $params)->render('raw');
@@ -268,7 +269,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                         });
 
                         \XF::runLater(function () use ($threadReplier, $postAsUser){
-                            \XF::asVisitor($postAsUser, function () use ($threadReplier) {
+                            Globals::asVisitorWithLang($postAsUser, function () use ($threadReplier) {
                                 $threadReplier->sendNotifications();
                             });
                         });
