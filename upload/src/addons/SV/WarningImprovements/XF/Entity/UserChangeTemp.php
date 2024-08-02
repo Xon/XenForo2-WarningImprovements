@@ -12,11 +12,11 @@ use XF\Phrase;
 /**
  * @Extends \XF\Entity\UserChangeTemp
  *
- * @property \XF\Entity\Phrase name
- * @property \XF\Entity\Phrase result
- * @property bool is_expired
- * @property bool is_permanent
- * @property int effective_expiry_date
+ * @property-read \XF\Entity\Phrase $name
+ * @property-read \XF\Entity\Phrase $result
+ * @property bool $is_expired
+ * @property bool $is_permanent
+ * @property int $effective_expiry_date
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {

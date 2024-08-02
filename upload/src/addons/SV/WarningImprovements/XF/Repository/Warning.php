@@ -521,9 +521,6 @@ class Warning extends XFCP_Warning
         $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $exists ? $warning->warning_id : 0, $action, $extra);
     }
 
-    /**
-     * @return \XF\Mvc\Entity\Repository|UserChangeTemp
-     */
     protected function _getWarningActionRepo(): UserChangeTemp
     {
         return Helper::repository(\XF\Repository\UserChangeTemp::class);

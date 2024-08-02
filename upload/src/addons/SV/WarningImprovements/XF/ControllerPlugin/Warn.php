@@ -9,12 +9,15 @@ use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\Repository\WarningCategory as WarningCategoryRepo;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use SV\WarningImprovements\XF\Repository\Warning;
 use XF\Entity\User;
 use XF\Mvc\Entity\Entity;
-use XF\Mvc\Reply\Redirect;
+use XF\Mvc\Reply\AbstractReply;
+use XF\Mvc\Reply\Redirect as RedirectReply;
 use XF\Mvc\Reply\View as ViewReply;
+use XF\Service\FloodCheck as FloodCheckService;
 use XF\Warning\AbstractHandler;
 use SV\WarningImprovements\XF\Service\User\Warn as ExtendedUserWarnSvc;
 
@@ -28,7 +31,7 @@ class Warn extends XFCP_Warn
      * @param Entity $content
      * @param string $warnUrl
      * @param array  $breadcrumbs
-     * @return \XF\Mvc\Reply\AbstractReply
+     * @return AbstractReply
      * @noinspection PhpDocMissingThrowsInspection
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
@@ -38,7 +41,7 @@ class Warn extends XFCP_Warn
 
         if ($this->isPost() && !$this->filter('fill', 'bool'))
         {
-            $floodChecker = Helper::service(\XF\Service\FloodCheck::class);
+            $floodChecker = Helper::service(FloodCheckService::class);
             $timeRemaining = $floodChecker->checkFlooding('warn.'.$contentType, $content->getEntityId(), 5);
             if ($timeRemaining)
             {
@@ -57,7 +60,7 @@ class Warn extends XFCP_Warn
 
         $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
 
-        if ($response instanceof Redirect)
+        if ($response instanceof RedirectReply)
         {
             if (empty($response->getMessage()))
             {
@@ -239,11 +242,8 @@ class Warn extends XFCP_Warn
         }
     }
 
-    /**
-     * @return \SV\WarningImprovements\Repository\WarningCategory|\XF\Mvc\Entity\Repository
-     */
-    protected function getWarningCategoryRepo()
+    protected function getWarningCategoryRepo(): WarningCategoryRepo
     {
-        return Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
+        return Helper::repository(WarningCategoryRepo::class);
     }
 }

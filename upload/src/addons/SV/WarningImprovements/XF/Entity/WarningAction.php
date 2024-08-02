@@ -14,19 +14,19 @@ use XF\Mvc\Entity\Structure;
  * @Extends \XF\Entity\WarningAction
  *
  * COLUMNS
- * @property int|null sv_post_node_id
- * @property int|null sv_post_thread_id
- * @property int|null sv_post_as_user_id
- * @property int|null sv_warning_category_id
+ * @property int|null $sv_post_node_id
+ * @property int|null $sv_post_thread_id
+ * @property int|null $sv_post_as_user_id
+ * @property int|null $sv_warning_category_id
  *
  * GETTERS
- * @property string title
+ * @property string $title
  *
  * RELATIONS
- * @property WarningCategoryEntity Category
- * @property Forum PostForum
- * @property Thread PostThread
- * @property User PostAsUser
+ * @property-read ?WarningCategoryEntity $Category
+ * @property-read ?Forum $PostForum
+ * @property-read ?Thread $PostThread
+ * @property-read ?User $PostAsUser
  */
 class WarningAction extends XFCP_WarningAction
 {

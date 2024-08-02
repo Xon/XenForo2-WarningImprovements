@@ -10,27 +10,27 @@ use XF\Mvc\Entity\Structure;
 /**
  * COLUMNS
  *
- * @property int|null warning_category_id
- * @property int warning_count
- * @property array allowed_user_group_ids
- * @property array allowed_user_group_ids_
- * @property int|null parent_category_id
- * @property int display_order
- * @property int lft
- * @property int                                 rgt
- * @property int                                 depth
- * @property array                               breadcrumb_data
+ * @property int|null $warning_category_id
+ * @property int $warning_count
+ * @property array $allowed_user_group_ids
+ * @property array $allowed_user_group_ids_
+ * @property int|null $parent_category_id
+ * @property int $display_order
+ * @property int $lft
+ * @property int                                 $rgt
+ * @property int                                 $depth
+ * @property array                               $breadcrumb_data
  * GETTERS
- * @property int|null                            category_id
- * @property bool                                is_usable
- * @property \XF\Phrase                          title
+ * @property int|null                            $category_id
+ * @property bool                                $is_usable
+ * @property-read \XF\Phrase                          $title
  * RELATIONS
- * @property \XF\Entity\Phrase                   MasterTitle
- * @property WarningCategory                     Parent
- * @property WarningCategory[]                   ChildCategories
- * @property WarningDefinition[]                 WarningDefinitions
- * @property \SV\WarningImprovements\XF\Entity\WarningAction[]          WarningActions
- * @property \XF\Entity\PermissionCacheContent[] Permissions
+ * @property-read \XF\Entity\Phrase                   $MasterTitle
+ * @property-read WarningCategory                     $Parent
+ * @property-read WarningCategory[]                   $ChildCategories
+ * @property-read WarningDefinition[]                 $WarningDefinitions
+ * @property-read \SV\WarningImprovements\XF\Entity\WarningAction[]          $WarningActions
+ * @property-read \XF\Entity\PermissionCacheContent[] $Permissions
  */
 class WarningCategory extends AbstractCategoryTree
 {

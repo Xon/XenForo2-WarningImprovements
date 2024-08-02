@@ -14,18 +14,18 @@ use XF\Phrase;
 /**
  * COLUMNS
  *
- * @property int                                            sv_warning_category_id
- * @property int                                            sv_display_order
- * @property bool                                           sv_custom_title
- * @property bool                                           is_custom
- * @property string                                         custom_title_placeholder
+ * @property int                                            $sv_warning_category_id
+ * @property int                                            $sv_display_order
+ * @property bool                                           $sv_custom_title
+ * @property bool                                           $is_custom
+ * @property string                                         $custom_title_placeholder
  * @property bool                                           $sv_spoiler_contents
  * @property bool                                           $sv_disable_reactions
  * GETTERS
  * @property Phrase                                         $sv_content_spoiler_title
  * RELATIONS
- * @property \SV\WarningImprovements\Entity\WarningCategory Category
- * @property \XF\Entity\Phrase                              $SvMasterContentSpoilerTitle
+ * @property-read \SV\WarningImprovements\Entity\WarningCategory $Category
+ * @property-read \XF\Entity\Phrase                              $SvMasterContentSpoilerTitle
  */
 class WarningDefinition extends XFCP_WarningDefinition
 {

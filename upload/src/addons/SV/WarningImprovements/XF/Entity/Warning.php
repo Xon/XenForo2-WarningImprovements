@@ -10,7 +10,9 @@ use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\User as UserExtendedEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as WarningDefinitionExtended;
+use XF\Entity\Report as ReportEntity;
 use XF\Entity\User as UserEntity;
+use XF\Entity\WarningDefinition as WarningDefinitionEntity;
 use XF\Mvc\Entity\Structure;
 use XF\Phrase;
 use XF\Util\Arr as ArrUtil;
@@ -18,23 +20,22 @@ use function array_key_exists;
 
 /**
  * COLUMNS
- * @property string                                                 notes_
- * @property bool $sv_spoiler_contents
- * @property string|null $sv_content_spoiler_title
- * @property bool $sv_disable_reactions
  *
+ * @property string                                            $notes_
+ * @property bool                                              $sv_spoiler_contents
+ * @property string|null                                       $sv_content_spoiler_title
+ * @property bool                                              $sv_disable_reactions
  * GETTERS
- * @property UserExtendedEntity|UserEntity|null                     anonymized_issuer
- * @property int                                                    expiry_date_rounded
- * @property \XF\Entity\WarningDefinition                           definition
- * @property string                                                 title_censored
- * @property-read bool $is_old_warning
- *
+ * @property UserExtendedEntity|UserEntity|null                $anonymized_issuer
+ * @property int                                               $expiry_date_rounded
+ * @property WarningDefinitionEntity                           $definition
+ * @property string                                            $title_censored
+ * @property-read bool                                         $is_old_warning
  * RELATIONS
- * @property WarningDefinitionExtended|\XF\Entity\WarningDefinition Definition
- * @property \XF\Entity\WarningDefinition                           Definition_
- * @property \XF\Entity\Report                                      Report
- * @property UserExtendedEntity                                     User
+ * @property-read ?WarningDefinitionExtended|WarningDefinitionEntity $Definition
+ * @property-read ?WarningDefinitionEntity                           $Definition_
+ * @property-read ?ReportEntity                                      $Report
+ * @property-read ?UserExtendedEntity                                $User
  */
 class Warning extends XFCP_Warning
 {
@@ -536,10 +537,7 @@ class Warning extends XFCP_Warning
         return $structure;
     }
 
-    /**
-     * @return \XF\Mvc\Entity\Repository|\XF\Repository\Warning|\SV\WarningImprovements\XF\Repository\Warning
-     */
-    protected function _getWarningRepo()
+    protected function _getWarningRepo(): \SV\WarningImprovements\XF\Repository\Warning
     {
         return Helper::repository(\XF\Repository\Warning::class);
     }

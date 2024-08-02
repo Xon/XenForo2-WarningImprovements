@@ -9,11 +9,14 @@ namespace SV\WarningImprovements\XF\Admin\Controller;
 use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\WarningCategory;
 use SV\WarningImprovements\Entity\WarningDefault;
+use SV\WarningImprovements\Repository\WarningCategory as WarningCategoryRepo;
+use SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree as WarningCategoryTreePlugin;
 use XF\Entity\WarningAction;
 use XF\Entity\WarningDefinition;
 use XF\Mvc\FormAction;
 use XF\Mvc\ParameterBag;
-use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\Exception as ReplyException;
+use XF\Mvc\Reply\View as ViewReply;
 
 /**
  * @Extends \XF\Admin\Controller\Warning
@@ -40,7 +43,7 @@ class Warning extends XFCP_Warning
 
         $response = parent::actionIndex($params);
 
-        if ($response instanceof View)
+        if ($response instanceof ViewReply)
         {
             $categoryRepo = $this->getCategoryRepo();
             $categories = $categoryRepo->findCategoryList()->fetch();
@@ -100,7 +103,7 @@ class Warning extends XFCP_Warning
     {
         $response = parent::warningAddEdit($warning);
 
-        if ($response instanceof View)
+        if ($response instanceof ViewReply)
         {
             $categoryRepo = $this->getCategoryRepo();
             $categoryTree = $categoryRepo->createCategoryTree();
@@ -227,7 +230,7 @@ class Warning extends XFCP_Warning
     {
         $response = parent::_actionAddEdit($action);
 
-        if ($response instanceof View)
+        if ($response instanceof ViewReply)
         {
             $nodeRepo = Helper::repository(\XF\Repository\Node::class);
             $nodes = $nodeRepo->getFullNodeList()->filterViewable();
@@ -474,51 +477,41 @@ class Warning extends XFCP_Warning
         return $this->getCategoryTreePlugin()->actionSort();
     }
 
-    /**
-     * @return \SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree
-     */
-    protected function getCategoryTreePlugin()
+    protected function getCategoryTreePlugin(): WarningCategoryTreePlugin
     {
-        return Helper::plugin($this,\SV\WarningImprovements\XF\ControllerPlugin\WarningCategoryTree::class);
+        return Helper::plugin($this, WarningCategoryTreePlugin::class);
+    }
+
+    protected function getCategoryRepo(): WarningCategoryRepo
+    {
+        return Helper::repository(WarningCategoryRepo::class);
     }
 
     /**
-     * @return \SV\WarningImprovements\Repository\WarningCategory|\XF\Mvc\Entity\Repository
+     * @param int|null $id
+     * @param array    $with
+     * @param null     $phraseKey
+     * @return WarningCategory
+     * @throws ReplyException
      */
-    protected function getCategoryRepo()
-    {
-        return Helper::repository(\SV\WarningImprovements\Repository\WarningCategory::class);
-    }
-
-    /**
-     * @param      $id
-     * @param null $with
-     * @param null $phraseKey
-     * @return WarningCategory|\XF\Mvc\Entity\Entity
-     * @throws \XF\Mvc\Reply\Exception
-     */
-    protected function assertCategoryExists($id, $with = null, $phraseKey = null)
+    protected function assertCategoryExists(?int $id, array $with = [], $phraseKey = null): WarningCategory
     {
         return $this->assertRecordExists('SV\WarningImprovements:WarningCategory', $id, $with, $phraseKey);
     }
 
-
     /**
-     * @param int               $id
-     * @param string[]          $with
-     * @param string|\XF\Phrase $phraseKey
-     * @return WarningDefault|\XF\Mvc\Entity\Entity
-     * @throws \XF\Mvc\Reply\Exception
+     * @param int      $id
+     * @param string[] $with
+     * @param null     $phraseKey
+     * @return WarningDefault
+     * @throws ReplyException
      */
-    protected function assertDefaultExists(int $id, array $with = [], $phraseKey = null)
+    protected function assertDefaultExists(int $id, array $with = [], $phraseKey = null): WarningDefault
     {
         return $this->assertRecordExists('SV\WarningImprovements:WarningDefault', $id, $with, $phraseKey);
     }
 
-    /**
-     * @return \SV\WarningImprovements\XF\Entity\WarningDefinition
-     */
-    private function getCustomWarningDefinition()
+    private function getCustomWarningDefinition(): \SV\WarningImprovements\XF\Entity\WarningDefinition
     {
         /** @var \SV\WarningImprovements\XF\Repository\Warning $warningRepo */
         $warningRepo = $this->getWarningRepo();

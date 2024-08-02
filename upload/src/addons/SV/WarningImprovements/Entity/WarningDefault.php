@@ -10,11 +10,11 @@ use XF\Mvc\Entity\Structure;
 
 /**
  * COLUMNS
- * @property int|null warning_default_id
- * @property int threshold_points
- * @property string expiry_type
- * @property int expiry_extension
- * @property bool active
+ * @property int|null $warning_default_id
+ * @property int $threshold_points
+ * @property string $expiry_type
+ * @property int $expiry_extension
+ * @property bool $active
  */
 class WarningDefault extends Entity
 {

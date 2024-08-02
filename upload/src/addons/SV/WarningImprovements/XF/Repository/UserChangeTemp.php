@@ -14,14 +14,16 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     protected $userGroups = null;
 
     /**
-     * @return null|\XF\Entity\UserGroup[]|\XF\Mvc\Entity\ArrayCollection
+     * @return \XF\Entity\UserGroup[]
      */
-    public function getCachedUserGroupsList()
+    public function getCachedUserGroupsList(): array
     {
         if ($this->userGroups === null)
         {
             $userGroupRepo = Helper::repository(\XF\Repository\UserGroup::class);
-            $this->userGroups = $userGroupRepo->findUserGroupsForList()->fetch();
+            $this->userGroups = $userGroupRepo->findUserGroupsForList()
+                                              ->fetch()
+                                              ->toArray();
         }
 
         return $this->userGroups;

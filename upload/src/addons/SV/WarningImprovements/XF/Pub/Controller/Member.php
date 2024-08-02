@@ -9,7 +9,7 @@ use SV\StandardLib\Helper;
 use SV\WarningImprovements\Globals;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\ParameterBag;
-use XF\Mvc\Reply\View;
+use XF\Mvc\Reply\View as ViewReply;
 
 /**
  * @Extends \XF\Pub\Controller\Member
@@ -20,7 +20,7 @@ class Member extends XFCP_Member
     {
         $reply = parent::actionWarnings($params);
 
-        if ($reply instanceof View)
+        if ($reply instanceof ViewReply)
         {
             /** @var AbstractCollection $warnings */
             $warnings = $reply->getParam('warnings');

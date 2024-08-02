@@ -15,9 +15,9 @@ use XF\Phrase;
 
 /**
  * GETTERS
- * @property \XF\Mvc\Entity\ArrayCollection warning_definitions
- * @property array warning_actions
- * @property int warning_actions_count
+ * @property-read AbstractCollection $warning_definitions
+ * @property-read array $warning_actions
+ * @property-read int $warning_actions_count
  */
 class User extends XFCP_User
 {
