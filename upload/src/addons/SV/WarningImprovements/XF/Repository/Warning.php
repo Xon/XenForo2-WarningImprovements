@@ -20,13 +20,13 @@ class Warning extends XFCP_Warning
 {
     /**
      * XF2.2.0/XF2.2.1 compatibility shim
-     *
+     * @template T
      * @param UserEntity $user
-     * @param \Closure   $callable
-     * @return mixed
+     * @param callable(): T $callable
+     * @return T
      * @noinspection PhpDocMissingThrowsInspection
      */
-    public function asVisitorWithLang(UserEntity $user, \Closure $callable)
+    public function asVisitorWithLang(UserEntity $user, callable $callable)
     {
         if (\XF::$versionId >= 2020270)
         {
@@ -75,7 +75,7 @@ class Warning extends XFCP_Warning
     {
         /** @var UserEntity|ExtendedUserEntity $warnedUser */
         /** @var WarningEntity|ExtendedWarningEntity|null $warning */
-        return $this->asVisitorWithLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions) {
+        return $this->asVisitorWithLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions): array {
             $app = \XF::app();
             $router = $app->router('public');
             $dateString = \date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
