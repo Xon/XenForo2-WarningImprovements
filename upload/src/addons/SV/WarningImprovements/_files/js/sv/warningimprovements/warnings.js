@@ -244,200 +244,42 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         }
     })
 
-    // ################################## WARNING SELECT HANDLER ###########################################
+    // ################################## SAVE WARNING VIEW PREFERENCE HANDLER ###########################################
 
-    SV.WarningImprovements.TitleWatcher  = XF.Element.newHandler({
-        eventNameSpace: 'WarningTitleWatcher',
+    SV.WarningImprovements.SaveWarningViewPref  = XF.Element.newHandler({
         options: {
-            publicWarningSelector: 'input[name=\'action_options[public_message]\']',
-            copyTitle: true // Default value must match with that of the option: sv_warningimprovements_copy_title
+            warningView: null
         },
-        publicWarning: null,
 
         init ()
         {
-            this.publicWarning = XF.findRelativeIf(this.options.publicWarningSelector, this.target || this.$target)
-            if (this.$target)
+            if (!(['radio', 'select'].includes(this.options.warningView)))
             {
-                this.publicWarning = this.publicWarning.get(0)
-            }
-
-            if (this.publicWarning === null)
-            {
-                console.error('Could not find public warning input')
-                return
+                throw new Error('Invalid warning view provided.')
             }
 
             if (typeof XF.on !== "function") // XF 2.2
             {
-                this.$target.on('change input', this.onChangeOrClick.bind(this))
-
-                if (this.$target.is('input:radio'))
-                {
-                    this.$target.on('click', this.onChangeOrClick.bind(this))
-                }
+                this.$target.on('change', this.onChange.bind(this))
             }
             else
             {
-                XF.on(this.target, 'change input', this.onInputChangeOrClick.bind(this))
-
-                if (this.target.getAttribute('type') === 'radio')
-                {
-                    XF.on(this.target, 'click', this.onInputChangeOrClick.bind(this))
-                }
+                XF.on(this.target, 'change', this.onChange.bind(this))
             }
         },
 
-        onInputChangeOrClick ()
+        onChange (e)
         {
             const theTarget = this.target || this.$target.get(0)
 
-            if (theTarget.getAttribute('type') === 'text')
-            {
-                this.onChangeForTextbox(theTarget)
-            }
-            else if (theTarget.getAttribute('type') === 'radio')
-            {
-                this.onChangeForRadio(theTarget)
-            }
-            else if (theTarget instanceof HTMLSelectElement)
-            {
-                this.onChangeForSelect(theTarget)
-            }
-        },
-
-        /**
-         * @param {HTMLInputElement} target
-         */
-        onChangeForTextbox (target)
-        {
-            this.setPublicMessage(target.value)
-        },
-
-        /**
-         * @param {HTMLInputElement} target
-         */
-        onChangeForRadio (target)
-        {
-            // document.querySelectorAll("input[data-warning-title-input='1'][data-for-warning=']")
-
-            let inputForWarning = document.querySelectorAll("input[data-warning-title-input='1'][data-for-warning='" + target.value + "']"),
-                inputNotForWarning = document.querySelectorAll("input[data-warning-title-input='1']:not([data-for-warning='" + target.value + "'])")
-
-            inputForWarning.forEach((input) =>
-            {
-                if (typeof this.$target !== 'undefined') // XF 2.2
-                {
-                    $(input).parent().parent().parent().xfFadeDown(XF.config.speed.xxfast)
-                }
-                else
-                {
-                    XF.Animate.fadeDown(input.parentNode.parentNode.parentNode, {
-                        speed: XF.config.speed.xxfast
-                    })
-                }
-            })
-
-            inputNotForWarning.forEach((input) =>
-            {
-                if (typeof this.$target !== 'undefined') // XF 2.2
-                {
-                    $(input).parent().parent().parent().xfFadeUp(XF.config.speed.xxfast)
-                }
-                else
-                {
-                    XF.Animate.fadeUp(input.parentNode.parentNode.parentNode, {
-                        speed: XF.config.speed.xxfast
-                    })
-                }
-            })
-
-            this.setPublicMessage('')
-
-            if (target.dataset.warningLabel !== null)
-            {
-                this.setPublicMessage(target.dataset.warningLabel)
-            }
-        },
-
-        /**
-         * @param {HTMLSelectElement} target
-         */
-        onChangeForSelect (target)
-        {
-            document.querySelectorAll("input[data-warning-title-input='1']:not([data-for-warning='" + target.querySelector('[selected]') + "'])").forEach((input) =>
-            {
-                input.disabled = true
-
-                if (typeof this.$target !== 'undefined') // XF 2.2
-                {
-                    $(input).parent().parent().xfFadeUp(XF.config.speed.xxfast)
-                }
-                else
-                {
-                    XF.Animate.fadeUp(input.parentNode.parentNode, {
-                        speed: XF.config.speed.xxfast,
-                    })
-                }
-            })
-
-            let selectedWarning = target.querySelector('option[selected]')
-            if (selectedWarning === null)
-            {
-                return
-            }
-
-            let warningId = selectedWarning.value,
-                warningInput = document.querySelector("input[data-warning-title-input=1][data-for-warning=" + warningId + "]"),
-                warningLabel = document.querySelector("dl[data-for-warning=" + warningId + "][data-warning-label]")
-
-            if (warningInput === null)
-            {
-                console.error('Warning input missing.');
-                return
-            }
-
-            if (warningLabel !== null)
-            {
-                warningInput.value = warningLabel.dataset.warningLabel
-            }
-
-            this.setPublicMessage('')
-
-            if (warningInput.type === 'hidden')
-            {
-                warningInput.disabled = true
-
-                if (typeof this.$target !== 'undefined') // XF 2.2
-                {
-                    $(warningInput)
-                        .prop('disabled', false)
-                        .parent().parent()
-                        .xfFadeDown(XF.config.speed.xxfast)
-                }
-                else
-                {
-                    XF.Animate.fadeDown(warningInput.parentNode.parentNode, {
-                        speed: XF.config.speed.xxfast,
-                    })
-                }
-            }
-        },
-
-        /**
-         *
-         * @param message
-         */
-        setPublicMessage (message)
-        {
-            if (this.options.copyTitle && this.publicWarning !== null)
-            {
-                this.publicWarning.value = message
-            }
-        },
+            XF.ajax('POST', XF.canonicalizeUrl('index.php?warnings/sv-warning-view-pref'), {
+                value: theTarget.value
+            }, null, { skipDefaultSuccess: true })
+        }
     })
 
     XF.Element.register('warning-view-toggle', 'SV.WarningImprovements.ViewToggler')
     XF.Element.register('warning-view-select', 'SV.WarningImprovements.SelectView')
     XF.Element.register('warning-title-watcher', 'SV.WarningImprovements.TitleWatcher')
+    XF.Element.register('sv-save-warning-view-pref', 'SV.WarningImprovements.SaveWarningViewPref')
 }) ()
