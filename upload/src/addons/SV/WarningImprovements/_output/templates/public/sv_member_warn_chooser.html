@@ -3,16 +3,22 @@
 <xf:macro name="svStandardLib_macros::choices_setup" />
 <xf:js addon="SV/WarningImprovements" src="sv/warningimprovements/warnings.js" min="1" />
 
-<xf:radiorow name="warning_view" label="{{ phrase('svWarningImprovements_warning_view') }}" value="{{ is_toggled('sv_warning_view') ? 'select' : 'radio' }}">
-	<xf:option value="radio" label="{{ phrase('svWarningImprovements_use_warning_radio_view') }}"
-			   data-xf-init="disabler"
-			   data-storage-key="sv_warning_view"
+<xf:set var="$radioViewControlId" value="{{ unique_id('sv_warning_view_radio') }}" />
+<xf:set var="$selectViewControlId" value="{{ unique_id('sv_warning_view_select') }}" />
+
+<xf:radiorow name="warning_view" label="{{ phrase('svWarningImprovements_warning_view') }}">
+	<xf:option id="{$radioViewControlId}" value="radio" checked="{{ in_array($xf.visitor.Option.sv_warning_view, [null, 'radio']) }}"
+			   label="{{ phrase('svWarningImprovements_use_warning_radio_view') }}"
+			   data-xf-init="disabler sv-save-warning-view-pref"
 			   data-hide="{{ true }}"
-			   data-container=".svWarningViewRadio" />
-	<xf:option value="select" label="{{ phrase('svWarningImprovements_use_warning_select_view') }}"
-			   data-xf-init="disabler"
+			   data-container=".svWarningViewRadio"
+			   data-warning-view="radio" />
+	<xf:option id="{$selectViewControlId}" value="select" checked="{{ $xf.visitor.Option.sv_warning_view === 'select' }}"
+			   label="{{ phrase('svWarningImprovements_use_warning_select_view') }}"
+			   data-xf-init="disabler sv-save-warning-view-pref"
 			   data-hide="{{ true }}"
-			   data-container=".svWarningViewSelect" />
+			   data-container=".svWarningViewSelect"
+			   data-warning-view="select" />
 </xf:radiorow>
 
 <div class="svWarningViewSelect">

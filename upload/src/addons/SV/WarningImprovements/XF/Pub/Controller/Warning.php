@@ -350,6 +350,38 @@ class Warning extends XFCP_Warning
         return $output;
     }
 
+    /**
+     * @since 2.10.2
+     *
+     * @return \XF\Mvc\Reply\Message
+     *
+     * @throws \XF\Mvc\Reply\Exception
+     * @throws \XF\PrintableException
+     */
+    public function actionSvWarningViewPref()
+    {
+        $this->assertPostOnly();
+
+        $visitor = \XF::visitor();
+        if (!$visitor->canBanUsers($error))
+        {
+            throw $this->exception($this->noPermission($error));
+        }
+
+        $value = $this->filter('value', 'str');
+        if (!in_array($value, ['radio', 'select']))
+        {
+            throw $this->exception($this->noPermission()); // Just fail without giving too much details
+        }
+
+        $userOption = $visitor->getRelationOrDefault('Option');
+        $this->formAction()->setupEntityInput($userOption, [
+            'sv_warning_view' => $value
+        ])->run();
+
+        return $this->message(\XF::phrase('action_completed_successfully'));
+    }
+
     protected function assertViewableWarning($id, array $extraWith = [])
     {
         $extraWith[] = 'User';
