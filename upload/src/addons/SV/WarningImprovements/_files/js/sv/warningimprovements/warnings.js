@@ -66,17 +66,17 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         {
             this._svWarningImprovementsOnAddItem(event)
 
-            this.onChange(event)
+            this.onAddRemoveItem(event)
         },
 
         onRemoveItem (event)
         {
             this._svWarningImprovementsOnRemoveItem(event)
 
-            this.onChange(event)
+            this.onAddRemoveItem(event)
         },
 
-        onChange(event)
+        onAddRemoveItem(event)
         {
             if (!this.choices)
             {
@@ -133,9 +133,12 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             }
             else
             {
-                // If someone clicks on the "X" button when any warning definition is selected leaving none selected
-                // The custom title row needs to be hidden AND marked as disabled
-                this.hideCustomTitleInput()
+                if (previousSelectedItem.customProperties.allows_custom_title)
+                {
+                    // If someone clicks on the "X" button when any warning definition is selected leaving none selected
+                    // The custom title row needs to be hidden AND marked as disabled
+                    this.hideCustomTitleInput()
+                }
             }
         },
 
