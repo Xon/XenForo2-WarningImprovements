@@ -11,10 +11,11 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
     // ################################## WARNING SELECT HANDLER ###########################################
 
     SV.WarningImprovements.SelectViewOpts = {
-        customTitleSelector: 'input[type=text][name=custom_title]'
+        customTitleRowSelector: null,
+        customTitleInputSelector: 'input[type=text][name=custom_title]'
     }
 
-    SV.WarningImprovements.SelectView = XF.extend(SV.StandardLib.Choices, {
+    SV.WarningImprovements.WarningSelectView = XF.extend(SV.StandardLib.Choices, {
         __backup: {
             init: '_svWarningImprovementsInit',
             onAddItem: '_svWarningImprovementsOnAddItem',
@@ -23,20 +24,39 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
 
         options: SV.extendObject({}, SV.StandardLib.Choices.prototype.options, SV.WarningImprovements.SelectViewOpts),
 
-        customTitleSelector: null,
+        customTitleRow: null,
+        customTitleInput: null,
+
+        customTitles: [],
 
         init ()
         {
-            this.customTitleSelector = XF.findRelativeIf(this.options.customTitleSelector, this.target || this.$target)
-            if (this.$target)
+            const rowSelector = this.options.customTitleRowSelector
+            if (rowSelector === null)
             {
-                this.customTitleSelector = this.customTitleSelector.get(0)
+                throw new Error('Custom title row selector missing.')
             }
 
-            if (this.customTitleSelector === null)
+            this.customTitleRow = XF.findRelativeIf(rowSelector, this.target || this.$target)
+            if (this.$target)
             {
-                console.error('Missing custom title input.')
-                return
+                this.customTitleRow = this.customTitleRow.get(0)
+            }
+
+            if (this.customTitleRow === null)
+            {
+                throw new Error('Missing custom title row.')
+            }
+
+            this.customTitleInput = XF.findRelativeIf(this.options.customTitleInputSelector, this.target || this.$target)
+            if (this.$target)
+            {
+                this.customTitleInput = this.customTitleInput.get(0)
+            }
+
+            if (this.customTitleInput === null)
+            {
+                throw new Error('Custom title input missing.')
             }
 
             this._svWarningImprovementsInit()
@@ -45,20 +65,112 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         onAddItem (event)
         {
             this._svWarningImprovementsOnAddItem(event)
+
             this.onChange(event)
         },
 
         onRemoveItem (event)
         {
-            console.log(event)
-
             this._svWarningImprovementsOnRemoveItem(event)
+
             this.onChange(event)
         },
 
-        onChange (event)
+        onChange(event)
         {
-            this.customTitleSelector.value = '';
+            if (!this.choices)
+            {
+                throw new Error('Choices not setup.');
+            }
+
+            const previousSelectedItem = this.choices._currentState.items.find(() => true)
+            const selectedItem = this.choices._currentState.choices.find((choice) => {
+                return choice.selected === true
+            })
+
+            if (previousSelectedItem)
+            {
+                // Store the custom title to a dataset in previous selected item
+                if (previousSelectedItem.customProperties.allows_custom_title)
+                {
+                    if (this.customTitleInput.value.length === 0) // empty
+                    {
+                        this.customTitles[previousSelectedItem.value] = previousSelectedItem.label
+                    }
+                    else
+                    {
+                        this.customTitles[previousSelectedItem.value] = this.customTitleInput.value
+                    }
+                }
+                else
+                {
+                    delete this.customTitles[previousSelectedItem.value]
+                }
+            }
+
+            if (selectedItem)
+            {
+                if (selectedItem.customProperties.allows_custom_title)
+                {
+                    // If there is any stored custom title in the data set of selectedItem then restore that
+                    if (typeof this.customTitles[selectedItem.value] !== 'undefined')
+                    {
+                        this.customTitleInput.value = this.customTitles[selectedItem.value]
+                    }
+                    else // Or else set the custom title to the warning definition title
+                    {
+                        this.customTitleInput.value = selectedItem.label
+                    }
+
+                    this.showCustomTitleInput()
+                }
+                else
+                {
+                    delete this.customTitles[selectedItem.value]
+
+                    this.hideCustomTitleInput()
+                }
+            }
+            else
+            {
+                // If someone clicks on the "X" button when any warning definition is selected leaving none selected
+                // The custom title row needs to be hidden AND marked as disabled
+                this.hideCustomTitleInput()
+            }
+        },
+
+        showCustomTitleInput ()
+        {
+            if (this.customTitleRow.offsetParent !== null)
+            {
+                return
+            }
+
+            if (typeof XF.Animate !== 'function')
+            {
+                XF.Animate.fadeDown(this.customTitleRow)
+            }
+            else
+            {
+                $(this.customTitleRow).xfFadeDown()
+            }
+        },
+
+        hideCustomTitleInput ()
+        {
+            if (this.customTitleRow.offsetParent === null)
+            {
+                return
+            }
+
+            if (typeof XF.Animate !== 'function')
+            {
+                XF.Animate.fadeUp(this.customTitleRow)
+            }
+            else
+            {
+                $(this.customTitleRow).xfFadeUp()
+            }
         }
     })
 
@@ -96,7 +208,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         }
     })
 
-    XF.Element.register('warning-view-select', 'SV.WarningImprovements.SelectView')
+    XF.Element.register('sv-warning-view-select', 'SV.WarningImprovements.WarningSelectView')
     XF.Element.register('warning-title-watcher', 'SV.WarningImprovements.TitleWatcher')
     XF.Element.register('sv-save-warning-view-pref', 'SV.WarningImprovements.SaveWarningViewPref')
 }) ()
