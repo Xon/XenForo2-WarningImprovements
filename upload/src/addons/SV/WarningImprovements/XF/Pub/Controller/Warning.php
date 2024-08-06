@@ -6,6 +6,7 @@
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
@@ -359,8 +360,9 @@ class Warning extends XFCP_Warning
     {
         $this->assertPostOnly();
 
+        /** @var ExtendedUserEntity $visitor */
         $visitor = \XF::visitor();
-        if (!$visitor->canBanUsers($error))
+        if (!$visitor->canChangeSvWarningViewPref($error))
         {
             throw $this->exception($this->noPermission($error));
         }

@@ -177,6 +177,29 @@ class User extends XFCP_User
                            ->fetch();
     }
 
+    /**
+     * @since 2.10.2
+     *
+     * @param Phrase|null $error
+     *
+     * @return bool
+     */
+    public function canChangeSvWarningViewPref(?Phrase &$error = null) : bool
+    {
+        $visitor = \XF::visitor();
+        if (!$visitor->user_id)
+        {
+            return false;
+        }
+
+        if (!$this->hasPermission('general', 'viewWarning'))
+        {
+            return false;
+        }
+
+        return $visitor->hasPermission('general', 'warn');
+    }
+
     public function getUsableWarningDefinitions(): array
     {
         $warningDefinitions = $this->warning_definitions;
