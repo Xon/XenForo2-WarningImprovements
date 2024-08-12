@@ -362,8 +362,9 @@ class Warning extends XFCP_Warning
     {
         $this->assertPostOnly();
 
+        /** @var ExtendedUserEntity $visitor */
         $visitor = \XF::visitor();
-        if (!$visitor->canBanUsers($error))
+        if (!$visitor->canChangeSvWarningViewPref($error))
         {
             throw $this->exception($this->noPermission($error));
         }
