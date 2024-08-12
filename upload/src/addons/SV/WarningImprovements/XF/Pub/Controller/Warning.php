@@ -18,6 +18,7 @@ use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\Service\Warning\Editor as EditorService;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use function array_key_exists;
 
 /**
@@ -25,6 +26,7 @@ use function array_key_exists;
  */
 class Warning extends XFCP_Warning
 {
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function actionDelete(ParameterBag $params)
     {
         /** @noinspection PhpUndefinedFieldInspection */
@@ -265,6 +267,7 @@ class Warning extends XFCP_Warning
         return $warningEditor;
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public static function getActivityDetails(array $activities)
     {
         /** @var SessionActivityEntity[] $activities */
@@ -352,13 +355,8 @@ class Warning extends XFCP_Warning
 
     /**
      * @since 2.10.2
-     *
-     * @return \XF\Mvc\Reply\Message
-     *
-     * @throws \XF\Mvc\Reply\Exception
-     * @throws \XF\PrintableException
      */
-    public function actionSvWarningViewPref()
+    public function actionSvWarningViewPref(): AbstractReply
     {
         $this->assertPostOnly();
 
