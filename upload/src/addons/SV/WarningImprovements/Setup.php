@@ -424,7 +424,7 @@ class Setup extends AbstractSetup
         $tables['xf_user_option'] = function (Alter $table)
         {
             $this->addOrChangeColumn($table, 'sv_pending_warning_expiry', 'int')->nullable(true)->setDefault(null);
-            $this->addOrChangeColumn($table, 'sv_warning_view', 'enum')->values(['radio', 'select'])->setDefault('radio');
+            $this->addOrChangeColumn($table, 'sv_warning_view', 'enum')->values(['radio', 'select'])->nullable()->setDefault(null);
         };
 
         $tables['xf_warning'] = function (Alter $table)
