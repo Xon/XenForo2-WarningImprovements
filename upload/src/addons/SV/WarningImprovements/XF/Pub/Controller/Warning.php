@@ -353,34 +353,6 @@ class Warning extends XFCP_Warning
         return $output;
     }
 
-    /**
-     * @since 2.10.2
-     */
-    public function actionSvWarningViewPref(): AbstractReply
-    {
-        $this->assertPostOnly();
-
-        /** @var ExtendedUserEntity $visitor */
-        $visitor = \XF::visitor();
-        if (!$visitor->canChangeSvWarningViewPref($error))
-        {
-            throw $this->exception($this->noPermission($error));
-        }
-
-        $value = $this->filter('value', 'str');
-        if (!in_array($value, ['radio', 'select']))
-        {
-            throw $this->exception($this->noPermission()); // Just fail without giving too much details
-        }
-
-        $userOption = $visitor->getRelationOrDefault('Option');
-        $this->formAction()->setupEntityInput($userOption, [
-            'sv_warning_view' => $value
-        ])->run();
-
-        return $this->message(\XF::phrase('action_completed_successfully'));
-    }
-
     protected function assertViewableWarning($id, array $extraWith = [])
     {
         $extraWith[] = 'User';
