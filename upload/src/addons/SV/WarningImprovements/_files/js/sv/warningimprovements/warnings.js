@@ -19,7 +19,8 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         __backup: {
             init: '_svWarningImprovementsInit',
             getConfig: '_svWarningImprovementsGetConfig',
-            onAddItem: '_svWarningImprovementsOnAddItem'
+            onAddItem: '_svWarningImprovementsOnAddItem',
+            onRemoveItem: '_svWarningImprovementsOnRemoveItem',
         },
 
         options: SV.extendObject({}, SV.StandardLib.Choices.prototype.options, SV.WarningImprovements.SelectViewOpts),
@@ -72,22 +73,32 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             return config
         },
 
+        previousSelectedItem: null,
+        onRemoveItem (event)
+        {
+            this._svWarningImprovementsOnRemoveItem(event)
+
+            if (typeof event.detail !== 'undefined')
+            {
+                this.previousSelectedItem = event.detail
+            }
+            else
+            {
+                this.previousSelectedItem = null
+            }
+        },
+
         onAddItem (event)
         {
             this._svWarningImprovementsOnAddItem(event)
 
-            this.onItemChange(event)
-        },
-
-        onItemChange(event)
-        {
             if (!this.choices)
             {
                 throw new Error('Choices not setup.');
             }
 
-            const previousSelectedItem = this.choices._currentState.items.find(() => true)
-            const selectedItem = this.choices._currentState.choices.find((choice) => {
+            const previousSelectedItem = this.previousSelectedItem
+            const selectedItem = this.choices._store._store.choices.find((choice) => {
                 return choice.selected === true
             })
 
