@@ -12,13 +12,15 @@
 			   data-xf-init="disabler sv-save-warning-view-pref"
 			   data-hide="{{ true }}"
 			   data-container=".svWarningViewRadio"
-			   data-warning-view="radio" />
+			   data-warning-view="radio"
+			   data-warning-url="{$warnUrl}" />
 	<xf:option id="{$selectViewControlId}" value="select" checked="{{ $xf.visitor.Option.sv_warning_view === 'select' }}"
 			   label="{{ phrase('svWarningImprovements_use_warning_select_view') }}"
 			   data-xf-init="disabler sv-save-warning-view-pref"
 			   data-hide="{{ true }}"
 			   data-container=".svWarningViewSelect"
-			   data-warning-view="select" />
+			   data-warning-view="select"
+			   data-warning-url="{$warnUrl}" />
 </xf:radiorow>
 
 <xf:set var="$selectViewCustomTitleRowId" value="{{ unique_id('sv_warning_view_select_custom_title_row') }}" />

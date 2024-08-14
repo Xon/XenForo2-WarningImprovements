@@ -181,11 +181,17 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
 
     SV.WarningImprovements.SaveWarningViewPref  = XF.Element.newHandler({
         options: {
-            warningView: null
+            warningView: null,
+            warningUrl: null
         },
 
         init ()
         {
+            if (this.options.warningUrl === null)
+            {
+                throw new Error('No warning URL provided.')
+            }
+
             if (!(['radio', 'select'].includes(this.options.warningView)))
             {
                 throw new Error('Invalid warning view provided.')
@@ -205,8 +211,9 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         {
             const theTarget = this.target || this.$target.get(0)
 
-            XF.ajax('POST', XF.canonicalizeUrl('index.php?warnings/sv-warning-view-pref'), {
-                value: theTarget.value
+            XF.ajax('POST', XF.canonicalizeUrl(this.options.warningUrl), {
+                view: theTarget.value,
+                sv_save_warn_view_pref: true
             }, null, { skipDefaultSuccess: true })
         }
     })

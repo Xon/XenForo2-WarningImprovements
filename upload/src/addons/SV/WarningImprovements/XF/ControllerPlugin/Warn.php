@@ -31,19 +31,22 @@ use SV\WarningImprovements\XF\Service\User\Warn as ExtendedUserWarnSvc;
 class Warn extends XFCP_Warn
 {
     /**
-     * @param string $contentType
+     * @param $contentType
      * @param Entity $content
-     * @param string $warnUrl
-     * @param array  $breadcrumbs
-     * @return AbstractReply
-     * @noinspection PhpDocMissingThrowsInspection
+     * @param $warnUrl
+     * @param array $breadcrumbs
+     *
+     * @return AbstractReply|\XF\Mvc\Reply\Error|RedirectReply|ViewReply
+     *
+     * @throws \XF\Mvc\Reply\Exception
+     * @throws \XF\PrintableException
      */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
         /** @var ExtendedWarningRepo $warningRepo */
         $warningRepo = Helper::repository(WarningRepo::class);
 
-        if ($this->isPost() && !$this->filter('fill', 'bool'))
+        if ($this->isPost() && (!$this->filter('fill', 'bool') && !$this->filter('sv_save_warn_view_pref', 'bool')))
         {
             $floodChecker = Helper::service(FloodCheckService::class);
             $timeRemaining = $floodChecker->checkFlooding('warn.'.$contentType, $content->getEntityId(), 5);
@@ -60,6 +63,11 @@ class Warn extends XFCP_Warn
         if (empty($warnings))
         {
             return $this->error(\XF::phrase('sv_no_permission_to_give_warnings'), 403);
+        }
+
+        if ($this->isPost() && $this->filter('sv_save_warn_view_pref', 'bool'))
+        {
+            return $this->getSvSaveWarningViewPrefReply($content, $contentType);
         }
 
         $response = parent::actionWarn($contentType, $content, $warnUrl, $breadcrumbs);
@@ -146,6 +154,59 @@ class Warn extends XFCP_Warn
         }
 
         return $response;
+    }
+
+
+    /**
+     * @since 2.10.2
+     *
+     * @param Entity $content
+     * @param string|null $contentType
+     * @param User|null $forUser
+     *
+     * @return \XF\Mvc\Reply\Message
+     *
+     * @throws \XF\Mvc\Reply\Exception
+     * @throws \XF\PrintableException
+     */
+    public function getSvSaveWarningViewPrefReply(
+        Entity $content,
+        ?string $contentType = null,
+        ?User $forUser = null
+    ) : AbstractReply
+    {
+        $this->assertPostOnly();
+
+        $contentType = $contentType ?? $content->getEntityContentType();
+        $forUser = $forUser ?? \XF::visitor();
+
+        /** @var ExtendedWarningRepo $warningRepo */
+        $warningRepo = Helper::repository(WarningRepo::class);
+
+        $warningHandler = $warningRepo->getWarningHandler($contentType, true);
+        if (!$warningHandler)
+        {
+            throw $this->exception($this->noPermission());
+        }
+
+        $user = $warningHandler->getContentUser($content);
+        if (!$user)
+        {
+            throw $this->exception($this->noPermission());
+        }
+
+        $value = $this->filter('view', 'str');
+        if (!in_array($value, ['radio', 'select']))
+        {
+            throw $this->exception($this->noPermission()); // Just fail without giving too much details
+        }
+
+        $userOption = $forUser->getRelationOrDefault('Option');
+        $this->formAction()->setupEntityInput($userOption, [
+            'sv_warning_view' => $value
+        ])->run();
+
+        return $this->message(\XF::phrase('action_completed_successfully'));
     }
 
     /**
