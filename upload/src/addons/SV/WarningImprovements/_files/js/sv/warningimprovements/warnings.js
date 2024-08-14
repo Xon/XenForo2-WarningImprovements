@@ -18,8 +18,8 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
     SV.WarningImprovements.WarningSelectView = XF.extend(SV.StandardLib.Choices, {
         __backup: {
             init: '_svWarningImprovementsInit',
-            onAddItem: '_svWarningImprovementsOnAddItem',
-            onRemoveItem: '_svWarningImprovementsOnRemoveItem',
+            getConfig: '_svWarningImprovementsGetConfig',
+            onAddItem: '_svWarningImprovementsOnAddItem'
         },
 
         options: SV.extendObject({}, SV.StandardLib.Choices.prototype.options, SV.WarningImprovements.SelectViewOpts),
@@ -62,21 +62,24 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             this._svWarningImprovementsInit()
         },
 
+        getConfig ()
+        {
+            const config = this._svWarningImprovementsGetConfig()
+
+            delete config.customTitleInputSelector
+            delete config.customTitleRowSelector
+
+            return config
+        },
+
         onAddItem (event)
         {
             this._svWarningImprovementsOnAddItem(event)
 
-            this.onAddRemoveItem(event)
+            this.onItemChange(event)
         },
 
-        onRemoveItem (event)
-        {
-            this._svWarningImprovementsOnRemoveItem(event)
-
-            this.onAddRemoveItem(event)
-        },
-
-        onAddRemoveItem(event)
+        onItemChange(event)
         {
             if (!this.choices)
             {
@@ -121,23 +124,43 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                     {
                         this.customTitleInput.value = selectedItem.label
                     }
-
-                    this.showCustomTitleInput()
                 }
                 else
                 {
                     delete this.customTitles[selectedItem.value]
-
-                    this.hideCustomTitleInput()
                 }
             }
-            else
+
+            if (!previousSelectedItem && selectedItem)
             {
-                if (previousSelectedItem.customProperties.allows_custom_title)
+                if (selectedItem.customProperties.allows_custom_title)
                 {
-                    // If someone clicks on the "X" button when any warning definition is selected leaving none selected
-                    // The custom title row needs to be hidden AND marked as disabled
+                    this.showCustomTitleInput()
+                }
+            }
+            else if (previousSelectedItem && !selectedItem)
+            {
+                this.hideCustomTitleInput()
+            }
+            else if (previousSelectedItem && selectedItem)
+            {
+                if (previousSelectedItem.customProperties.allows_custom_title && selectedItem.customProperties.allows_custom_title)
+                {
+                    // Both the previously selected and newly selected allow custom title.
+                    // Force showing
+                    this.showCustomTitleInput();
+                }
+                else if (previousSelectedItem.customProperties.allows_custom_title && !selectedItem.customProperties.allows_custom_title)
+                {
+                    // The previously selected allowed custom title but the newly selected does not
+                    // Hide the custom title input
                     this.hideCustomTitleInput()
+                }
+                else if (!previousSelectedItem.customProperties.allows_custom_title && selectedItem.customProperties.allows_custom_title)
+                {
+                    // The previously selected did not allow custom title but the newly selected does
+                    // Show the custom title input
+                    this.showCustomTitleInput()
                 }
             }
         },
