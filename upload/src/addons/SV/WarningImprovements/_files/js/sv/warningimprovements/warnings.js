@@ -12,7 +12,10 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
 
     SV.WarningImprovements.SelectViewOpts = {
         customTitleRowSelector: null,
-        customTitleInputSelector: 'input[type=text][name=custom_title]'
+        customTitleInputSelector: 'input[type=text][name=custom_title]',
+
+        publicWarningSelector: 'input[name=\'action_options[public_message]\']',
+        copyTitle: true // Default value must match with that of the option: sv_warningimprovements_copy_title
     }
 
     SV.WarningImprovements.WarningSelectView = XF.extend(SV.StandardLib.Choices, {
@@ -27,6 +30,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
 
         customTitleRow: null,
         customTitleInput: null,
+        previousSelectedItem: null,
 
         customTitles: [],
 
@@ -60,6 +64,17 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                 throw new Error('Custom title input missing.')
             }
 
+            this.publicWarning = XF.findRelativeIf(this.options.publicWarningSelector, this.target || this.$target)
+            if (this.$target)
+            {
+                this.publicWarning = this.publicWarning.get(0)
+            }
+
+            if (this.publicWarning === null)
+            {
+                throw new Error('Could not find public warning input')
+            }
+
             this._svWarningImprovementsInit()
         },
 
@@ -73,7 +88,6 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             return config
         },
 
-        previousSelectedItem: null,
         onRemoveItem (event)
         {
             this._svWarningImprovementsOnRemoveItem(event)
@@ -86,6 +100,8 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             {
                 this.previousSelectedItem = null
             }
+
+            this.clearPublicWarningTitle()
         },
 
         onAddItem (event)
@@ -174,6 +190,8 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                     this.showCustomTitleInput()
                 }
             }
+
+            this.clearPublicWarningTitle()
         },
 
         showCustomTitleInput ()
@@ -208,10 +226,111 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             {
                 $(this.customTitleRow).xfFadeUp()
             }
-        }
+        },
+
+        clearPublicWarningTitle ()
+        {
+            if (this.options.copyTitle && this.publicWarning !== null)
+            {
+                this.publicWarning.value = ''
+            }
+        },
     })
 
-    // ################################## SAVE WARNING VIEW PREFERENCE HANDLER ###########################################
+    // ###################################### WARNING TITLE WATCHER HANDLER ############################################
+
+    SV.WarningImprovements.TitleWatcher  = XF.Element.newHandler({
+        eventNameSpace: 'WarningTitleWatcher',
+        options: {
+            publicWarningSelector: 'input[name=\'action_options[public_message]\']',
+            copyTitle: true, // Default value must match with that of the option: sv_warningimprovements_copy_title
+            warningDefTitle: null,
+        },
+        publicWarning: null,
+
+        init ()
+        {
+            this.publicWarning = XF.findRelativeIf(this.options.publicWarningSelector, this.target || this.$target)
+            if (this.$target)
+            {
+                this.publicWarning = this.publicWarning.get(0)
+            }
+
+            if (this.publicWarning === null)
+            {
+                console.error('Could not find public warning input')
+                return
+            }
+
+            if (typeof XF.on !== "function") // XF 2.2
+            {
+                this.$target.on('change input', this.onInputChangeOrClick.bind(this))
+
+                if (this.$target.is('input:radio'))
+                {
+                    this.$target.on('click', this.onInputChangeOrClick.bind(this))
+                }
+            }
+            else
+            {
+                XF.on(this.target, 'change input', this.onInputChangeOrClick.bind(this))
+
+                if (this.target.getAttribute('type') === 'radio')
+                {
+                    XF.on(this.target, 'click', this.onInputChangeOrClick.bind(this))
+                }
+            }
+        },
+
+        onInputChangeOrClick ()
+        {
+            const theTarget = this.target || this.$target.get(0)
+
+            if (theTarget.getAttribute('type') === 'text')
+            {
+                this.onChangeForTextbox(theTarget)
+            }
+            else if (theTarget.getAttribute('type') === 'radio')
+            {
+                this.onChangeForRadio(theTarget)
+            }
+        },
+
+        /**
+         * @param {HTMLInputElement} target
+         */
+        onChangeForTextbox (target)
+        {
+            this.setPublicMessage(target.value)
+        },
+
+        /**
+         * @param {HTMLInputElement} target
+         */
+        onChangeForRadio (target)
+        {
+            if (this.options.warningDefTitle === null)
+            {
+                throw new Error('No warning definition title provided.')
+            }
+
+            this.setPublicMessage(this.options.warningDefTitle)
+        },
+
+        /**
+         *
+         * @param message
+         */
+        setPublicMessage (message)
+        {
+            if (this.options.copyTitle && this.publicWarning !== null)
+            {
+                this.publicWarning.value = message
+            }
+        },
+    })
+
+    // ################################## SAVE WARNING VIEW PREFERENCE HANDLER #########################################
 
     SV.WarningImprovements.SaveWarningViewPref  = XF.Element.newHandler({
         options: {
@@ -253,6 +372,6 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
     })
 
     XF.Element.register('sv-warning-view-select', 'SV.WarningImprovements.WarningSelectView')
-    XF.Element.register('warning-title-watcher', 'SV.WarningImprovements.TitleWatcher')
+    XF.Element.register('sv-warning-title-watcher', 'SV.WarningImprovements.TitleWatcher')
     XF.Element.register('sv-save-warning-view-pref', 'SV.WarningImprovements.SaveWarningViewPref')
 }) ()

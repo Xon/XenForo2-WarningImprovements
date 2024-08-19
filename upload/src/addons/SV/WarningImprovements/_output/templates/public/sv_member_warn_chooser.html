@@ -88,10 +88,15 @@
 							<xf:set var="$defaultWarningId" value="{$warningDefinition.warning_definition_id}"/>
 						</xf:if>
 						<xf:radio name="warning_definition_id" value="{{$defaultWarningId ?: 0}}">
-							<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}" data-hide="true">
+							<xf:option value="{$warningDefinition.warning_definition_id}" class="js-FormFiller" label="{$warningDefinition.title}"
+									   data-hide="true"
+									   data-xf-init="sv-warning-title-watcher"
+									   data-warning-def-title="{$warningDefinition.title}">
 								<xf:dependent>
 									<xf:if is="$warningDefinition.sv_custom_title || !$warningDefinition.warning_definition_id">
-										<xf:textbox label="" name="custom_title" maxlength="{{ max_length('XF:Warning', 'title') }}" value="{$warningDefinition.custom_title_placeholder}" />
+										<xf:textbox name="custom_title" maxlength="{{ max_length('XF:Warning', 'title') }}"
+													value="{$warningDefinition.custom_title_placeholder}"
+													data-xf-init="sv-warning-title-watcher" />
 									</xf:if>
 								</xf:dependent>
 							</xf:option>
