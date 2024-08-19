@@ -98,7 +98,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             }
 
             const previousSelectedItem = this.previousSelectedItem
-            const selectedItem = this.choices._store._store.choices.find((choice) => {
+            const selectedItem = this.choices._store.choices.find((choice) => {
                 return choice.selected === true
             })
 
