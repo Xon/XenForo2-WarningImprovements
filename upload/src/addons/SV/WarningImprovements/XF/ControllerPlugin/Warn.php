@@ -202,7 +202,7 @@ class Warn extends XFCP_Warn
         }
 
         $userOption = $forUser->getRelationOrDefault('Option');
-        $this->formAction()->setupEntityInput($userOption, [
+        $this->formAction()->basicEntitySave($userOption, [
             'sv_warning_view' => $value
         ])->run();
 
