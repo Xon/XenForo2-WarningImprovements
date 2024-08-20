@@ -100,8 +100,6 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             {
                 this.previousSelectedItem = null
             }
-
-            this.clearPublicWarningTitle()
         },
 
         onAddItem (event)
@@ -201,7 +199,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                 return
             }
 
-            if (typeof XF.Animate !== 'function')
+            if (typeof XF.Animate !== 'undefined')
             {
                 XF.Animate.fadeDown(this.customTitleRow)
             }
@@ -218,7 +216,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                 return
             }
 
-            if (typeof XF.Animate !== 'function')
+            if (typeof XF.Animate !== 'undefined')
             {
                 XF.Animate.fadeUp(this.customTitleRow)
             }
