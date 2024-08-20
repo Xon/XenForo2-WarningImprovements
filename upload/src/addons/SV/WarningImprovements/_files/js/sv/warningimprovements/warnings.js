@@ -156,6 +156,8 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                 {
                     delete this.customTitles[selectedItem.value]
                 }
+
+                this.setPublicMessage(selectedItem.label)
             }
 
             if (!previousSelectedItem && selectedItem)
@@ -190,8 +192,6 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                     this.showCustomTitleInput()
                 }
             }
-
-            this.clearPublicWarningTitle()
         },
 
         showCustomTitleInput ()
@@ -228,11 +228,15 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             }
         },
 
-        clearPublicWarningTitle ()
+        /**
+         *
+         * @param message
+         */
+        setPublicMessage (message)
         {
             if (this.options.copyTitle && this.publicWarning !== null)
             {
-                this.publicWarning.value = ''
+                this.publicWarning.value = message
             }
         },
     })
