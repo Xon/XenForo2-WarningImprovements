@@ -24,6 +24,8 @@ use XF\Util\Arr as ArrUtil;
 use function array_key_exists;
 
 /**
+ * @extends \XF\Entity\Warning
+ *
  * COLUMNS
  *
  * @property string                                            $notes_

@@ -26,7 +26,7 @@ use XF\Warning\AbstractHandler;
 use SV\WarningImprovements\XF\Service\User\Warn as ExtendedUserWarnSvc;
 
 /**
- * @Extends \XF\ControllerPlugin\Warn
+ * @extends \XF\ControllerPlugin\Warn
  */
 class Warn extends XFCP_Warn
 {

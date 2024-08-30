@@ -17,7 +17,7 @@ use XF\Mvc\Reply\View as ViewReply;
 use XF\Service\User\TempChange as TempChangeService;
 
 /**
- * @Extends \XF\Pub\Controller\Member
+ * @extends \XF\Pub\Controller\Member
  */
 class Member extends XFCP_Member
 {

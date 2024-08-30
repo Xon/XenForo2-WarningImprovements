@@ -21,7 +21,7 @@ use XF\Repository\UserChangeTemp as UserChangeTempRepo;
 use XF\Service\User\TempChange as TempChangeService;
 
 /**
- * @Extends \XF\Repository\Warning
+ * @extends \XF\Repository\Warning
  */
 class Warning extends XFCP_Warning
 {

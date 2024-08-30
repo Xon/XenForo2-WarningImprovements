@@ -30,7 +30,7 @@ use XF\Service\User\Warn as WarningService;
 use XF\Entity\ConversationMaster as ConversationMasterEntity;
 
 /**
- * @Extends WarningService
+ * @extends WarningService
  *
  * @property ExtendedWarningEntity $warning
  */

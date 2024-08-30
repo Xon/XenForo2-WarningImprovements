@@ -8,7 +8,7 @@ namespace SV\WarningImprovements\XF\Pub\View\Member;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
 
 /**
- * @Extends \XF\Pub\View\Member\WarnFill
+ * @extends \XF\Pub\View\Member\WarnFill
  */
 class WarnFill extends XFCP_WarnFill
 {

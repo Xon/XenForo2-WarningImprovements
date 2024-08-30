@@ -10,7 +10,7 @@ use XF\Mvc\Entity\Finder;
 use XF\Repository\UserGroup as UserGroupRepo;
 
 /**
- * @Extends \XF\Repository\UserChangeTemp
+ * @extends \XF\Repository\UserChangeTemp
  */
 class UserChangeTemp extends XFCP_UserChangeTemp
 {

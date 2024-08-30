@@ -2,8 +2,6 @@
 
 namespace SV\WarningImprovements\XF\Finder;
 
-
-
 /**
  * @extends \XF\Finder\Warning
  */

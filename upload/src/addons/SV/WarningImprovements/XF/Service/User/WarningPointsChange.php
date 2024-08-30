@@ -27,7 +27,7 @@ use XF\Service\Thread\Creator as ThreadCreatorService;
 use XF\Service\Thread\Replier as ThreadReplierService;
 
 /**
- * @Extends \XF\Service\User\WarningPointsChange
+ * @extends \XF\Service\User\WarningPointsChange
  */
 class WarningPointsChange extends XFCP_WarningPointsChange
 {

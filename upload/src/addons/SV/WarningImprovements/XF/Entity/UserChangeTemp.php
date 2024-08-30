@@ -16,7 +16,7 @@ use XF\Repository\UserChangeTemp as UserChangeTempRepo;
 use XF\Repository\Warning as WarningRepo;
 
 /**
- * @Extends \XF\Entity\UserChangeTemp
+ * @extends \XF\Entity\UserChangeTemp
  *
  * @property-read PhraseEntity $name
  * @property-read PhraseEntity $result

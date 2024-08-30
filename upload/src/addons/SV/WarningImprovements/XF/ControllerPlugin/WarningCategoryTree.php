@@ -6,6 +6,9 @@ use XF\ControllerPlugin\AbstractCategoryTree;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 
+/**
+ * @extends \XF\ControllerPlugin\WarningCategoryTree
+ */
 class WarningCategoryTree extends AbstractCategoryTree
 {
     protected $viewFormatter     = 'SV\WarningImprovements\XF:WarningCategory\%s';

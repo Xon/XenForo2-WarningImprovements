@@ -9,6 +9,9 @@ use XF\Mvc\Reply\View as ViewReply;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\Exception as ExceptionReply;
 
+/**
+ * @extends \XF\ControllerPlugin\Reaction
+ */
 class Reaction extends XFCP_Reaction
 {
     /**

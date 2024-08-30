@@ -14,6 +14,7 @@ use XF\Mvc\Entity\Structure;
 use XF\Phrase;
 
 /**
+ * @extends \XF\Entity\WarningDefinition
  * COLUMNS
  *
  * @property int                        $sv_warning_category_id

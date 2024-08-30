@@ -22,7 +22,7 @@ use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use function array_key_exists;
 
 /**
- * @Extends \XF\Pub\Controller\Warning
+ * @extends \XF\Pub\Controller\Warning
  */
 class Warning extends XFCP_Warning
 {

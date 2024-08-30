@@ -6,6 +6,9 @@ use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionTrait;
 use XF\Mvc\Entity\Entity;
 
+/**
+ * @extends \XF\Reaction\Post
+ */
 class Post extends XFCP_Post implements SupportsDisablingReactionInterface
 {
     use SupportsDisablingReactionTrait;

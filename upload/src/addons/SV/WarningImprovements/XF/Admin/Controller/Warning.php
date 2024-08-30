@@ -28,7 +28,7 @@ use XF\Mvc\Reply\View as ViewReply;
 use XF\Repository\Node as NodeRepo;
 
 /**
- * @Extends \XF\Admin\Controller\Warning
+ * @extends \XF\Admin\Controller\Warning
  */
 class Warning extends XFCP_Warning
 {

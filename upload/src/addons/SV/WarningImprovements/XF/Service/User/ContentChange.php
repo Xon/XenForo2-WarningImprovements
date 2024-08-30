@@ -17,9 +17,7 @@ use XF\Repository\UserChangeTemp as UserChangeTempRepo;
 use XF\Service\User\TempChange as TempChangeService;
 
 /**
- * Class ContentChange
- *
- * @package SV\WarningImprovements
+ * @extends \XF\Service\User\ContentChange
  */
 class ContentChange extends XFCP_ContentChange
 {

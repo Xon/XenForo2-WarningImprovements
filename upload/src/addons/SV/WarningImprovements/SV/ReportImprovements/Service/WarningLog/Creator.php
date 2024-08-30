@@ -2,6 +2,9 @@
 
 namespace SV\WarningImprovements\SV\ReportImprovements\Service\WarningLog;
 
+/**
+ * @extends \SV\ReportImprovements\Service\WarningLog\Creator
+ */
 class Creator extends XFCP_Creator
 {
     protected function getFieldsToLog(): array

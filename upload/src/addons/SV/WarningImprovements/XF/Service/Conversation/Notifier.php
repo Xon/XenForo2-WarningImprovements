@@ -13,6 +13,9 @@ use XF\App;
 use XF\Entity\ConversationMaster;
 use XF\Entity\User as UserEntity;
 
+/**
+ * @extends \XF\Service\Conversation\Notifier
+ */
 class Notifier extends XFCP_Notifier
 {
     /** @var Warning */

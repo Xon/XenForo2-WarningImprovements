@@ -10,6 +10,9 @@ use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
 use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerTrait;
 use XF\Mvc\Entity\Entity;
 
+/**
+ * @extends \XF\Entity\ProfilePost
+ */
 class ProfilePost extends XFCP_ProfilePost implements SupportsDisablingReactionInterface, SupportsEmbedMetadataInterface, SupportsWrappingContentWithSpoilerInterface
 {
     use SupportsDisablingReactionTrait, SupportsEmbedMetadataTrait, SupportsWrappingContentWithSpoilerTrait;

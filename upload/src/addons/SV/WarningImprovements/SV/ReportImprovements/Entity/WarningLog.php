@@ -5,6 +5,8 @@ namespace SV\WarningImprovements\SV\ReportImprovements\Entity;
 use XF\Mvc\Entity\Structure as EntityStructure;
 
 /**
+ * @extends \SV\ReportImprovements\Entity\WarningLog
+ *
  * @property bool $sv_spoiler_contents
  * @property string|null $sv_content_spoiler_title
  * @property bool $sv_disable_reactions

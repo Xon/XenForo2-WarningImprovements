@@ -18,7 +18,10 @@ use XF\Repository\UserChangeTemp as UserChangeTempRepo;
 use XF\Repository\Warning as WarningRepo;
 
 /**
+ * @extends \XF\Entity\User
+ *
  * GETTERS
+ *
  * @property-read AbstractCollection $warning_definitions
  * @property-read array $warning_actions
  * @property-read int $warning_actions_count

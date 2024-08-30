@@ -7,7 +7,7 @@ use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\Repository\Warning as WarningRepo;
 
 /**
- * @Extends \XF\Entity\UserBan
+ * @extends \XF\Entity\UserBan
  */
 class UserBan extends XFCP_UserBan
 {

@@ -5,7 +5,7 @@ namespace SV\WarningImprovements\XF\Entity;
 use XF\Mvc\Entity\Structure;
 
 /**
- * @Extends \XF\Entity\UserOption
+ * @extends \XF\Entity\UserOption
  *
  * @property int|null $sv_pending_warning_expiry
  * @property string|null $sv_warning_view_type

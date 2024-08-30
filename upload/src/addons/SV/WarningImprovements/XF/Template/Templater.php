@@ -4,6 +4,9 @@ namespace SV\WarningImprovements\XF\Template;
 
 use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
 
+/**
+ * @extends \XF\Template\Templater
+ */
 class Templater extends XFCP_Templater
 {
     public function fnBbCode(

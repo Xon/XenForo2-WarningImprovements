@@ -9,7 +9,7 @@ use XF\Entity\ConversationMaster as ConversationMasterEntity;
 use XF\Entity\User as UserEntity;
 
 /**
- * @Extends \XF\Repository\Conversation
+ * @extends \XF\Repository\Conversation
  */
 class Conversation extends XFCP_Conversation
 {

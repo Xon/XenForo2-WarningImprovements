@@ -11,7 +11,7 @@ use XF\Entity\Thread;
 use XF\Mvc\Entity\Structure;
 
 /**
- * @Extends \XF\Entity\WarningAction
+ * @extends \XF\Entity\WarningAction
  *
  * COLUMNS
  * @property int|null $sv_post_node_id
