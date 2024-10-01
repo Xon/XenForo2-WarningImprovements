@@ -20,6 +20,7 @@ use XF\ControllerPlugin\Sort as SortPlugin;
 use XF\Entity\Phrase as PhraseEntity;
 use XF\Entity\WarningAction as WarningActionEntity;
 use XF\Entity\WarningDefinition as WarningDefinitionEntity;
+use XF\Finder\WarningDefinition as WarningDefinitionFinder;
 use XF\Mvc\FormAction;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
@@ -194,7 +195,7 @@ class Warning extends XFCP_Warning
                 {
                     $lastOrder += 5;
                     /** @var ExtendedWarningDefinitionEntity $entry */
-                    $entry = Helper::finder(WarningDefinitionEntity::class)
+                    $entry = Helper::finder(WarningDefinitionFinder::class)
                                    ->where('warning_definition_id', '=', $warningId)
                                    ->fetchOne();
                     $entry->sv_warning_category_id = $data['parent_id'];
