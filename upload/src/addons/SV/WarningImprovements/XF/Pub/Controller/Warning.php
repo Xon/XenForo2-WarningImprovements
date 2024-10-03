@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
@@ -18,8 +15,9 @@ use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\Service\Warning\Editor as EditorService;
-use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use function array_key_exists;
+use function array_merge;
+use function strlen;
 
 /**
  * @extends \XF\Pub\Controller\Warning
@@ -184,7 +182,7 @@ class Warning extends XFCP_Warning
             $defaults['resolve_alert_comment'] = 'str';
         }
 
-        $args = \array_merge($defaults, $args);
+        $args = array_merge($defaults, $args);
 
         return $this->filter($args);
     }
@@ -230,7 +228,7 @@ class Warning extends XFCP_Warning
             $bbCode = $input['sv_user_note'] ?? '';
             $html = $input['sv_user_note_html'] ?? '';
 
-            if (\strlen($bbCode) === 0 && \strlen($html) !== 0)
+            if (strlen($bbCode) === 0 && strlen($html) !== 0)
             {
                 $editor = Helper::plugin($this, EditorPlugin::class);
                 $bbCode = $editor->convertToBbCode($html);

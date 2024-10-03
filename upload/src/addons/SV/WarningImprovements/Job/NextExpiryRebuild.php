@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingParentCallCommonInspection
+ */
 
 namespace SV\WarningImprovements\Job;
 
@@ -7,6 +10,7 @@ use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\Entity\User as UserEntity;
 use XF\Job\AbstractRebuildJob;
 use XF\Repository\Warning as WarningRepo;
+use function sprintf;
 
 /**
  * Class WarningLogMigration

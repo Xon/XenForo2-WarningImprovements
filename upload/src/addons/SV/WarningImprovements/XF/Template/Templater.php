@@ -9,6 +9,7 @@ use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
  */
 class Templater extends XFCP_Templater
 {
+    /** @noinspection PhpMissingReturnTypeInspection */
     public function fnBbCode(
         $templater,
         &$escape,

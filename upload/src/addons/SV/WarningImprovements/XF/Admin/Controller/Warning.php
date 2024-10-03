@@ -1,6 +1,5 @@
 <?php
 /**
- * @noinspection PhpMissingReturnTypeInspection
  * @noinspection PhpUnusedParameterInspection
  */
 
@@ -93,6 +92,7 @@ class Warning extends XFCP_Warning
         return $response;
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function actionEdit(ParameterBag $params)
     {
         /** @noinspection PhpUndefinedFieldInspection */
@@ -521,7 +521,7 @@ class Warning extends XFCP_Warning
         return $this->assertRecordExists('SV\WarningImprovements:WarningDefault', $id, $with, $phraseKey);
     }
 
-    private function getCustomWarningDefinition(): ExtendedWarningDefinitionEntity
+    protected function getCustomWarningDefinition(): ExtendedWarningDefinitionEntity
     {
         /** @var ExtendedWarningRepo $warningRepo */
         $warningRepo = $this->getWarningRepo();

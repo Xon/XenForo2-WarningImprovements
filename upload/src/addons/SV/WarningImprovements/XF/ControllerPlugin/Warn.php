@@ -24,23 +24,13 @@ use XF\Repository\Warning as WarningRepo;
 use XF\Service\FloodCheck as FloodCheckService;
 use XF\Warning\AbstractHandler;
 use SV\WarningImprovements\XF\Service\User\Warn as ExtendedUserWarnSvc;
+use function is_array;
 
 /**
  * @extends \XF\ControllerPlugin\Warn
  */
 class Warn extends XFCP_Warn
 {
-    /**
-     * @param $contentType
-     * @param Entity $content
-     * @param $warnUrl
-     * @param array $breadcrumbs
-     *
-     * @return AbstractReply|\XF\Mvc\Reply\Error|RedirectReply|ViewReply
-     *
-     * @throws \XF\Mvc\Reply\Exception
-     * @throws \XF\PrintableException
-     */
     public function actionWarn($contentType, Entity $content, $warnUrl, array $breadcrumbs = [])
     {
         /** @var ExtendedWarningRepo $warningRepo */
@@ -141,7 +131,7 @@ class Warn extends XFCP_Warn
 
             $warningStructure = Helper::getEntityStructure(WarningEntity::class);
             $nodeColDefinition = $warningStructure->columns['notes'] ?? null;
-            $userNoteRequired = \is_array($nodeColDefinition) && (!isset($nodeColDefinition['default']) || !empty($nodeColDefinition['required']));
+            $userNoteRequired = is_array($nodeColDefinition) && (!isset($nodeColDefinition['default']) || !empty($nodeColDefinition['required']));
             $response->setParams(
                 [
                     'userNoteRequired' => $userNoteRequired,
@@ -159,15 +149,6 @@ class Warn extends XFCP_Warn
 
     /**
      * @since 2.10.2
-     *
-     * @param Entity $content
-     * @param string|null $contentType
-     * @param User|null $forUser
-     *
-     * @return \XF\Mvc\Reply\Message
-     *
-     * @throws \XF\Mvc\Reply\Exception
-     * @throws \XF\PrintableException
      */
     public function getSvSaveWarningViewPrefReply(
         Entity $content,

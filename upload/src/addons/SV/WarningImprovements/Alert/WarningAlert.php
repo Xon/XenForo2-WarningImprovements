@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\Alert;
 
@@ -11,10 +8,15 @@ use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Entity\ArrayCollection;
 use XF\Mvc\Entity\Entity;
 use XF\Entity\Warning as WarningEntity;
+use function in_array;
+use function is_array;
 
 class WarningAlert extends AbstractHandler
 {
-    public function canViewContent(Entity $entity, &$error = null)
+    /**
+     * @noinspection PhpMissingParentCallCommonInspection
+     */
+    public function canViewContent(Entity $entity, &$error = null): bool
     {
         return true;
     }
@@ -35,11 +37,11 @@ class WarningAlert extends AbstractHandler
             $id = $id->toArray();
         }
 
-        if (\is_array($id))
+        if (is_array($id))
         {
             $warnings = parent::getContent($id);
 
-            if (\in_array(0, $id, true))
+            if (in_array(0, $id, true))
             {
                 $warningArr = $warnings->toArray();
                 $warningArr[0] = $this->getPlaceholderWarning();

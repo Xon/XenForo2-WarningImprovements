@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Entity;
 
@@ -14,6 +11,10 @@ use XF\Mvc\Entity\Structure;
 use XF\Phrase;
 use XF\Repository\UserChangeTemp as UserChangeTempRepo;
 use XF\Repository\Warning as WarningRepo;
+use function implode;
+use function is_array;
+use function preg_match;
+use function substr;
 
 /**
  * @extends \XF\Entity\UserChangeTemp
@@ -51,7 +52,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             case 'groups':
                 $result = 'n_a';
 
-                if (\substr($this->action_modifier, 0, 15) === 'warning_action_')
+                if (substr($this->action_modifier, 0, 15) === 'warning_action_')
                 {
                     $userGroupNames = [];
 
@@ -61,7 +62,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
                     $userGroupChangeSet = $userGroupRepo->getCachedUserGroupChangeList($this->user_id);
 
                     $userGroupChanges = $userGroupChangeSet[$this->action_modifier] ?? null;
-                    if (\is_array($userGroupChanges))
+                    if (is_array($userGroupChanges))
                     {
                         foreach ($userGroupChangeSet[$this->action_modifier] as $userGroupId)
                         {
@@ -74,7 +75,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
                     if (!empty($userGroupNames))
                     {
-                        $result = \implode(',', $userGroupNames);
+                        $result = implode(',', $userGroupNames);
                     }
                 }
 
@@ -101,16 +102,13 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return ($this->effective_expiry_date === null);
     }
 
-    /**
-     * @return int|null
-     */
-    public function getEffectiveExpiryDate()
+    public function getEffectiveExpiryDate(): ?int
     {
         $visitor = \XF::visitor();
 
         $effectiveExpiryDate = $this->expiry_date;
         // need to check how this expires
-        if ($effectiveExpiryDate === null && \preg_match('#^warning_action_(\d+)$#', $this->action_modifier, $matches))
+        if ($effectiveExpiryDate === null && preg_match('#^warning_action_(\d+)$#', $this->action_modifier, $matches))
         {
             $warningActionId = $matches[1];
             /** @var WarningAction $warningAction */
@@ -245,6 +243,11 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         $warningRepo->updatePendingExpiryForLater($this->User, true);
     }
 
+    /**
+     * @param Structure $structure
+     * @return Structure
+     * @noinspection PhpMissingReturnTypeInspection
+     */
     public static function getStructure(Structure $structure)
     {
         $structure = parent::getStructure($structure);

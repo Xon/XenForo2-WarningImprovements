@@ -6,8 +6,5 @@ interface SupportsWrappingContentWithSpoilerInterface
 {
     public function isContentWrappedInSpoilerForSvWarnImprov() : bool;
 
-    /**
-     * @return string|null
-     */
-    public function getContentSpoilerTitleForSvWarnImprov();
+    public function getContentSpoilerTitleForSvWarnImprov(): ?string;
 }

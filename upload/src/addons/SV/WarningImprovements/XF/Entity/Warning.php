@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Entity;
 
@@ -22,6 +19,15 @@ use XF\Repository\UserAlert as UserAlertRepo;
 use XF\Repository\Warning as WarningRepo;
 use XF\Util\Arr as ArrUtil;
 use function array_key_exists;
+use function count;
+use function is_callable;
+use function preg_match;
+use function preg_quote;
+use function preg_replace;
+use function str_replace;
+use function strlen;
+use function trim;
+use function mb_strlen;
 
 /**
  * @extends \XF\Entity\Warning
@@ -46,10 +52,7 @@ use function array_key_exists;
  */
 class Warning extends XFCP_Warning
 {
-    /**
-     * @return int|null
-     */
-    public function getExpiryDateRounded()
+    public function getExpiryDateRounded(): ?int
     {
         $visitor = \XF::visitor();
 
@@ -83,28 +86,28 @@ class Warning extends XFCP_Warning
             \XF::app()->options()->svWarningImprov_censorWarningTitle ?? '',
             '/\r?\n/'
         );
-        if (!\count($censorList))
+        if (count($censorList) === 0)
         {
             return $title;
         }
 
         foreach ($censorList AS $phrase)
         {
-            $phrase = \trim($phrase);
-            if (!\strlen($phrase))
+            $phrase = trim($phrase);
+            if (strlen($phrase) === 0)
             {
                 continue;
             }
 
             if ($phrase[0] !== '/')
             {
-                $phrase = \preg_quote($phrase, '#');
-                $phrase = \str_replace('\\*', '[\w"\'/ \t]*', $phrase);
+                $phrase = preg_quote($phrase, '#');
+                $phrase = str_replace('\\*', '[\w"\'/ \t]*', $phrase);
                 $phrase = '#(?<=\W|^)(' . $phrase . ')(?=\W|$)#iu';
             }
             else
             {
-                if (\preg_match('/\W[\s\w]*e[\s\w]*$/', $phrase))
+                if (preg_match('/\W[\s\w]*e[\s\w]*$/', $phrase))
                 {
                     // can't run a /e regex
                     continue;
@@ -113,7 +116,7 @@ class Warning extends XFCP_Warning
 
             try
             {
-                $title = \preg_replace($phrase, '', $title);
+                $title = preg_replace($phrase, '', $title);
             }
             catch (\Throwable $e) {}
         }
@@ -121,7 +124,7 @@ class Warning extends XFCP_Warning
         return $title;
     }
 
-    public function canViewNotes()
+    public function canViewNotes(): bool
     {
         $visitor = \XF::visitor();
 
@@ -131,6 +134,7 @@ class Warning extends XFCP_Warning
     /**
      * @param Phrase|string|null $error
      * @return bool
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function canView(&$error = null)
     {
@@ -160,7 +164,7 @@ class Warning extends XFCP_Warning
      * @param Phrase|string|null $error
      * @return bool
      */
-    public function canViewIssuer(&$error = null)
+    public function canViewIssuer(&$error = null): bool
     {
         /** @var UserExtendedEntity $visitor */
         $visitor = \XF::visitor();
@@ -171,6 +175,7 @@ class Warning extends XFCP_Warning
     /**
      * @param Phrase|string|null $error
      * @return bool
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function canDelete(&$error = null)
     {
@@ -189,10 +194,11 @@ class Warning extends XFCP_Warning
     /**
      * @param Phrase|string|null $error
      * @return bool
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function canEdit(&$error = null)
     {
-        if (\is_callable([parent::class,'canEdit']))
+        if (is_callable([parent::class,'canEdit']))
         {
             /** @noinspection PhpUndefinedMethodInspection */
             return parent::canEdit($error);
@@ -204,6 +210,7 @@ class Warning extends XFCP_Warning
     /**
      * @param Phrase|string|null $error
      * @return bool
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function canEditExpiry(&$error = null)
     {
@@ -274,12 +281,12 @@ class Warning extends XFCP_Warning
         return true;
     }
 
-    public function verifyNotes($notes)
+    public function verifyNotes(string &$notes): bool
     {
         $minNoteLength = (int)(\XF::options()->sv_wi_warning_note_chars ?? 0);
         if ($minNoteLength > 0)
         {
-            $noteLength = \mb_strlen($notes);
+            $noteLength = mb_strlen($notes);
             if ($noteLength < $minNoteLength)
             {
                 $underAmount = $minNoteLength - $noteLength;
@@ -484,6 +491,7 @@ class Warning extends XFCP_Warning
     /**
      * @param Structure $structure
      * @return Structure
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public static function getStructure(Structure $structure)
     {

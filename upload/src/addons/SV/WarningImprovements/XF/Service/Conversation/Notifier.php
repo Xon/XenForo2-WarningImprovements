@@ -1,14 +1,12 @@
 <?php
-
 /**
- * @noinspection PhpMissingReturnTypeInspection
- *  @noinspection PhpUnusedParameterInspection
+ * @noinspection PhpUnusedParameterInspection
  */
 
 namespace SV\WarningImprovements\XF\Service\Conversation;
 
 use SV\WarningImprovements\Globals;
-use SV\WarningImprovements\XF\Entity\Warning;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use XF\App;
 use XF\Entity\ConversationMaster;
 use XF\Entity\User as UserEntity;
@@ -18,7 +16,7 @@ use XF\Entity\User as UserEntity;
  */
 class Notifier extends XFCP_Notifier
 {
-    /** @var Warning */
+    /** @var ExtendedWarningEntity */
     protected $warning = null;
 
     protected $sv_force_email_for_user_id     = null;
@@ -31,11 +29,12 @@ class Notifier extends XFCP_Notifier
         $this->setWarning(Globals::$warningObj ?? null);
     }
 
-    public function setWarning(?Warning $warning = null)
+    public function setWarning(?ExtendedWarningEntity $warning = null)
     {
         $this->warning = $warning;
     }
 
+    /** @noinspection PhpMissingReturnTypeInspection */
     protected function _canUserReceiveNotification(UserEntity $user, ?UserEntity $sender = null)
     {
         $canUserReceiveNotification = parent::_canUserReceiveNotification($user, $sender);
@@ -118,6 +117,7 @@ class Notifier extends XFCP_Notifier
      * @param UserEntity|null $sender
      *
      * @return bool
+     * @noinspection PhpMissingReturnTypeInspection
      */
     protected function _canUserReceiveEmailNotification(UserEntity $user, ?UserEntity $sender = null)
     {

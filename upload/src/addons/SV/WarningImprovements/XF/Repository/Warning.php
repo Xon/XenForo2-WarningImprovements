@@ -2,11 +2,12 @@
 
 namespace SV\WarningImprovements\XF\Repository;
 
+use LogicException;
 use SV\StandardLib\Helper;
-use SV\WarningImprovements\Entity\WarningDefault;
+use SV\WarningImprovements\Entity\WarningDefault as WarningDefaultEntity;
 use SV\WarningImprovements\Finder\WarningDefault as WarningDefaultFinder;
 use SV\WarningImprovements\Globals;
-use SV\WarningImprovements\XF\Entity\UserOption;
+use SV\WarningImprovements\XF\Entity\UserOption as ExtendedUserOptionEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
 use XF\Entity\User as UserEntity;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
@@ -14,12 +15,18 @@ use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use XF\Entity\UserChangeTemp as UserChangeTempEntity;
 use XF\Entity\Warning as WarningEntity;
 use XF\Finder\UserBan as UserBanFinder;
+use XF\Finder\UserChangeTemp as UserChangeTempFinder;
+use XF\Finder\Warning as WarningFinder;
 use XF\Finder\WarningDefinition as WarningDefinitionFinder;
 use XF\Entity\WarningDefinition as WarningDefinitionEntity;
 use XF\Phrase;
 use XF\Repository\UserAlert as UserAlertRepo;
 use XF\Repository\UserChangeTemp as UserChangeTempRepo;
 use XF\Service\User\TempChange as TempChangeService;
+use function array_merge;
+use function date;
+use function is_array;
+use function is_object;
 
 /**
  * @extends \XF\Repository\Warning
@@ -33,7 +40,7 @@ class Warning extends XFCP_Warning
         return Globals::asVisitorWithLang($warnedUser, function () use ($warnedUser, $warning, $pointThreshold, $forPhrase, $contentAction, $contentActionOptions): array {
             $app = \XF::app();
             $router = $app->router('public');
-            $dateString = \date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
+            $dateString = date($app->options()->sv_warning_date_format ?? 'F d, Y', \XF::$time);
             $staffUser = $warning
                 ? $warnedUser->canViewIssuer() ? $warning->WarnedBy : $warning->getAnonymizedIssuer()
                 : \XF::visitor();
@@ -43,7 +50,7 @@ class Warning extends XFCP_Warning
             $params = $warning ? $warning->toArray() : [];
             foreach ($params as $key => $value)
             {
-                if (\is_array($value) || \is_object($value))
+                if (is_array($value) || is_object($value))
                 {
                     unset($params[$key]);
                 }
@@ -51,7 +58,7 @@ class Warning extends XFCP_Warning
 
             $category = $warning && $warning->Definition && $warning->Definition->Category ? $warning->Definition->Category : null;
 
-            $params = \array_merge($params, [
+            $params = array_merge($params, [
                 'title'                    => $warning && $content ? $handler->getStoredTitle($content) : '',
                 'content'                  => $handler && $content ? $handler->getContentForConversation($content) : '',
                 'url'                      => $handler && $content ? $handler->getContentUrl($content, true) : '',
@@ -96,13 +103,7 @@ class Warning extends XFCP_Warning
         });
     }
 
-    /**
-     * @param $contentAction
-     * @param array $contentOptions
-     *
-     * @return null|Phrase
-     */
-    protected function getReadableContentAction($contentAction, array $contentOptions)
+    protected function getReadableContentAction(string $contentAction, array $contentOptions): ?Phrase
     {
         return \XF::phrase(
             'svWarningImprovements_warning_content_action.' . $contentAction,
@@ -132,7 +133,7 @@ class Warning extends XFCP_Warning
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function getWarningDefaultExtension(int $warningCount, int $warningTotals): ?WarningDefault
+    public function getWarningDefaultExtension(int $warningCount, int $warningTotals): ?WarningDefaultEntity
     {
         return Helper::finder(WarningDefaultFinder::class)
                                 ->where('active', '=', 1)
@@ -165,7 +166,7 @@ class Warning extends XFCP_Warning
         if ($definition === null)
         {
             // todo - copy how getGuestUser works
-            throw new \LogicException('Require a warning definition to be specified');
+            throw new LogicException('Require a warning definition to be specified');
         }
         if ($definition->expiry_type === 'never')
         {
@@ -241,13 +242,8 @@ class Warning extends XFCP_Warning
         }
     }
 
-    /**
-     * @param int  $userId
-     * @param bool $checkBannedStatus
-     * @return int|null
-     * @noinspection PhpUnusedParameterInspection
-     */
-    public function getEffectiveNextExpiry(int $userId, bool $checkBannedStatus)
+    /** @noinspection PhpUnusedParameterInspection */
+    public function getEffectiveNextExpiry(int $userId, bool $checkBannedStatus): ?int
     {
         return \XF::db()->fetchOne('
             SELECT MIN(CAST(expiryDate as SIGNED))
@@ -268,19 +264,14 @@ class Warning extends XFCP_Warning
         ', [$userId, \XF::$time, $userId, \XF::$time, $userId, \XF::$time]);
     }
 
-    public function updatePendingExpiryForLater(UserEntity $user, bool $checkBannedStatus)
+    public function updatePendingExpiryForLater(UserEntity $user, bool $checkBannedStatus): void
     {
         \XF::runOnce('svPendingExpiry.' . $user->user_id, function () use ($user, $checkBannedStatus) {
             $this->updatePendingExpiryFor($user, $checkBannedStatus);
         });
     }
 
-    /**
-     * @param UserEntity|null $user
-     * @param bool            $checkBannedStatus
-     * @return int|null
-     */
-    public function updatePendingExpiryFor(?UserEntity $user = null, bool $checkBannedStatus = true)
+    public function updatePendingExpiryFor(?UserEntity $user = null, bool $checkBannedStatus = true): ?int
     {
         if ($user === null || $user->Option === null)
         {
@@ -288,7 +279,7 @@ class Warning extends XFCP_Warning
         }
         $db = \XF::db();
 
-        /** @var UserOption $option */
+        /** @var ExtendedUserOptionEntity $option */
         $option = $user->Option;
 
         $db->beginTransaction();
@@ -314,7 +305,7 @@ class Warning extends XFCP_Warning
             return false;
         }
 
-        $warnings = Helper::finder(\XF\Finder\Warning::class)
+        $warnings = Helper::finder(WarningFinder::class)
                           ->where('expiry_date', '<=', \XF::$time)
                           ->where('expiry_date', '>', 0)
                           ->where('is_expired', 0)
@@ -330,7 +321,7 @@ class Warning extends XFCP_Warning
             $warning->save();
         }
 
-        $changes = Helper::finder(\XF\Finder\UserChangeTemp::class)
+        $changes = Helper::finder(UserChangeTempFinder::class)
                          ->where('expiry_date', '<=', \XF::$time)
                          ->where('expiry_date', '!=', null)
                          ->order('expiry_date')
@@ -459,7 +450,7 @@ class Warning extends XFCP_Warning
         {
             $defaults['warning_id']  = $warning->warning_id;
         }
-        $extra = \array_merge($defaults, $extra);
+        $extra = array_merge($defaults, $extra);
 
         $warnedBy = $this->getWarnedByForUser($warning, false);
         $alertRepo = Helper::repository(UserAlertRepo::class);

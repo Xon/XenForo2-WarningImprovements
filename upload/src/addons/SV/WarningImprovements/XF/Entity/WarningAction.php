@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Entity;
 
@@ -30,6 +27,10 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningAction extends XFCP_WarningAction
 {
+    /**
+     * @noinspection PhpMissingReturnTypeInspection
+     * @noinspection PhpMissingParentCallCommonInspection
+     */
     public function getTitle()
     {
         return \XF::phrase('svWarningPoints:') . ' '. $this->points;
@@ -57,6 +58,7 @@ class WarningAction extends XFCP_WarningAction
     /**
      * @param Structure $structure
      * @return Structure
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public static function getStructure(Structure $structure)
     {

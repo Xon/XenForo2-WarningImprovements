@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Entity;
 
@@ -21,6 +18,7 @@ class ConversationMaster extends XFCP_ConversationMaster
     /**
      * @param Structure $structure
      * @return Structure
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public static function getStructure(Structure $structure)
     {

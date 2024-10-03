@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Service\User;
 
@@ -28,6 +25,8 @@ use XF\Service\Thread\Creator as ThreadCreatorService;
 use XF\Service\Thread\Replier as ThreadReplierService;
 use XF\Service\User\Warn as WarningService;
 use XF\Entity\ConversationMaster as ConversationMasterEntity;
+use function strval;
+use function strtr;
 
 /**
  * @extends WarningService
@@ -63,6 +62,7 @@ class Warn extends XFCP_Warn
         $this->sendAlertReason = $sendAlertReason;
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function setFromDefinition(WarningDefinitionEntity $definition, $points = null, $expiry = null)
     {
         $this->setSendAlert(Globals::$warningInput['send_warning_alert'] ?? false, Globals::$warningInput['send_warning_alert_reason'] ?? '');
@@ -93,6 +93,7 @@ class Warn extends XFCP_Warn
         return $return;
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function setFromCustom($title, $points, $expiry)
     {
         Globals::$warningInput['custom_title'] = $title;
@@ -227,7 +228,9 @@ class Warn extends XFCP_Warn
      * @param WarningEntity $warning
      * @return ConversationCreatorService
      * @throws \Exception
-     *@since 2.5.7
+     * @noinspection PhpMissingParentCallCommonInspection
+     * @noinspection PhpMissingReturnTypeInspection
+     * @since 2.5.7
      */
     protected function setupConversation(WarningEntity $warning)
     {
@@ -249,8 +252,8 @@ class Warn extends XFCP_Warn
             );
 
             $conversationCreatorSvc->setContent(
-                \strtr(\strval($this->conversationTitle), $replace),
-                \strtr(\strval($this->conversationMessage), $replace)
+                strtr(strval($this->conversationTitle), $replace),
+                strtr(strval($this->conversationMessage), $replace)
             );
 
             return $conversationCreatorSvc;
@@ -261,7 +264,8 @@ class Warn extends XFCP_Warn
      * @param WarningEntity $warning
      * @return Entity|ExtendedConversationMasterEntity|null
      * @throws \Exception
-     *@since 2.5.7
+     * @noinspection PhpMissingParentCallCommonInspection
+     * @since        2.5.7
      */
     protected function sendConversation(WarningEntity $warning)
     {

@@ -8,6 +8,12 @@ use XF\Entity\UserGroup as UserGroupEntity;
 use XF\Finder\UserChangeTemp as UserChangeTempFinder;
 use XF\Mvc\Entity\Finder;
 use XF\Repository\UserGroup as UserGroupRepo;
+use function array_filter;
+use function array_key_exists;
+use function array_map;
+use function array_unique;
+use function explode;
+use function implode;
 
 /**
  * @extends \XF\Repository\UserChangeTemp
@@ -40,9 +46,9 @@ class UserChangeTemp extends XFCP_UserChangeTemp
      * @param int $userId
      * @return null|int[]
      */
-    public function getCachedUserGroupChangeList(int $userId)
+    public function getCachedUserGroupChangeList(int $userId): ?array
     {
-        if (\array_key_exists($userId, $this->userGroupChangeSet))
+        if (array_key_exists($userId, $this->userGroupChangeSet))
         {
             return $this->userGroupChangeSet[$userId];
         }
@@ -60,7 +66,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         {
             foreach ($this->userGroupChangeSet[$userId] as &$val)
             {
-                $val = \array_unique(\array_filter(\array_map('\intval', \explode(',', $val))));
+                $val = array_unique(array_filter(array_map('\intval', explode(',', $val))));
             }
         }
 
@@ -102,7 +108,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
 
             if (!$showDiscouraged)
             {
-                $showDiscouragedWhere = 'AND ' . \implode(' AND ', [
+                $showDiscouragedWhere = 'AND ' . implode(' AND ', [
                         $warningActions->buildCondition('action_type', '<>', 'field'),
                         $warningActions->buildCondition('action_modifier', '<>', 'is_discouraged')
                     ]);
@@ -122,13 +128,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
         return $warningActions;
     }
 
-    /**
-     * @param UserEntity $user
-     * @param bool       $showAll
-     * @param bool       $showDiscouraged
-     * @return int|null
-     */
-    public function countWarningActions(UserEntity $user, bool $showAll = false, bool $showDiscouraged = false)
+    public function countWarningActions(UserEntity $user, bool $showAll = false, bool $showDiscouraged = false): ?int
     {
         return \XF::db()->fetchOne($this->getWarningActions($user->user_id, $showAll, $showDiscouraged)->getQuery(['countOnly' => true]));
     }

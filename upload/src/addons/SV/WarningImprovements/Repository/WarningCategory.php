@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\Repository;
 
@@ -9,6 +6,7 @@ use SV\WarningImprovements\Entity\WarningCategory as WarningCategoryEntity;
 use SV\WarningImprovements\Finder\WarningCategory as WarningCategoryFinder;
 use XF\Repository\AbstractCategoryTree;
 use XF\Tree;
+use function array_merge;
 
 class WarningCategory extends AbstractCategoryTree
 {
@@ -23,7 +21,7 @@ class WarningCategory extends AbstractCategoryTree
      * @param bool $excludeEmpty
      * @return Tree
      */
-    public function createCategoryTree($categories = null, $rootId = 0, bool $excludeEmpty = false)
+    public function createCategoryTree($categories = null, $rootId = 0, bool $excludeEmpty = false): Tree
     {
         if ($excludeEmpty)
         {
@@ -40,14 +38,9 @@ class WarningCategory extends AbstractCategoryTree
         return parent::createCategoryTree($categories, $rootId);
     }
 
-    /**
-     * @param array $extras
-     * @param array $childExtras
-     * @return array
-     */
-    public function mergeCategoryListExtras(array $extras, array $childExtras)
+    public function mergeCategoryListExtras(array $extras, array $childExtras): array
     {
-        $output = \array_merge(
+        $output = array_merge(
             [
                 'warning_count' => 0,
                 'childCount'    => 0

@@ -13,6 +13,7 @@ class Post extends XFCP_Post implements SupportsDisablingReactionInterface
 {
     use SupportsDisablingReactionTrait;
 
+    /** @noinspection PhpMissingReturnTypeInspection */
     public function reactionsCounted(Entity $entity)
     {
         return parent::reactionsCounted($entity)

@@ -11,7 +11,7 @@ class InstallerListener
      * Called when the post-rebuild code for an add-on has been run.
      *
      * Event hint: The add-on ID for the add-on being rebuilt.
-     * 
+     *
      * @param AddOn       $addOn          The AddOn object for the add-on being rebuilt.
      * @param AddOnEntity $installedAddOn The add-on entity.
      * @param array       $json           An array decoded from the add-on's addon.json file.
@@ -29,7 +29,7 @@ class InstallerListener
      * Called when the post-install code for an add-on has been run.
      *
      * Event hint: The add-on ID for the add-on being installed.
-     * 
+     *
      * @param AddOn       $addOn          The AddOn object for the add-on being installed.
      * @param AddOnEntity $installedAddOn The newly created add-on entity.
      * @param array       $json           An array decoded from the add-on's addon.json file.
@@ -49,7 +49,7 @@ class InstallerListener
      * Called when the post-upgrade code for an add-on has been run.
      *
      * Event hint: The add-on ID for the add-on being upgraded.
-     * 
+     *
      * @param AddOn       $addOn          The AddOn object for the add-on being upgraded.
      * @param AddOnEntity $installedAddOn The existing add-on entity.
      * @param array       $json           An array decoded from the add-on's addon.json file.

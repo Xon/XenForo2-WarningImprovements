@@ -10,8 +10,8 @@ use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\WarningCategory as WarningCategoryEntity;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\Repository\WarningCategory as WarningCategoryRepo;
-use SV\WarningImprovements\XF\Entity\User;
-use SV\WarningImprovements\XF\Entity\Warning;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Entity\WarningAction as ExtendedWarningActionEntity;
 use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\App;
@@ -36,7 +36,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
      */
     protected $lastAction = null;
 
-    /** @var Warning */
+    /** @var ExtendedWarningEntity */
     protected $warning = null;
 
     /** @var Report */
@@ -48,7 +48,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /** @var WarningCategoryEntity[] */
     protected $warningCategories = [];
 
-    public function __construct(App $app, User $user)
+    public function __construct(App $app, ExtendedUserEntity $user)
     {
         parent::__construct($app, $user);
 
@@ -62,7 +62,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         $this->warningCategories = $warningCategoryRepo->findCategoryList()->fetch()->toArray();
     }
 
-    public function setWarning(?Warning $warning = null)
+    public function setWarning(?ExtendedWarningEntity $warning = null)
     {
         $this->warning = $warning;
     }
@@ -96,7 +96,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     {
         /** @var ExtendedWarningRepo $warningRepo */
         $warningRepo = Helper::repository(WarningRepo::class);
-        /** @var Warning[] $warnings */
+        /** @var ExtendedWarningEntity[] $warnings */
         $warnings = $warningRepo->findUserWarningsForList($this->user->user_id)
                                 ->where('is_expired', '=', 0)
                                 ->fetch()
@@ -207,7 +207,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     {
         if ($this->lastAction)
         {
-            /** @var User $postAsUser */
+            /** @var ExtendedUserEntity $postAsUser */
             $postAsUser = null;
             $postAsUserId = (int)$this->lastAction->sv_post_as_user_id;
             if ($postAsUserId !== 0)

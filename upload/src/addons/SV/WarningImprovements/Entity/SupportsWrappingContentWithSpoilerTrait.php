@@ -22,10 +22,7 @@ trait SupportsWrappingContentWithSpoilerTrait
         return isset($this->embed_metadata['sv_spoiler_contents']);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getContentSpoilerTitleForSvWarnImprov()
+    public function getContentSpoilerTitleForSvWarnImprov(): ?string
     {
         if (!$this->isContentWrappedInSpoilerForSvWarnImprov())
         {

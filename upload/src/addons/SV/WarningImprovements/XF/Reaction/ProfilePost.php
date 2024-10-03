@@ -13,6 +13,7 @@ class ProfilePost extends XFCP_ProfilePost implements SupportsDisablingReactionI
 {
     use SupportsDisablingReactionTrait;
 
+    /** @noinspection PhpMissingReturnTypeInspection */
     public function reactionsCounted(Entity $entity)
     {
         return parent::reactionsCounted($entity)

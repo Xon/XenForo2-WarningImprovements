@@ -5,7 +5,7 @@
 
 namespace SV\WarningImprovements\Entity;
 
-use SV\WarningImprovements\XF\Entity\Warning;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use XF\Mvc\Entity\Structure;
 use function array_key_exists;
 
@@ -24,7 +24,7 @@ trait SupportsEmbedMetadataTrait
             if (array_key_exists('Warning', $this->structure()->relations))
             {
                 $warning = $this->getRelation('Warning');
-                if ($warning instanceof Warning)
+                if ($warning instanceof ExtendedWarningEntity)
                 {
                     foreach ($fields as $key)
                     {
@@ -55,6 +55,11 @@ trait SupportsEmbedMetadataTrait
         parent::_preSave();
     }
 
+    /**
+     * @param Structure $structure
+     * @return Structure
+     * @noinspection PhpMissingReturnTypeInspection
+     */
     public static function getStructure(Structure $structure)
     {
         $structure = parent::getStructure($structure);

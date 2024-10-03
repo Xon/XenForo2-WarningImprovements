@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Pub\Controller;
 
@@ -15,6 +12,8 @@ use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\View as ViewReply;
 use XF\Service\User\TempChange as TempChangeService;
+use function pow;
+use function strtotime;
 
 /**
  * @extends \XF\Pub\Controller\Member
@@ -125,7 +124,7 @@ class Member extends XFCP_Member
             $expiryLength = $this->filter('expiry_value', 'uint');
             $expiryUnit = $this->filter('expiry_unit', 'str');
 
-            $expiryDate = @\strtotime("+$expiryLength $expiryUnit");
+            $expiryDate = @strtotime("+$expiryLength $expiryUnit");
             if ($expiryDate === false)
             {
                 $userChangeTemp->error(\XF::phrase('svWarningImprovements_invalid_offset_date', [
@@ -134,7 +133,7 @@ class Member extends XFCP_Member
                 ]), 'expiry_date');
             }
             $expiryDate = (int)$expiryDate;
-            if ($expiryDate >= \pow(2, 32) - 1)
+            if ($expiryDate >= pow(2, 32) - 1)
             {
                 $expiryDate = 0;
             }
@@ -157,21 +156,22 @@ class Member extends XFCP_Member
         return $this->redirect($this->getDynamicRedirect());
     }
 
+    /** @noinspection PhpMissingReturnTypeInspection */
     protected function assertViewableUser($userId, array $extraWith = [], $basicProfileOnly = false)
     {
         if ($this->options()->sv_view_own_warnings ?? false)
         {
-            Globals::$profileUserId = \intval($userId);
+            Globals::$profileUserId = (int)$userId;
         }
 
         return parent::assertViewableUser($userId, $extraWith, $basicProfileOnly);
     }
 
-    public function assertWarningActionViewable($userChangeTempId, array $extraWith = [])
+    public function assertWarningActionViewable(?int $userChangeTempId, array $extraWith = []): ExtendedUserChangeTempEntity
     {
-        /** @var ExtendedUserChangeTempEntity $userChangeTemp */
+        /** @var ExtendedUserChangeTempEntity|null $userChangeTemp */
         $userChangeTemp = Helper::find(UserChangeTempEntity::class, $userChangeTempId, $extraWith);
-        if (!$userChangeTemp)
+        if ($userChangeTemp === null)
         {
             /** @var ExtendedUserEntity $visitor */
             $visitor = \XF::visitor();

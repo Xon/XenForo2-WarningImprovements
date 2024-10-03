@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Repository;
 
@@ -13,6 +10,7 @@ use XF\Entity\User as UserEntity;
  */
 class Conversation extends XFCP_Conversation
 {
+    /** @noinspection PhpMissingReturnTypeInspection */
     public function insertRecipients(ConversationMasterEntity $conversation, array $recipientUsers, ?UserEntity $from = null)
     {
         if ($from && !$from->user_id)

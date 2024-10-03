@@ -2,6 +2,7 @@
 
 namespace SV\WarningImprovements\XF\Service\User;
 
+use LogicException;
 use SV\StandardLib\Helper;
 use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use SV\WarningImprovements\XF\Entity\UserChangeTemp as ExtendedUserChangeTempEntity;
@@ -15,6 +16,14 @@ use XF\Entity\WarningAction as WarningActionEntity;
 use XF\Finder\WarningAction as WarningActionFinder;
 use XF\Repository\UserChangeTemp as UserChangeTempRepo;
 use XF\Service\User\TempChange as TempChangeService;
+use function array_map;
+use function count;
+use function explode;
+use function mb_strcut;
+use function min;
+use function pow;
+use function strtotime;
+use function strval;
 
 /**
  * @extends \XF\Service\User\ContentChange
@@ -55,20 +64,20 @@ class ContentChange extends XFCP_ContentChange
             /** @var UserChangeTempEntity|ExtendedUserChangeTempEntity $_warningAction */
             foreach ($warningActionsAppliedToSource AS $_warningAction)
             {
-                $warningActionDetails = \explode('_', $_warningAction->change_key);
+                $warningActionDetails = explode('_', $_warningAction->change_key);
                 $warningActionId = $warningActionDetails[2] ?? null;
                 if (!$warningActionId)
                 {
-                    \XF::logException(new \LogicException('Warning ID not available.'));
+                    \XF::logException(new LogicException('Warning ID not available.'));
                     continue;
                 }
                 $warningActionIds[] = $warningActionId;
             }
-            $warningActionIds = \array_map('\intval', $warningActionIds);
+            $warningActionIds = array_map('\intval', $warningActionIds);
 
-            if (\count($warningActionIds) === 0)
+            if (count($warningActionIds) === 0)
             {
-                \XF::logException(new \LogicException('No warning actions applied to target user.'));
+                \XF::logException(new LogicException('No warning actions applied to target user.'));
                 return;
             }
 
@@ -93,7 +102,7 @@ class ContentChange extends XFCP_ContentChange
         }
         else
         {
-            $actionEndDate = \min(\pow(2,32) - 1, (int)\strtotime("+{$warningAction->action_length} {$warningAction->action_length_type}"));
+            $actionEndDate = min(pow(2,32) - 1, (int)strtotime("+{$warningAction->action_length} {$warningAction->action_length_type}"));
         }
 
         $tempChangeKey = $warningAction->getTempUserChangeKey();
@@ -149,15 +158,15 @@ class ContentChange extends XFCP_ContentChange
     protected function applyUserBanForSVWI(UserEntity &$targetUser, int $endDate, bool $setTriggered): UserBanEntity
     {
         $ban = $targetUser->Ban;
-        if (!$ban)
+        if ($ban === null)
         {
-            $reason = \strval(\XF::phrase('warning_ban_reason'));
+            $reason = strval(\XF::phrase('warning_ban_reason'));
 
             /** @var UserBanEntity $ban */
             $ban = $targetUser->getRelationOrDefault('Ban', false);
             $ban->user_id = $targetUser->user_id;
             $ban->ban_user_id = 0;
-            $ban->user_reason = \mb_strcut($reason, 0, 255);
+            $ban->user_reason = mb_strcut($reason, 0, 255);
         }
 
         $ban->end_date = $endDate;

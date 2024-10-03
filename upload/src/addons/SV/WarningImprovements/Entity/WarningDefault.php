@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\Entity;
 
@@ -18,11 +15,8 @@ use XF\Mvc\Entity\Structure;
  */
 class WarningDefault extends Entity
 {
-    /**
-     * @param Structure $structure
-     * @return Structure
-     */
-    public static function getStructure(Structure $structure)
+    /** @noinspection PhpMissingParentCallCommonInspection */
+    public static function getStructure(Structure $structure): Structure
     {
         $structure->table = 'xf_sv_warning_default';
         $structure->shortName = 'SV\WarningImprovements:WarningDefault';

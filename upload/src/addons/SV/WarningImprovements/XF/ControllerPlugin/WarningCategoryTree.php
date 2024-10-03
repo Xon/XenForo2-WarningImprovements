@@ -6,9 +6,6 @@ use XF\ControllerPlugin\AbstractCategoryTree;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 
-/**
- * @extends \XF\ControllerPlugin\WarningCategoryTree
- */
 class WarningCategoryTree extends AbstractCategoryTree
 {
     protected $viewFormatter     = 'SV\WarningImprovements\XF:WarningCategory\%s';
@@ -17,6 +14,9 @@ class WarningCategoryTree extends AbstractCategoryTree
     protected $entityIdentifier  = 'SV\WarningImprovements:WarningCategory';
     protected $primaryKey        = 'warning_category_id';
 
+    /**
+     * @noinspection PhpMissingParentCallCommonInspection
+     */
     public function actionDelete(ParameterBag $params): AbstractReply
     {
         $category = $this->assertCategoryExists($this->filter($this->primaryKey, 'uint'));

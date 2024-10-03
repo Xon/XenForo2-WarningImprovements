@@ -17,6 +17,8 @@ use XF\Repository\Warning as WarningRepo;
 use XF\Service\AbstractService;
 use XF\Service\ValidateAndSavableTrait;
 use function array_key_exists;
+use function strlen;
+use function strtotime;
 
 class Editor extends AbstractService
 {
@@ -95,7 +97,7 @@ class Editor extends AbstractService
                 $this->warning->is_expired = true;
                 break;
             case 'future':
-                $expiryDate = @\strtotime("+$expiryLength $expiryUnit");
+                $expiryDate = @strtotime("+$expiryLength $expiryUnit");
                 if ($expiryDate === false)
                 {
                     $this->warning->error(\XF::phrase('svWarningImprovements_invalid_offset_date', [
@@ -297,7 +299,7 @@ class Editor extends AbstractService
             ]);
         }
 
-        if (\strlen($this->contentAction) !== 0)
+        if (strlen($this->contentAction) !== 0)
         {
             $this->applyContentAction();
         }
@@ -352,7 +354,7 @@ class Editor extends AbstractService
         $warning = $this->warning;
         $handler = $warning->getHandler();
         $content = $warning->Content;
-        if ($content === null || $handler == null)
+        if ($content === null || $handler === null)
         {
             return;
         }
@@ -361,7 +363,7 @@ class Editor extends AbstractService
         if ($this->contentAction === 'public')
         {
             $message = $this->contentActionOptions['message'] ?? '';
-            if (\strlen($message) === 0)
+            if (strlen($message) === 0)
             {
                 $handler->onWarningRemoval($content, $this->warning);
                 $handler->onWarning($content, $this->warning);

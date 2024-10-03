@@ -4,8 +4,6 @@ namespace SV\WarningImprovements\XF\ControllerPlugin;
 
 use SV\WarningImprovements\Entity\SupportsDisablingReactionInterface;
 use XF\Mvc\Entity\Entity;
-use XF\Mvc\Reply\Message as MessageReply;
-use XF\Mvc\Reply\View as ViewReply;
 use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\Exception as ExceptionReply;
 
@@ -24,6 +22,7 @@ class Reaction extends XFCP_Reaction
      * @return AbstractReply
      *
      * @throws ExceptionReply
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function actionReactions(
         Entity $content,

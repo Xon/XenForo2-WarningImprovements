@@ -1,7 +1,5 @@
 <?php
-
 /**
- * @noinspection PhpMissingReturnTypeInspection
  * @noinspection PhpUnusedParameterInspection
  */
 
@@ -42,6 +40,7 @@ class User extends XFCP_User
         }
     }
 
+    /** @noinspection PhpMissingReturnTypeInspection */
     public function canViewWarnings()
     {
         $visitor = \XF::visitor();

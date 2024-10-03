@@ -1,7 +1,4 @@
 <?php
-/**
- * @noinspection PhpMissingReturnTypeInspection
- */
 
 namespace SV\WarningImprovements\XF\Pub\View\Member;
 
@@ -12,6 +9,7 @@ use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinit
  */
 class WarnFill extends XFCP_WarnFill
 {
+    /** @noinspection PhpMissingReturnTypeInspection */
     public function renderJson()
     {
         $response = parent::renderJson();

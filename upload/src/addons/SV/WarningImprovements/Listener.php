@@ -7,7 +7,9 @@ use SV\WarningImprovements\XF\Entity\UserOption as ExtendedUserOptionEntity;
 use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\Entity\User;
 use XF\Finder\User as UserFinder;
+use XF\Pub\App as PubApp;
 use XF\Repository\Warning as WarningRepo;
+use function is_callable;
 
 class Listener
 {
@@ -70,7 +72,7 @@ class Listener
 
     public static function visitorSetup(User &$visitor)
     {
-        if (!(\XF::app() instanceof \XF\Pub\App))
+        if (!(\XF::app() instanceof PubApp))
         {
             return;
         }
@@ -90,7 +92,7 @@ class Listener
         {
             /** @var ExtendedWarningRepo $warningRepo */
             $warningRepo = Helper::repository(WarningRepo::class);
-            if (\is_callable([$warningRepo, 'processExpiredWarningsForUser']))
+            if (is_callable([$warningRepo, 'processExpiredWarningsForUser']))
             {
                 $expired = $warningRepo->processExpiredWarningsForUser($visitor, $visitor->is_banned);
                 if ($expired)
@@ -133,8 +135,8 @@ class Listener
                     else
                     {
                         $visitor = Helper::finder(UserFinder::class)
-                                      ->whereId($visitor->user_id)
-                                      ->fetchOne();
+                                         ->whereId($visitor->user_id)
+                                         ->fetchOne();
                     }
                 }
             }

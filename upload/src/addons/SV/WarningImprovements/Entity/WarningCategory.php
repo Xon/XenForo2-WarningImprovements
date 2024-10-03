@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpMissingParentCallCommonInspection
+ */
 
 namespace SV\WarningImprovements\Entity;
 
@@ -12,6 +15,11 @@ use XF\Entity\PermissionCacheContent as PermissionCacheContentEntity;
 use XF\Entity\Phrase as PhraseEntity;
 use XF\Mvc\Entity\Structure;
 use XF\Phrase;
+use function array_map;
+use function max;
+use function strtolower;
+use function substr;
+use function ucfirst;
 
 /**
  * COLUMNS
@@ -42,7 +50,7 @@ class WarningCategory extends AbstractCategoryTree
 {
     public function getAllowedUserGroupIds(): array
     {
-        return \array_map('\intval', $this->allowed_user_group_ids_);
+        return array_map('\intval', $this->allowed_user_group_ids_);
     }
 
     public function getIsUsable(): bool
@@ -97,7 +105,7 @@ class WarningCategory extends AbstractCategoryTree
         $this->rebuildCounters();
     }
 
-    protected function _postSave()
+    protected function _postSave(): void
     {
         if ($this->isUpdate())
         {
@@ -112,7 +120,7 @@ class WarningCategory extends AbstractCategoryTree
 
                         if ($maserPhrase)
                         {
-                            $type = \substr(\strtolower($name), 6); // strip Master
+                            $type = substr(strtolower($name), 6); // strip Master
                             $maserPhrase->title = $this->getPhraseName($type);
                             $maserPhrase->save();
                         }
@@ -127,15 +135,12 @@ class WarningCategory extends AbstractCategoryTree
         }
     }
 
-    /**
-     * @return int|null
-     */
-    protected function getCategoryId()
+    protected function getCategoryId(): ?int
     {
         return $this->warning_category_id;
     }
 
-    protected function _preDelete()
+    protected function _preDelete(): void
     {
         $warningCategoryCount = Helper::finder(WarningCategoryFinder::class)
                                       ->where('warning_category_id', '!=', $this->warning_category_id)
@@ -168,7 +173,7 @@ class WarningCategory extends AbstractCategoryTree
         }
     }
 
-    protected function _postDelete()
+    protected function _postDelete(): void
     {
         foreach ($this->_structure->relations AS $name => $relation)
         {
@@ -234,7 +239,7 @@ class WarningCategory extends AbstractCategoryTree
         // WarningPointsChange will dump into global category/actions as there isn't much else that can be done
     }
 
-    protected function scheduleNestedSetRebuild()
+    protected function scheduleNestedSetRebuild(): void
     {
         $entityType = $this->structure()->shortName;
         \XF::runOnce('rebuildTree-' . $entityType, function()
@@ -244,12 +249,12 @@ class WarningCategory extends AbstractCategoryTree
         });
     }
 
-    public function rebuildCounters()
+    public function rebuildCounters(): void
     {
         $this->rebuildWarningCount();
     }
 
-    public function rebuildWarningCount()
+    public function rebuildWarningCount(): void
     {
         $warningCount = \XF::db()->fetchOne('
 			SELECT COUNT(*)
@@ -257,7 +262,7 @@ class WarningCategory extends AbstractCategoryTree
 			WHERE sv_warning_category_id = ?
 		', $this->warning_category_id);
 
-        $this->warning_count = \max(0, $warningCount);
+        $this->warning_count = max(0, $warningCount);
     }
 
     public function getCategoryListExtras(): array
