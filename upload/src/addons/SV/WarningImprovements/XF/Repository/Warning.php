@@ -15,6 +15,7 @@ use XF\Entity\UserChangeTemp as UserChangeTempEntity;
 use XF\Entity\Warning as WarningEntity;
 use XF\Finder\UserBan as UserBanFinder;
 use XF\Finder\WarningDefinition as WarningDefinitionFinder;
+use XF\Entity\WarningDefinition as WarningDefinitionEntity;
 use XF\Phrase;
 use XF\Repository\UserAlert as UserAlertRepo;
 use XF\Repository\UserChangeTemp as UserChangeTempRepo;
@@ -119,7 +120,7 @@ class Warning extends XFCP_Warning
 
     public function getCustomWarningDefinition(): ExtendedWarningDefinitionEntity
     {
-        $warningDefinition = Helper::findCached(ExtendedWarningDefinitionEntity::class, 0);
+        $warningDefinition = Helper::findCached(WarningDefinitionEntity::class, 0);
         if ($warningDefinition !== null)
         {
             return $warningDefinition;
