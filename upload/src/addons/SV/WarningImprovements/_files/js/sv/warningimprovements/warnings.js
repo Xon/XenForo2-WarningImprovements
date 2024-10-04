@@ -82,8 +82,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         {
             const config = this._svWarningImprovementsGetConfig()
 
-            delete config.customTitleInputSelector
-            delete config.customTitleRowSelector
+            config.silent = true;
 
             return config
         },
