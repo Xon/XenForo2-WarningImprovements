@@ -1,12 +1,14 @@
-// noinspection JSVoidFunctionReturnValueUsed
-
-window.SV = window.SV || {};
-window.SV.WarningImprovements = window.SV.WarningImprovements || {};
+// noinspection ES6ConvertVarToLetConst
+var SV = window.SV || {};
+SV.$ = SV.$ || window.jQuery || null;
+SV.extendObject = SV.extendObject || XF.extendObject || jQuery.extend;
+SV.WarningImprovements = SV.WarningImprovements || {};
 
 // noinspection JSUnusedLocalSymbols
 (function()
 {
     "use strict"
+    const $ = SV.$, xf22 = typeof XF.on !== 'function';
 
     // ################################## WARNING SELECT HANDLER ###########################################
 
@@ -43,7 +45,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             }
 
             this.customTitleRow = XF.findRelativeIf(rowSelector, this.target || this.$target)
-            if (this.$target)
+            if (xf22)
             {
                 this.customTitleRow = this.customTitleRow.get(0)
             }
@@ -54,7 +56,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             }
 
             this.customTitleInput = XF.findRelativeIf(this.options.customTitleInputSelector, this.target || this.$target)
-            if (this.$target)
+            if (xf22)
             {
                 this.customTitleInput = this.customTitleInput.get(0)
             }
@@ -65,7 +67,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
             }
 
             this.publicWarning = XF.findRelativeIf(this.options.publicWarningSelector, this.target || this.$target)
-            if (this.$target)
+            if (xf22)
             {
                 this.publicWarning = this.publicWarning.get(0)
             }
@@ -215,7 +217,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                 return
             }
 
-            if (typeof XF.Animate !== 'undefined')
+            if (xf22)
             {
                 XF.Animate.fadeUp(this.customTitleRow)
             }
@@ -252,7 +254,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
         init ()
         {
             this.publicWarning = XF.findRelativeIf(this.options.publicWarningSelector, this.target || this.$target)
-            if (this.$target)
+            if (xf22)
             {
                 this.publicWarning = this.publicWarning.get(0)
             }
@@ -263,7 +265,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                 return
             }
 
-            if (typeof XF.on !== "function") // XF 2.2
+            if (xf22) // XF 2.2
             {
                 this.$target.on('change input', this.onInputChangeOrClick.bind(this))
 
@@ -351,7 +353,7 @@ window.SV.WarningImprovements = window.SV.WarningImprovements || {};
                 throw new Error('Invalid warning view provided.')
             }
 
-            if (typeof XF.on !== "function") // XF 2.2
+            if (xf22) // XF 2.2
             {
                 this.$target.on('change', this.onChange.bind(this))
             }
