@@ -374,6 +374,16 @@ SV.WarningImprovements = SV.WarningImprovements || {};
         }
     })
 
+    SV.WarningImprovements.onInitialFormFill = function () {
+        const form = document.querySelector('form[data-xf-init*="form-fill"]');
+        if (form) {
+            const formFillHandler = XF.Element.getHandler(xf22 ? $(form) : form, 'form-fill')
+            if (formFillHandler !== null) {
+                formFillHandler.change();
+            }
+        }
+    }
+
     XF.Element.register('sv-warning-view-select', 'SV.WarningImprovements.WarningSelectView')
     XF.Element.register('sv-warning-title-watcher', 'SV.WarningImprovements.TitleWatcher')
     XF.Element.register('sv-save-warning-view-pref', 'SV.WarningImprovements.SaveWarningViewPref')

@@ -24,6 +24,8 @@
 			   data-warning-url="{$warnUrl}" />
 </xf:radiorow>
 
+<xf:set var="$defaultSelected" value="{{ false }}"/>
+<xf:set var="$defaultWarningId" value="{{ 0 }}"/>
 <xf:set var="$selectViewCustomTitleRowId" value="{{ unique_id('sv_warning_view_select_custom_title_row') }}" />
 
 <div class="svWarningViewSelect" style="{{ !$selectMode ? 'display: none;' : ''}}">
@@ -37,6 +39,10 @@
 			<xf:set var="$category" value="{$treeEntry.record}" />
 			<xf:optgroup label="{{ repeat('--', $treeEntry.depth) }} {$category.title}">
 				<xf:foreach loop="{$warnings.{$category.warning_category_id}}" value="$warning">
+					<xf:if is="!$defaultSelected">
+						<xf:set var="$defaultSelected" value="{{ true }}"/>
+						<xf:set var="$defaultWarningId" value="{$warning.warning_definition_id}"/>
+					</xf:if>
 					<xf:option value="{$warning.warning_definition_id}"
 							   label="{{ repeat('--', $treeEntry.depth) }} {$warning.title}"
 							   data-custom-properties="{{ {'allows_custom_title': ($warning.sv_custom_title || !$warning.warning_definition_id)}|json }}" />
@@ -52,8 +58,6 @@
 				   disabled="disabled" placeholder="{{ phrase('custom_title') }}" />
 </div>
 
-<xf:set var="$defaultSelected" value="{{ false }}"/>
-<xf:set var="$defaultWarningId" value="{{ 0 }}"/>
 <div class="svWarningViewRadio" style="{{ $selectMode ? 'display: none;' : ''}}">
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:set var="$category" value="{$treeEntry.record}" />
@@ -110,3 +114,13 @@
 		</xf:if>
 	</xf:foreach>
 </div>
+
+<xf:if is="$defaultSelected">
+<xf:js>
+<xf:if is="$xf.versionId >= 2030000">
+	XF.on(document, 'xf:page-load-complete', SV.WarningImprovements.onInitialFormFill);
+<xf:else/>
+	$('xf:page-load-complete', SV.WarningImprovements.onInitialFormFill);
+	</xf:if>
+</xf:js>
+</xf:if>
