@@ -200,13 +200,13 @@ SV.WarningImprovements = SV.WarningImprovements || {};
                 return
             }
 
-            if (typeof XF.Animate !== 'undefined')
+            if (xf22)
             {
-                XF.Animate.fadeDown(this.customTitleRow)
+                $(this.customTitleRow).xfFadeDown()
             }
             else
             {
-                $(this.customTitleRow).xfFadeDown()
+                XF.Animate.fadeDown(this.customTitleRow)
             }
         },
 
@@ -219,11 +219,11 @@ SV.WarningImprovements = SV.WarningImprovements || {};
 
             if (xf22)
             {
-                XF.Animate.fadeUp(this.customTitleRow)
+                $(this.customTitleRow).xfFadeUp()
             }
             else
             {
-                $(this.customTitleRow).xfFadeUp()
+                XF.Animate.fadeUp(this.customTitleRow)
             }
         },
 
