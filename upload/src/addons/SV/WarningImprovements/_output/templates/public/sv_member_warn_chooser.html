@@ -6,15 +6,16 @@
 <xf:set var="$radioViewControlId" value="{{ unique_id('sv_warning_view_radio') }}" />
 <xf:set var="$selectViewControlId" value="{{ unique_id('sv_warning_view_select') }}" />
 
+<xf:set var="$selectMode" value="{{ $xf.visitor.Option.sv_warning_view === 'select' }}" />
 <xf:radiorow name="warning_view" label="{{ phrase('svWarningImprovements_warning_view') }}">
-	<xf:option id="{$radioViewControlId}" value="radio" checked="{{ in_array($xf.visitor.Option.sv_warning_view, [null, 'radio']) }}"
+	<xf:option id="{$radioViewControlId}" value="radio" checked="{{ !$selectMode }}"
 			   label="{{ phrase('svWarningImprovements_use_warning_radio_view') }}"
 			   data-xf-init="disabler sv-save-warning-view-pref"
 			   data-hide="{{ true }}"
 			   data-container=".svWarningViewRadio"
 			   data-warning-view="radio"
 			   data-warning-url="{$warnUrl}" />
-	<xf:option id="{$selectViewControlId}" value="select" checked="{{ $xf.visitor.Option.sv_warning_view === 'select' }}"
+	<xf:option id="{$selectViewControlId}" value="select" checked="{{ $selectMode }}"
 			   label="{{ phrase('svWarningImprovements_use_warning_select_view') }}"
 			   data-xf-init="disabler sv-save-warning-view-pref"
 			   data-hide="{{ true }}"
@@ -25,7 +26,7 @@
 
 <xf:set var="$selectViewCustomTitleRowId" value="{{ unique_id('sv_warning_view_select_custom_title_row') }}" />
 
-<div class="svWarningViewSelect">
+<div class="svWarningViewSelect" style="{{ !$selectMode ? 'display: none;' : ''}}">
 	<xf:selectrow name="warning_definition_id" class="js-FormFiller" value="0" label="{{ phrase('warning_type') }}"
 				  data-xf-init="sv-warning-view-select"
 				  data-no-results-text="{{ phrase('sv_no_results_match') }}"
@@ -51,7 +52,7 @@
 
 <xf:set var="$defaultSelected" value="{{ false }}"/>
 <xf:set var="$defaultWarningId" value="{{ 0 }}"/>
-<div class="svWarningViewRadio">
+<div class="svWarningViewRadio" style="{{ $selectMode ? 'display: none;' : ''}}">
 	<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 		<xf:set var="$category" value="{$treeEntry.record}" />
 
