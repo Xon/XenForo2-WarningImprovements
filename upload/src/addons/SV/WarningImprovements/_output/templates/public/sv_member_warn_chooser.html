@@ -31,7 +31,7 @@
 				  data-xf-init="sv-warning-view-select"
 				  data-no-results-text="{{ phrase('sv_no_results_match') }}"
 				  data-place-holder-text="{{ phrase('sv_choose_a_warning') }}"
-				  data-copy-title="{{ $xf.options.sv_warningimprovements_copy_title }}"
+				  data-copy-title="{{ $xf.options.sv_warningimprovements_copy_title ? '1' : '0' }}"
 				  data-custom-title-row-selector="{{ '#' . $selectViewCustomTitleRowId }}">
 		<xf:foreach loop="$categoryTree.getFlattened(0)" value="$treeEntry">
 			<xf:set var="$category" value="{$treeEntry.record}" />
@@ -47,6 +47,8 @@
 	
 	<xf:textboxrow rowid="{$selectViewCustomTitleRowId}" name="custom_title"
 				   maxlength="{{ max_length('XF:Warning', 'title') }}"
+				   data-xf-init="sv-warning-title-watcher"
+				   data-copy-title="{{ $xf.options.sv_warningimprovements_copy_title ? '1' : '0' }}"
 				   disabled="disabled" placeholder="{{ phrase('custom_title') }}" />
 </div>
 
