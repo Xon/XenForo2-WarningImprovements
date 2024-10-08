@@ -103,7 +103,12 @@ class Warning extends XFCP_Warning
         });
     }
 
-    protected function getReadableContentAction(string $contentAction, array $contentOptions): ?Phrase
+    /**
+     * @param string $contentAction
+     * @param array  $contentOptions
+     * @return Phrase|string
+     */
+    protected function getReadableContentAction(string $contentAction, array $contentOptions)
     {
         return \XF::phrase(
             'svWarningImprovements_warning_content_action.' . $contentAction,
