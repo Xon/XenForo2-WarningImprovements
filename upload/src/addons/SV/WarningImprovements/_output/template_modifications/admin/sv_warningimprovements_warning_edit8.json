@@ -4,6 +4,6 @@
     "execution_order": 6240,
     "enabled": true,
     "action": "preg_replace",
-    "find": "{^\\s{3}.*{{ phrase\\('conversation_settings'\\) }}.*?<\\/h3>$}m",
+    "find": "#[\\t ]*<xf:submitrow icon=\"save\" sticky=\"true\" />#si",
     "replace": "<xf:include template=\"sv_warning_improvements_warning_edit8\" />\n\n$0"
 }

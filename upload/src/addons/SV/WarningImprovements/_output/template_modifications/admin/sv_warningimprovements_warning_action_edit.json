@@ -3,7 +3,7 @@
     "description": "Inject post to thread/form on warning action",
     "execution_order": 10,
     "enabled": true,
-    "action": "str_replace",
-    "find": "<xf:radiorow name=\"action\" value=\"{$action.action}\"",
+    "action": "preg_replace",
+    "find": "#[\\t ]*<xf:radiorow name=\"action\"#si",
     "replace": "<xf:include template=\"sv_warning_action_edit\" />\n$0"
 }
