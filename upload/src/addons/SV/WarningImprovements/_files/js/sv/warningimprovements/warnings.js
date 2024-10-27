@@ -33,6 +33,7 @@ SV.WarningImprovements = SV.WarningImprovements || {};
         customTitleRow: null,
         customTitleInput: null,
         previousSelectedItem: null,
+        publicWarning: null,
 
         customTitles: [],
 
@@ -41,40 +42,35 @@ SV.WarningImprovements = SV.WarningImprovements || {};
             const rowSelector = this.options.customTitleRowSelector
             if (rowSelector === null)
             {
-                throw new Error('Custom title row selector missing.')
+                console.error('Custom title row selector missing.')
             }
 
-            this.customTitleRow = XF.findRelativeIf(rowSelector, this.target || this.$target)
+            this.customTitleRow = rowSelector ? XF.findRelativeIf(rowSelector, this.target || this.$target) : null
             if (xf22)
             {
-                this.customTitleRow = this.customTitleRow.get(0)
+                this.customTitleRow = this.customTitleRow.get(0) || null
             }
 
             if (this.customTitleRow === null)
             {
-                throw new Error('Missing custom title row.')
+                console.error('Missing custom title row.')
             }
 
             this.customTitleInput = XF.findRelativeIf(this.options.customTitleInputSelector, this.target || this.$target)
             if (xf22)
             {
-                this.customTitleInput = this.customTitleInput.get(0)
+                this.customTitleInput = this.customTitleInput.get(0) || null
             }
 
             if (this.customTitleInput === null)
             {
-                throw new Error('Custom title input missing.')
+                console.error('Custom title input missing.')
             }
 
             this.publicWarning = XF.findRelativeIf(this.options.publicWarningSelector, this.target || this.$target)
             if (xf22)
             {
-                this.publicWarning = this.publicWarning.get(0)
-            }
-
-            if (this.publicWarning === null)
-            {
-                throw new Error('Could not find public warning input')
+                this.publicWarning = this.publicWarning.get(0) || null
             }
 
             this._svWarningImprovementsInit()
@@ -109,7 +105,8 @@ SV.WarningImprovements = SV.WarningImprovements || {};
 
             if (!this.choices)
             {
-                throw new Error('Choices not setup.');
+                console.error('Choices not setup.');
+                return;
             }
 
             const previousSelectedItem = this.previousSelectedItem
@@ -120,7 +117,7 @@ SV.WarningImprovements = SV.WarningImprovements || {};
             if (previousSelectedItem)
             {
                 // Store the custom title to a dataset in previous selected item
-                if (previousSelectedItem.customProperties.allows_custom_title)
+                if (this.customTitleInput !== null && previousSelectedItem.customProperties.allows_custom_title)
                 {
                     if (this.customTitleInput.value.length === 0) // empty
                     {
@@ -139,7 +136,7 @@ SV.WarningImprovements = SV.WarningImprovements || {};
 
             if (selectedItem)
             {
-                if (selectedItem.customProperties.allows_custom_title)
+                if (this.customTitleInput !== null && selectedItem.customProperties.allows_custom_title)
                 {
                     // If there is any stored custom title in the data set of selectedItem then restore that
                     if (typeof this.customTitles[selectedItem.value] !== 'undefined')
@@ -195,7 +192,7 @@ SV.WarningImprovements = SV.WarningImprovements || {};
 
         showCustomTitleInput ()
         {
-            if (this.customTitleRow.offsetParent !== null)
+            if (this.customTitleRow === null || this.customTitleRow.offsetParent !== null)
             {
                 return
             }
@@ -212,7 +209,7 @@ SV.WarningImprovements = SV.WarningImprovements || {};
 
         hideCustomTitleInput ()
         {
-            if (this.customTitleRow.offsetParent === null)
+            if (this.customTitleRow === null || this.customTitleRow.offsetParent === null)
             {
                 return
             }
@@ -256,7 +253,7 @@ SV.WarningImprovements = SV.WarningImprovements || {};
             this.publicWarning = XF.findRelativeIf(this.options.publicWarningSelector, this.target || this.$target)
             if (xf22)
             {
-                this.publicWarning = this.publicWarning.get(0)
+                this.publicWarning = this.publicWarning.get(0) || null
             }
 
             if (this.publicWarning === null)
@@ -287,7 +284,7 @@ SV.WarningImprovements = SV.WarningImprovements || {};
 
         onInputChangeOrClick ()
         {
-            const theTarget = this.target || this.$target.get(0)
+            const theTarget = this.target || this.$target.get(0) || null
 
             if (theTarget.getAttribute('type') === 'text')
             {
@@ -314,7 +311,8 @@ SV.WarningImprovements = SV.WarningImprovements || {};
         {
             if (this.options.warningDefTitle === null)
             {
-                throw new Error('No warning definition title provided.')
+                console.log('No warning definition title provided.')
+                return;
             }
 
             this.setPublicMessage(this.options.warningDefTitle)
@@ -345,12 +343,14 @@ SV.WarningImprovements = SV.WarningImprovements || {};
         {
             if (this.options.warningUrl === null)
             {
-                throw new Error('No warning URL provided.')
+                console.log('No warning URL provided.')
+                return;
             }
 
             if (!(['radio', 'select'].includes(this.options.warningView)))
             {
-                throw new Error('Invalid warning view provided.')
+                console.log('Invalid warning view provided.');
+                return;
             }
 
             if (xf22) // XF 2.2
@@ -365,7 +365,7 @@ SV.WarningImprovements = SV.WarningImprovements || {};
 
         onChange (e)
         {
-            const theTarget = this.target || this.$target.get(0)
+            const theTarget = this.target || this.$target.get(0) || null
 
             XF.ajax('POST', XF.canonicalizeUrl(this.options.warningUrl), {
                 view: theTarget.value,
