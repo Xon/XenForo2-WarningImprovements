@@ -30,7 +30,7 @@
 			<xf:contentcheck>
 			<xf:foreach loop="$warnings" value="$warning">
 				<li class="nestable-item" data-id="{$warning.warning_definition_id}">
-					<div class="nestable-handle" aria-label="{{ phrase('drag_handle')|for_attr }}"><i class="fa fa-bars" aria-hidden="true"></i></div>
+					<div class="nestable-handle" aria-label="{{ phrase('drag_handle')|for_attr }}"><xf:fa icon="fa-bars" /></i></div>
 					<div class="nestable-content">{$warning.MasterTitle.phrase_text}</div>
 				</li>
 			</xf:foreach>

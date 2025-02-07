@@ -85,7 +85,7 @@
 
 <xf:macro name="sortable_list_entry" arg-child="!" arg-children="!">
 	<li class="nestable-item" data-id="{$child.id}">
-		<div class="nestable-handle" aria-label="{{ phrase('drag_handle')|for_attr }}"><i class="fa fa-bars" aria-hidden="true"></i></div>
+		<div class="nestable-handle" aria-label="{{ phrase('drag_handle')|for_attr }}"><xf:fa icon="fa-bars" /></div>
 		<div class="nestable-content">{$child.record.title}</div>
 		<xf:if is="$child.children is not empty">
 			<xf:macro name="sortable_list" arg-children="{$child.children}" />
