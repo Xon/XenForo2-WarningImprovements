@@ -22,7 +22,7 @@ class UserOption extends XFCP_UserOption
         $structure = parent::getStructure($structure);
 
         $structure->columns['sv_pending_warning_expiry'] = ['type' => self::UINT, 'default' => null, 'nullable' => true, 'changeLog' => false];
-        $structure->columns['sv_warning_view'] = ['type' => self::STR, 'default' => null, 'allowedValues' => ['radio', 'select'], 'nullable' => true];
+        $structure->columns['sv_warning_view'] = ['type' => self::STR, 'default' => null, 'allowedValues' => ['radio', 'select'], 'nullable' => true, 'changeLog' => false];
 
         return $structure;
     }
