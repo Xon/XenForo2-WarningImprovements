@@ -284,6 +284,14 @@ class Setup extends AbstractSetup
         $this->installStep2();
     }
 
+    public function upgrade1738906021Step1 (): void
+    {
+        \XF::db()->query("
+            DELETE FROM xf_change_log
+            WHERE xf_change_log.content_type = 'user' AND field = 'sv_warning_view'
+        ");
+    }
+
     public function uninstallStep1(): void
     {
         $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");
