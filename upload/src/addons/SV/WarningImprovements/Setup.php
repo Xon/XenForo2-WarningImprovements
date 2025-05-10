@@ -284,7 +284,7 @@ class Setup extends AbstractSetup
         $this->installStep2();
     }
 
-    public function upgrade1738906021Step1 (): void
+    public function upgrade1746864825Step1 (): void
     {
         \XF::db()->query("
             DELETE FROM xf_change_log
