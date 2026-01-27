@@ -20,15 +20,11 @@
 				  arg-label="{{ phrase('svWarningImprov_send_alert_on_deleting_warning') }}"
 				  arg-withReason="{{ true }}"
 				  />
-		
-		<xf:if is="is_addon_active('SV/ReportImprovements', 2100002) && $content.canResolveLinkedReport() && !$content.Report">
-			<xf:if contentcheck="true">
-				<xf:contentcheck>
-					<xf:macro name="svReportImprov_report_macros::resolve_report" 
-							  arg-report="{$content.Report}"
-							  />
-				</xf:contentcheck>
-			</xf:if>
+
+		<xf:if is="$showResolveReport">
+			<xf:macro name="svReportImprov_report_macros::resolve_report"
+					  arg-report="{$content.Report}"
+					  />
 		</xf:if>
 
 		<xf:submitrow rowtype="simple" icon="delete" />

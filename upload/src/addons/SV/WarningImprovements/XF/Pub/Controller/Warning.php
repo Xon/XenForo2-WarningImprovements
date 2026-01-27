@@ -13,10 +13,12 @@ use XF\ControllerPlugin\Editor as EditorPlugin;
 use XF\Entity\DeletionLog as DeletionLogEntity;
 use XF\Entity\SessionActivity as SessionActivityEntity;
 use XF\Entity\User as UserEntity;
+use XF\Entity\Warning as WarningEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
 use function array_key_exists;
 use function array_merge;
+use function count;
 use function str_replace;
 use function strlen;
 
@@ -25,6 +27,14 @@ use function strlen;
  */
 class Warning extends XFCP_Warning
 {
+    public function canResolveLinkedReports(WarningEntity $warning): bool
+    {
+        return Helper::isAddOnActive('SV/ReportImprovements', '2.10.0')
+               && $warning instanceof ReportImprovWarningEntity
+               && $warning->canResolveLinkedReport()
+            ;
+    }
+
     /** @noinspection PhpMissingParentCallCommonInspection */
     public function actionDelete(ParameterBag $params)
     {
@@ -46,6 +56,10 @@ class Warning extends XFCP_Warning
             return $this->redirect($this->buildLink('warnings/delete', $warning));
         }
 
+        /** @var ReportImprovWarningEntity $warning */
+        $showResolveReport = $this->canResolveLinkedReports($warning)
+                      && ($warning->Report === null || !Helper::isAddOnActive('SV/ReportCentreEssentials'));
+
         $plugin = Helper::plugin($this, DeletePlugin::class);
 
         return $plugin->actionDelete(
@@ -57,7 +71,9 @@ class Warning extends XFCP_Warning
                 'title' => $warning->title,
                 'name'  => $warning->User->username,
             ]),
-            'svWarningInfo_warning_info_delete'
+            'svWarningInfo_warning_info_delete', [
+                'showResolveReport' => $showResolveReport,
+            ]
         );
     }
 
@@ -96,6 +112,9 @@ class Warning extends XFCP_Warning
         $reply = $this->actionIndex($params);
 
         $reply->setParam('editingTemplate', 'svWarningInfo_warning_info');
+
+        $showResolveReport = $this->canResolveLinkedReports($warning);
+        $reply->setParam('showResolveReport', $showResolveReport);
 
         $handler = $warning->getHandler();
         $content = $warning->Content;
@@ -165,8 +184,7 @@ class Warning extends XFCP_Warning
             $defaults['points'] = 'uint';
         }
 
-        $addOns = \XF::app()->container('addon.cache');
-        if ($addOns['SV/WarningAcknowledgement'] ?? false)
+        if (Helper::isAddOnActive('SV/WarningAcknowledgement'))
         {
             /** @var ExtendedWarningDefinitionEntity $warningDefinition */
             $canEditWarningAck = $warningDefinition === null || $warningDefinition->sv_allow_acknowledgement;
@@ -179,7 +197,7 @@ class Warning extends XFCP_Warning
             }
         }
 
-        if ((($addOns['SV/ReportImprovements'] ?? 0) > 2100002) && $warning->canResolveLinkedReport())
+        if ($this->canResolveLinkedReports($warning))
         {
             $defaults['resolve_report'] = 'bool';
             $defaults['resolve_alert'] = 'bool';
@@ -230,8 +248,7 @@ class Warning extends XFCP_Warning
             $warningEditor->setSendAlert(true, $input['send_warning_alert_reason'] ?? '');
         }
 
-        $addOns = \XF::app()->container('addon.cache');
-        if ($addOns['SV/WarningAcknowledgement'] ?? false)
+        if (Helper::isAddOnActive('SV/WarningAcknowledgement'))
         {
             $bbCode = $input['sv_user_note'] ?? '';
             $html = $input['sv_user_note_html'] ?? '';
@@ -249,7 +266,7 @@ class Warning extends XFCP_Warning
             $warningEditor->setWarningAck($input);
         }
 
-        if ((($addOns['SV/ReportImprovements'] ?? 0) > 2100002) && $warning->canResolveLinkedReport())
+        if ($this->canResolveLinkedReports($warning))
         {
             $warningEditor->setCanReopenReport(false);
             $warningEditor->resolveReportFor($input['resolve_report'] ?? false, $input['resolve_alert'] ?? false, $input['resolve_alert_comment'] ?? '');
@@ -291,10 +308,9 @@ class Warning extends XFCP_Warning
             }
         }
 
-        if ($warningIds)
+        if (count($warningIds) !== 0)
         {
-            /** @var \XF\Entity\Warning[] $warnings */
-            $warnings = Helper::findByIds(\XF\Entity\Warning::class, $warningIds, ['User']);
+            $warnings = Helper::findByIds(WarningEntity::class, $warningIds, ['User'])->toArray();
         }
 
         $userIds = [];
@@ -335,8 +351,9 @@ class Warning extends XFCP_Warning
 
             $visitor = \XF::visitor();
             $warningId = $activity->pluckParam('warning_id');
+            /** @var WarningEntity|null $warning */
             $warning = $warningId ? ($warnings[$warningId] ?? null) : null;
-            if ($warning && $warning->User)
+            if ($warning !== null && $warning->User !== null)
             {
                 $warnedUserId = $warning->user_id;
                 Globals::$profileUserId = $warnedUserId && $activityUserId === $warnedUserId ? $warnedUserId : null;
