@@ -52,7 +52,10 @@ class Warning extends XFCP_Warning
             $this->buildLink('warnings/delete', $warning, ['confirm' => 1]),
             $this->buildLink('warnings', $warning),
             $this->buildLink('members', $warning->User) . '#warnings',
-            \XF::phrase('svWarningImprov_warning_for_x', ['title' => $warning->title, 'name' => $warning->User->username]),
+            \XF::phrase('svWarningImprov_warning_for_x', [
+                'title' => $warning->title,
+                'name' => $warning->User->username,
+            ]),
             'svWarningInfo_warning_info_delete'
         );
     }
