@@ -24,23 +24,23 @@ class WarnFill extends XFCP_WarnFill
         $response['formValues']['input[name=open_invite]'] = $options->sv_warningimprovements_conversation_invite ?? false;
         $response['formValues']['input[name=send_warning_alert]'] = $options->sv_warningimprovements_alert_send_default ?? false;
 
-/*
-XF bug; https://xenforo.com/community/threads/form-filler-doesnt-work-well-with-disabler.143576
-Use a template mopdification which calls $user.getWarningDefaultContentAction() instead of this:
-        switch ($options->sv_warningimprovements_default_content_action)
-        {
-            case 'delete_content':
-                $response['formValues']['input[name=content_action][value="delete"]'] = 1;
-                break;
-            case 'public_warning':
-                $response['formValues']['input[name=content_action][value="public"]'] = 1;
-                break;
-            case 'none';
-            default:
-                $response['formValues']['input[name=content_action][value=""]'] = 1;
-                break;
-        }
-*/
+        /*
+        XF bug; https://xenforo.com/community/threads/form-filler-doesnt-work-well-with-disabler.143576
+        Use a template mopdification which calls $user.getWarningDefaultContentAction() instead of this:
+                switch ($options->sv_warningimprovements_default_content_action)
+                {
+                    case 'delete_content':
+                        $response['formValues']['input[name=content_action][value="delete"]'] = 1;
+                        break;
+                    case 'public_warning':
+                        $response['formValues']['input[name=content_action][value="public"]'] = 1;
+                        break;
+                    case 'none';
+                    default:
+                        $response['formValues']['input[name=content_action][value=""]'] = 1;
+                        break;
+                }
+        */
         if ($warningDefinition->sv_custom_title)
         {
             $response['formValues']['#customTitle'] = true;

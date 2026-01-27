@@ -93,14 +93,12 @@ class Notifier extends XFCP_Notifier
     }
 
     /**
-     * @since @since 2.5.6
-     *
-     * @param UserEntity $user
+     * @param UserEntity      $user
      * @param UserEntity|null $sender
-     *
      * @return bool
+     * @since @since 2.5.6
      */
-    protected function isForcingEmailNotificationForUser(UserEntity $user, ?UserEntity $sender = null) : bool
+    protected function isForcingEmailNotificationForUser(UserEntity $user, ?UserEntity $sender = null): bool
     {
         if (!$user->user_id)
         {
@@ -111,17 +109,15 @@ class Notifier extends XFCP_Notifier
     }
 
     /**
-     * @since 2.5.6
-     *
-     * @param UserEntity $user
+     * @param UserEntity      $user
      * @param UserEntity|null $sender
-     *
      * @return bool
      * @noinspection PhpMissingReturnTypeInspection
+     * @since        2.5.6
      */
     protected function _canUserReceiveEmailNotification(UserEntity $user, ?UserEntity $sender = null)
     {
         return parent::_canUserReceiveEmailNotification($user, $sender)
-            || $this->isForcingEmailNotificationForUser($user, $sender);
+               || $this->isForcingEmailNotificationForUser($user, $sender);
     }
 }

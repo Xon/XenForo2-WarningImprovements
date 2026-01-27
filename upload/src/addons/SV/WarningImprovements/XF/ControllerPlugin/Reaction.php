@@ -13,23 +13,21 @@ use XF\Mvc\Reply\Exception as ExceptionReply;
 class Reaction extends XFCP_Reaction
 {
     /**
-     * @param Entity $content
-     * @param string $link
+     * @param Entity      $content
+     * @param string      $link
      * @param string|null $title
-     * @param array $breadcrumbs
-     * @param array $linkParams
-     *
+     * @param array       $breadcrumbs
+     * @param array       $linkParams
      * @return AbstractReply
-     *
      * @throws ExceptionReply
      * @noinspection PhpMissingReturnTypeInspection
      */
     public function actionReactions(
         Entity $content,
-        $link,
-        $title = null,
-        array $breadcrumbs = [],
-        array $linkParams = []
+               $link,
+               $title = null,
+        array  $breadcrumbs = [],
+        array  $linkParams = []
     )
     {
         if ($content instanceof SupportsDisablingReactionInterface

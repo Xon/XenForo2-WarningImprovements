@@ -16,7 +16,6 @@ use XF\Phrase;
 /**
  * @extends \XF\Entity\WarningDefinition
  * COLUMNS
- *
  * @property int                        $sv_warning_category_id
  * @property int                        $sv_display_order
  * @property bool                       $sv_custom_title
@@ -34,12 +33,12 @@ class WarningDefinition extends XFCP_WarningDefinition
 {
     public const SV_CONTENT_SPOILER_TITLE = 'sv_warning_improvements_warning_spoiler_title';
 
-    public function getSvContentSpoilerTitlePhraseName() : string
+    public function getSvContentSpoilerTitlePhraseName(): string
     {
         return static::SV_CONTENT_SPOILER_TITLE . '.' . $this->warning_definition_id;
     }
 
-    public function getSvContentSpoilerTitle() : Phrase
+    public function getSvContentSpoilerTitle(): Phrase
     {
         return \XF::phrase($this->getSvContentSpoilerTitlePhraseName());
     }
@@ -180,12 +179,12 @@ class WarningDefinition extends XFCP_WarningDefinition
         $structure->columns['sv_display_order'] = ['type' => self::UINT];
         $structure->columns['sv_custom_title'] = ['type' => self::BOOL, 'default' => false];
         $structure->columns['sv_spoiler_contents'] = [
-            'type' => self::BOOL,
-            'default' => false
+            'type'    => self::BOOL,
+            'default' => false,
         ];
         $structure->columns['sv_disable_reactions'] = [
-            'type' => self::BOOL,
-            'default' => false
+            'type'    => self::BOOL,
+            'default' => false,
         ];
 
         $structure->getters['is_custom'] = true;
@@ -196,16 +195,16 @@ class WarningDefinition extends XFCP_WarningDefinition
             'entity'     => 'SV\WarningImprovements:WarningCategory',
             'type'       => self::TO_ONE,
             'conditions' => [['warning_category_id', '=', '$sv_warning_category_id']],
-            'primary'    => true
+            'primary'    => true,
         ];
         $structure->relations['SvMasterContentSpoilerTitle'] = [
-            'entity' => 'XF:Phrase',
-            'type' => self::TO_ONE,
-            'conditions' => [
+            'entity'        => 'XF:Phrase',
+            'type'          => self::TO_ONE,
+            'conditions'    => [
                 ['language_id', '=', 0],
-                ['title', '=', static::SV_CONTENT_SPOILER_TITLE . '.', '$warning_definition_id']
+                ['title', '=', static::SV_CONTENT_SPOILER_TITLE . '.', '$warning_definition_id'],
             ],
-            'cascadeDelete' => true
+            'cascadeDelete' => true,
         ];
 
         return $structure;

@@ -7,11 +7,12 @@ use XF\Mvc\Entity\Structure;
 
 /**
  * COLUMNS
+ *
  * @property int|null $warning_default_id
- * @property int $threshold_points
- * @property string $expiry_type
- * @property int $expiry_extension
- * @property bool $active
+ * @property int      $threshold_points
+ * @property string   $expiry_type
+ * @property int      $expiry_extension
+ * @property bool     $active
  */
 class WarningDefault extends Entity
 {
@@ -26,7 +27,7 @@ class WarningDefault extends Entity
             'threshold_points'   => ['type' => self::UINT, 'required' => true, 'max' => 65535],
             'expiry_type'        => [
                 'type'          => self::STR, 'default' => 'never',
-                'allowedValues' => ['never', 'hours', 'days', 'weeks', 'months', 'years']
+                'allowedValues' => ['never', 'hours', 'days', 'weeks', 'months', 'years'],
             ],
             'expiry_extension'   => ['type' => self::UINT, 'default' => 1, 'max' => 65535],
             'active'             => ['type' => self::BOOL, 'required' => true],

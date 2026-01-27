@@ -30,14 +30,14 @@ class WarningAction extends XFCP_WarningAction
      */
     public function getTitle()
     {
-        return \XF::phrase('svWarningPoints:') . ' '. $this->points;
+        return \XF::phrase('svWarningPoints:') . ' ' . $this->points;
     }
 
     /**
      * @param int|null $value
-     * @param string $key
-     * @param string $type
-     * @param array  $columnOptions
+     * @param string   $key
+     * @param string   $type
+     * @param array    $columnOptions
      * @return bool
      * @noinspection PhpUnusedParameterInspection
      * @noinspection PhpMissingParamTypeInspection
@@ -49,6 +49,7 @@ class WarningAction extends XFCP_WarningAction
         {
             $value = null;
         }
+
         return true;
     }
 
@@ -71,28 +72,28 @@ class WarningAction extends XFCP_WarningAction
             'entity'     => 'SV\WarningImprovements:WarningDefault',
             'type'       => self::TO_ONE,
             'conditions' => 'sv_warning_category_id',
-            'primary'    => true
+            'primary'    => true,
         ];
 
         $structure->relations['PostForum'] = [
             'entity'     => 'XF:Forum',
             'type'       => self::TO_ONE,
             'conditions' => 'sv_post_node_id',
-            'primary'    => true
+            'primary'    => true,
         ];
 
         $structure->relations['PostThread'] = [
             'entity'     => 'XF:Thread',
             'type'       => self::TO_ONE,
             'conditions' => 'sv_post_thread_id',
-            'primary'    => true
+            'primary'    => true,
         ];
 
         $structure->relations['PostAsUser'] = [
             'entity'     => 'XF:User',
             'type'       => self::TO_ONE,
             'conditions' => 'sv_post_as_user_id',
-            'primary'    => true
+            'primary'    => true,
         ];
 
         if (\XF::$versionId < 2010500)

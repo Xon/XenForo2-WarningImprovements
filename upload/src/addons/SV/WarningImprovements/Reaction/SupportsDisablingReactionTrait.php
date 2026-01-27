@@ -2,12 +2,12 @@
 
 namespace SV\WarningImprovements\Reaction;
 
-use XF\Mvc\Entity\Entity;
 use SV\WarningImprovements\Entity\SupportsDisablingReactionInterface as SupportsDisablingReactionEntityInterface;
+use XF\Mvc\Entity\Entity;
 
 trait SupportsDisablingReactionTrait
 {
-    public function reactionsCountedForSvWarnImprov(Entity $entity) : bool
+    public function reactionsCountedForSvWarnImprov(Entity $entity): bool
     {
         if (!($entity instanceof SupportsDisablingReactionEntityInterface))
         {

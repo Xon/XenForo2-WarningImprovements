@@ -8,29 +8,28 @@ use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
 use SV\WarningImprovements\XF\Entity\ConversationMaster as ExtendedConversationMasterEntity;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
 use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\App;
+use XF\Entity\ConversationMaster as ConversationMasterEntity;
 use XF\Entity\Forum as ForumEntity;
 use XF\Entity\Thread as ThreadEntity;
 use XF\Entity\User as UserEntity;
 use XF\Entity\Warning as WarningEntity;
 use XF\Entity\WarningDefinition as WarningDefinitionEntity;
 use XF\Mvc\Entity\Entity;
-use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use XF\Repository\Reaction as ReactionRepo;
 use XF\Repository\Warning as WarningRepo;
 use XF\Service\Conversation\Creator as ConversationCreatorService;
 use XF\Service\Thread\Creator as ThreadCreatorService;
 use XF\Service\Thread\Replier as ThreadReplierService;
 use XF\Service\User\Warn as WarningService;
-use XF\Entity\ConversationMaster as ConversationMasterEntity;
-use function strval;
 use function strtr;
+use function strval;
 
 /**
  * @extends WarningService
- *
  * @property ExtendedWarningEntity $warning
  */
 class Warn extends XFCP_Warn
@@ -70,7 +69,7 @@ class Warn extends XFCP_Warn
 
 
         /** @var ExtendedWarningDefinitionEntity $definition */
-        $return = Globals::asVisitorWithLang($this->user, function() use ($definition, $points, $expiry): WarningService {
+        $return = Globals::asVisitorWithLang($this->user, function () use ($definition, $points, $expiry): WarningService {
             return parent::setFromDefinition($definition, $points, $expiry);
         });
 
@@ -97,6 +96,7 @@ class Warn extends XFCP_Warn
     public function setFromCustom($title, $points, $expiry)
     {
         Globals::$warningInput['custom_title'] = $title;
+
         return $this->setFromDefinition($this->getCustomWarningDefinition(), $points, $expiry);
     }
 
@@ -149,7 +149,7 @@ class Warn extends XFCP_Warn
             ($forum = Helper::find(ForumEntity::class, $postSummaryForumId)))
         {
             /** @var ForumEntity|MultiPrefixForumEntity $forum */
-            $threadCreator = Globals::asVisitorWithLang($warningUser, function () use ($forum, $params) : ThreadCreatorService {
+            $threadCreator = Globals::asVisitorWithLang($warningUser, function () use ($forum, $params): ThreadCreatorService {
                 $threadCreator = Helper::service(ThreadCreatorService::class, $forum);
                 $threadCreator->setIsAutomated();
 
@@ -168,7 +168,7 @@ class Warn extends XFCP_Warn
                 return $threadCreator;
             });
 
-            \XF::runLater(function () use ($threadCreator, $warningUser){
+            \XF::runLater(function () use ($threadCreator, $warningUser) {
                 Globals::asVisitorWithLang($warningUser, function () use ($threadCreator): void {
                     $threadCreator->sendNotifications();
                 });
@@ -189,7 +189,7 @@ class Warn extends XFCP_Warn
                 return $threadReplier;
             });
 
-            \XF::runLater(function () use ($threadReplier, $warningUser){
+            \XF::runLater(function () use ($threadReplier, $warningUser) {
                 Globals::asVisitorWithLang($warningUser, function () use ($threadReplier): void {
                     $threadReplier->sendNotifications();
                 });
@@ -202,7 +202,7 @@ class Warn extends XFCP_Warn
      * @param callable(): T $callback
      * @return T
      * @throws \Exception
-     *@since 2.5.7
+     * @since 2.5.7
      * @template T
      */
     protected function doAsWarningIssuerForSv(WarningEntity $warning, callable $callback)
@@ -230,12 +230,11 @@ class Warn extends XFCP_Warn
      * @throws \Exception
      * @noinspection PhpMissingParentCallCommonInspection
      * @noinspection PhpMissingReturnTypeInspection
-     * @since 2.5.7
+     * @since        2.5.7
      */
     protected function setupConversation(WarningEntity $warning)
     {
-        return $this->doAsWarningIssuerForSv($warning, function () use ($warning): ConversationCreatorService
-        {
+        return $this->doAsWarningIssuerForSv($warning, function () use ($warning): ConversationCreatorService {
             $warnedByUser = \XF::visitor();
             $warnedUser = $warning->User;
 
@@ -274,7 +273,7 @@ class Warn extends XFCP_Warn
         });
     }
 
-    public function setContentSpoilerTitleForSvWarnImprove(string $spoilerTitle) : self
+    public function setContentSpoilerTitleForSvWarnImprove(string $spoilerTitle): self
     {
         $warning = $this->warning;
         $warning->sv_spoiler_contents = true;
@@ -292,7 +291,7 @@ class Warn extends XFCP_Warn
         return $this;
     }
 
-    public function disableReactionsForSvWarnImprov() : self
+    public function disableReactionsForSvWarnImprov(): self
     {
         $warning = $this->warning;
         $warning->sv_disable_reactions = true;

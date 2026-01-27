@@ -4,10 +4,10 @@ namespace SV\WarningImprovements\Service\Warning;
 
 use SV\ReportImprovements\XF\Entity\Warning as ReportImprovWarningEntity;
 use SV\StandardLib\Helper;
-use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningAcknowledgement\XF\Entity\Warning as WarningAckExtendedWarningEntity;
 use SV\WarningImprovements\Entity\SupportsEmbedMetadataInterface;
 use SV\WarningImprovements\Reaction\SupportsDisablingReactionInterface;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\App;
 use XF\Entity\DeletionLog as DeletionLogEntity;
@@ -17,6 +17,7 @@ use XF\Repository\Warning as WarningRepo;
 use XF\Service\AbstractService;
 use XF\Service\ValidateAndSavableTrait;
 use function array_key_exists;
+use function pow;
 use function strlen;
 use function strtotime;
 
@@ -90,7 +91,7 @@ class Editor extends AbstractService
 
     public function setExpiry(string $expiry, int $expiryLength, string $expiryUnit)
     {
-        switch($expiry)
+        switch ($expiry)
         {
             case 'now':
                 $this->warning->expiry_date = \XF::$time;
@@ -135,7 +136,7 @@ class Editor extends AbstractService
     {
         $content = $this->warning->Content;
 
-        switch($contentAction)
+        switch ($contentAction)
         {
             case 'public':
                 if (($contentActionOptions['message'] ?? '') === $this->publicBanner)
@@ -218,9 +219,9 @@ class Editor extends AbstractService
     }
 
     public function setSpoilerContents(
-        bool $spoilerContents,
+        bool   $spoilerContents,
         string $spoilerTitle,
-        bool $forceSpoilerTitleUpdate = false) : self
+        bool   $forceSpoilerTitleUpdate = false): self
     {
         $warning = $this->warning;
         $warning->sv_spoiler_contents = $spoilerContents;
@@ -234,7 +235,7 @@ class Editor extends AbstractService
         return $this;
     }
 
-    public function setDisableReactions(bool $disableReactions) : self
+    public function setDisableReactions(bool $disableReactions): self
     {
         $warning = $this->warning;
         $warning->sv_disable_reactions = $disableReactions;
@@ -247,6 +248,7 @@ class Editor extends AbstractService
         $this->finalSetup();
 
         $this->warning->preSave();
+
         return $this->warning->getErrors();
     }
 

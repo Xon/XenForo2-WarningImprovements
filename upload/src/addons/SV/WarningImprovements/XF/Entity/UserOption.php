@@ -6,8 +6,7 @@ use XF\Mvc\Entity\Structure;
 
 /**
  * @extends \XF\Entity\UserOption
- *
- * @property int|null $sv_pending_warning_expiry
+ * @property int|null    $sv_pending_warning_expiry
  * @property string|null $sv_warning_view_type
  */
 class UserOption extends XFCP_UserOption

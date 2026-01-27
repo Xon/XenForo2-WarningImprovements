@@ -43,10 +43,10 @@ class WarningCategory extends AbstractCategoryTree
         $output = array_merge(
             [
                 'warning_count' => 0,
-                'childCount'    => 0
+                'childCount'    => 0,
             ], $extras);
 
-        foreach ($childExtras AS $child)
+        foreach ($childExtras as $child)
         {
             if (!empty($child['warning_count']))
             {

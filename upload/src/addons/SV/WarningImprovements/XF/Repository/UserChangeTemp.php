@@ -74,10 +74,10 @@ class UserChangeTemp extends XFCP_UserChangeTemp
     }
 
     /**
-     * @param int   $userId
-     * @param bool  $showAll
-     * @param bool  $showDiscouraged
-     * @param bool  $onlyExpired
+     * @param int  $userId
+     * @param bool $showAll
+     * @param bool $showDiscouraged
+     * @param bool $onlyExpired
      * @return Finder|UserChangeTempFinder
      */
     public function getWarningActions(int $userId, bool $showAll = false, bool $showDiscouraged = false, bool $onlyExpired = false)
@@ -110,7 +110,7 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             {
                 $showDiscouragedWhere = 'AND ' . implode(' AND ', [
                         $warningActions->buildCondition('action_type', '<>', 'field'),
-                        $warningActions->buildCondition('action_modifier', '<>', 'is_discouraged')
+                        $warningActions->buildCondition('action_modifier', '<>', 'is_discouraged'),
                     ]);
             }
 

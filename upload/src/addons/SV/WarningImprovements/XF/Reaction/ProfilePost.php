@@ -17,6 +17,6 @@ class ProfilePost extends XFCP_ProfilePost implements SupportsDisablingReactionI
     public function reactionsCounted(Entity $entity)
     {
         return parent::reactionsCounted($entity)
-            && $this->reactionsCountedForSvWarnImprov($entity);
+               && $this->reactionsCountedForSvWarnImprov($entity);
     }
 }

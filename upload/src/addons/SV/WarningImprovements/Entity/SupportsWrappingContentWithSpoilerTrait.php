@@ -4,7 +4,7 @@ namespace SV\WarningImprovements\Entity;
 
 trait SupportsWrappingContentWithSpoilerTrait
 {
-    public function isContentWrappedInSpoilerForSvWarnImprov() : bool
+    public function isContentWrappedInSpoilerForSvWarnImprov(): bool
     {
         /** @noinspection PhpInstanceofIsAlwaysTrueInspection */
         if (!($this instanceof SupportsEmbedMetadataInterface))

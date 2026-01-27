@@ -17,6 +17,6 @@ class Post extends XFCP_Post implements SupportsDisablingReactionInterface
     public function reactionsCounted(Entity $entity)
     {
         return parent::reactionsCounted($entity)
-            && $this->reactionsCountedForSvWarnImprov($entity);
+               && $this->reactionsCountedForSvWarnImprov($entity);
     }
 }

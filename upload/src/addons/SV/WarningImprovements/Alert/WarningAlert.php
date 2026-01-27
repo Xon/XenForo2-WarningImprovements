@@ -4,10 +4,10 @@ namespace SV\WarningImprovements\Alert;
 
 use SV\StandardLib\Helper;
 use XF\Alert\AbstractHandler;
+use XF\Entity\Warning as WarningEntity;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Mvc\Entity\ArrayCollection;
 use XF\Mvc\Entity\Entity;
-use XF\Entity\Warning as WarningEntity;
 use function in_array;
 use function is_array;
 

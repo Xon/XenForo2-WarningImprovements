@@ -9,8 +9,8 @@ use SV\StandardLib\Helper;
 use SV\WarningImprovements\Finder\WarningCategory as WarningCategoryFinder;
 use SV\WarningImprovements\Service\Warning\CategoryRebuildNestedSet as CategoryRebuildNestedSetService;
 use SV\WarningImprovements\XF\Entity\WarningAction as ExtendedWarningActionEntity;
-use XF\Entity\AbstractCategoryTree;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+use XF\Entity\AbstractCategoryTree;
 use XF\Entity\PermissionCacheContent as PermissionCacheContentEntity;
 use XF\Entity\Phrase as PhraseEntity;
 use XF\Mvc\Entity\Structure;
@@ -24,14 +24,14 @@ use function ucfirst;
 /**
  * COLUMNS
  *
- * @property int|null                            $warning_category_id
- * @property int                                                    $warning_count
- * @property array                                                  $allowed_user_group_ids
- * @property array                                                  $allowed_user_group_ids_
- * @property int|null                                               $parent_category_id
- * @property int                                                    $display_order
- * @property int                                                    $lft
- * @property int                                                    $rgt
+ * @property int|null                               $warning_category_id
+ * @property int                                    $warning_count
+ * @property array                                  $allowed_user_group_ids
+ * @property array                                  $allowed_user_group_ids_
+ * @property int|null                               $parent_category_id
+ * @property int                                    $display_order
+ * @property int                                    $lft
+ * @property int                                    $rgt
  * @property int                                    $depth
  * @property array                                  $breadcrumb_data
  * GETTERS
@@ -111,7 +111,7 @@ class WarningCategory extends AbstractCategoryTree
         {
             if ($this->isChanged('warning_category_id'))
             {
-                foreach ($this->_structure->relations AS $name => $relation)
+                foreach ($this->_structure->relations as $name => $relation)
                 {
                     if ($relation['entity'] === 'XF:Phrase')
                     {
@@ -175,7 +175,7 @@ class WarningCategory extends AbstractCategoryTree
 
     protected function _postDelete(): void
     {
-        foreach ($this->_structure->relations AS $name => $relation)
+        foreach ($this->_structure->relations as $name => $relation)
         {
             if ($relation['entity'] === 'XF:Phrase')
             {
@@ -242,8 +242,7 @@ class WarningCategory extends AbstractCategoryTree
     protected function scheduleNestedSetRebuild(): void
     {
         $entityType = $this->structure()->shortName;
-        \XF::runOnce('rebuildTree-' . $entityType, function()
-        {
+        \XF::runOnce('rebuildTree-' . $entityType, function () {
             $service = Helper::service(CategoryRebuildNestedSetService::class);
             $service->rebuildNestedSetInfo();
         });

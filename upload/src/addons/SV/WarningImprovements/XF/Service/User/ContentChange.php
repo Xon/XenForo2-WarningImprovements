@@ -33,7 +33,7 @@ class ContentChange extends XFCP_ContentChange
     /**
      * ContentChange constructor.
      *
-     * @param App $app
+     * @param App     $app
      * @param int     $originalUserId
      * @param ?string $originalUserName
      */
@@ -62,7 +62,7 @@ class ContentChange extends XFCP_ContentChange
         {
             $warningActionIds = [];
             /** @var UserChangeTempEntity|ExtendedUserChangeTempEntity $_warningAction */
-            foreach ($warningActionsAppliedToSource AS $_warningAction)
+            foreach ($warningActionsAppliedToSource as $_warningAction)
             {
                 $warningActionDetails = explode('_', $_warningAction->change_key);
                 $warningActionId = $warningActionDetails[2] ?? null;
@@ -78,13 +78,14 @@ class ContentChange extends XFCP_ContentChange
             if (count($warningActionIds) === 0)
             {
                 \XF::logException(new LogicException('No warning actions applied to target user.'));
+
                 return;
             }
 
             $warningActions = Helper::finder(WarningActionFinder::class)->whereIds($warningActionIds)->fetch();
 
             /** @var ExtendedWarningActionEntity $warningAction */
-            foreach ($warningActions AS $warningAction)
+            foreach ($warningActions as $warningAction)
             {
                 $this->applyWarningActionForSVWI($targetUser, $warningAction);
             }
@@ -102,7 +103,7 @@ class ContentChange extends XFCP_ContentChange
         }
         else
         {
-            $actionEndDate = min(pow(2,32) - 1, (int)strtotime("+{$warningAction->action_length} {$warningAction->action_length_type}"));
+            $actionEndDate = min(pow(2, 32) - 1, (int)strtotime("+{$warningAction->action_length} {$warningAction->action_length_type}"));
         }
 
         $tempChangeKey = $warningAction->getTempUserChangeKey();

@@ -32,7 +32,7 @@ class WarningCategoryTree extends AbstractCategoryTree
         else
         {
             $viewParams = [
-                'category' => $category
+                'category' => $category,
             ];
 
             return $this->view(

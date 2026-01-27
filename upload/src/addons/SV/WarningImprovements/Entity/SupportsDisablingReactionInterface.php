@@ -8,11 +8,11 @@ use XF\Phrase;
 interface SupportsDisablingReactionInterface
 {
     /**
-     * @param Entity      $entity
+     * @param Entity             $entity
      * @param Phrase|string|null $error
      * @return bool
      */
-    public function hasDisabledReactionsForSvWarnImprov(Entity $entity, &$error = null) : bool;
+    public function hasDisabledReactionsForSvWarnImprov(Entity $entity, &$error = null): bool;
 
-    public function hasDisabledReactionsListForSvWarnImprov(Entity $entity) : bool;
+    public function hasDisabledReactionsListForSvWarnImprov(Entity $entity): bool;
 }

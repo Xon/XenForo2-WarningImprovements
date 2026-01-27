@@ -20,7 +20,7 @@ class Warning extends XFCP_Warning
             [
                 ['points', '>', '0'],
                 ['is_expired', '!=', '0'],
-            ]
+            ],
         ]);
 
         return $this;

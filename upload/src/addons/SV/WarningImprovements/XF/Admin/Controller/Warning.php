@@ -27,6 +27,7 @@ use XF\Mvc\Reply\AbstractReply;
 use XF\Mvc\Reply\Exception as ReplyException;
 use XF\Mvc\Reply\View as ViewReply;
 use XF\Repository\Node as NodeRepo;
+use function strlen;
 
 /**
  * @extends \XF\Admin\Controller\Warning
@@ -45,7 +46,7 @@ class Warning extends XFCP_Warning
                 $setup->addDefaultPhrases();
                 $setup->cleanupWarningCategories();
             }
-            catch(\Exception $e)
+            catch (\Exception $e)
             {
                 // swallow exceptions
             }
@@ -86,7 +87,7 @@ class Warning extends XFCP_Warning
                     'actions'       => $actions,
                     'globalActions' => $globalActions,
 
-                    'escalatingDefaults' => $escalatingDefaults
+                    'escalatingDefaults' => $escalatingDefaults,
                 ]);
         }
 
@@ -120,7 +121,7 @@ class Warning extends XFCP_Warning
             $categoryTree = $categoryRepo->createCategoryTree();
             $response->setParams(
                 [
-                    'categoryTree' => $categoryTree
+                    'categoryTree' => $categoryTree,
                 ]);
         }
 
@@ -138,18 +139,17 @@ class Warning extends XFCP_Warning
 
         $formAction->setupEntityInput($warning, $this->filter([
             'sv_warning_category_id' => 'uint',
-            'sv_custom_title' => 'bool',
-            'sv_display_order' => 'uint',
+            'sv_custom_title'        => 'bool',
+            'sv_display_order'       => 'uint',
 
-            'sv_spoiler_contents' => 'bool',
-            'sv_disable_reactions' => 'bool'
+            'sv_spoiler_contents'  => 'bool',
+            'sv_disable_reactions' => 'bool',
         ]));
 
         $phraseInput = $this->filter([
-            'sv_content_spoiler_title' => 'str'
+            'sv_content_spoiler_title' => 'str',
         ]);
-        $formAction->apply(function () use($phraseInput, $warning)
-        {
+        $formAction->apply(function () use ($phraseInput, $warning) {
             if (strlen($phraseInput['sv_content_spoiler_title']) === 0)
             {
                 $masterContentSpoilerTitle = $warning->getRelation('SvMasterContentSpoilerTitle');
@@ -215,7 +215,7 @@ class Warning extends XFCP_Warning
 
             $viewParams = [
                 'categoryTree' => $categoryTree,
-                'warnings'     => $warnings
+                'warnings'     => $warnings,
             ];
 
             return $this->view(
@@ -252,7 +252,7 @@ class Warning extends XFCP_Warning
             $response->setParams(
                 [
                     'nodeTree'     => $nodeRepo->createNodeTree($nodes),
-                    'categoryTree' => $categoryTree
+                    'categoryTree' => $categoryTree,
                 ]);
         }
 
@@ -266,10 +266,10 @@ class Warning extends XFCP_Warning
             'sv_warning_category_id' => 'uint',
             'sv_post_node_id'        => 'uint',
             'sv_post_thread_id'      => 'uint',
-            'sv_post_as_user_id'     => 'uint'
+            'sv_post_as_user_id'     => 'uint',
         ];
 
-        foreach ($inputFieldNames AS $inputFieldName => $inputFieldFilterName)
+        foreach ($inputFieldNames as $inputFieldName => $inputFieldFilterName)
         {
             $input = $this->filter($inputFieldName, $inputFieldFilterName);
             if ($inputFieldFilterName === 'uint' && $input === 0)
@@ -293,7 +293,7 @@ class Warning extends XFCP_Warning
         $viewParams = [
             'default'      => $defaultAction,
             'nodeTree'     => $nodeRepo->createNodeTree($nodes),
-            'categoryTree' => $categoryTree
+            'categoryTree' => $categoryTree,
         ];
 
         return $this->view('SV\WarningImprovements\XF:Warning\Action\DefaultEdit', 'sv_warningimprovements_warning_default_edit', $viewParams);
@@ -322,7 +322,7 @@ class Warning extends XFCP_Warning
                 'threshold_points' => 'uint',
                 'expiry_extension' => 'uint',
                 'expiry_type'      => 'str',
-                'active'           => 'bool'
+                'active'           => 'bool',
             ]);
 
         if ($this->filter('expiry_type_base', 'str') === 'never')
@@ -368,7 +368,7 @@ class Warning extends XFCP_Warning
         else
         {
             $viewParams = [
-                'default' => $defaultAction
+                'default' => $defaultAction,
             ];
 
             return $this->view('XF:Warning\DefaultDelete', 'sv_warningimprovements_warning_default_delete', $viewParams);
@@ -413,8 +413,8 @@ class Warning extends XFCP_Warning
 
         $input = $this->filter(
             [
-                'parent_category_id'     => 'uint',
-                'display_order'          => 'uint',
+                'parent_category_id' => 'uint',
+                'display_order'      => 'uint',
             ]);
 
         if (!$input['parent_category_id'])
@@ -436,7 +436,7 @@ class Warning extends XFCP_Warning
 
         $phraseInput = $this->filter(
             [
-                'title' => 'str'
+                'title' => 'str',
             ]);
         $form->validate(function (FormAction $form) use ($phraseInput) {
             if ($phraseInput['title'] === '')
@@ -445,7 +445,7 @@ class Warning extends XFCP_Warning
             }
         });
         $form->apply(function () use ($phraseInput, $warningCategory) {
-            foreach ($phraseInput AS $type => $text)
+            foreach ($phraseInput as $type => $text)
             {
                 $masterPhrase = $warningCategory->getMasterPhrase($type);
                 $masterPhrase->phrase_text = $text;

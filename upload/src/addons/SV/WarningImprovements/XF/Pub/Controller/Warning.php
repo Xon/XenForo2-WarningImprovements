@@ -6,6 +6,8 @@ use SV\ReportImprovements\XF\Entity\Warning as ReportImprovWarningEntity;
 use SV\StandardLib\Helper;
 use SV\WarningAcknowledgement\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\Service\Warning\Editor as EditorService;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use XF\ControllerPlugin\Delete as DeletePlugin;
 use XF\ControllerPlugin\Editor as EditorPlugin;
 use XF\Entity\DeletionLog as DeletionLogEntity;
@@ -13,10 +15,9 @@ use XF\Entity\SessionActivity as SessionActivityEntity;
 use XF\Entity\User as UserEntity;
 use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\AbstractReply;
-use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
-use SV\WarningImprovements\Service\Warning\Editor as EditorService;
 use function array_key_exists;
 use function array_merge;
+use function str_replace;
 use function strlen;
 
 /**
@@ -54,7 +55,7 @@ class Warning extends XFCP_Warning
             $this->buildLink('members', $warning->User) . '#warnings',
             \XF::phrase('svWarningImprov_warning_for_x', [
                 'title' => $warning->title,
-                'name' => $warning->User->username,
+                'name'  => $warning->User->username,
             ]),
             'svWarningInfo_warning_info_delete'
         );
@@ -139,18 +140,18 @@ class Warning extends XFCP_Warning
         $canEditPoints = $isCustom || $warningDefinition->is_editable;
 
         $defaults = [
-            'expire' => 'str',
-            'expiry_value' => 'uint',
-            'expiry_unit' => 'str',
-            'notes' => 'str',
-            'content_action' => 'str',
-            'action_options' => 'array',
-            'send_warning_alert' => 'bool',
+            'expire'                    => 'str',
+            'expiry_value'              => 'uint',
+            'expiry_unit'               => 'str',
+            'notes'                     => 'str',
+            'content_action'            => 'str',
+            'action_options'            => 'array',
+            'send_warning_alert'        => 'bool',
             'send_warning_alert_reason' => 'str',
 
-            'sv_spoiler_contents' => 'bool',
+            'sv_spoiler_contents'      => 'bool',
             'sv_content_spoiler_title' => 'str',
-            'sv_disable_reactions' => 'str'
+            'sv_disable_reactions'     => 'str',
         ];
 
         if ($canEditTitle)
@@ -277,7 +278,7 @@ class Warning extends XFCP_Warning
         /** @var SessionActivityEntity[] $activities */
         $warningIds = [];
         $warnings = [];
-        foreach ($activities AS $activity)
+        foreach ($activities as $activity)
         {
             $warningId = $activity->pluckParam('warning_id');
             if ($warningId)
@@ -293,7 +294,7 @@ class Warning extends XFCP_Warning
         }
 
         $userIds = [];
-        foreach ($activities AS $activity)
+        foreach ($activities as $activity)
         {
             $userId = $activity->user_id;
             if ($userId && !Helper::findCached(UserEntity::class, $userId))
@@ -312,7 +313,7 @@ class Warning extends XFCP_Warning
         $defaultModPhrase = \XF::phrase('performing_moderation_duties');
         $defaultUserPhrase = \XF::phrase('viewing_members');
 
-        foreach ($activities AS $key => $activity)
+        foreach ($activities as $key => $activity)
         {
             $activityUserId = $activity->user_id;
             if ($activityUserId && $activity->User)

@@ -17,12 +17,10 @@ use XF\Repository\Warning as WarningRepo;
 
 /**
  * @extends \XF\Entity\User
- *
  * GETTERS
- *
  * @property-read AbstractCollection $warning_definitions
- * @property-read array $warning_actions
- * @property-read int $warning_actions_count
+ * @property-read array              $warning_actions
+ * @property-read int                $warning_actions_count
  */
 class User extends XFCP_User
 {
@@ -89,12 +87,14 @@ class User extends XFCP_User
         if ($visitor->hasPermission('general', 'sv_viewWarningActions'))
         {
             $error = null;
+
             return true;
         }
 
         if ($visitor->user_id === $this->user_id && (\XF::options()->sv_view_own_warnings ?? false))
         {
             $error = null;
+
             return true;
         }
 
@@ -162,7 +162,7 @@ class User extends XFCP_User
         return $visitor->hasPermission('general', 'sv_editWarningActions');
     }
 
-    public function canBypassWarningTitleCensor(Phrase &$error = null) : bool
+    public function canBypassWarningTitleCensor(Phrase &$error = null): bool
     {
         $visitor = \XF::visitor();
         if (!$visitor->user_id)

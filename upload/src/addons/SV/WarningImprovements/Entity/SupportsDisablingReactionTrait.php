@@ -9,7 +9,7 @@ use XF\Mvc\Entity\Entity;
 
 trait SupportsDisablingReactionTrait
 {
-    public function hasDisabledReactionsForSvWarnImprov(Entity $entity, &$error = null) : bool
+    public function hasDisabledReactionsForSvWarnImprov(Entity $entity, &$error = null): bool
     {
         $warningId = $this->warning_id ?? 0;
         if ($warningId === 0)

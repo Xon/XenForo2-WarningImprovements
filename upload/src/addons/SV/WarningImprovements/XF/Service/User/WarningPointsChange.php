@@ -16,10 +16,10 @@ use SV\WarningImprovements\XF\Entity\WarningAction as ExtendedWarningActionEntit
 use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
 use XF\App;
 use XF\Entity\Forum as ForumEntity;
+use XF\Entity\Report as ReportEntity;
 use XF\Entity\Thread as ThreadEntity;
 use XF\Entity\User as UserEntity;
 use XF\Entity\WarningAction as WarningActionEntity;
-use XF\Entity\Report as ReportEntity;
 use XF\Finder\WarningAction as WarningActionFinder;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Repository\Warning as WarningRepo;
@@ -82,8 +82,8 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     protected function getActions(string $direction, bool $fromDelete = false): AbstractCollection
     {
         return Helper::finder(WarningActionFinder::class)
-                    ->order('points', $direction)
-                    ->fetch();
+                     ->order('points', $direction)
+                     ->fetch();
     }
 
     /**
@@ -184,7 +184,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         $categoryPoints = $this->getCategoryPoints();
 
         /** @var ExtendedWarningActionEntity $action */
-        foreach ($actions AS $action)
+        foreach ($actions as $action)
         {
             $categoryId = (int)$action->sv_warning_category_id;
             if (empty($categoryPoints[$categoryId]))
@@ -253,7 +253,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
 
                             return $threadCreator;
                         });
-                        \XF::runLater(function () use ($threadCreator, $postAsUser){
+                        \XF::runLater(function () use ($threadCreator, $postAsUser) {
                             Globals::asVisitorWithLang($postAsUser, function () use ($threadCreator) {
                                 $threadCreator->sendNotifications();
                             });
@@ -276,7 +276,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
                             return $threadReplier;
                         });
 
-                        \XF::runLater(function () use ($threadReplier, $postAsUser){
+                        \XF::runLater(function () use ($threadReplier, $postAsUser) {
                             Globals::asVisitorWithLang($postAsUser, function () use ($threadReplier) {
                                 $threadReplier->sendNotifications();
                             });
@@ -309,7 +309,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         {
             $remainingTriggers = $triggers;
 
-            foreach ($triggers AS $key => $trigger)
+            foreach ($triggers as $key => $trigger)
             {
                 $categoryId = $trigger['sv_warning_category_id'] ?: 0;
                 if (empty($categoryPoints[$categoryId]))
@@ -333,7 +333,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
         {
             $actions = $this->getActions('DESC', true);
             /** @var ExtendedWarningActionEntity $action */
-            foreach ($actions AS $action)
+            foreach ($actions as $action)
             {
                 $categoryId = (int)$action->sv_warning_category_id;
                 if (empty($categoryPoints[$categoryId]))

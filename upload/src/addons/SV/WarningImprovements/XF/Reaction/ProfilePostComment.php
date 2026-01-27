@@ -17,6 +17,6 @@ class ProfilePostComment extends XFCP_ProfilePostComment implements SupportsDisa
     public function reactionsCounted(Entity $entity)
     {
         return parent::reactionsCounted($entity)
-            && $this->reactionsCountedForSvWarnImprov($entity);
+               && $this->reactionsCountedForSvWarnImprov($entity);
     }
 }

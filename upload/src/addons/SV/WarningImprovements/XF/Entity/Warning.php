@@ -21,20 +21,18 @@ use XF\Util\Arr as ArrUtil;
 use function array_key_exists;
 use function count;
 use function is_callable;
+use function mb_strlen;
 use function preg_match;
 use function preg_quote;
 use function preg_replace;
 use function str_replace;
 use function strlen;
 use function trim;
-use function mb_strlen;
 
 /**
  * @extends \XF\Entity\Warning
- *
  * COLUMNS
- *
- * @property string                                            $notes_
+ * @property string                                                        $notes_
  * @property bool                                                          $sv_spoiler_contents
  * @property string|null                                                   $sv_content_spoiler_title
  * @property bool                                                          $sv_disable_reactions
@@ -71,7 +69,7 @@ class Warning extends XFCP_Warning
         return $expiryDateRound;
     }
 
-    public function getTitleCensored() : string
+    public function getTitleCensored(): string
     {
         $title = $this->title;
 
@@ -91,7 +89,7 @@ class Warning extends XFCP_Warning
             return $title;
         }
 
-        foreach ($censorList AS $phrase)
+        foreach ($censorList as $phrase)
         {
             $phrase = trim($phrase);
             if (strlen($phrase) === 0)
@@ -118,7 +116,9 @@ class Warning extends XFCP_Warning
             {
                 $title = preg_replace($phrase, '', $title);
             }
-            catch (\Throwable $e) {}
+            catch (\Throwable $e)
+            {
+            }
         }
 
         return $title;
@@ -198,7 +198,7 @@ class Warning extends XFCP_Warning
      */
     public function canEdit(&$error = null)
     {
-        if (is_callable([parent::class,'canEdit']))
+        if (is_callable([parent::class, 'canEdit']))
         {
             /** @noinspection PhpUndefinedMethodInspection */
             return parent::canEdit($error);
@@ -243,6 +243,7 @@ class Warning extends XFCP_Warning
         }
 
         $userRepo = Helper::repository(\XF\Repository\User::class);
+
         return $userRepo->getGuestUser(\XF::phrase('WarningStaff')->render());
     }
 
@@ -292,7 +293,7 @@ class Warning extends XFCP_Warning
                 $underAmount = $minNoteLength - $noteLength;
                 $this->error(\XF::phrase('sv_please_enter_note_with_at_least_x_characters', [
                     'count' => $minNoteLength,
-                    'under' => $underAmount
+                    'under' => $underAmount,
                 ]));
 
                 return false;
@@ -337,6 +338,7 @@ class Warning extends XFCP_Warning
             try
             {
                 parent::onExpiration($isDelete);
+
                 return;
             }
             finally
@@ -380,19 +382,19 @@ class Warning extends XFCP_Warning
                         $app = \XF::app();
                         /** @noinspection PhpRedundantOptionalArgumentInspection */
                         $language = $app->language(0);
-                        $phraseTitle = 'mod_log.'.$this->content_type.'_warning_edited';
+                        $phraseTitle = 'mod_log.' . $this->content_type . '_warning_edited';
                         $text = $language->getPhraseText($phraseTitle);
                         if ($text === false)
                         {
                             // phrase doesn't exist, create one using `mod_log.warning_edited` as a template
                             $phrase = Helper::finder(PhraseFinder::class)
-                                         ->where('title', '=', $phraseTitle)
-                                         ->where('language_id', '=', 0)
-                                         ->fetchOne();
+                                            ->where('title', '=', $phraseTitle)
+                                            ->where('language_id', '=', 0)
+                                            ->fetchOne();
                             if ($phrase === null)
                             {
                                 $phraseText = (string)\XF::phrase('mod_log.warning_edited', [
-                                    'contentType' => $app->getContentTypePhrase($this->content_type)
+                                    'contentType' => $app->getContentTypePhrase($this->content_type),
                                 ]);
 
                                 $phrase = Helper::createEntity(PhraseEntity::class);
@@ -402,12 +404,14 @@ class Warning extends XFCP_Warning
                                 $phrase->global_cache = false;
                                 $phrase->addon_id = 'SV/WarningImprovements';
                                 // try to run outside this transaction
-                                \XF::runLater(function() use ($phrase) {
+                                \XF::runLater(function () use ($phrase) {
                                     try
                                     {
                                         $phrase->save(false);
                                     }
-                                    catch(\Exception $e) {}
+                                    catch (\Exception $e)
+                                    {
+                                    }
                                 });
                             }
                         }
@@ -518,17 +522,17 @@ class Warning extends XFCP_Warning
         }
 
         $structure->columns['sv_spoiler_contents'] = [
-            'type' => self::BOOL,
-            'default' => false
+            'type'    => self::BOOL,
+            'default' => false,
         ];
         $structure->columns['sv_content_spoiler_title'] = [
-            'type' => self::STR,
+            'type'     => self::STR,
             'nullable' => true,
-            'default' => null,
+            'default'  => null,
         ];
         $structure->columns['sv_disable_reactions'] = [
-            'type' => self::BOOL,
-            'default' => false
+            'type'    => self::BOOL,
+            'default' => false,
         ];
 
         $structure->getters['anonymized_issuer'] = true;

@@ -7,19 +7,19 @@ use SV\StandardLib\Helper;
 use SV\WarningImprovements\Entity\WarningDefault as WarningDefaultEntity;
 use SV\WarningImprovements\Finder\WarningDefault as WarningDefaultFinder;
 use SV\WarningImprovements\Globals;
+use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use SV\WarningImprovements\XF\Entity\UserOption as ExtendedUserOptionEntity;
+use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
 use SV\WarningImprovements\XF\Repository\UserChangeTemp as ExtendedUserChangeTempRepo;
 use XF\Entity\User as UserEntity;
-use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
-use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use XF\Entity\UserChangeTemp as UserChangeTempEntity;
 use XF\Entity\Warning as WarningEntity;
+use XF\Entity\WarningDefinition as WarningDefinitionEntity;
 use XF\Finder\UserBan as UserBanFinder;
 use XF\Finder\UserChangeTemp as UserChangeTempFinder;
 use XF\Finder\Warning as WarningFinder;
 use XF\Finder\WarningDefinition as WarningDefinitionFinder;
-use XF\Entity\WarningDefinition as WarningDefinitionEntity;
 use XF\Phrase;
 use XF\Repository\UserAlert as UserAlertRepo;
 use XF\Repository\UserChangeTemp as UserChangeTempRepo;
@@ -134,6 +134,7 @@ class Warning extends XFCP_Warning
                                        ->where('warning_definition_id', '=', 0)
                                        ->fetchOne();
         }
+
         /** @var ExtendedWarningDefinitionEntity|null $warningDefinition */
 
         return $warningDefinition;
@@ -143,10 +144,10 @@ class Warning extends XFCP_Warning
     public function getWarningDefaultExtension(int $warningCount, int $warningTotals): ?WarningDefaultEntity
     {
         return Helper::finder(WarningDefaultFinder::class)
-                                ->where('active', '=', 1)
-                                ->where('threshold_points', '<', $warningTotals)
-                                ->order('threshold_points', 'DESC')
-                                ->fetchOne();
+                     ->where('active', '=', 1)
+                     ->where('threshold_points', '<', $warningTotals)
+                     ->order('threshold_points', 'DESC')
+                     ->fetchOne();
     }
 
     public function _getWarningTotals(int $userId): array
@@ -155,8 +156,8 @@ class Warning extends XFCP_Warning
         $timeLimit = $ageLimit > 0 ? \XF::$time - $ageLimit * 2629746 : 0;
 
         $totals = \XF::db()->fetchRow('
-            SELECT count(points) AS `count`,
-                   CAST(IFNULL(sum(points), 0) AS UNSIGNED) AS `total`
+            SELECT COUNT(points) AS `count`,
+                   CAST(IFNULL(SUM(points), 0) AS UNSIGNED) AS `total`
             FROM xf_warning
             WHERE user_id = ? AND xf_warning.warning_date >= ?
         ', [$userId, $timeLimit]);
@@ -253,7 +254,7 @@ class Warning extends XFCP_Warning
     public function getEffectiveNextExpiry(int $userId, bool $checkBannedStatus): ?int
     {
         return \XF::db()->fetchOne('
-            SELECT MIN(CAST(expiryDate as SIGNED))
+            SELECT MIN(CAST(expiryDate AS SIGNED))
             FROM (
                         SELECT MIN(expiry_date) AS expiryDate
                         FROM xf_warning
@@ -267,7 +268,7 @@ class Warning extends XFCP_Warning
                         FROM xf_user_ban
                         WHERE user_id = ? AND end_date > ?
             ) a
-            WHERE a.expiryDate IS NOT NULL and a.expiryDate > 0
+            WHERE a.expiryDate IS NOT NULL AND a.expiryDate > 0
         ', [$userId, \XF::$time, $userId, \XF::$time, $userId, \XF::$time]);
     }
 
@@ -321,7 +322,7 @@ class Warning extends XFCP_Warning
         $expired = $warnings->count() > 0;
 
         /** @var WarningEntity $warning */
-        foreach ($warnings AS $warning)
+        foreach ($warnings as $warning)
         {
             $warning->is_expired = true;
             $warning->setOption('log_moderator', false);
@@ -340,7 +341,7 @@ class Warning extends XFCP_Warning
         $expired = $expired || $changes->count() > 0;
 
         /** @var UserChangeTempEntity $change */
-        foreach ($changes AS $change)
+        foreach ($changes as $change)
         {
             $changeService->expireChange($change);
         }
@@ -352,7 +353,7 @@ class Warning extends XFCP_Warning
                       ->fetch();
         $expired = $expired || $bans->count() > 0;
 
-        foreach ($bans AS $userBan)
+        foreach ($bans as $userBan)
         {
             $userBan->delete();
         }
@@ -447,15 +448,15 @@ class Warning extends XFCP_Warning
     {
         $exists = $warning->exists();
         $defaults = [
-            'reason' => $reason,
-            'points' => $warning->points,
-            'expiry' => $warning->expiry_date_rounded,
-            'title'  => $warning->title_censored,
+            'reason'              => $reason,
+            'points'              => $warning->points,
+            'expiry'              => $warning->expiry_date_rounded,
+            'title'               => $warning->title_censored,
             'depends_on_addon_id' => 'SV/WarningImprovements',
         ];
         if (!$exists)
         {
-            $defaults['warning_id']  = $warning->warning_id;
+            $defaults['warning_id'] = $warning->warning_id;
         }
         $extra = array_merge($defaults, $extra);
 

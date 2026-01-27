@@ -18,7 +18,6 @@ use function substr;
 
 /**
  * @extends \XF\Entity\UserChangeTemp
- *
  * @property-read PhraseEntity $name
  * @property-read PhraseEntity $result
  * @property bool              $is_expired
@@ -117,22 +116,22 @@ class UserChangeTemp extends XFCP_UserChangeTemp
             {
                 // compute when the minimum level of points expire.
                 $effectiveExpiryDate = \XF::db()->fetchOne(
-                    'select expiry_date
-                            from
+                    'SELECT expiry_date
+                            FROM
                             (
-                                select @pointSum := @pointSum+ points AS pointSum, permanent, expiry_date 
-                                from
+                                SELECT @pointSum := @pointSum+ points AS pointSum, permanent, expiry_date 
+                                FROM
                                 (
-                                    select points, if(expiry_date = 0, 1, 0) as permanent, expiry_date 
-                                    from xf_warning 
-                                    where user_id = ? and (expiry_date >= unix_timestamp() or expiry_date = 0)
-                                    order by permanent, expiry_date
+                                    SELECT points, IF(expiry_date = 0, 1, 0) AS permanent, expiry_date 
+                                    FROM xf_warning 
+                                    WHERE user_id = ? AND (expiry_date >= UNIX_TIMESTAMP() OR expiry_date = 0)
+                                    ORDER BY permanent, expiry_date
                                 ) a, (SELECT @pointSum :=0) AS dummy
-                                order by permanent, expiry_date
+                                ORDER BY permanent, expiry_date
                             ) b
-                            where pointSum >= ?
-                            order by permanent, expiry_date
-                            limit 1', [$this->user_id, $warningAction->points]);
+                            WHERE pointSum >= ?
+                            ORDER BY permanent, expiry_date
+                            LIMIT 1', [$this->user_id, $warningAction->points]);
                 if (!$effectiveExpiryDate)
                 {
                     $effectiveExpiryDate = null;

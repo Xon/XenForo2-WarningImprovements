@@ -23,7 +23,8 @@ abstract class Globals
     /**
      * XF2.2.0/XF2.2.1 compatibility shim
      * @template T
-     * @param UserEntity $user
+     *
+     * @param UserEntity    $user
      * @param callable(): T $callable
      * @return T
      * @noinspection PhpDocMissingThrowsInspection

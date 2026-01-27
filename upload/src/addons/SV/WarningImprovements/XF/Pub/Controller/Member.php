@@ -75,7 +75,7 @@ class Member extends XFCP_Member
         }
 
         $viewParams = [
-            'user' => $user
+            'user' => $user,
         ];
 
         return $this->view('XF:Member\WarningActions\List', 'sv_member_warning_actions', $viewParams);
@@ -94,7 +94,7 @@ class Member extends XFCP_Member
         $viewParams = [
             'user' => $user,
 
-            'warningAction' => $userChangeTemp
+            'warningAction' => $userChangeTemp,
         ];
 
         return $this->view('XF:Member\WarningActions\View', 'sv_warning_actions_info', $viewParams);

@@ -34,8 +34,8 @@ class CategoryRebuildNestedSet extends AbstractService
     protected function getEntities(): AbstractCollection
     {
         return Helper::finder(WarningCategoryFinder::class)
-                    ->order('display_order')
-                    ->fetch();
+                     ->order('display_order')
+                     ->fetch();
     }
 
     public function rebuildNestedSetInfo()
@@ -59,7 +59,7 @@ class CategoryRebuildNestedSet extends AbstractService
         $left = $counter;
 
 
-        foreach ($this->tree->childIds($id) AS $childId)
+        foreach ($this->tree->childIds($id) as $childId)
         {
             $this->_rebuildNestedSetInfo($childId, $depth + 1, $counter);
         }
@@ -75,7 +75,7 @@ class CategoryRebuildNestedSet extends AbstractService
             $updateData = [
                 'lft'   => $left,
                 'rgt'   => $right,
-                'depth' => $depth
+                'depth' => $depth,
             ];
 
             $entity->fastUpdate($updateData);

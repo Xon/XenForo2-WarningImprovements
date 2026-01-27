@@ -14,6 +14,7 @@ use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
 use SV\WarningImprovements\XF\Finder\Warning as ExtendedWarningFinder;
 use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
+use SV\WarningImprovements\XF\Service\User\Warn as ExtendedUserWarnSvc;
 use XF\Entity\User as UserEntity;
 use XF\Entity\Warning as WarningEntity;
 use XF\Mvc\Entity\Entity;
@@ -23,7 +24,7 @@ use XF\Mvc\Reply\View as ViewReply;
 use XF\Repository\Warning as WarningRepo;
 use XF\Service\FloodCheck as FloodCheckService;
 use XF\Warning\AbstractHandler;
-use SV\WarningImprovements\XF\Service\User\Warn as ExtendedUserWarnSvc;
+use function in_array;
 use function is_array;
 
 /**
@@ -39,7 +40,7 @@ class Warn extends XFCP_Warn
         if ($this->isPost() && (!$this->filter('fill', 'bool') && !$this->filter('sv_save_warn_view_pref', 'bool')))
         {
             $floodChecker = Helper::service(FloodCheckService::class);
-            $timeRemaining = $floodChecker->checkFlooding('warn.'.$contentType, $content->getEntityId(), 5);
+            $timeRemaining = $floodChecker->checkFlooding('warn.' . $contentType, $content->getEntityId(), 5);
             if ($timeRemaining)
             {
                 throw $this->exception($this->controller->error(\XF::phrase('must_wait_x_seconds_before_performing_this_action', ['count' => $timeRemaining])));
@@ -134,12 +135,12 @@ class Warn extends XFCP_Warn
             $userNoteRequired = is_array($nodeColDefinition) && (!isset($nodeColDefinition['default']) || !empty($nodeColDefinition['required']));
             $response->setParams(
                 [
-                    'userNoteRequired' => $userNoteRequired,
-                    'warnings'         => $warnings,
-                    'previousWarnings' => $previousWarnings,
+                    'userNoteRequired'        => $userNoteRequired,
+                    'warnings'                => $warnings,
+                    'previousWarnings'        => $previousWarnings,
                     'canViewPreviousWarnings' => $canViewPreviousWarnings,
 
-                    'categoryTree' => $categoryTree
+                    'categoryTree' => $categoryTree,
                 ]);
         }
 
@@ -151,10 +152,10 @@ class Warn extends XFCP_Warn
      * @since 2.10.2
      */
     public function getSvSaveWarningViewPrefReply(
-        Entity $content,
-        ?string $contentType = null,
+        Entity      $content,
+        ?string     $contentType = null,
         ?UserEntity $forUser = null
-    ) : AbstractReply
+    ): AbstractReply
     {
         $this->assertPostOnly();
 
@@ -184,7 +185,7 @@ class Warn extends XFCP_Warn
 
         $userOption = $forUser->getRelationOrDefault('Option');
         $this->formAction()->basicEntitySave($userOption, [
-            'sv_warning_view' => $value
+            'sv_warning_view' => $value,
         ])->run();
 
         return $this->message(\XF::phrase('action_completed_successfully'));
@@ -227,7 +228,7 @@ class Warn extends XFCP_Warn
                 $response->setParams(
                     [
                         'conversationTitle'   => $conversationTitle,
-                        'conversationMessage' => $conversationMessage
+                        'conversationMessage' => $conversationMessage,
                     ]);
             }
 

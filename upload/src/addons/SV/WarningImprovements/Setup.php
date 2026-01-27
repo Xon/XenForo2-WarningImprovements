@@ -82,7 +82,7 @@ class Setup extends AbstractSetup
     public function installStep5(): void
     {
         $this->renamePhrases([
-            'sv_warning_category_*_title' => 'sv_warning_category_title.*'
+            'sv_warning_category_*_title' => 'sv_warning_category_title.*',
         ]);
         $this->addDefaultPhrases();
     }
@@ -147,8 +147,8 @@ class Setup extends AbstractSetup
         // set all warning definitions to be in default warning category, note; the phrase is defined in the XML
         $db->query('UPDATE xf_warning_definition
             SET sv_warning_category_id = 1
-            WHERE sv_warning_category_id is null OR
-                  NOT exists (SELECT *
+            WHERE sv_warning_category_id IS NULL OR
+                  NOT EXISTS (SELECT *
                               FROM xf_sv_warning_category
                               WHERE xf_warning_definition.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
         ');
@@ -162,9 +162,9 @@ class Setup extends AbstractSetup
 
         // ensure warning actions are not orphaned
         $db->query('UPDATE xf_warning_action
-            SET sv_warning_category_id = null
-            WHERE sv_warning_category_id is not null AND
-                  NOT exists (SELECT *
+            SET sv_warning_category_id = NULL
+            WHERE sv_warning_category_id IS NOT NULL AND
+                  NOT EXISTS (SELECT *
                               FROM xf_sv_warning_category
                               WHERE xf_warning_action.sv_warning_category_id = xf_sv_warning_category.warning_category_id)
         ');
@@ -194,7 +194,7 @@ class Setup extends AbstractSetup
     {
         $userGroupRepo = Helper::repository(UserGroupRepo::class);
         $allGroups = array_keys($userGroupRepo->getUserGroupTitlePairs());
-        foreach(Helper::finder(WarningCategoryFinder::class)->fetch() as $group)
+        foreach (Helper::finder(WarningCategoryFinder::class)->fetch() as $group)
         {
             $groups = $group->allowed_user_group_ids;
 
@@ -217,10 +217,10 @@ class Setup extends AbstractSetup
     public function upgrade2021501Step1(): void
     {
         $this->renamePhrases([
-            'Warning_Summary_Title' => 'Warning_Summary.Title',
+            'Warning_Summary_Title'   => 'Warning_Summary.Title',
             'Warning_Summary_Message' => 'Warning_Summary.Message',
-            'Warning_Thread_Title' => 'Warning_Thread.Title',
-            'Warning_Thread_Message' => 'Warning_Thread.Message',
+            'Warning_Thread_Title'    => 'Warning_Thread.Title',
+            'Warning_Thread_Message'  => 'Warning_Thread.Message',
         ]);
     }
 
@@ -242,10 +242,10 @@ class Setup extends AbstractSetup
         }
 
         $this->db()->query('
-            update xf_sv_warning_log as warnLog 
-            join xf_report_comment as reportComment on (reportComment.warning_log_id = warnLog.warning_log_id and warnLog.operation_type = \'new\')
-            set warnLog.warning_user_id = reportComment.user_id  
-            where warnLog.warning_user_id <> reportComment.user_id
+            UPDATE xf_sv_warning_log AS warnLog 
+            JOIN xf_report_comment AS reportComment ON (reportComment.warning_log_id = warnLog.warning_log_id AND warnLog.operation_type = \'new\')
+            SET warnLog.warning_user_id = reportComment.user_id  
+            WHERE warnLog.warning_user_id <> reportComment.user_id
         ');
     }
 
@@ -257,25 +257,25 @@ class Setup extends AbstractSetup
         }
 
         $this->db()->query('
-            update xf_warning as warn
-            join xf_sv_warning_log as warnLog on (warn.warning_id = warnLog.warning_id and warnLog.operation_type = \'new\')
-            set warn.warning_user_id = warnLog.warning_user_id
-            where warn.warning_user_id = warn.user_id and warn.warning_user_id <> warnLog.warning_user_id
+            UPDATE xf_warning AS warn
+            JOIN xf_sv_warning_log AS warnLog ON (warn.warning_id = warnLog.warning_id AND warnLog.operation_type = \'new\')
+            SET warn.warning_user_id = warnLog.warning_user_id
+            WHERE warn.warning_user_id = warn.user_id AND warn.warning_user_id <> warnLog.warning_user_id
         ');
     }
 
     public function upgrade2060200Step3(): void
     {
         $this->db()->query('
-            update xf_warning as warn
-            join xf_moderator_log on (
+            UPDATE xf_warning AS warn
+            JOIN xf_moderator_log ON (
                     warn.content_type = xf_moderator_log.content_type 
-                    and warn.content_id = xf_moderator_log.content_id 
-                    and warn.warning_date = xf_moderator_log.log_date
-                    and xf_moderator_log.action = \'warning_given\'
+                    AND warn.content_id = xf_moderator_log.content_id 
+                    AND warn.warning_date = xf_moderator_log.log_date
+                    AND xf_moderator_log.action = \'warning_given\'
                 )
-            set warn.warning_user_id = xf_moderator_log.user_id
-            where warn.warning_user_id = warn.user_id and warn.warning_user_id <> xf_moderator_log.user_id
+            SET warn.warning_user_id = xf_moderator_log.user_id
+            WHERE warn.warning_user_id = warn.user_id AND warn.warning_user_id <> xf_moderator_log.user_id
         ');
     }
 
@@ -284,7 +284,7 @@ class Setup extends AbstractSetup
         $this->installStep2();
     }
 
-    public function upgrade1746864825Step1 (): void
+    public function upgrade1746864825Step1(): void
     {
         \XF::db()->query("
             DELETE FROM xf_change_log
@@ -294,8 +294,8 @@ class Setup extends AbstractSetup
 
     public function uninstallStep1(): void
     {
-        $this->db()->query("update xf_warning_definition set expiry_type = 'days' where expiry_type = 'hours' ");
-        $this->db()->query('delete from xf_warning_definition where warning_definition_id = 0 ');
+        $this->db()->query("UPDATE xf_warning_definition SET expiry_type = 'days' WHERE expiry_type = 'hours' ");
+        $this->db()->query('DELETE FROM xf_warning_definition WHERE warning_definition_id = 0 ');
     }
 
     public function uninstallStep2(): void
@@ -331,7 +331,7 @@ class Setup extends AbstractSetup
             'warning_title.0',
             'warning_conv_title.0',
             'warning_conv_text.0',
-            'sv_warning_improvements_warning_spoiler_title.%'
+            'sv_warning_improvements_warning_spoiler_title.%',
         ]);
     }
 
@@ -398,8 +398,7 @@ class Setup extends AbstractSetup
     {
         $tables = [];
 
-        $tables['xf_sv_warning_default'] = function ($table): void
-        {
+        $tables['xf_sv_warning_default'] = function ($table): void {
             /** @var Create|Alter $table */
             $this->addOrChangeColumn($table, 'warning_default_id', 'int')->autoIncrement();
             $this->addOrChangeColumn($table, 'threshold_points', 'smallint')->setDefault(0);
@@ -410,8 +409,7 @@ class Setup extends AbstractSetup
             $table->addPrimaryKey('warning_default_id');
         };
 
-        $tables['xf_sv_warning_category'] = function ($table): void
-        {
+        $tables['xf_sv_warning_category'] = function ($table): void {
             /** @var Create|Alter $table */
             $this->addOrChangeColumn($table, 'warning_category_id', 'int')->autoIncrement();
             $this->addOrChangeColumn($table, 'parent_category_id', 'int')->nullable(true)->setDefault(null);
@@ -435,14 +433,12 @@ class Setup extends AbstractSetup
     {
         $tables = [];
 
-        $tables['xf_user_option'] = function (Alter $table): void
-        {
+        $tables['xf_user_option'] = function (Alter $table): void {
             $this->addOrChangeColumn($table, 'sv_pending_warning_expiry', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_warning_view', 'enum')->values(['radio', 'select'])->nullable()->setDefault(null);
         };
 
-        $tables['xf_warning'] = function (Alter $table): void
-        {
+        $tables['xf_warning'] = function (Alter $table): void {
             $this->addOrChangeColumn($table, 'sv_spoiler_contents', 'tinyint', 3)->setDefault(0);
             $this->addOrChangeColumn($table, 'sv_content_spoiler_title', 'mediumtext')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_disable_reactions', 'tinyint', 3)->setDefault(0);
@@ -453,8 +449,7 @@ class Setup extends AbstractSetup
             $tables['xf_sv_warning_log'] = $tables['xf_warning'];
         }
 
-        $tables['xf_warning_definition'] = function (Alter $table): void
-        {
+        $tables['xf_warning_definition'] = function (Alter $table): void {
             $this->addOrChangeColumn($table, 'sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_display_order', 'int')->setDefault(0);
             $this->addOrChangeColumn($table, 'sv_custom_title', 'tinyint', 1)->setDefault(0);
@@ -463,16 +458,14 @@ class Setup extends AbstractSetup
             $table->changeColumn('expiry_type')->addValues(['hours']);
         };
 
-        $tables['xf_warning_action'] = function (Alter $table): void
-        {
+        $tables['xf_warning_action'] = function (Alter $table): void {
             $this->addOrChangeColumn($table, 'sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_post_node_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_post_thread_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_post_as_user_id', 'int')->nullable(true)->setDefault(null);
         };
 
-        $tables['xf_sv_warning_category'] = function (Alter $table): void
-        {
+        $tables['xf_sv_warning_category'] = function (Alter $table): void {
             $table->renameColumn('parent_warning_category_id', 'parent_category_id')
                   ->nullable(true)
                   ->setDefault(null);
@@ -485,24 +478,20 @@ class Setup extends AbstractSetup
     {
         $tables = [];
 
-        $tables['xf_user_option'] = function (Alter $table): void
-        {
+        $tables['xf_user_option'] = function (Alter $table): void {
             $table->dropColumns('sv_pending_warning_expiry');
         };
 
-        $tables['xf_warning'] = function (Alter $table): void
-        {
+        $tables['xf_warning'] = function (Alter $table): void {
             $table->dropColumns(['sv_spoiler_contents', 'sv_disable_reactions']);
         };
 
-        $tables['xf_warning_definition'] = function (Alter $table): void
-        {
+        $tables['xf_warning_definition'] = function (Alter $table): void {
             $table->dropColumns(['sv_warning_category_id', 'sv_display_order', 'sv_custom_title', 'sv_spoiler_contents', 'sv_disable_reactions']);
             $table->changeColumn('expiry_type')->removeValues(['hours']);
         };
 
-        $tables['xf_warning_action'] = function (Alter $table): void
-        {
+        $tables['xf_warning_action'] = function (Alter $table): void {
             $table->dropColumns(['sv_warning_category_id', 'sv_post_node_id', 'sv_post_thread_id', 'sv_post_as_user_id']);
         };
 
