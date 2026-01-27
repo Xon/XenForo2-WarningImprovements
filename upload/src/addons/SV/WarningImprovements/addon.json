@@ -3,8 +3,8 @@
     "title": "Warning Improvements",
     "description": "A (large) collection of improvements to XF's warning system.",
     "version_id": 1746864825,
-    "version_string": "2.11.6",
-    "dev": "Xon",
+    "version_string": "2.12.0",
+    "dev": "Atelier Aphelion",
     "dev_url": "https://atelieraphelion.com",
     "faq_url": "",
     "support_url": "https://xenforo.com/community/resources/warning-improvements-by-xon.6240/",
@@ -14,8 +14,8 @@
     },
     "require": {
         "SV/StandardLib": [
-            2001180000,
-            "Standard Library by Xon v1.18.0+"
+            2001230000,
+            "Standard Library by Xon v1.23.0+"
         ],
         "XF": [
             "2.1.0",
