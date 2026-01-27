@@ -24,10 +24,9 @@
 				</xf:foreach>
 			</xf:selectrow>
 
-			<xf:macro template="display_order_macros" name="row" arg-value="{$category.display_order}" />
+			<xf:macro name="display_order_macros::row" arg-value="{$category.display_order}" />
 			
-			<xf:macro template="helper_user_group_edit"
-					  name="checkboxes"
+			<xf:macro name="helper_user_group_edit::checkboxes"
 					  arg-selectedUserGroups="{{ $category.isUpdate() ? $category.allowed_user_group_ids : [-1] }}" />
 		</div>
 		<xf:submitrow sticky="true" icon="save" />

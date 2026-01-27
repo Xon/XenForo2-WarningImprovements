@@ -1,7 +1,7 @@
 <xf:macro name="sortable_form" arg-categoryTree="!" arg-warnings="!">
 	<xf:css src="sv_warning_improvements_nestable.less" />
 
-	<xf:macro template="public:nestable_macros" name="setup" />
+	<xf:macro name="public:nestable_macros::setup" />
 
 	<xf:form action="{{ link('warnings/sort') }}" class="block" ajax="true">
 		<div class="block-container">

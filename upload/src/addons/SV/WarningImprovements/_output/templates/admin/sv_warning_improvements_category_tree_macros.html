@@ -2,7 +2,7 @@
 	<xf:if is="$warnings is not empty">
 		<div class="block">
 			<div class="block-outer">
-				<xf:macro template="filter_macros" name="quick_filter" arg-key="warning-category" arg-class="block-outer-opposite" />
+				<xf:macro name="filter_macros::quick_filter" arg-key="warning-category" arg-class="block-outer-opposite" />
 			</div>
 			<div class="block-container">
 				<div class="block-body">
@@ -60,7 +60,7 @@
 </xf:macro>
 
 <xf:macro name="sortable_form" arg-categoryTree="!">
-	<xf:macro template="public:nestable_macros" name="setup" />
+	<xf:macro name="public:nestable_macros::setup" />
 
 	<xf:form action="{{ link('warnings/category-sort') }}" class="block" ajax="true">
 		<div class="block-container">

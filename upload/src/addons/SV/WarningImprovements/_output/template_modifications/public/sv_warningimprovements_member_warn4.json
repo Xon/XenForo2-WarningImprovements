@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:submitrow submit=\"{{ phrase('warn') }}\" sticky=\"true\" />",
-    "replace": "<xf:macro template=\"svWarningImprov_macros\"\n\t\t  name=\"sendAlert\"\n\t\t  arg-withReason=\"{{ false }}\"\n\t\t  />\n$0"
+    "replace": "<xf:macro name=\"svWarningImprov_macros::sendAlert\"\n\t\t  arg-withReason=\"{{ false }}\"\n\t\t  />\n$0"
 }
