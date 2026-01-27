@@ -2,11 +2,12 @@
 
 namespace SV\WarningImprovements;
 
-use SV\ReportImprovements\Job\WarningLogMigration;
+use SV\ReportImprovements\Job\WarningLogMigration as WarningLogMigrationJob;
 use SV\StandardLib\Helper;
 use SV\StandardLib\InstallerHelper;
 use SV\WarningImprovements\Finder\WarningCategory as WarningCategoryFinder;
 use SV\WarningImprovements\Job\NextExpiryRebuild;
+use SV\WarningImprovements\Job\NextExpiryRebuild as NextExpiryRebuildJob;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
@@ -14,7 +15,7 @@ use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\Db\Schema\Alter;
 use XF\Db\Schema\Create;
 use XF\Entity\User;
-use XF\Job\Atomic;
+use XF\Job\Atomic as AtomicJob;
 use XF\Job\PermissionRebuild;
 use XF\Repository\Option as OptionRepo;
 use XF\Repository\UserGroup as UserGroupRepo;
@@ -341,13 +342,13 @@ class Setup extends AbstractSetup
         parent::postInstall($stateChanges);
         $atomicJobs = [];
 
-        $atomicJobs[] = 'SV\WarningImprovements:NextExpiryRebuild';
+        $atomicJobs[] = NextExpiryRebuildJob::class;
 
         if (count($atomicJobs) !== 0)
         {
             \XF::app()->jobManager()->enqueueUnique(
                 'warning-improvements-installer',
-                Atomic::class, ['execute' => $atomicJobs]
+                AtomicJob::class, ['execute' => $atomicJobs]
             );
         }
     }
@@ -362,7 +363,7 @@ class Setup extends AbstractSetup
         $atomicJobs = [];
         if (Helper::isAddOnActive('SV/ReportImprovements'))
         {
-            $atomicJobs[] = WarningLogMigration::class;
+            $atomicJobs[] = WarningLogMigrationJob::class;
         }
         else
         {
@@ -389,7 +390,7 @@ class Setup extends AbstractSetup
         {
             \XF::app()->jobManager()->enqueueUnique(
                 'warning-improvements-installer',
-                Atomic::class, ['execute' => $atomicJobs]
+                AtomicJob::class, ['execute' => $atomicJobs]
             );
         }
     }
