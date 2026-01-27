@@ -1,5 +1,6 @@
 <?php
 /**
+ * @noinspection PhpMissingReturnTypeInspection
  * @noinspection PhpUnusedParameterInspection
  */
 
@@ -506,6 +507,7 @@ class Warning extends XFCP_Warning
      */
     protected function assertCategoryExists(?int $id, array $with = [], $phraseKey = null): WarningCategoryEntity
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->assertRecordExists('SV\WarningImprovements:WarningCategory', $id, $with, $phraseKey);
     }
 
@@ -518,6 +520,7 @@ class Warning extends XFCP_Warning
      */
     protected function assertDefaultExists(int $id, array $with = [], $phraseKey = null): WarningDefaultEntity
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->assertRecordExists('SV\WarningImprovements:WarningDefault', $id, $with, $phraseKey);
     }
 

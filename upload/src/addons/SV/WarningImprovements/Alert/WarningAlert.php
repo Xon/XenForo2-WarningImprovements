@@ -11,6 +11,9 @@ use XF\Entity\Warning as WarningEntity;
 use function in_array;
 use function is_array;
 
+/**
+ * @extends AbstractHandler<WarningEntity>
+ */
 class WarningAlert extends AbstractHandler
 {
     /**
@@ -32,6 +35,7 @@ class WarningAlert extends AbstractHandler
 
     public function getContent($id)
     {
+        /** @noinspection PhpInvalidInstanceofInspection */
         if ($id instanceof AbstractCollection)
         {
             $id = $id->toArray();

@@ -9,6 +9,7 @@ use SV\WarningImprovements\Finder\WarningDefault as WarningDefaultFinder;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\XF\Entity\UserOption as ExtendedUserOptionEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+use SV\WarningImprovements\XF\Repository\UserChangeTemp as ExtendedUserChangeTempRepo;
 use XF\Entity\User as UserEntity;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
 use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
@@ -127,14 +128,15 @@ class Warning extends XFCP_Warning
     public function getCustomWarningDefinition(): ExtendedWarningDefinitionEntity
     {
         $warningDefinition = Helper::findCached(WarningDefinitionEntity::class, 0);
-        if ($warningDefinition !== null)
+        if ($warningDefinition === null)
         {
-            return $warningDefinition;
+            $warningDefinition = Helper::finder(WarningDefinitionFinder::class)
+                                       ->where('warning_definition_id', '=', 0)
+                                       ->fetchOne();
         }
+        /** @var ExtendedWarningDefinitionEntity|null $warningDefinition */
 
-        return Helper::finder(WarningDefinitionFinder::class)
-                     ->where('warning_definition_id', '=', 0)
-                     ->fetchOne();
+        return $warningDefinition;
     }
 
     /** @noinspection PhpUnusedParameterInspection */
@@ -149,7 +151,7 @@ class Warning extends XFCP_Warning
 
     public function _getWarningTotals(int $userId): array
     {
-        $ageLimit = (int)(\XF::options()->svWarningEscalatingDefaultsLimit ?? 0);
+        $ageLimit = \XF::options()->svWarningEscalatingDefaultsLimit ?? 0;
         $timeLimit = $ageLimit > 0 ? \XF::$time - $ageLimit * 2629746 : 0;
 
         $totals = \XF::db()->fetchRow('
@@ -462,8 +464,9 @@ class Warning extends XFCP_Warning
         $alertRepo->alertFromUser($warning->User, $warnedBy, 'warning_alert', $exists ? $warning->warning_id : 0, $action, $extra);
     }
 
-    protected function _getWarningActionRepo(): UserChangeTemp
+    protected function _getWarningActionRepo(): ExtendedUserChangeTempRepo
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Helper::repository(UserChangeTempRepo::class);
     }
 }

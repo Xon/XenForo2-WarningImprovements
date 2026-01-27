@@ -33,7 +33,7 @@ class Member extends XFCP_Member
                 $warnings = $warnings->filterViewable();
                 $reply->setParam('warnings', $warnings);
 
-                $ageLimit = (int)(\XF::options()->svWarningsOnProfileAgeLimit ?? 0);
+                $ageLimit = \XF::options()->svWarningsOnProfileAgeLimit ?? 0;
                 if ($ageLimit > 0)
                 {
                     $oldCount = 0;

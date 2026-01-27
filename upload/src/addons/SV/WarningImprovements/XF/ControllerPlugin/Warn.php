@@ -14,7 +14,7 @@ use SV\WarningImprovements\XF\Entity\User as ExtendedUserEntity;
 use SV\WarningImprovements\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
 use SV\WarningImprovements\XF\Finder\Warning as ExtendedWarningFinder;
 use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
-use XF\Entity\User;
+use XF\Entity\User as UserEntity;
 use XF\Entity\Warning as WarningEntity;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Reply\AbstractReply;
@@ -108,7 +108,7 @@ class Warn extends XFCP_Warn
                 Globals::$profileUserId = null;
             }
 
-            $warningLimit = (int)(\XF::options()->svPreviousWarningLimit ?? -1);
+            $warningLimit = \XF::options()->svPreviousWarningLimit ?? -1;
             if ($canViewPreviousWarnings && $user !== null && $warningLimit >= 0)
             {
                 /** @var ExtendedWarningFinder $warningList */
@@ -117,7 +117,7 @@ class Warn extends XFCP_Warn
                 {
                     $warningList->limit($warningLimit);
                 }
-                $ageLimit = (int)(\XF::options()->svWarningsOnProfileAgeLimit ?? 0);
+                $ageLimit = \XF::options()->svWarningsOnProfileAgeLimit ?? 0;
                 $warningList->withAgeLimit($ageLimit);
 
                 $previousWarnings = $warningList->fetch()
@@ -153,7 +153,7 @@ class Warn extends XFCP_Warn
     public function getSvSaveWarningViewPrefReply(
         Entity $content,
         ?string $contentType = null,
-        ?User $forUser = null
+        ?UserEntity $forUser = null
     ) : AbstractReply
     {
         $this->assertPostOnly();
@@ -191,14 +191,14 @@ class Warn extends XFCP_Warn
     }
 
     /**
-     * @param AbstractHandler         $warningHandler
-     * @param ExtendedUserEntity|User $user
-     * @param string                  $contentType
-     * @param Entity                  $content
-     * @param array                   $input
+     * @param AbstractHandler               $warningHandler
+     * @param ExtendedUserEntity|UserEntity $user
+     * @param string                        $contentType
+     * @param Entity                        $content
+     * @param array                         $input
      * @return ViewReply
      */
-    protected function getWarningFillerReply(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
+    protected function getWarningFillerReply(AbstractHandler $warningHandler, UserEntity $user, $contentType, Entity $content, array $input)
     {
         $response = parent::getWarningFillerReply($warningHandler, $user, $contentType, $content, $input);
 
@@ -256,13 +256,13 @@ class Warn extends XFCP_Warn
 
     /**
      * @param AbstractHandler $warningHandler
-     * @param User            $user
+     * @param UserEntity      $user
      * @param string          $contentType
      * @param Entity          $content
      * @param array           $input
      * @return ExtendedUserWarnSvc|\XF\Service\User\Warn
      */
-    protected function setupWarnService(AbstractHandler $warningHandler, User $user, $contentType, Entity $content, array $input)
+    protected function setupWarnService(AbstractHandler $warningHandler, UserEntity $user, $contentType, Entity $content, array $input)
     {
         Globals::$warningInput = $input;
         try

@@ -6,7 +6,6 @@ use SV\ReportImprovements\Job\WarningLogMigration as WarningLogMigrationJob;
 use SV\StandardLib\Helper;
 use SV\StandardLib\InstallerHelper;
 use SV\WarningImprovements\Finder\WarningCategory as WarningCategoryFinder;
-use SV\WarningImprovements\Job\NextExpiryRebuild;
 use SV\WarningImprovements\Job\NextExpiryRebuild as NextExpiryRebuildJob;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
@@ -14,9 +13,9 @@ use XF\AddOn\StepRunnerUninstallTrait;
 use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\Db\Schema\Alter;
 use XF\Db\Schema\Create;
-use XF\Entity\User;
+use XF\Entity\User as UserEntity;
 use XF\Job\Atomic as AtomicJob;
-use XF\Job\PermissionRebuild;
+use XF\Job\PermissionRebuild as PermissionRebuildJob;
 use XF\Repository\Option as OptionRepo;
 use XF\Repository\UserGroup as UserGroupRepo;
 use function array_keys;
@@ -99,19 +98,19 @@ class Setup extends AbstractSetup
 
         if ($previousVersion < 2080000)
         {
-            $this->applyGlobalPermissionByGroup('forum', 'bypassSvReactionList', [User::GROUP_MOD, User::GROUP_ADMIN]);
-            $this->applyGlobalPermissionByGroup('profilePost', 'bypassSvReactionList', [User::GROUP_MOD, User::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'bypassSvReactionList', [UserEntity::GROUP_MOD, UserEntity::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('profilePost', 'bypassSvReactionList', [UserEntity::GROUP_MOD, UserEntity::GROUP_ADMIN]);
             $applied = true;
         }
 
         if ($previousVersion !== 0 && $previousVersion < 2080000)
         {
-            $this->applyGlobalPermissionByGroup('forum', 'sv_viewWarningActions', [User::GROUP_MOD, User::GROUP_ADMIN]);
-            $this->applyGlobalPermissionByGroup('forum', 'viewWarning_issuer', [User::GROUP_MOD, User::GROUP_ADMIN]);
-            $this->applyGlobalPermissionByGroup('forum', 'sv_editWarningActions', [User::GROUP_MOD, User::GROUP_ADMIN]);
-            $this->applyGlobalPermissionByGroup('forum', 'sv_showAllWarningActions', [User::GROUP_MOD, User::GROUP_ADMIN]);
-            $this->applyGlobalPermissionByGroup('forum', 'svManageIssuedWarnings', [User::GROUP_MOD, User::GROUP_ADMIN]);
-            $this->applyGlobalPermissionByGroup('forum', 'svBypassWarnTitleCensor', [User::GROUP_MOD, User::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'sv_viewWarningActions', [UserEntity::GROUP_MOD, UserEntity::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'viewWarning_issuer', [UserEntity::GROUP_MOD, UserEntity::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'sv_editWarningActions', [UserEntity::GROUP_MOD, UserEntity::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'sv_showAllWarningActions', [UserEntity::GROUP_MOD, UserEntity::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'svManageIssuedWarnings', [UserEntity::GROUP_MOD, UserEntity::GROUP_ADMIN]);
+            $this->applyGlobalPermissionByGroup('forum', 'svBypassWarnTitleCensor', [UserEntity::GROUP_MOD, UserEntity::GROUP_ADMIN]);
         }
 
         return $applied;
@@ -372,18 +371,18 @@ class Setup extends AbstractSetup
 
         if ($this->applyDefaultPermissions($previousVersion))
         {
-            $atomicJobs[] = PermissionRebuild::class;
+            $atomicJobs[] = PermissionRebuildJob::class;
         }
 
         if ($previousVersion < 2080602)
         {
-            $atomicJobs[] = NextExpiryRebuild::class;
+            $atomicJobs[] = NextExpiryRebuildJob::class;
         }
 
         if ($previousVersion < 1700328323)
         {
             $optionRepo = Helper::repository(OptionRepo::class);
-            $optionRepo->updateOption('svWarningsOnProfileAgeLimit', (int)(\XF::options()->svWarningEscalatingDefaultsLimit ?? 0));
+            $optionRepo->updateOption('svWarningsOnProfileAgeLimit', \XF::options()->svWarningEscalatingDefaultsLimit ?? 0);
         }
 
         if (count($atomicJobs) !== 0)
@@ -399,7 +398,7 @@ class Setup extends AbstractSetup
     {
         $tables = [];
 
-        $tables['xf_sv_warning_default'] = function ($table)
+        $tables['xf_sv_warning_default'] = function ($table): void
         {
             /** @var Create|Alter $table */
             $this->addOrChangeColumn($table, 'warning_default_id', 'int')->autoIncrement();
@@ -411,7 +410,7 @@ class Setup extends AbstractSetup
             $table->addPrimaryKey('warning_default_id');
         };
 
-        $tables['xf_sv_warning_category'] = function ($table)
+        $tables['xf_sv_warning_category'] = function ($table): void
         {
             /** @var Create|Alter $table */
             $this->addOrChangeColumn($table, 'warning_category_id', 'int')->autoIncrement();
@@ -422,7 +421,7 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'depth', 'smallint', 5)->setDefault(0);
             $this->addOrChangeColumn($table, 'breadcrumb_data', 'blob');
             $this->addOrChangeColumn($table, 'warning_count', 'int')->setDefault(0);
-            $this->addOrChangeColumn($table, 'allowed_user_group_ids', 'varbinary', 255)->setDefault(strval(User::GROUP_REG));
+            $this->addOrChangeColumn($table, 'allowed_user_group_ids', 'varbinary', 255)->setDefault(strval(UserEntity::GROUP_REG));
 
             $table->addPrimaryKey('warning_category_id');
             $table->addKey(['parent_category_id', 'lft']);
@@ -436,13 +435,13 @@ class Setup extends AbstractSetup
     {
         $tables = [];
 
-        $tables['xf_user_option'] = function (Alter $table)
+        $tables['xf_user_option'] = function (Alter $table): void
         {
             $this->addOrChangeColumn($table, 'sv_pending_warning_expiry', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_warning_view', 'enum')->values(['radio', 'select'])->nullable()->setDefault(null);
         };
 
-        $tables['xf_warning'] = function (Alter $table)
+        $tables['xf_warning'] = function (Alter $table): void
         {
             $this->addOrChangeColumn($table, 'sv_spoiler_contents', 'tinyint', 3)->setDefault(0);
             $this->addOrChangeColumn($table, 'sv_content_spoiler_title', 'mediumtext')->nullable(true)->setDefault(null);
@@ -454,7 +453,7 @@ class Setup extends AbstractSetup
             $tables['xf_sv_warning_log'] = $tables['xf_warning'];
         }
 
-        $tables['xf_warning_definition'] = function (Alter $table)
+        $tables['xf_warning_definition'] = function (Alter $table): void
         {
             $this->addOrChangeColumn($table, 'sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_display_order', 'int')->setDefault(0);
@@ -464,7 +463,7 @@ class Setup extends AbstractSetup
             $table->changeColumn('expiry_type')->addValues(['hours']);
         };
 
-        $tables['xf_warning_action'] = function (Alter $table)
+        $tables['xf_warning_action'] = function (Alter $table): void
         {
             $this->addOrChangeColumn($table, 'sv_warning_category_id', 'int')->nullable(true)->setDefault(null);
             $this->addOrChangeColumn($table, 'sv_post_node_id', 'int')->nullable(true)->setDefault(null);
@@ -472,7 +471,7 @@ class Setup extends AbstractSetup
             $this->addOrChangeColumn($table, 'sv_post_as_user_id', 'int')->nullable(true)->setDefault(null);
         };
 
-        $tables['xf_sv_warning_category'] = function (Alter $table)
+        $tables['xf_sv_warning_category'] = function (Alter $table): void
         {
             $table->renameColumn('parent_warning_category_id', 'parent_category_id')
                   ->nullable(true)
@@ -486,23 +485,23 @@ class Setup extends AbstractSetup
     {
         $tables = [];
 
-        $tables['xf_user_option'] = function (Alter $table)
+        $tables['xf_user_option'] = function (Alter $table): void
         {
             $table->dropColumns('sv_pending_warning_expiry');
         };
 
-        $tables['xf_warning'] = function (Alter $table)
+        $tables['xf_warning'] = function (Alter $table): void
         {
             $table->dropColumns(['sv_spoiler_contents', 'sv_disable_reactions']);
         };
 
-        $tables['xf_warning_definition'] = function (Alter $table)
+        $tables['xf_warning_definition'] = function (Alter $table): void
         {
             $table->dropColumns(['sv_warning_category_id', 'sv_display_order', 'sv_custom_title', 'sv_spoiler_contents', 'sv_disable_reactions']);
             $table->changeColumn('expiry_type')->removeValues(['hours']);
         };
 
-        $tables['xf_warning_action'] = function (Alter $table)
+        $tables['xf_warning_action'] = function (Alter $table): void
         {
             $table->dropColumns(['sv_warning_category_id', 'sv_post_node_id', 'sv_post_thread_id', 'sv_post_as_user_id']);
         };

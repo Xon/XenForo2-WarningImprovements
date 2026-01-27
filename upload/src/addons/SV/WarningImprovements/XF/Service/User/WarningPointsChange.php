@@ -19,7 +19,7 @@ use XF\Entity\Forum as ForumEntity;
 use XF\Entity\Thread as ThreadEntity;
 use XF\Entity\User as UserEntity;
 use XF\Entity\WarningAction as WarningActionEntity;
-use XF\Entity\Report;
+use XF\Entity\Report as ReportEntity;
 use XF\Finder\WarningAction as WarningActionFinder;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\Repository\Warning as WarningRepo;
@@ -39,7 +39,7 @@ class WarningPointsChange extends XFCP_WarningPointsChange
     /** @var ExtendedWarningEntity */
     protected $warning = null;
 
-    /** @var Report */
+    /** @var ReportEntity */
     protected $report = null;
 
     /** @var WarningCategoryEntity */

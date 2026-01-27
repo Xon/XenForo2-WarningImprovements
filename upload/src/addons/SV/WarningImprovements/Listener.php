@@ -5,23 +5,24 @@ namespace SV\WarningImprovements;
 use SV\StandardLib\Helper;
 use SV\WarningImprovements\XF\Entity\UserOption as ExtendedUserOptionEntity;
 use SV\WarningImprovements\XF\Repository\Warning as ExtendedWarningRepo;
-use XF\Entity\User;
+use XF\Entity\User as UserEntity;
 use XF\Finder\User as UserFinder;
 use XF\Pub\App as PubApp;
 use XF\Repository\Warning as WarningRepo;
 use function is_callable;
 
-class Listener
+abstract class Listener
 {
     /** @var bool */
     public static $doPartialVisitorReload = true;
 
     public static function getWarningRepo(): ExtendedWarningRepo
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Helper::repository(WarningRepo::class);
     }
 
-    public static function criteriaUser($rule, array $data, User $user, &$returnValue)
+    public static function criteriaUser($rule, array $data, UserEntity $user, &$returnValue)
     {
         switch ($rule)
         {
@@ -70,7 +71,7 @@ class Listener
         }
     }
 
-    public static function visitorSetup(User &$visitor)
+    public static function visitorSetup(UserEntity &$visitor)
     {
         if (!(\XF::app() instanceof PubApp))
         {

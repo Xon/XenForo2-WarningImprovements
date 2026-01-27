@@ -127,8 +127,8 @@ class Warn extends XFCP_Warn
     public function warningActionNotifications()
     {
         $options = \XF::app()->options();
-        $postSummaryForumId = (int)($options->sv_post_warning_summaryForum ?? 0);
-        $postSummaryThreadId = (int)($options->sv_post_warning_summary ?? 0);
+        $postSummaryForumId = $options->sv_post_warning_summaryForum ?? 0;
+        $postSummaryThreadId = $options->sv_post_warning_summary ?? 0;
 
         if (!$postSummaryForumId && !$postSummaryThreadId)
         {

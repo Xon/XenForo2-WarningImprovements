@@ -9,7 +9,7 @@ use function is_callable;
 /**
  * Add-on globals.
  */
-class Globals
+abstract class Globals
 {
     /** @var int|null */
     public static $profileUserId = null;

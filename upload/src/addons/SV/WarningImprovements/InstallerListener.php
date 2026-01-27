@@ -5,7 +5,7 @@ namespace SV\WarningImprovements;
 use XF\AddOn\AddOn;
 use XF\Entity\AddOn as AddOnEntity;
 
-class InstallerListener
+abstract class InstallerListener
 {
     /**
      * Called when the post-rebuild code for an add-on has been run.

@@ -231,7 +231,7 @@ class Warning extends XFCP_Warning
      */
     public function getAnonymizedIssuer(): UserEntity
     {
-        $warningUserId = (int)(\XF::app()->options()->sv_warningimprovements_warning_user ?? 0);
+        $warningUserId = \XF::app()->options()->sv_warningimprovements_warning_user ?? 0;
         if ($warningUserId)
         {
             /** @var UserExtendedEntity $warningStaff */
@@ -266,7 +266,7 @@ class Warning extends XFCP_Warning
             return false;
         }
 
-        $ageLimit = (int)(\XF::options()->svWarningsOnProfileAgeLimit ?? 0);
+        $ageLimit = \XF::options()->svWarningsOnProfileAgeLimit ?? 0;
         if ($ageLimit === 0)
         {
             return false;
@@ -283,7 +283,7 @@ class Warning extends XFCP_Warning
 
     public function verifyNotes(string &$notes): bool
     {
-        $minNoteLength = (int)(\XF::options()->sv_wi_warning_note_chars ?? 0);
+        $minNoteLength = \XF::options()->sv_wi_warning_note_chars ?? 0;
         if ($minNoteLength > 0)
         {
             $noteLength = mb_strlen($notes);
@@ -510,7 +510,7 @@ class Warning extends XFCP_Warning
         if ($options->sv_wi_require_warning_notes ?? false)
         {
             unset($structure->columns['notes']['default']);
-            $minNoteLength = (int)(\XF::options()->sv_wi_warning_note_chars ?? 0);
+            $minNoteLength = \XF::options()->sv_wi_warning_note_chars ?? 0;
             if ($minNoteLength > 0)
             {
                 $structure->columns['notes']['required'] = 'sv_please_enter_note_for_warning';
@@ -554,6 +554,7 @@ class Warning extends XFCP_Warning
 
     protected function _getWarningRepo(): ExtendedWarningRepo
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Helper::repository(WarningRepo::class);
     }
 }

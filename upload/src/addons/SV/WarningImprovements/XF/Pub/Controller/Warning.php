@@ -268,7 +268,10 @@ class Warning extends XFCP_Warning
         return $warningEditor;
     }
 
-    /** @noinspection PhpMissingParentCallCommonInspection */
+    /**
+     * @noinspection PhpMissingParentCallCommonInspection
+     * @noinspection PhpMissingReturnTypeInspection
+     */
     public static function getActivityDetails(array $activities)
     {
         /** @var SessionActivityEntity[] $activities */
@@ -354,6 +357,7 @@ class Warning extends XFCP_Warning
         return $output;
     }
 
+    /** @noinspection PhpMissingReturnTypeInspection */
     protected function assertViewableWarning($id, array $extraWith = [])
     {
         $extraWith[] = 'User';

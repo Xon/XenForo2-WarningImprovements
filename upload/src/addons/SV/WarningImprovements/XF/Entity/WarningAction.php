@@ -3,27 +3,24 @@
 namespace SV\WarningImprovements\XF\Entity;
 
 use SV\WarningImprovements\Entity\WarningCategory as WarningCategoryEntity;
-use XF\Entity\Forum;
-use XF\Entity\Thread;
+use XF\Entity\Forum as ForumEntity;
+use XF\Entity\Thread as ThreadEntity;
 use XF\Mvc\Entity\Structure;
 
 /**
  * @extends \XF\Entity\WarningAction
- *
  * COLUMNS
- * @property int|null $sv_post_node_id
- * @property int|null $sv_post_thread_id
- * @property int|null $sv_post_as_user_id
- * @property int|null $sv_warning_category_id
- *
+ * @property int|null                    $sv_post_node_id
+ * @property int|null                    $sv_post_thread_id
+ * @property int|null                    $sv_post_as_user_id
+ * @property int|null                    $sv_warning_category_id
  * GETTERS
- * @property string $title
- *
+ * @property string                      $title
  * RELATIONS
  * @property-read ?WarningCategoryEntity $Category
- * @property-read ?Forum $PostForum
- * @property-read ?Thread $PostThread
- * @property-read ?User $PostAsUser
+ * @property-read ?ForumEntity           $PostForum
+ * @property-read ?ThreadEntity          $PostThread
+ * @property-read ?User                  $PostAsUser
  */
 class WarningAction extends XFCP_WarningAction
 {
