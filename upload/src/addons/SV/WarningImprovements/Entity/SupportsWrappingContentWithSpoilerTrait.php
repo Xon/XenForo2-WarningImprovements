@@ -19,7 +19,9 @@ trait SupportsWrappingContentWithSpoilerTrait
             return false;
         }
 
-        return isset($this->embed_metadata['sv_spoiler_contents']);
+        $embedMetadata = $this->embed_metadata;
+
+        return (bool)($embedMetadata['sv_spoiler_contents'] ?? false);
     }
 
     public function getContentSpoilerTitleForSvWarnImprov(): ?string
@@ -29,6 +31,8 @@ trait SupportsWrappingContentWithSpoilerTrait
             return null;
         }
 
-        return $this->embed_metadata['sv_content_spoiler_title'];
+        $embedMetadata = $this->embed_metadata;
+
+        return $embedMetadata['sv_content_spoiler_title'] ?? null;
     }
 }

@@ -195,30 +195,34 @@ class Warning extends XFCP_Warning
     {
         /** @var ExtendedWarningEntity|ReportImprovWarningEntity $warning */
         $warning = $warningEditor->getWarning();
-        if (isset($input['title']))
+        $title = $input['title'] ?? null;
+        if ($title !== null)
         {
-            $warningEditor->setTitle($input['title']);
+            $warningEditor->setTitle($title);
         }
 
-        if (isset($input['expire']))
+        $expire = $input['expire'] ?? null;
+        if ($expire !== null)
         {
-            $warningEditor->setExpiry($input['expire'], $input['expiry_value'] ?? 0, $input['expiry_unit'] ?? '');
+            $warningEditor->setExpiry($expire, $input['expiry_value'] ?? 0, $input['expiry_unit'] ?? '');
         }
 
-        if (isset($input['notes']))
+        $notes = $input['title'] ?? null;
+        if ($notes !== null)
         {
-            $warningEditor->setNotes($input['notes']);
+            $warningEditor->setNotes($notes);
         }
 
-        if (($input['points_enable'] ?? false) && isset($input['points']))
+        $points = $input['points'] ?? null;
+        if (($input['points_enable'] ?? false) && $points !== null)
         {
-            $points = (int)$input['points'];
-            $warningEditor->setPoints($points);
+            $warningEditor->setPoints((int)$points);
         }
 
-        if (isset($input['content_action']))
+        $contentAction = $input['content_action'] ?? null;
+        if ($contentAction !== null)
         {
-            $warningEditor->setContentActions($input['content_action'], $input['action_options'] ?? []);
+            $warningEditor->setContentActions($contentAction, $input['action_options'] ?? []);
         }
 
         if ($input['send_warning_alert'] ?? false)

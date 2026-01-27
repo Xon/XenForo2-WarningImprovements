@@ -132,7 +132,7 @@ class Warn extends XFCP_Warn
 
             $warningStructure = Helper::getEntityStructure(WarningEntity::class);
             $nodeColDefinition = $warningStructure->columns['notes'] ?? null;
-            $userNoteRequired = is_array($nodeColDefinition) && (!isset($nodeColDefinition['default']) || !empty($nodeColDefinition['required']));
+            $userNoteRequired = is_array($nodeColDefinition) && (!($nodeColDefinition['default'] ?? null) || ($nodeColDefinition['required'] ?? false));
             $response->setParams(
                 [
                     'userNoteRequired'        => $userNoteRequired,

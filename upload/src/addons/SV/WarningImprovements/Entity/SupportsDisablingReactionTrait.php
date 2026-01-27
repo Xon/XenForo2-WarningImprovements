@@ -17,7 +17,9 @@ trait SupportsDisablingReactionTrait
             return false;
         }
 
-        return isset($entity->get('embed_metadata')['sv_disable_reactions']);
+        $embedMetaData = $entity->get('embed_metadata');
+
+        return (bool)($embedMetaData['sv_disable_reactions'] ?? false);
     }
 
     public function canReact(&$error = null)

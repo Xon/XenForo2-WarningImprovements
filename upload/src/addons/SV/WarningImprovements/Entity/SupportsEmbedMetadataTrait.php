@@ -43,9 +43,10 @@ trait SupportsEmbedMetadataTrait
                 $oldMetaData = $this->getPreviousValue('embed_metadata');
                 foreach ($fields as $key)
                 {
-                    if (!isset($metadata[$key]) && isset($oldMetaData[$key]))
+                    $oldValue = $oldMetaData[$key] ?? null;
+                    if (!array_key_exists($key, $metadata) && $oldValue !== null)
                     {
-                        $metadata[$key] = $oldMetaData[$key];
+                        $metadata[$key] = $oldValue;
                     }
                 }
             }
