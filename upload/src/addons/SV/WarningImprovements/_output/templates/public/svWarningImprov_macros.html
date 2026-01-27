@@ -33,3 +33,126 @@
 	</xf:datarow>
 	</xf:if>
 </xf:macro>
+
+<xf:macro name="disableActions" arg-spoilerContentsAction="!" arg-disablingReactionsAction="!">
+	<xf:if is="$spoilerContentsAction || $disablingReactionsAction">
+		<xf:checkboxrow>
+			<xf:if is="$spoilerContentsAction">
+				<xf:option name="sv_spoiler_contents"
+						   label="{{ phrase('sv_warning_improvements_spoiler_contents') }}">
+					<xf:dependent>
+						<xf:textbox name="sv_content_spoiler_title"
+									placeholder="{{ phrase('sv_warning_improvements_content_spoiler_title') }}" />
+					</xf:dependent>
+					<xf:afterhint>{{ phrase('sv_warning_improvements_spoiler_contents_explain') }}</xf:afterhint>
+				</xf:option>
+			</xf:if>
+			<xf:if is="$disablingReactionsAction">
+				<xf:option name="sv_disable_reactions"
+						   label="{{ phrase('sv_warning_improvements_disable_reactions') }}"
+						   hint="{{ phrase('sv_warning_improvements_disable_reactions_explain') }}" />
+			</xf:if>
+		</xf:checkboxrow>
+	</xf:if>
+</xf:macro>
+
+<xf:macro name="report_view_warnings" arg-comment="!">
+	<xf:if is="$comment.WarningLog.sv_spoiler_contents">
+		<dl class="pairs pairs--justified fauxBlockLink">
+			<dt>{{ phrase('sv_warning_improvements_spoiler_contents') }}</dt>
+			<dd>{{ phrase('yes') }}</dd>
+		</dl>
+		<dl class="pairs pairs--justified fauxBlockLink">
+			<dt>{{ phrase('sv_warning_improvements_content_spoiler_title') }}</dt>
+			<dd>{{ $comment.WarningLog.sv_content_spoiler_title === '' ? phrase("n_a") : '"'.($comment.WarningLog.sv_content_spoiler_title).'"' }}</dd>
+		</dl>
+	</xf:if>
+
+	<xf:if is="$comment.WarningLog.sv_disable_reactions">
+		<dl class="pairs pairs--justified fauxBlockLink">
+			<dt>{{ phrase('sv_warning_improvements_disable_reactions') }}</dt>
+			<dd>{{ phrase('yes') }}</dd>
+		</dl>
+	</xf:if>
+</xf:macro>
+
+<xf:macro name="warning_info" arg-warning="!">
+	<xf:if is="$warning.sv_spoiler_contents">
+		<xf:formrow label="{{ phrase('sv_warning_improvements_spoiler_contents') }}">{{ phrase('yes') }}</xf:formrow>
+
+		<xf:formrow label="{{ phrase('sv_warning_improvements_content_spoiler_title') }}">{{ $warning.sv_content_spoiler_title === '' ? phrase("n_a") : '"'.($warning.sv_content_spoiler_title).'"' }}</xf:formrow>
+	</xf:if>
+
+	<xf:if is="$warning.sv_disable_reactions">
+		<xf:formrow label="{{ phrase('sv_warning_improvements_disable_reactions') }}">{{ phrase('yes') }}</xf:formrow>
+	</xf:if>
+</xf:macro>
+
+<xf:macro name="previousWarnings" arg-user="!" arg-previousWarnings="!" arg-canViewPreviousWarnings="!">
+	<xf:css src="sv_warningImprov_previousWarnings.less" />
+	<xf:if is="$canViewPreviousWarnings">
+		<h2 class="block-formSectionHeader">
+			<span class="collapseTrigger collapseTrigger--block" data-xf-click="toggle" data-target="< :up :next">
+				<span class="block-formSectionHeader-aligner">{{ phrase('sv_warning_improvements_previous_warnings', {'count': $user.warning_count}) }}</span>
+			</span>
+		</h2>
+		<xf:set var="$withWarningAck" value="{{ s_addon_active('SV/WarningAcknowledgement') }}"/>
+
+		<div class="block-body previous-warnings block-body--collapsible">
+			<xf:formrow>
+				<xf:datalist data-xf-init="responsive-data-list">
+					<xf:datarow rowtype="header">
+						<xf:cell>{{ phrase('warning') }}</xf:cell>
+						<xf:cell>{{ phrase('date') }}</xf:cell>
+						<xf:cell>{{ phrase('svWarningPoints') }}</xf:cell>
+						<xf:cell>{{ phrase('expiry') }}</xf:cell>
+						<xf:if is="$withWarningAck">
+						<xf:cell>{{ phrase('sv_warningAcknowledge_acknowledge_state') }}</xf:cell>
+						</xf:if>
+					</xf:datarow>
+					<xf:foreach loop="$previousWarnings" value="$previousWarning">
+						<xf:datarow rowclass="{{ $previousWarning.is_expired ? 'dataList-row--disabled' : '' }}">
+							<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">{$previousWarning.title}</xf:cell>
+							<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true" class="dataList-cell--min"><xf:date time="{$previousWarning.warning_date} " /></xf:cell>
+							<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true" class="dataList-cell--min">{$previousWarning.points|number}</xf:cell>
+							<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true" class="dataList-cell--min">
+								<xf:if is="$previousWarning.expiry_date">
+									<xf:date time="{$previousWarning.expiry_date} " />
+									<xf:else />
+									{{ phrase('n_a') }}
+								</xf:if>
+							</xf:cell>
+							<xf:if is="$withWarningAck">
+							<xf:cell href="{{ link('warnings', $previousWarning) }}" overlay="true">
+								<xf:macro template="svWarningAcknowledgement_macros" name="acknowledge_state" arg-warning="{{ $previousWarning }}" />
+							</xf:cell>
+							</xf:if>
+						</xf:datarow>
+					</xf:foreach>
+					<xf:if is="count($previousWarnings) < $user.warning_count">
+						<xf:datarow rowclass="{{ $previousWarning.is_expired ? 'dataList-row--disabled' : '' }}">
+							<xf:cell href="{{ link('members', $user) }}#warnings" colspan="4">{{ phrase('sv_all_warnings', {'count': $user.warning_count - count($previousWarnings) }) }}</xf:cell>
+						</xf:datarow>
+					</xf:if>
+				</xf:datalist>
+			</xf:formrow>
+		</div>
+	</xf:if>
+</xf:macro>
+
+<xf:macro name="warning_actions_tabs" arg-user="!">
+	<xf:if is="$user.hasOption('svWarnImprov') && $user.canViewWarningActions() && $user.warning_actions_count">
+		<a href="{{ link('members/warning-actions', $user) }}"
+		   class="tabs-tab"
+		   id="warningsActions"
+		   role="tab">{{ phrase('sv_user_warning_actions', {'count': {$user.warning_actions_count}}) }}</a>
+	</xf:if>
+</xf:macro>
+
+<xf:macro name="warning_actions_panes" arg-user="!">
+	<xf:if is="$user.hasOption('svWarnImprov') && $user.canViewWarningActions() && $user.warning_actions_count">
+		<li data-href="{{ link('members/warning-actions', $user) }}" role="tabpanel" aria-labelledby="warningActions">
+			<div class="blockMessage">{{ phrase('loading...') }}</div>
+		</li>
+	</xf:if>
+</xf:macro>

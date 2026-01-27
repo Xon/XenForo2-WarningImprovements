@@ -238,6 +238,7 @@ class User extends XFCP_User
     {
         $structure = parent::getStructure($structure);
 
+        $structure->options['svWarnImprov'] = true;
         $structure->getters['warning_definitions'] = ['getter' => 'getWarningDefinitions', 'cache' => true];
         $structure->getters['warning_actions'] = ['getter' => 'getWarningActions', 'cache' => true];
         $structure->getters['warning_actions_count'] = ['getter' => 'getWarningActionsCount', 'cache' => true];

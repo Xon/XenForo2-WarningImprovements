@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<!--[XF:tab_panes:end]-->",
-    "replace": "<xf:include template=\"sv_warningimprovements_member_view_warning_actions\" />\n\t$0"
+    "replace": "<xf:macro name=\"svWarningImprov_macros::warning_actions_panes\"\n\t\t  arg-user=\"{$user}\"\n/>\n\t$0"
 }

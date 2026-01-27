@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "preg_replace",
     "find": "#$#",
-    "replace": "$0\n<xf:include template=\"svWarningImprov_report_view_warning\" />"
+    "replace": "$0\n<xf:macro name=\"svWarningImprov_macros::report_view_warnings\"\n\t\t  arg-comment=\"{$comment}\"\n/>"
 }

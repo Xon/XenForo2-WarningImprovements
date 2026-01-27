@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<h2 class=\"block-formSectionHeader\"><span class=\"block-formSectionHeader-aligner\">{{ phrase('member_notification') }}</span></h2>",
-    "replace": "<xf:include template=\"sv_warningimprovements_member_warn7\" />\n$0"
+    "replace": "<xf:macro name=\"svWarningImprov_macros::previousWarnings\"\n\t\t  arg-user=\"{$user}\"\n\t\t  arg-previousWarnings=\"{$previousWarnings}\"\n\t\t  arg-canViewPreviousWarnings=\"{$canViewPreviousWarnings}\"\n/>\n$0"
 }
