@@ -225,7 +225,7 @@ class Warning extends XFCP_Warning
             $warningEditor->setExpiry($expire, $input['expiry_value'] ?? 0, $input['expiry_unit'] ?? '');
         }
 
-        $notes = $input['title'] ?? null;
+        $notes = $input['notes'] ?? null;
         if ($notes !== null)
         {
             $warningEditor->setNotes($notes);
