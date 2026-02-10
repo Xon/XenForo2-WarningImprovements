@@ -162,7 +162,7 @@ class User extends XFCP_User
         return $visitor->hasPermission('general', 'sv_editWarningActions');
     }
 
-    public function canBypassWarningTitleCensor(Phrase &$error = null): bool
+    public function canBypassWarningTitleCensor(?Phrase &$error = null): bool
     {
         $visitor = \XF::visitor();
         if (!$visitor->user_id)
