@@ -32,8 +32,7 @@ trait SupportsDisablingReactionTrait
         return parent::canReact($error);
     }
 
-    /** @noinspection PhpMissingReturnTypeInspection */
-    public function getReactions()
+    public function getReactions(): array
     {
         if ($this->hasDisabledReactionsListForSvWarnImprov($this))
         {
