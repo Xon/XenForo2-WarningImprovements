@@ -4,6 +4,6 @@
     "execution_order": 6240,
     "enabled": true,
     "action": "preg_replace",
-    "find": "{(^\\s{3}<xf:if is=\"\\$contentActions\\.delete OR.*?>$.*?)(.\\s{3}<\\/div>)$}smU",
-    "replace": "$1\n\n<xf:macro name=\"svWarningImprov_macros::disableActions\"\n\t\t  arg-spoilerContentsAction=\"[$disableActions]\"\n\t\t  arg-disablingReactionsAction=\"{$disablingReactionsAction}\"\n\t\t  />\n$2"
+    "find": "#(^\\s*<xf:if is=\"\\$contentActions\\.delete.*?\">$.*?)(\\s*<xf:submitrow)#smi",
+    "replace": "$1\n\n<xf:macro name=\"svWarningImprov_macros::disableActions\"\n\t\t  arg-spoilerContentsAction=\"{$spoilerContentsAction}\"\n\t\t  arg-disablingReactionsAction=\"{$disablingReactionsAction}\"\n\t\t  />\n$2"
 }
