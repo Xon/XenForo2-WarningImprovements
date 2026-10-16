@@ -5,6 +5,8 @@ namespace SV\WarningImprovements\XF\Pub\Controller;
 use SV\ReportImprovements\XF\Entity\Warning as ReportImprovWarningEntity;
 use SV\StandardLib\Helper;
 use SV\WarningAcknowledgement\XF\Entity\WarningDefinition as ExtendedWarningDefinitionEntity;
+use SV\WarningImprovements\Entity\SupportsDisablingReactionInterface;
+use SV\WarningImprovements\Entity\SupportsWrappingContentWithSpoilerInterface;
 use SV\WarningImprovements\Globals;
 use SV\WarningImprovements\Service\Warning\Editor as EditorService;
 use SV\WarningImprovements\XF\Entity\Warning as ExtendedWarningEntity;
@@ -144,6 +146,9 @@ class Warning extends XFCP_Warning
                 $reply->setParam('defaultContentAction', 'public');
                 $reply->setParam('contentPublicBanner', $content->get('warning_message'));
             }
+
+            $reply->setParam('disablingReactionsAction', $content instanceof SupportsDisablingReactionInterface);
+            $reply->setParam('spoilerContentsAction', $content instanceof SupportsWrappingContentWithSpoilerInterface);
         }
 
         return $reply;

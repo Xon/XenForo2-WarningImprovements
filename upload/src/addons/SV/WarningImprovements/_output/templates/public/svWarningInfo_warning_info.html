@@ -26,7 +26,7 @@
 					   data-public-warning-selector="input[name='action_options[public][message]']"
 					   data-copy-title="{{ $xf.options.sv_warningimprovements_copy_title }}" />
 	</xf:if>
-	
+
 	<xf:if is="$canEditPoints">
 		<xf:checkboxrow label="{{ phrase('warning_points') }}">
 			<xf:option name="points_enable" value="1"
@@ -36,12 +36,12 @@
 			</xf:option>
 		</xf:checkboxrow>
 	</xf:if>
-	
-	<xf:radiorow name="expire" value="no_change" 
-				 label="{{ phrase('svWarningImprov_warning_expiry') }}" 
+
+	<xf:radiorow name="expire" value="no_change"
+				 label="{{ phrase('svWarningImprov_warning_expiry') }}"
 				 explain="{{ phrase('svWarningImprov_warning_expiry_explain') }}">
 		<xf:option value="no_change">{{ phrase('svWarningImprov_do_not_change_expiry') }}</xf:option>
-		<xf:option value="now">{{ phrase('expire_now') }}</xf:option>		
+		<xf:option value="now">{{ phrase('expire_now') }}</xf:option>
 		<xf:option value="future" label="{{ phrase('expire_in_time:') }}">
 			<xf:dependent>
 				<div class="inputGroup">
@@ -63,7 +63,7 @@
 					value="{$warning.notes}"
 					label="{{ phrase('notes') }}"
 					explain="{{ phrase('this_will_not_be_shown_to_member_receiving_warning') }}" />
-	
+
 	<xf:if is="$canEditWarningAck">
 		<h2 class="block-formSectionHeader">
 			<span class="block-formSectionHeader-aligner">{{ phrase('svWarningImprov_edit_warning_acknowledgement') }}</span>
@@ -103,55 +103,62 @@
 		<hr class="formRowSep" />
 	</xf:if>
 
-	<xf:if is="$contentActions.delete OR $contentActions.public">
+	<xf:if contentcheck="true">
 		<h2 class="block-formSectionHeader"><span class="block-formSectionHeader-aligner">{{ phrase('content_action') }}</span></h2>
 		<div class="block-body">
-			<xf:radiorow name="content_action" 
-						 value="{$defaultContentAction}"
-						 label="{{ phrase('content_action') }}">
+			<xf:contentcheck>
+				<xf:if is="$contentActions.delete || $contentActions.public">
+					<xf:radiorow name="content_action"
+								 value="{$defaultContentAction}"
+								 label="{{ phrase('content_action') }}">
 
-			<xf:option value="">{{ phrase('svWarningImprove_no_content_action') }}</xf:option>
-			<xf:if is="$contentActions.delete">
-				<xf:option value="delete"
-						   label="{{ phrase('delete_the_content') }}"
-						   hint="{{ phrase('item_will_remain_viewable_by_moderators_and_may_be_restored_at_later') }}">
+						<xf:option value="">{{ phrase('svWarningImprove_no_content_action') }}</xf:option>
+						<xf:if is="$contentActions.delete">
+							<xf:option value="delete"
+									   label="{{ phrase('delete_the_content') }}"
+									   hint="{{ phrase('item_will_remain_viewable_by_moderators_and_may_be_restored_at_later') }}">
 
-					<xf:textbox name="action_options[delete][reason]"
-								placeholder="{{ phrase('reason_for_deletion...') }}"
-								value="{$contentDeleteReason}"
-								maxlength="{{ max_length('XF:DeletionLog', 'delete_reason') }}" />
-				</xf:option>
-			</xf:if>
-			<xf:if is="$contentActions.public">
-				<xf:option value="public"
-						   label="{{ phrase('post_public_warning') }}"
-						   hint="{{ phrase('this_will_be_visible_to_anyone_who_can_see_content_for_warning') }}">
+								<xf:textbox name="action_options[delete][reason]"
+											placeholder="{{ phrase('reason_for_deletion...') }}"
+											value="{$contentDeleteReason}"
+											maxlength="{{ max_length('XF:DeletionLog', 'delete_reason') }}" />
+							</xf:option>
+						</xf:if>
+						<xf:if is="$contentActions.public">
+							<xf:option value="public"
+									   label="{{ phrase('post_public_warning') }}"
+									   hint="{{ phrase('this_will_be_visible_to_anyone_who_can_see_content_for_warning') }}">
 
-					<xf:textbox name="action_options[public][message]" maxlength="255"
-								value="{$contentPublicBanner}"
-								placeholder="{{ phrase('public_warning_text...') }}" />
-				</xf:option>
-			</xf:if>
-			</xf:radiorow>
-			
-			<xf:checkboxrow>
-				<xf:option name="sv_spoiler_contents" checked="{$warning.sv_spoiler_contents}"
-						   label="{{ phrase('sv_warning_improvements_spoiler_contents') }}">
-					<xf:dependent>
-						<xf:textbox name="sv_content_spoiler_title" value="{$warning.sv_content_spoiler_title}"
-									placeholder="{{ phrase('sv_warning_improvements_content_spoiler_title') }}" />
-					</xf:dependent>
-					<xf:afterhint>{{ phrase('sv_warning_improvements_spoiler_contents_explain') }}</xf:afterhint>
-				</xf:option>
-				<xf:if is="$contentActions is not empty">
-					<xf:option name="sv_disable_reactions" checked="{$warning.sv_disable_reactions}"
-							   label="{{ phrase('sv_warning_improvements_disable_reactions') }}"
-							   hint="{{ phrase('sv_warning_improvements_disable_reactions_explain') }}" />
+								<xf:textbox name="action_options[public][message]" maxlength="255"
+											value="{$contentPublicBanner}"
+											placeholder="{{ phrase('public_warning_text...') }}" />
+							</xf:option>
+						</xf:if>
+					</xf:radiorow>
 				</xf:if>
-			</xf:checkboxrow>
+				<xf:if is="$spoilerContentsAction || $disablingReactionsAction">
+					<xf:checkboxrow>
+						<xf:if is="$spoilerContentsAction">
+							<xf:option name="sv_spoiler_contents" checked="{$warning.sv_spoiler_contents}"
+									   label="{{ phrase('sv_warning_improvements_spoiler_contents') }}">
+								<xf:dependent>
+									<xf:textbox name="sv_content_spoiler_title" value="{$warning.sv_content_spoiler_title}"
+												placeholder="{{ phrase('sv_warning_improvements_content_spoiler_title') }}" />
+								</xf:dependent>
+								<xf:afterhint>{{ phrase('sv_warning_improvements_spoiler_contents_explain') }}</xf:afterhint>
+							</xf:option>
+						</xf:if>
+						<xf:if is="$disablingReactionsAction">
+							<xf:option name="sv_disable_reactions" checked="{$warning.sv_disable_reactions}"
+									   label="{{ phrase('sv_warning_improvements_disable_reactions') }}"
+									   hint="{{ phrase('sv_warning_improvements_disable_reactions_explain') }}" />
+						</xf:if>
+					</xf:checkboxrow>
+				</xf:if>
+			</xf:contentcheck>
 		</div>
 	</xf:if>
-		
+
 	<xf:if is="$showResolveReport">
 		<xf:if contentcheck="true">
 			<h2 class="block-formSectionHeader">
