@@ -67,7 +67,7 @@ abstract class InstallerListener
         AddOn       $addOn,
         AddOnEntity $addonEntity,
         array       $json,
-        array       &$stateChanges = null
+        ?array       &$stateChanges = null
     )
     {
         if (empty(Setup::$supportedAddOns[$addOn->getAddOnId()]))
