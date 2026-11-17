@@ -21,6 +21,11 @@ trait SupportsEmbedMetadataTrait
             // values and store in the new version of embed_metadata
             // or extract fields from the warning, which will be the canonical versions
             $metadata = $this->embed_metadata;
+            // avoid the additional __isset() lookup call against the entity
+            if ($metadata === null)
+            {
+                $metadata = [];
+            }
             if (array_key_exists('Warning', $this->structure()->relations))
             {
                 $warning = $this->getRelation('Warning');

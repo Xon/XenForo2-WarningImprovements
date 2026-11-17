@@ -3,7 +3,7 @@
 namespace SV\WarningImprovements\Entity;
 
 /**
- * @property array $embed_metadata
+ * @property array|null $embed_metadata
  */
 interface SupportsEmbedMetadataInterface
 {
